@@ -277,6 +277,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderStorefront();
   updateNavBarState();
   setupEventListeners();
+
+  // Admin Mode: If this is the /admin/ page, handle admin-specific behavior
+  const pageMode = (typeof wpApiSettings !== 'undefined' && wpApiSettings.pageMode) ? wpApiSettings.pageMode : 'shop';
+  if (pageMode === 'admin') {
+    if (app.currentUser && app.currentUser.role === 'admin') {
+      // Already logged in as admin — go directly to dashboard
+      switchView("admin");
+    } else if (app.currentUser) {
+      // Logged in but not admin
+      showToast("Access denied. Admin credentials required.", "danger");
+    } else {
+      // Not logged in — auto-open login modal
+      openModal("auth-modal");
+    }
+  }
 });
 
 function initTheme() {
@@ -1001,6 +1016,15 @@ function setupEventListeners() {
       authLoginForm.style.display = "block";
       authTabBtns.forEach(b => b.classList.remove("active"));
       authTabBtns[0].classList.add("active");
+
+      // Admin page: auto-switch to admin dashboard after login
+      const currentPageMode = (typeof wpApiSettings !== 'undefined' && wpApiSettings.pageMode) ? wpApiSettings.pageMode : 'shop';
+      if (currentPageMode === 'admin' && res.user.role === 'admin') {
+        switchView("admin");
+      } else if (currentPageMode === 'admin' && res.user.role !== 'admin') {
+        showToast("You are not an admin. Redirecting to shop...", "danger");
+        setTimeout(() => { window.location.href = '/shop/'; }, 2000);
+      }
     } else {
       showToast(res.message, "danger");
     }

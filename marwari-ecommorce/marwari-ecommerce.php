@@ -172,19 +172,24 @@ function marwari_ecommerce_setup_demo_users() {
 // 2. Enqueue Assets (style.css & app.js)
 add_action( 'wp_enqueue_scripts', 'marwari_ecommerce_enqueue_assets' );
 function marwari_ecommerce_enqueue_assets() {
-    // Only enqueue scripts on pages containing the shortcode
     global $post;
-    if ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'marwari_storefront' ) ) {
-        // Enqueue Style (v2.2.0 to bust browser cache)
-        wp_enqueue_style( 'marwari-style', plugin_dir_url( __FILE__ ) . 'style.css', array(), '2.2.0' );
+    if ( ! is_a( $post, 'WP_Post' ) ) return;
 
-        // Enqueue Script (v2.2.0 to bust browser cache)
-        wp_enqueue_script( 'marwari-app', plugin_dir_url( __FILE__ ) . 'app.js', array(), '2.2.0', true );
+    $is_shop  = has_shortcode( $post->post_content, 'marwari_storefront' );
+    $is_admin = has_shortcode( $post->post_content, 'marwari_admin_panel' );
 
-        // Localize script to inject API URL and Security Nonce
+    if ( $is_shop || $is_admin ) {
+        // Enqueue Style (v2.3.0)
+        wp_enqueue_style( 'marwari-style', plugin_dir_url( __FILE__ ) . 'style.css', array(), '2.3.0' );
+
+        // Enqueue Script (v2.3.0)
+        wp_enqueue_script( 'marwari-app', plugin_dir_url( __FILE__ ) . 'app.js', array(), '2.3.0', true );
+
+        // Localize: pass API settings + page mode
         wp_localize_script( 'marwari-app', 'wpApiSettings', array(
-            'root'  => esc_url_raw( rest_url() ),
-            'nonce' => wp_create_nonce( 'wp_rest' )
+            'root'     => esc_url_raw( rest_url() ),
+            'nonce'    => wp_create_nonce( 'wp_rest' ),
+            'pageMode' => $is_admin ? 'admin' : 'shop'
         ) );
     }
 }
@@ -1077,11 +1082,20 @@ function marwari_ecommerce_update_order_status( WP_REST_Request $request ) {
     return rest_ensure_response( array( 'success' => true, 'status' => $status ) );
 }
 
-// 5. Intercept template load and render a clean storefront directly to bypass theme header/footer
+// 5. Admin Panel Shortcode: [marwari_admin_panel] — reuses the same storefront UI
+add_shortcode( 'marwari_admin_panel', 'marwari_ecommerce_render_storefront' );
+
+// 6. Intercept template load and render a clean storefront directly to bypass theme header/footer
 add_action( 'template_redirect', 'marwari_ecommerce_direct_template_redirect' );
 function marwari_ecommerce_direct_template_redirect() {
     global $post;
-    if ( is_singular() && is_a( $post, 'WP_Post' ) && ( has_shortcode( $post->post_content, 'marwari_storefront' ) || strpos( $post->post_content, 'marwari_storefront' ) !== false ) ) {
+    if ( ! is_singular() || ! is_a( $post, 'WP_Post' ) ) return;
+
+    $is_shop  = has_shortcode( $post->post_content, 'marwari_storefront' );
+    $is_admin = has_shortcode( $post->post_content, 'marwari_admin_panel' );
+
+    if ( $is_shop || $is_admin ) {
+        $shortcode = $is_admin ? '[marwari_admin_panel]' : '[marwari_storefront]';
         ?>
         <!DOCTYPE html>
         <html <?php language_attributes(); ?>>
@@ -1091,9 +1105,7 @@ function marwari_ecommerce_direct_template_redirect() {
             <?php wp_head(); ?>
         </head>
         <body <?php body_class(); ?>>
-            <?php
-            echo do_shortcode( '[marwari_storefront]' );
-            ?>
+            <?php echo do_shortcode( $shortcode ); ?>
             <?php wp_footer(); ?>
         </body>
         </html>
