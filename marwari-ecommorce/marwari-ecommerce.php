@@ -185,11 +185,11 @@ function marwari_ecommerce_enqueue_assets() {
     $is_admin = has_shortcode( $post->post_content, 'marwari_admin_panel' );
 
     if ( $is_shop || $is_admin ) {
-        // Enqueue Style (v2.3.0)
-        wp_enqueue_style( 'marwari-style', plugin_dir_url( __FILE__ ) . 'style.css', array(), '2.3.0' );
+        // Enqueue Style (v2.4.0)
+        wp_enqueue_style( 'marwari-style', plugin_dir_url( __FILE__ ) . 'style.css', array(), '2.4.0' );
 
-        // Enqueue Script (v2.3.0)
-        wp_enqueue_script( 'marwari-app', plugin_dir_url( __FILE__ ) . 'app.js', array(), '2.3.0', true );
+        // Enqueue Script (v2.4.0)
+        wp_enqueue_script( 'marwari-app', plugin_dir_url( __FILE__ ) . 'app.js', array(), '2.4.0', true );
 
         // Localize: pass API settings + page mode
         wp_localize_script( 'marwari-app', 'wpApiSettings', array(
