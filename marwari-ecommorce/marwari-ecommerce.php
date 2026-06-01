@@ -166,13 +166,22 @@ function marwari_ecommerce_setup_demo_users() {
             ) );
             update_user_meta( $admin_id, 'billing_phone', '9876543210' );
         }
-    } else {
-        // Ensure password is 123456 for existing admin
-        $existing_admin = get_user_by( 'email', 'admin@gmail.com' );
-        if ( $existing_admin ) {
-            wp_set_password( '123456', $existing_admin->ID );
-        }
     }
+}
+
+// Auto-reset admin password to 123456 (runs once per version update)
+add_action( 'init', 'marwari_ecommerce_ensure_admin_password' );
+function marwari_ecommerce_ensure_admin_password() {
+    $version_key = 'marwari_admin_pw_version';
+    $current_version = '2.4.0';
+    
+    if ( get_option( $version_key ) === $current_version ) return;
+    
+    $admin = get_user_by( 'email', 'admin@gmail.com' );
+    if ( $admin ) {
+        wp_set_password( '123456', $admin->ID );
+    }
+    update_option( $version_key, $current_version );
 }
 
 // 2. Enqueue Assets (style.css & app.js)
