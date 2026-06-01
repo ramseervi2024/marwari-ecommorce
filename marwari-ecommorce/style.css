@@ -1546,3 +1546,17 @@ select.form-input {
     /* Hide on mobile navbar for cleanliness */
   }
 }
+
+/* Hide Hostinger Theme Header & Footer on the Storefront Page */
+body:has(.marwari-ecommerce-wrapper) .hostinger-ai-menu,
+body:has(.marwari-ecommerce-wrapper) .hostinger-ai-menu-wrapper,
+body:has(.marwari-ecommerce-wrapper) .wp-block-template-part-header,
+body:has(.marwari-ecommerce-wrapper) .wp-block-template-part-footer,
+body:has(.marwari-ecommerce-wrapper) header.wp-block-template-part,
+body:has(.marwari-ecommerce-wrapper) footer.wp-block-template-part,
+body:has(.marwari-ecommerce-wrapper) div.wp-block-group.has-color-2-background-color,
+body:has(.marwari-ecommerce-wrapper) div.wp-block-group.has-color-1-background-color,
+body:has(.marwari-ecommerce-wrapper) header:not(.navbar),
+body:has(.marwari-ecommerce-wrapper) footer:not(.marwari-ecommerce-wrapper footer) {
+  display: none !important;
+}

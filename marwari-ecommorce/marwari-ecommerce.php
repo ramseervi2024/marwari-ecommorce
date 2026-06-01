@@ -980,3 +980,28 @@ function marwari_ecommerce_update_order_status( WP_REST_Request $request ) {
 
     return rest_ensure_response( array( 'success' => true, 'status' => $status ) );
 }
+
+// 5. Intercept template load and render a clean storefront directly to bypass theme header/footer
+add_action( 'template_redirect', 'marwari_ecommerce_direct_template_redirect' );
+function marwari_ecommerce_direct_template_redirect() {
+    global $post;
+    if ( is_singular() && is_a( $post, 'WP_Post' ) && ( has_shortcode( $post->post_content, 'marwari_storefront' ) || strpos( $post->post_content, 'marwari_storefront' ) !== false ) ) {
+        ?>
+        <!DOCTYPE html>
+        <html <?php language_attributes(); ?>>
+        <head>
+            <meta charset="<?php bloginfo( 'charset' ); ?>">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <?php wp_head(); ?>
+        </head>
+        <body <?php body_class(); ?>>
+            <?php
+            echo do_shortcode( '[marwari_storefront]' );
+            ?>
+            <?php wp_footer(); ?>
+        </body>
+        </html>
+        <?php
+        exit;
+    }
+}
