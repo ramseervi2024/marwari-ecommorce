@@ -10,8 +10,9 @@ class WordPressAppState {
     // In-memory active states
     this.products = [];
     this.orders = [];
-    this.currentUser = null;
-    
+    // Restore user session from localStorage so UI shows login state immediately on refresh
+    this.currentUser = this.loadLocalStorage("marwari_session", null);
+
     // Cart is maintained in client LocalStorage until checkout
     this.cart = this.loadLocalStorage("marwari_cart", []);
   }
@@ -62,18 +63,38 @@ class WordPressAppState {
   // Load initial configurations from WordPress
   async initSession() {
     try {
-      // 1. Fetch products
+      // 1. Always fetch products
       this.products = await this.apiFetch('/products');
-      
-      // 2. Fetch logged in session if exists
-      this.currentUser = await this.apiFetch('/auth/current');
-      
-      // 3. If logged in, fetch orders
-      if (this.currentUser) {
-        this.orders = await this.apiFetch('/orders');
-      }
     } catch (e) {
-      console.warn("Session initialization error:", e.message);
+      console.warn("Failed to load products:", e.message);
+    }
+
+    // 2. If we have a cached session, fetch orders silently
+    if (this.currentUser) {
+      try {
+        this.orders = await this.apiFetch('/orders');
+      } catch (e) {
+        console.warn("Failed to load orders (session may have expired):", e.message);
+      }
+    }
+
+    // 3. Silently verify session with server in background — never force logout
+    //    Only update localStorage if server confirms a valid session
+    try {
+      const serverUser = await this.apiFetch('/auth/current');
+      if (serverUser) {
+        this.currentUser = serverUser;
+        this.saveLocalStorage("marwari_session", serverUser);
+        // If we didn't already load orders, load them now
+        if (this.orders.length === 0) {
+          this.orders = await this.apiFetch('/orders');
+        }
+      }
+      // NOTE: if serverUser is null, we do NOT clear the session.
+      // Session is ONLY cleared by the logout button or browser data clear.
+    } catch (e) {
+      // Server check failed silently — keep the cached localStorage session
+      console.warn("Background session check failed, keeping cached session.", e.message);
     }
   }
 
@@ -134,6 +155,7 @@ class WordPressAppState {
       
       if (res.success) {
         this.currentUser = res.user;
+        this.saveLocalStorage("marwari_session", res.user); // Persist session
         if (res.nonce) this.nonce = res.nonce; // Update working nonce
         this.orders = await this.apiFetch('/orders');
         return { success: true, user: this.currentUser };
@@ -159,6 +181,7 @@ class WordPressAppState {
       });
       if (res.success) {
         this.currentUser = res.user;
+        this.saveLocalStorage("marwari_session", res.user); // Persist session
         if (res.nonce) this.nonce = res.nonce;
         this.orders = await this.apiFetch('/orders');
         return { success: true, user: this.currentUser };
@@ -177,6 +200,7 @@ class WordPressAppState {
     }
     this.currentUser = null;
     this.orders = [];
+    localStorage.removeItem("marwari_session"); // Clear persisted session
     this.clearCart();
   }
 
@@ -231,14 +255,17 @@ let activeOTPPhone = null;
 // UI Initialization & Controller
 document.addEventListener("DOMContentLoaded", async () => {
   initTheme();
-  
+
+  // Immediately render navbar from cached localStorage session (no flicker on refresh)
+  updateNavBarState();
+
   // Show loading skeleton placeholders
   showStorefrontLoading();
 
-  // Initialize DB data and Session
+  // Initialize DB data and verify server session
   await app.initSession();
 
-  // Render storefront and update Navigation Menu
+  // Re-render navbar and storefront with confirmed server state
   renderStorefront();
   updateNavBarState();
   setupEventListeners();

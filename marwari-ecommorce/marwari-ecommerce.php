@@ -175,11 +175,11 @@ function marwari_ecommerce_enqueue_assets() {
     // Only enqueue scripts on pages containing the shortcode
     global $post;
     if ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'marwari_storefront' ) ) {
-        // Enqueue Style
-        wp_enqueue_style( 'marwari-style', plugin_dir_url( __FILE__ ) . 'style.css', array(), '1.0.0' );
+        // Enqueue Style (v2.0.0 to bust browser cache)
+        wp_enqueue_style( 'marwari-style', plugin_dir_url( __FILE__ ) . 'style.css', array(), '2.0.0' );
 
-        // Enqueue Script
-        wp_enqueue_script( 'marwari-app', plugin_dir_url( __FILE__ ) . 'app.js', array(), '1.0.0', true );
+        // Enqueue Script (v2.0.0 to bust browser cache)
+        wp_enqueue_script( 'marwari-app', plugin_dir_url( __FILE__ ) . 'app.js', array(), '2.0.0', true );
 
         // Localize script to inject API URL and Security Nonce
         wp_localize_script( 'marwari-app', 'wpApiSettings', array(
@@ -589,33 +589,53 @@ function marwari_ecommerce_render_storefront() {
     return ob_get_clean();
 }
 
-// 4. REST API: Register Endpoints & Auth Nonce Bypasses
-add_filter( 'rest_authentication_errors', 'marwari_ecommerce_bypass_auth_cookie_check', 101 );
-function marwari_ecommerce_bypass_auth_cookie_check( $result ) {
-    // If we have a cookie check failed error (invalid nonce), check if we can safely bypass it
-    if ( is_wp_error( $result ) && $result->get_error_code() === 'rest_cookie_invalid_nonce' ) {
-        // Collect all possible representations of the route
-        $paths = array();
-        if ( isset( $_SERVER['REQUEST_URI'] ) ) {
-            $paths[] = $_SERVER['REQUEST_URI'];
-            $paths[] = urldecode( $_SERVER['REQUEST_URI'] );
-        }
-        if ( isset( $_GET['rest_route'] ) ) {
-            $paths[] = $_GET['rest_route'];
-            $paths[] = urldecode( $_GET['rest_route'] );
-        }
-        if ( isset( $_SERVER['PATH_INFO'] ) ) {
-            $paths[] = $_SERVER['PATH_INFO'];
-            $paths[] = urldecode( $_SERVER['PATH_INFO'] );
-        }
+// 4. REST API: Authenticate our endpoints from cookies, bypassing WordPress nonce requirement.
+// Priority 99 runs BEFORE WordPress's rest_cookie_check_errors (priority 100), preventing
+// it from resetting the user to 0 when nonce is stale/cached.
+add_filter( 'rest_authentication_errors', 'marwari_ecommerce_rest_auth', 99 );
+function marwari_ecommerce_rest_auth( $result ) {
+    // If another plugin already handled auth, pass through
+    if ( $result !== null ) {
+        return $result;
+    }
 
-        foreach ( $paths as $path ) {
-            if ( strpos( $path, '/marwari-ecom/' ) !== false ) {
-                return true; // Bypass nonce verification error for all storefront endpoints
-            }
+    // Detect if this request is for our plugin's REST namespace
+    $paths = array();
+    if ( isset( $_SERVER['REQUEST_URI'] ) ) {
+        $paths[] = $_SERVER['REQUEST_URI'];
+        $paths[] = urldecode( $_SERVER['REQUEST_URI'] );
+    }
+    if ( isset( $_GET['rest_route'] ) ) {
+        $paths[] = $_GET['rest_route'];
+        $paths[] = urldecode( $_GET['rest_route'] );
+    }
+    if ( isset( $_SERVER['PATH_INFO'] ) ) {
+        $paths[] = $_SERVER['PATH_INFO'];
+        $paths[] = urldecode( $_SERVER['PATH_INFO'] );
+    }
+
+    $is_our_route = false;
+    foreach ( $paths as $path ) {
+        if ( strpos( $path, '/marwari-ecom/' ) !== false ) {
+            $is_our_route = true;
+            break;
         }
     }
-    return $result;
+
+    if ( ! $is_our_route ) {
+        return $result; // Not our route — let WordPress handle normally
+    }
+
+    // For our routes: authenticate directly from the browser's auth cookie (no nonce needed)
+    $cookie_user_id = wp_validate_auth_cookie( '', 'logged_in' );
+    if ( $cookie_user_id ) {
+        wp_set_current_user( $cookie_user_id );
+    }
+
+    // Return true = "auth passed, no errors".
+    // This short-circuits rest_cookie_check_errors at priority 100,
+    // preventing it from calling wp_set_current_user(0).
+    return true;
 }
 
 add_action( 'rest_api_init', 'marwari_ecommerce_register_rest_endpoints' );
