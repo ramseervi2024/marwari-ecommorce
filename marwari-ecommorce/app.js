@@ -145,48 +145,57 @@ class WordPressAppState {
     return this.cart.reduce((count, item) => count + item.quantity, 0);
   }
 
-  // Authentication REST Operations
-  async loginWithEmail(email, password) {
+  // Authentication REST Operations — Email + OTP Code (no passwords)
+  async loginWithEmail(email) {
     try {
       const res = await this.apiFetch('/auth/login', {
         method: 'POST',
-        body: JSON.stringify({ username: email, password: password })
+        body: JSON.stringify({ email })
       });
-      
-      if (res.success) {
-        this.currentUser = res.user;
-        this.saveLocalStorage("marwari_session", res.user); // Persist session
-        if (res.nonce) this.nonce = res.nonce; // Update working nonce
-        this.orders = await this.apiFetch('/orders');
-        return { success: true, user: this.currentUser };
-      }
-      return { success: false, message: "Authentication failed" };
+      return res;
     } catch (e) {
       return { success: false, message: e.message };
     }
   }
 
-  async sendOTP(phone) {
-    return this.apiFetch('/auth/send-otp', {
-      method: 'POST',
-      body: JSON.stringify({ phone })
-    });
+  async registerUser(name, email, phone) {
+    try {
+      const res = await this.apiFetch('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, phone })
+      });
+      return res;
+    } catch (e) {
+      return { success: false, message: e.message };
+    }
   }
 
-  async verifyOTP(phone, otp) {
+  async verifyEmailCode(email, code) {
     try {
-      const res = await this.apiFetch('/auth/verify-otp', {
+      const res = await this.apiFetch('/auth/verify-email', {
         method: 'POST',
-        body: JSON.stringify({ phone, otp })
+        body: JSON.stringify({ email, code })
       });
       if (res.success) {
         this.currentUser = res.user;
-        this.saveLocalStorage("marwari_session", res.user); // Persist session
+        this.saveLocalStorage("marwari_session", res.user);
         if (res.nonce) this.nonce = res.nonce;
         this.orders = await this.apiFetch('/orders');
         return { success: true, user: this.currentUser };
       }
       return { success: false, message: "Verification failed" };
+    } catch (e) {
+      return { success: false, message: e.message };
+    }
+  }
+
+  async resendCode(email) {
+    try {
+      const res = await this.apiFetch('/auth/resend-code', {
+        method: 'POST',
+        body: JSON.stringify({ email })
+      });
+      return res;
     } catch (e) {
       return { success: false, message: e.message };
     }
@@ -250,7 +259,6 @@ class WordPressAppState {
 }
 
 const app = new WordPressAppState();
-let activeOTPPhone = null;
 
 // UI Initialization & Controller
 document.addEventListener("DOMContentLoaded", async () => {
@@ -897,105 +905,124 @@ function setupEventListeners() {
     });
   });
 
+  // Auth Modal Tab Switching
   const authTabBtns = document.querySelectorAll(".auth-tab-btn");
-  const authEmailForm = document.getElementById("auth-email-form");
-  const authPhoneForm = document.getElementById("auth-phone-form");
+  const authLoginForm = document.getElementById("auth-login-form");
+  const authRegisterForm = document.getElementById("auth-register-form");
+  const authVerifyForm = document.getElementById("auth-verify-form");
+
+  let pendingVerifyEmail = null; // Track which email is being verified
 
   authTabBtns.forEach(btn => {
     btn.addEventListener("click", () => {
       authTabBtns.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
-      const type = btn.dataset.tab;
-      if (type === "email") {
-        authEmailForm.style.display = "block";
-        authPhoneForm.style.display = "none";
-      } else {
-        authEmailForm.style.display = "none";
-        authPhoneForm.style.display = "block";
-      }
+      const tab = btn.dataset.tab;
+      authLoginForm.style.display = tab === "login" ? "block" : "none";
+      authRegisterForm.style.display = tab === "register" ? "block" : "none";
+      authVerifyForm.style.display = "none"; // Always hide verify when switching tabs
     });
   });
 
-  authEmailForm.addEventListener("submit", async (e) => {
+  // Helper: Show verify screen
+  function showVerifyScreen(email) {
+    pendingVerifyEmail = email;
+    authLoginForm.style.display = "none";
+    authRegisterForm.style.display = "none";
+    authVerifyForm.style.display = "block";
+    document.getElementById("verify-email-hint").textContent = `We sent a 6-digit code to ${email}`;
+    document.getElementById("verify-code").value = "";
+    document.getElementById("verify-code").focus();
+  }
+
+  // Login Form Submit — email only, sends verification code
+  authLoginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const email = document.getElementById("login-email").value.trim();
-    const password = document.getElementById("login-password").value;
-    const submitBtn = authEmailForm.querySelector(".auth-submit-btn");
+    const submitBtn = authLoginForm.querySelector(".auth-submit-btn");
 
-    showLoadingButton(submitBtn, "Authorizing...");
-    const res = await app.loginWithEmail(email, password);
+    showLoadingButton(submitBtn, "Sending Code...");
+    const res = await app.loginWithEmail(email);
+    restoreButton(submitBtn);
+
+    if (res.success && res.requiresCode) {
+      showToast("Verification code sent to your email!");
+      showVerifyScreen(res.email);
+    } else if (!res.success) {
+      showToast(res.message, "danger");
+    }
+  });
+
+  // Registration Form Submit — no password
+  authRegisterForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = document.getElementById("register-name").value.trim();
+    const email = document.getElementById("register-email").value.trim();
+    const phone = document.getElementById("register-phone").value.trim();
+    const submitBtn = authRegisterForm.querySelector(".auth-submit-btn");
+
+    showLoadingButton(submitBtn, "Creating Account...");
+    const res = await app.registerUser(name, email, phone);
     restoreButton(submitBtn);
 
     if (res.success) {
-      showToast(`Welcome back, ${res.user.name}!`);
-      updateNavBarState();
-      closeModal();
-      
-      if (res.user.role === 'admin') {
-        switchView("admin");
-      }
+      showToast("Account created! Check your email for the verification code.");
+      showVerifyScreen(email);
     } else {
       showToast(res.message, "danger");
     }
   });
 
-  const sendOtpBtn = document.getElementById("send-otp-btn");
-  const otpSection = document.getElementById("otp-verification-section");
-  const otpPhoneInput = document.getElementById("login-phone");
-
-  sendOtpBtn.addEventListener("click", async () => {
-    const phone = otpPhoneInput.value.trim();
-    if (!phone || phone.length < 10) {
-      showToast("Please enter a valid 10-digit mobile number", "danger");
-      return;
-    }
-
-    showLoadingButton(sendOtpBtn, "Sending...");
-    try {
-      const res = await app.sendOTP(phone);
-      restoreButton(sendOtpBtn);
-      
-      activeOTPPhone = phone;
-      otpSection.style.display = "block";
-      sendOtpBtn.innerText = "Resend Code";
-      
-      if (res.otp) {
-        alert(`[Demo OTP Code] Your verification code to log in is: ${res.otp}`);
-      }
-      showToast(`Verification code sent to +91 ${phone}`);
-    } catch(err) {
-      showToast(err.message, "danger");
-      restoreButton(sendOtpBtn);
-    }
-  });
-
-  authPhoneForm.addEventListener("submit", async (e) => {
+  // Email Verification Form Submit
+  authVerifyForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const otp = document.getElementById("login-otp").value.trim();
-    const submitBtn = authPhoneForm.querySelector("button[type='submit']");
+    const code = document.getElementById("verify-code").value.trim();
+    const submitBtn = authVerifyForm.querySelector(".auth-submit-btn");
 
-    if (!activeOTPPhone) {
-      showToast("Please request an OTP first", "danger");
+    if (!pendingVerifyEmail) {
+      showToast("Please register first", "danger");
       return;
     }
 
     showLoadingButton(submitBtn, "Verifying...");
-    const res = await app.verifyOTP(activeOTPPhone, otp);
+    const res = await app.verifyEmailCode(pendingVerifyEmail, code);
     restoreButton(submitBtn);
 
     if (res.success) {
-      showToast(`Welcome to Marwari E-Commerce!`);
+      showToast(`Welcome to Mārwāri E-Commerce, ${res.user.name}!`);
       updateNavBarState();
       closeModal();
-      
-      activeOTPPhone = null;
-      otpSection.style.display = "none";
-      sendOtpBtn.innerText = "Send OTP Code";
-      document.getElementById("login-otp").value = "";
+      pendingVerifyEmail = null;
+
+      // Reset forms
+      authRegisterForm.reset();
+      authVerifyForm.style.display = "none";
+      authLoginForm.style.display = "block";
+      authTabBtns.forEach(b => b.classList.remove("active"));
+      authTabBtns[0].classList.add("active");
     } else {
       showToast(res.message, "danger");
     }
+  });
+
+  // Resend Code Button
+  document.getElementById("resend-code-btn").addEventListener("click", async () => {
+    if (!pendingVerifyEmail) return;
+    const btn = document.getElementById("resend-code-btn");
+    btn.textContent = "Sending...";
+    btn.disabled = true;
+
+    const res = await app.resendCode(pendingVerifyEmail);
+    
+    if (res.success) {
+      showToast("New verification code sent to your email!");
+    } else {
+      showToast(res.message || "Failed to resend code", "danger");
+    }
+
+    btn.textContent = "Resend Verification Code";
+    btn.disabled = false;
   });
 
   document.getElementById("checkout-trigger-btn").addEventListener("click", () => {

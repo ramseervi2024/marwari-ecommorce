@@ -175,11 +175,11 @@ function marwari_ecommerce_enqueue_assets() {
     // Only enqueue scripts on pages containing the shortcode
     global $post;
     if ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'marwari_storefront' ) ) {
-        // Enqueue Style (v2.0.0 to bust browser cache)
-        wp_enqueue_style( 'marwari-style', plugin_dir_url( __FILE__ ) . 'style.css', array(), '2.0.0' );
+        // Enqueue Style (v2.2.0 to bust browser cache)
+        wp_enqueue_style( 'marwari-style', plugin_dir_url( __FILE__ ) . 'style.css', array(), '2.2.0' );
 
-        // Enqueue Script (v2.0.0 to bust browser cache)
-        wp_enqueue_script( 'marwari-app', plugin_dir_url( __FILE__ ) . 'app.js', array(), '2.0.0', true );
+        // Enqueue Script (v2.2.0 to bust browser cache)
+        wp_enqueue_script( 'marwari-app', plugin_dir_url( __FILE__ ) . 'app.js', array(), '2.2.0', true );
 
         // Localize script to inject API URL and Security Nonce
         wp_localize_script( 'marwari-app', 'wpApiSettings', array(
@@ -500,44 +500,52 @@ function marwari_ecommerce_render_storefront() {
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
                 </button>
                 <div class="auth-tabs">
-                    <button class="auth-tab-btn active" data-tab="email">Password Login</button>
-                    <button class="auth-tab-btn" data-tab="phone">Mobile OTP Login</button>
+                    <button class="auth-tab-btn active" data-tab="login">Login</button>
+                    <button class="auth-tab-btn" data-tab="register">Create Account</button>
                 </div>
                 <div class="auth-form-container">
-                    <!-- Email Password Form -->
-                    <form id="auth-email-form">
+                    <!-- Login Form (Email Only — code sent to email) -->
+                    <form id="auth-login-form">
                         <div class="form-group">
                             <label for="login-email">Email Address</label>
-                            <input type="email" id="login-email" class="form-input" placeholder="e.g. user@gmail.com" required>
-                            <div class="form-tip">Demo Admin: <code>admin@gmail.com</code> | User: <code>user@gmail.com</code></div>
+                            <input type="email" id="login-email" class="form-input" placeholder="your@email.com" required>
                         </div>
-                        <div class="form-group">
-                            <label for="login-password">Password</label>
-                            <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
-                            <div class="form-tip">Demo Password: <code>password123</code></div>
-                        </div>
-                        <button type="submit" class="auth-submit-btn">Authorize Session</button>
+                        <button type="submit" class="auth-submit-btn">Send Login Code</button>
                     </form>
 
-                    <!-- Mobile OTP Form -->
-                    <form id="auth-phone-form" style="display: none;">
+                    <!-- Registration Form (No password) -->
+                    <form id="auth-register-form" style="display: none;">
                         <div class="form-group">
-                            <label for="login-phone">Mobile Number</label>
+                            <label for="register-name">Full Name</label>
+                            <input type="text" id="register-name" class="form-input" placeholder="e.g. Ramesh Seervi" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">Email Address</label>
+                            <input type="email" id="register-email" class="form-input" placeholder="your@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-phone">Mobile Number</label>
                             <div style="display: flex; gap: 0.5rem;">
                                 <span class="form-input" style="width: auto; background: var(--bg-app); border-color: var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: 600;">+91</span>
-                                <input type="tel" id="login-phone" class="form-input" placeholder="98765 43210" pattern="[0-9]{10}">
+                                <input type="tel" id="register-phone" class="form-input" placeholder="98765 43210" pattern="[0-9]{10}" required>
                             </div>
-                            <button type="button" class="auth-submit-btn" id="send-otp-btn" style="margin-top: 0.75rem; padding: 0.6rem;">Send OTP Code</button>
                         </div>
-                        
-                        <div id="otp-verification-section" style="display: none; border-top: 1px dashed var(--border-color); padding-top: 1rem; margin-top: 1rem;">
-                            <div class="form-group">
-                                <label for="login-otp">4-Digit Verification Code</label>
-                                <input type="text" id="login-otp" class="form-input" placeholder="Enter code received" pattern="[0-9]{4}">
-                                <div class="form-tip">Enter the OTP code shown in the notification pop-up.</div>
-                            </div>
-                            <button type="submit" class="auth-submit-btn">Verify and Login</button>
+                        <button type="submit" class="auth-submit-btn">Create Account & Send Code</button>
+                    </form>
+
+                    <!-- Email Verification Code Form (shown after login or registration) -->
+                    <form id="auth-verify-form" style="display: none;">
+                        <div style="text-align: center; padding: 0.5rem 0 1rem;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 0.5rem;"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                            <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Check Your Email</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);" id="verify-email-hint">We sent a 6-digit verification code to your email.</p>
                         </div>
+                        <div class="form-group">
+                            <label for="verify-code">Verification Code</label>
+                            <input type="text" id="verify-code" class="form-input verify-code-input" placeholder="000000" maxlength="6" pattern="[0-9]{6}" required autocomplete="one-time-code" inputmode="numeric" style="text-align: center; font-size: 1.5rem; letter-spacing: 0.8rem; font-weight: 700;">
+                        </div>
+                        <button type="submit" class="auth-submit-btn">Verify & Login</button>
+                        <button type="button" class="auth-resend-btn" id="resend-code-btn" style="display: block; width: 100%; margin-top: 0.75rem; padding: 0.5rem; background: none; color: var(--text-secondary); font-size: 0.85rem; border: 1px dashed var(--border-color); border-radius: 8px; cursor: pointer;">Resend Verification Code</button>
                     </form>
                 </div>
             </div>
@@ -675,21 +683,33 @@ function marwari_ecommerce_register_rest_endpoints() {
         'permission_callback' => '__return_true',
     ));
 
+    register_rest_route( $ns, '/auth/debug', array(
+        'methods'             => WP_REST_Server::READABLE,
+        'callback'            => 'marwari_ecommerce_debug_auth',
+        'permission_callback' => '__return_true',
+    ));
+
     register_rest_route( $ns, '/auth/logout', array(
         'methods'             => WP_REST_Server::CREATABLE,
         'callback'            => 'marwari_ecommerce_logout_user',
         'permission_callback' => '__return_true',
     ));
 
-    register_rest_route( $ns, '/auth/send-otp', array(
+    register_rest_route( $ns, '/auth/register', array(
         'methods'             => WP_REST_Server::CREATABLE,
-        'callback'            => 'marwari_ecommerce_send_otp',
+        'callback'            => 'marwari_ecommerce_register_user',
         'permission_callback' => '__return_true',
     ));
 
-    register_rest_route( $ns, '/auth/verify-otp', array(
+    register_rest_route( $ns, '/auth/verify-email', array(
         'methods'             => WP_REST_Server::CREATABLE,
-        'callback'            => 'marwari_ecommerce_verify_otp',
+        'callback'            => 'marwari_ecommerce_verify_email_code',
+        'permission_callback' => '__return_true',
+    ));
+
+    register_rest_route( $ns, '/auth/resend-code', array(
+        'methods'             => WP_REST_Server::CREATABLE,
+        'callback'            => 'marwari_ecommerce_resend_verification_code',
         'permission_callback' => '__return_true',
     ));
 
@@ -781,37 +801,39 @@ function marwari_ecommerce_delete_product( WP_REST_Request $request ) {
 // B. Authentication Functions
 function marwari_ecommerce_login_user( WP_REST_Request $request ) {
     $params = $request->get_json_params();
-    $username = sanitize_user( $params['username'] );
-    $password = $params['password'];
+    $email = sanitize_email( $params['email'] ?? '' );
 
-    // Authenticate credentials directly to bypass the wp_signon testcookie check
-    $user = wp_authenticate( $username, $password );
-
-    if ( is_wp_error( $user ) ) {
-        return new WP_Error( 'login_failed', 'Invalid username/email or password.', array( 'status' => 401 ) );
+    if ( empty( $email ) ) {
+        return new WP_Error( 'missing_email', 'Please enter your email address.', array( 'status' => 400 ) );
     }
 
-    // Sign in user manually and set session cookies
-    wp_clear_auth_cookie();
-    wp_set_current_user( $user->ID );
-    wp_set_auth_cookie( $user->ID, true );
+    // Check if user exists
+    $user = get_user_by( 'email', $email );
+    if ( ! $user ) {
+        return new WP_Error( 'user_not_found', 'No account found with this email. Please create an account first.', array( 'status' => 404 ) );
+    }
 
-    // Determine Role
-    $role = in_array( 'administrator', (array) $user->roles ) ? 'admin' : 'user';
-    $phone = get_user_meta( $user->ID, 'billing_phone', true );
+    // Generate 6-digit code and send via email
+    $code = strval( wp_rand( 100000, 999999 ) );
+    set_transient( 'marwari_email_code_' . $email, $code, 600 ); // 10 min
 
-    $response = array(
-        'success' => true,
-        'user'    => array(
-            'email' => $user->user_email,
-            'name'  => $user->display_name,
-            'role'  => $role,
-            'phone' => $phone ? $phone : ''
-        ),
-        'nonce'   => wp_create_nonce( 'wp_rest' )
-    );
+    $subject = 'Your Mārwāri E-Commerce Login Code';
+    $message  = "Hello {$user->display_name},\n\n";
+    $message .= "Your login verification code is:\n\n";
+    $message .= "    {$code}\n\n";
+    $message .= "This code expires in 10 minutes.\n\n";
+    $message .= "If you did not request this, please ignore this email.\n\n";
+    $message .= "— Mārwāri E-Commerce Team";
 
-    return rest_ensure_response( $response );
+    $headers = array( 'Content-Type: text/plain; charset=UTF-8' );
+    wp_mail( $email, $subject, $message, $headers );
+
+    return rest_ensure_response( array(
+        'success'       => true,
+        'requiresCode'  => true,
+        'email'         => $email,
+        'message'       => 'Verification code sent to your email.'
+    ) );
 }
 
 function marwari_ecommerce_get_current_user() {
@@ -836,76 +858,96 @@ function marwari_ecommerce_logout_user() {
     return rest_ensure_response( array( 'success' => true ) );
 }
 
-// Send Mock OTP code via WordPress REST response (transient backup)
-function marwari_ecommerce_send_otp( WP_REST_Request $request ) {
+// B2. Registration with Email Verification Code (no password required)
+function marwari_ecommerce_register_user( WP_REST_Request $request ) {
     $params = $request->get_json_params();
-    $phone = sanitize_text_field( $params['phone'] );
+    $name     = sanitize_text_field( $params['name'] ?? '' );
+    $email    = sanitize_email( $params['email'] ?? '' );
+    $phone    = sanitize_text_field( $params['phone'] ?? '' );
 
-    if ( empty( $phone ) || strlen( $phone ) < 10 ) {
-        return new WP_Error( 'invalid_phone', 'Invalid phone number format.', array( 'status' => 400 ) );
+    // Validate inputs
+    if ( empty( $name ) || empty( $email ) ) {
+        return new WP_Error( 'missing_fields', 'Name and email are required.', array( 'status' => 400 ) );
+    }
+    if ( email_exists( $email ) ) {
+        return new WP_Error( 'email_exists', 'An account with this email already exists. Please use Login instead.', array( 'status' => 409 ) );
     }
 
-    $otp = strval( rand( 1000, 9900 ) );
-    set_transient( 'marwari_otp_' . $phone, $otp, 300 ); // 5 Minutes lifespan
+    // Create WordPress user with auto-generated password (login is via email code only)
+    $username = sanitize_user( strtolower( explode( '@', $email )[0] ) . '_' . wp_rand( 100, 999 ) );
+    $password = wp_generate_password( 24, true, true ); // Random secure password
+    $user_id = wp_create_user( $username, $password, $email );
+
+    if ( is_wp_error( $user_id ) ) {
+        return new WP_Error( 'registration_failed', 'Could not create account: ' . $user_id->get_error_message(), array( 'status' => 500 ) );
+    }
+
+    // Update user profile
+    wp_update_user( array(
+        'ID'           => $user_id,
+        'display_name' => $name,
+        'first_name'   => explode( ' ', $name )[0],
+        'last_name'    => count( explode( ' ', $name ) ) > 1 ? explode( ' ', $name, 2 )[1] : ''
+    ) );
+    if ( ! empty( $phone ) ) {
+        update_user_meta( $user_id, 'billing_phone', $phone );
+    }
+
+    // Generate 6-digit verification code and store as transient (10 min lifespan)
+    $code = strval( wp_rand( 100000, 999999 ) );
+    set_transient( 'marwari_email_code_' . $email, $code, 600 );
+
+    // Send verification code via email
+    $subject = 'Your Mārwāri E-Commerce Verification Code';
+    $message  = "Hello {$name},\n\n";
+    $message .= "Welcome to Mārwāri E-Commerce! Your verification code is:\n\n";
+    $message .= "    {$code}\n\n";
+    $message .= "This code expires in 10 minutes.\n\n";
+    $message .= "If you did not create this account, please ignore this email.\n\n";
+    $message .= "— Mārwāri E-Commerce Team";
+
+    $headers = array( 'Content-Type: text/plain; charset=UTF-8' );
+    wp_mail( $email, $subject, $message, $headers );
 
     return rest_ensure_response( array(
         'success' => true,
-        'message' => 'OTP dispatched to number',
-        'otp'     => $otp // Exposed only for demonstration purposes
+        'message' => 'Account created. Verification code sent to your email.',
+        'email'   => $email
     ) );
 }
 
-// Verify Mock OTP and log in / register
-function marwari_ecommerce_verify_otp( WP_REST_Request $request ) {
+function marwari_ecommerce_verify_email_code( WP_REST_Request $request ) {
     $params = $request->get_json_params();
-    $phone = sanitize_text_field( $params['phone'] );
-    $otp = sanitize_text_field( $params['otp'] );
+    $email = sanitize_email( $params['email'] ?? '' );
+    $code  = sanitize_text_field( $params['code'] ?? '' );
 
-    $saved_otp = get_transient( 'marwari_otp_' . $phone );
-
-    if ( ! $saved_otp || $saved_otp !== $otp ) {
-        return new WP_Error( 'invalid_otp', 'The verification code entered is incorrect.', array( 'status' => 401 ) );
+    if ( empty( $email ) || empty( $code ) ) {
+        return new WP_Error( 'missing_fields', 'Email and verification code are required.', array( 'status' => 400 ) );
     }
 
-    // OTP Correct: Authenticate User
-    delete_transient( 'marwari_otp_' . $phone );
+    // Check the stored transient code
+    $saved_code = get_transient( 'marwari_email_code_' . $email );
 
-    // Look for user with phone number
-    $user_query = new WP_User_Query( array(
-        'meta_key'   => 'billing_phone',
-        'meta_value' => $phone,
-        'number'     => 1
-    ) );
-    $users = $user_query->get_results();
-
-    if ( ! empty( $users ) ) {
-        $user = $users[0];
-    } else {
-        // Register a new user
-        $username = 'otp_' . $phone;
-        $email = $phone . '@marwari.com';
-        $password = wp_generate_password();
-
-        $user_id = wp_create_user( $username, $password, $email );
-        if ( is_wp_error( $user_id ) ) {
-            return new WP_Error( 'registration_failed', 'Could not register user with OTP.', array( 'status' => 500 ) );
-        }
-
-        wp_update_user( array(
-            'ID' => $user_id,
-            'display_name' => 'Guest ' . substr( $phone, -4 )
-        ) );
-        update_user_meta( $user_id, 'billing_phone', $phone );
-
-        $user = get_userdata( $user_id );
+    if ( ! $saved_code || $saved_code !== $code ) {
+        return new WP_Error( 'invalid_code', 'The verification code is incorrect or has expired.', array( 'status' => 401 ) );
     }
 
-    // Sign in user
+    // Code is correct — clear it
+    delete_transient( 'marwari_email_code_' . $email );
+
+    // Find the user
+    $user = get_user_by( 'email', $email );
+    if ( ! $user ) {
+        return new WP_Error( 'user_not_found', 'No account found with this email.', array( 'status' => 404 ) );
+    }
+
+    // Sign in the user
     wp_clear_auth_cookie();
     wp_set_current_user( $user->ID );
     wp_set_auth_cookie( $user->ID, true );
 
-    $role = in_array( 'administrator', (array) $user->roles ) ? 'admin' : 'user';
+    $role  = in_array( 'administrator', (array) $user->roles ) ? 'admin' : 'user';
+    $phone = get_user_meta( $user->ID, 'billing_phone', true );
 
     return rest_ensure_response( array(
         'success' => true,
@@ -913,9 +955,43 @@ function marwari_ecommerce_verify_otp( WP_REST_Request $request ) {
             'email' => $user->user_email,
             'name'  => $user->display_name,
             'role'  => $role,
-            'phone' => $phone
+            'phone' => $phone ? $phone : ''
         ),
         'nonce'   => wp_create_nonce( 'wp_rest' )
+    ) );
+}
+
+function marwari_ecommerce_resend_verification_code( WP_REST_Request $request ) {
+    $params = $request->get_json_params();
+    $email = sanitize_email( $params['email'] ?? '' );
+
+    if ( empty( $email ) ) {
+        return new WP_Error( 'missing_email', 'Email is required.', array( 'status' => 400 ) );
+    }
+
+    $user = get_user_by( 'email', $email );
+    if ( ! $user ) {
+        return new WP_Error( 'user_not_found', 'No account found with this email.', array( 'status' => 404 ) );
+    }
+
+    // Generate new code
+    $code = strval( wp_rand( 100000, 999999 ) );
+    set_transient( 'marwari_email_code_' . $email, $code, 600 );
+
+    // Send code via email
+    $subject = 'Your New Mārwāri E-Commerce Verification Code';
+    $message  = "Hello {$user->display_name},\n\n";
+    $message .= "Your new verification code is:\n\n";
+    $message .= "    {$code}\n\n";
+    $message .= "This code expires in 10 minutes.\n\n";
+    $message .= "— Mārwāri E-Commerce Team";
+
+    $headers = array( 'Content-Type: text/plain; charset=UTF-8' );
+    wp_mail( $email, $subject, $message, $headers );
+
+    return rest_ensure_response( array(
+        'success' => true,
+        'message' => 'A new verification code has been sent to your email.'
     ) );
 }
 
