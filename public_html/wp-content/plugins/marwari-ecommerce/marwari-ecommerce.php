@@ -152,9 +152,9 @@ function marwari_ecommerce_setup_demo_users() {
         }
     }
 
-    // Add Demo Admin
+    // Add Demo Admin (or update password if exists)
     if ( ! email_exists( 'admin@gmail.com' ) && ! username_exists( 'admin' ) ) {
-        $admin_id = wp_create_user( 'admin', 'password123', 'admin@gmail.com' );
+        $admin_id = wp_create_user( 'admin', '123456', 'admin@gmail.com' );
         if ( ! is_wp_error( $admin_id ) ) {
             $user_obj = new WP_User( $admin_id );
             $user_obj->set_role( 'administrator' );
@@ -165,6 +165,12 @@ function marwari_ecommerce_setup_demo_users() {
                 'last_name' => 'Admin'
             ) );
             update_user_meta( $admin_id, 'billing_phone', '9876543210' );
+        }
+    } else {
+        // Ensure password is 123456 for existing admin
+        $existing_admin = get_user_by( 'email', 'admin@gmail.com' );
+        if ( $existing_admin ) {
+            wp_set_password( '123456', $existing_admin->ID );
         }
     }
 }
@@ -507,6 +513,7 @@ function marwari_ecommerce_render_storefront() {
                 <div class="auth-tabs">
                     <button class="auth-tab-btn active" data-tab="login">Login</button>
                     <button class="auth-tab-btn" data-tab="register">Create Account</button>
+                    <button class="auth-tab-btn" data-tab="admin-panel">E-Commerce Panel</button>
                 </div>
                 <div class="auth-form-container">
                     <!-- Login Form (Email Only — code sent to email) -->
@@ -551,6 +558,24 @@ function marwari_ecommerce_render_storefront() {
                         </div>
                         <button type="submit" class="auth-submit-btn">Verify & Login</button>
                         <button type="button" class="auth-resend-btn" id="resend-code-btn" style="display: block; width: 100%; margin-top: 0.75rem; padding: 0.5rem; background: none; color: var(--text-secondary); font-size: 0.85rem; border: 1px dashed var(--border-color); border-radius: 8px; cursor: pointer;">Resend Verification Code</button>
+                    </form>
+
+                    <!-- Admin Panel Login Form (email + password) -->
+                    <form id="auth-admin-form" style="display: none;">
+                        <div style="text-align: center; padding: 0.5rem 0 1rem;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 0.5rem;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Admin Access</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Enter admin credentials to access the dashboard</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-email">Admin Email</label>
+                            <input type="email" id="admin-email" class="form-input" placeholder="admin@gmail.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-password">Password</label>
+                            <input type="password" id="admin-password" class="form-input" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="auth-submit-btn">Access Dashboard</button>
                     </form>
                 </div>
             </div>
@@ -716,6 +741,18 @@ function marwari_ecommerce_register_rest_endpoints() {
         'methods'             => WP_REST_Server::CREATABLE,
         'callback'            => 'marwari_ecommerce_resend_verification_code',
         'permission_callback' => '__return_true',
+    ));
+
+    register_rest_route( $ns, '/auth/admin-login', array(
+        'methods'             => WP_REST_Server::CREATABLE,
+        'callback'            => 'marwari_ecommerce_admin_direct_login',
+        'permission_callback' => '__return_true',
+    ));
+
+    register_rest_route( $ns, '/admin/customers', array(
+        'methods'             => WP_REST_Server::READABLE,
+        'callback'            => 'marwari_ecommerce_get_customers',
+        'permission_callback' => 'marwari_ecommerce_admin_permissions_check',
     ));
 
     // Orders endpoints
@@ -1080,6 +1117,36 @@ function marwari_ecommerce_update_order_status( WP_REST_Request $request ) {
     }
 
     return rest_ensure_response( array( 'success' => true, 'status' => $status ) );
+}
+
+// D0. Get All Customers (Admin Only)
+function marwari_ecommerce_get_customers() {
+    global $wpdb;
+    
+    $users = get_users( array(
+        'role__not_in' => array( 'administrator' ),
+        'orderby'      => 'registered',
+        'order'        => 'DESC'
+    ) );
+
+    $customers = array();
+    foreach ( $users as $u ) {
+        $phone = get_user_meta( $u->ID, 'billing_phone', true );
+        $order_count = $wpdb->get_var( $wpdb->prepare(
+            "SELECT COUNT(*) FROM " . MARWARI_ORDERS_TABLE . " WHERE user_email = %s",
+            $u->user_email
+        ) );
+
+        $customers[] = array(
+            'name'       => $u->display_name,
+            'email'      => $u->user_email,
+            'phone'      => $phone ? $phone : '—',
+            'orders'     => intval( $order_count ),
+            'registered' => $u->user_registered
+        );
+    }
+
+    return rest_ensure_response( $customers );
 }
 
 // D. Admin Direct Login (uses wp_check_password, bypasses wp_authenticate hooks)

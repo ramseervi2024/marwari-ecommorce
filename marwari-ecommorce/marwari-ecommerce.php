@@ -152,9 +152,9 @@ function marwari_ecommerce_setup_demo_users() {
         }
     }
 
-    // Add Demo Admin
+    // Add Demo Admin (or update password if exists)
     if ( ! email_exists( 'admin@gmail.com' ) && ! username_exists( 'admin' ) ) {
-        $admin_id = wp_create_user( 'admin', 'password123', 'admin@gmail.com' );
+        $admin_id = wp_create_user( 'admin', '123456', 'admin@gmail.com' );
         if ( ! is_wp_error( $admin_id ) ) {
             $user_obj = new WP_User( $admin_id );
             $user_obj->set_role( 'administrator' );
@@ -165,6 +165,12 @@ function marwari_ecommerce_setup_demo_users() {
                 'last_name' => 'Admin'
             ) );
             update_user_meta( $admin_id, 'billing_phone', '9876543210' );
+        }
+    } else {
+        // Ensure password is 123456 for existing admin
+        $existing_admin = get_user_by( 'email', 'admin@gmail.com' );
+        if ( $existing_admin ) {
+            wp_set_password( '123456', $existing_admin->ID );
         }
     }
 }
@@ -507,6 +513,7 @@ function marwari_ecommerce_render_storefront() {
                 <div class="auth-tabs">
                     <button class="auth-tab-btn active" data-tab="login">Login</button>
                     <button class="auth-tab-btn" data-tab="register">Create Account</button>
+                    <button class="auth-tab-btn" data-tab="admin-panel">E-Commerce Panel</button>
                 </div>
                 <div class="auth-form-container">
                     <!-- Login Form (Email Only — code sent to email) -->
@@ -551,6 +558,24 @@ function marwari_ecommerce_render_storefront() {
                         </div>
                         <button type="submit" class="auth-submit-btn">Verify & Login</button>
                         <button type="button" class="auth-resend-btn" id="resend-code-btn" style="display: block; width: 100%; margin-top: 0.75rem; padding: 0.5rem; background: none; color: var(--text-secondary); font-size: 0.85rem; border: 1px dashed var(--border-color); border-radius: 8px; cursor: pointer;">Resend Verification Code</button>
+                    </form>
+
+                    <!-- Admin Panel Login Form (email + password) -->
+                    <form id="auth-admin-form" style="display: none;">
+                        <div style="text-align: center; padding: 0.5rem 0 1rem;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 0.5rem;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Admin Access</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Enter admin credentials to access the dashboard</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-email">Admin Email</label>
+                            <input type="email" id="admin-email" class="form-input" placeholder="admin@gmail.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-password">Password</label>
+                            <input type="password" id="admin-password" class="form-input" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="auth-submit-btn">Access Dashboard</button>
                     </form>
                 </div>
             </div>
@@ -716,6 +741,18 @@ function marwari_ecommerce_register_rest_endpoints() {
         'methods'             => WP_REST_Server::CREATABLE,
         'callback'            => 'marwari_ecommerce_resend_verification_code',
         'permission_callback' => '__return_true',
+    ));
+
+    register_rest_route( $ns, '/auth/admin-login', array(
+        'methods'             => WP_REST_Server::CREATABLE,
+        'callback'            => 'marwari_ecommerce_admin_direct_login',
+        'permission_callback' => '__return_true',
+    ));
+
+    register_rest_route( $ns, '/admin/customers', array(
+        'methods'             => WP_REST_Server::READABLE,
+        'callback'            => 'marwari_ecommerce_get_customers',
+        'permission_callback' => 'marwari_ecommerce_admin_permissions_check',
     ));
 
     // Orders endpoints
@@ -1082,8 +1119,230 @@ function marwari_ecommerce_update_order_status( WP_REST_Request $request ) {
     return rest_ensure_response( array( 'success' => true, 'status' => $status ) );
 }
 
-// 5. Admin Panel Shortcode: [marwari_admin_panel] — reuses the same storefront UI
-add_shortcode( 'marwari_admin_panel', 'marwari_ecommerce_render_storefront' );
+// D0. Get All Customers (Admin Only)
+function marwari_ecommerce_get_customers() {
+    global $wpdb;
+    
+    $users = get_users( array(
+        'role__not_in' => array( 'administrator' ),
+        'orderby'      => 'registered',
+        'order'        => 'DESC'
+    ) );
+
+    $customers = array();
+    foreach ( $users as $u ) {
+        $phone = get_user_meta( $u->ID, 'billing_phone', true );
+        $order_count = $wpdb->get_var( $wpdb->prepare(
+            "SELECT COUNT(*) FROM " . MARWARI_ORDERS_TABLE . " WHERE user_email = %s",
+            $u->user_email
+        ) );
+
+        $customers[] = array(
+            'name'       => $u->display_name,
+            'email'      => $u->user_email,
+            'phone'      => $phone ? $phone : '—',
+            'orders'     => intval( $order_count ),
+            'registered' => $u->user_registered
+        );
+    }
+
+    return rest_ensure_response( $customers );
+}
+
+// D. Admin Direct Login (uses wp_check_password, bypasses wp_authenticate hooks)
+function marwari_ecommerce_admin_direct_login( WP_REST_Request $request ) {
+    $params = $request->get_json_params();
+    $email    = sanitize_email( $params['email'] ?? '' );
+    $password = $params['password'] ?? '';
+
+    if ( empty( $email ) || empty( $password ) ) {
+        return new WP_Error( 'missing_fields', 'Email and password are required.', array( 'status' => 400 ) );
+    }
+
+    $user = get_user_by( 'email', $email );
+    if ( ! $user ) {
+        return new WP_Error( 'invalid_credentials', 'Invalid email or password.', array( 'status' => 401 ) );
+    }
+
+    // Direct password check (no hooks/filters that cause permission issues)
+    if ( ! wp_check_password( $password, $user->user_pass, $user->ID ) ) {
+        return new WP_Error( 'invalid_credentials', 'Invalid email or password.', array( 'status' => 401 ) );
+    }
+
+    // Must be admin
+    if ( ! in_array( 'administrator', (array) $user->roles ) ) {
+        return new WP_Error( 'not_admin', 'Access denied. Admin privileges required.', array( 'status' => 403 ) );
+    }
+
+    // Log in
+    wp_clear_auth_cookie();
+    wp_set_current_user( $user->ID );
+    wp_set_auth_cookie( $user->ID, true );
+
+    $phone = get_user_meta( $user->ID, 'billing_phone', true );
+
+    return rest_ensure_response( array(
+        'success' => true,
+        'user'    => array(
+            'email' => $user->user_email,
+            'name'  => $user->display_name,
+            'role'  => 'admin',
+            'phone' => $phone ? $phone : ''
+        ),
+        'nonce'   => wp_create_nonce( 'wp_rest' )
+    ) );
+}
+
+// 5. Admin Panel Shortcode: [marwari_admin_panel] — dedicated admin dashboard
+add_shortcode( 'marwari_admin_panel', 'marwari_ecommerce_render_admin_panel' );
+function marwari_ecommerce_render_admin_panel() {
+    ob_start();
+    ?>
+    <div class="marwari-ecommerce-wrapper admin-dashboard-page">
+        <div class="toast-container" id="toast-container"></div>
+
+        <!-- Admin Header -->
+        <header class="navbar">
+            <div class="container nav-container">
+                <a href="/shop/" class="logo"><span>Mārwāri</span> Dashboard</a>
+                <div class="nav-actions">
+                    <button class="nav-btn" id="theme-toggle" title="Switch Theme"><span id="theme-icon"></span></button>
+                    <div class="user-profile-menu" id="user-menu-container"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Admin Login Screen (shown when not logged in) -->
+        <div class="admin-login-screen" id="admin-login-screen">
+            <div class="admin-login-card">
+                <div class="admin-login-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <h2>Admin Dashboard</h2>
+                    <p>Secure login for authorized administrators only</p>
+                </div>
+                <form id="admin-login-form">
+                    <div class="form-group">
+                        <label for="admin-login-email">Admin Email</label>
+                        <input type="email" id="admin-login-email" class="form-input" placeholder="admin@gmail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-login-password">Password</label>
+                        <input type="password" id="admin-login-password" class="form-input" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="auth-submit-btn" id="admin-login-btn">Access Dashboard</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard Content (shown after login) -->
+        <div class="admin-dashboard-content" id="admin-dashboard-content" style="display:none;">
+            <div class="container" style="padding-top:2rem; padding-bottom:4rem;">
+                <!-- Welcome Banner -->
+                <div class="admin-welcome-banner">
+                    <div>
+                        <h2 id="admin-welcome-name">Welcome, Admin</h2>
+                        <p>Here's your store performance overview</p>
+                    </div>
+                    <a href="/shop/" class="btn-primary" style="text-decoration:none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7M5 12h14"/></svg>
+                        Visit Store
+                    </a>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="admin-stats-grid" style="margin-top:1.5rem;">
+                    <div class="stat-card">
+                        <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                        <div class="stat-details"><h4>Total Revenue</h4><p id="dash-stat-revenue">₹0</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></div>
+                        <div class="stat-details"><h4>Products</h4><p id="dash-stat-products">0</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></div>
+                        <div class="stat-details"><h4>Orders</h4><p id="dash-stat-orders">0</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                        <div class="stat-details"><h4>Customers</h4><p id="dash-stat-customers">0</p></div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="admin-charts-row">
+                    <div class="admin-panel-card">
+                        <h3>📊 Revenue Overview</h3>
+                        <div class="chart-container" id="revenue-chart"></div>
+                    </div>
+                    <div class="admin-panel-card">
+                        <h3>📦 Order Status</h3>
+                        <div class="chart-container" id="order-status-chart"></div>
+                    </div>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="admin-panel-card" style="margin-top:2rem;">
+                    <h3>🛒 All Customer Orders</h3>
+                    <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">Click on 'Pending' to mark as 'Completed'.</p>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Date</th><th>Status</th></tr></thead>
+                            <tbody id="dash-orders-table"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Products Table -->
+                <div class="admin-panel-card" style="margin-top:2rem;">
+                    <h3>📋 Product Catalog</h3>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Actions</th></tr></thead>
+                            <tbody id="dash-products-table"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Add Product Form -->
+                <div class="admin-panel-card" style="margin-top:2rem;">
+                    <h3>➕ Add New Product</h3>
+                    <form id="admin-add-product-form">
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+                            <div class="form-group"><label for="admin-pname">Product Name</label><input type="text" id="admin-pname" class="form-input" required></div>
+                            <div class="form-group"><label for="admin-pcategory">Category</label><select id="admin-pcategory" class="form-input" required><option value="Apparel">Royal Apparel</option><option value="Handicrafts">Handicrafts</option><option value="Jewelry">Jewelry</option><option value="Sweets & Spices">Sweets & Spices</option></select></div>
+                            <div class="form-group"><label for="admin-pprice">Price (₹)</label><input type="number" id="admin-pprice" class="form-input" required min="1"></div>
+                            <div class="form-group"><label for="admin-pimage">Image URL</label><input type="url" id="admin-pimage" class="form-input"></div>
+                            <div class="form-group"><label for="admin-pbadge">Badge</label><input type="text" id="admin-pbadge" class="form-input" placeholder="e.g. Bestseller"></div>
+                        </div>
+                        <div class="form-group" style="margin-top:0.5rem;"><label for="admin-pdesc">Description</label><textarea id="admin-pdesc" class="form-input" rows="3" required></textarea></div>
+                        <button type="submit" class="auth-submit-btn" style="margin-top:1rem;">Publish Product</button>
+                    </form>
+                </div>
+
+                <!-- Customers Table -->
+                <div class="admin-panel-card" style="margin-top:2rem;">
+                    <h3>👥 Registered Customers</h3>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Orders</th></tr></thead>
+                            <tbody id="dash-customers-table"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Mārwāri E-Commerce Admin Dashboard. Authorized Access Only.</p>
+            </div>
+        </footer>
+    </div>
+    <?php
+    return ob_get_clean();
+}
 
 // 6. Intercept template load and render a clean storefront directly to bypass theme header/footer
 add_action( 'template_redirect', 'marwari_ecommerce_direct_template_redirect' );

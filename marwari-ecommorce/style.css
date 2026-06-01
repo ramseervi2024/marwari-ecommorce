@@ -1560,3 +1560,152 @@ body:has(.marwari-ecommerce-wrapper) header:not(.navbar),
 body:has(.marwari-ecommerce-wrapper) footer:not(.marwari-ecommerce-wrapper footer) {
   display: none !important;
 }
+
+/* ===== ADMIN DASHBOARD STYLES ===== */
+.admin-login-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 2rem;
+}
+
+.admin-login-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--card-shadow);
+}
+
+.admin-login-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.admin-login-header h2 {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  color: var(--text-primary);
+  margin: 0.75rem 0 0.3rem;
+}
+
+.admin-login-header p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.admin-welcome-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, var(--primary-glow), rgba(251, 191, 36, 0.05));
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  border-radius: 16px;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.admin-welcome-banner h2 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+.admin-welcome-banner p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.admin-charts-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.chart-container {
+  min-height: 250px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+}
+
+/* Bar Chart Styles */
+.chart-bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  max-width: 60px;
+}
+
+.chart-bar {
+  width: 100%;
+  min-height: 8px;
+  background: linear-gradient(to top, var(--primary), var(--primary-hover));
+  border-radius: 6px 6px 0 0;
+  transition: height 0.6s ease;
+  position: relative;
+}
+
+.chart-bar-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.chart-bar-value {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Donut Chart */
+.donut-chart-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  width: 100%;
+  padding: 1rem;
+}
+
+.donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.donut-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.donut-legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .admin-charts-row {
+    grid-template-columns: 1fr;
+  }
+  .admin-welcome-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+}

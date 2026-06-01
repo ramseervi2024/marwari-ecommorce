@@ -925,6 +925,7 @@ function setupEventListeners() {
   const authLoginForm = document.getElementById("auth-login-form");
   const authRegisterForm = document.getElementById("auth-register-form");
   const authVerifyForm = document.getElementById("auth-verify-form");
+  const authAdminForm = document.getElementById("auth-admin-form");
 
   let pendingVerifyEmail = null; // Track which email is being verified
 
@@ -937,6 +938,7 @@ function setupEventListeners() {
       authLoginForm.style.display = tab === "login" ? "block" : "none";
       authRegisterForm.style.display = tab === "register" ? "block" : "none";
       authVerifyForm.style.display = "none"; // Always hide verify when switching tabs
+      if (authAdminForm) authAdminForm.style.display = tab === "admin-panel" ? "block" : "none";
     });
   });
 
@@ -1049,6 +1051,44 @@ function setupEventListeners() {
     btn.disabled = false;
   });
 
+  // Admin Panel Login Form Submit
+  if (authAdminForm) {
+    authAdminForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("admin-email").value.trim();
+      const password = document.getElementById("admin-password").value;
+      const submitBtn = authAdminForm.querySelector(".auth-submit-btn");
+
+      showLoadingButton(submitBtn, "Authenticating...");
+
+      try {
+        const res = await app.apiFetch('/auth/admin-login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password })
+        });
+
+        restoreButton(submitBtn);
+
+        if (res.success) {
+          app.currentUser = res.user;
+          app.saveLocalStorage("marwari_session", res.user);
+          if (res.nonce) app.nonce = res.nonce;
+          app.orders = await app.apiFetch('/orders');
+
+          showToast(`Welcome, ${res.user.name}! Loading dashboard...`);
+          updateNavBarState();
+          closeModal();
+
+          // Switch to admin dashboard view
+          switchView("admin");
+        }
+      } catch (err) {
+        restoreButton(submitBtn);
+        showToast(err.message || "Admin login failed", "danger");
+      }
+    });
+  }
+
   document.getElementById("checkout-trigger-btn").addEventListener("click", () => {
     if (app.cart.length === 0) {
       showToast("Your cart is empty", "danger");
@@ -1135,3 +1175,323 @@ window.onclick = function(event) {
     closeModal();
   }
 };
+
+// ===== ADMIN DASHBOARD MODULE =====
+(function() {
+  const pageMode = (typeof wpApiSettings !== 'undefined' && wpApiSettings.pageMode) ? wpApiSettings.pageMode : 'shop';
+  if (pageMode !== 'admin') return;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initTheme();
+    
+    const loginForm = document.getElementById("admin-login-form");
+    const loginScreen = document.getElementById("admin-login-screen");
+    const dashContent = document.getElementById("admin-dashboard-content");
+    
+    if (!loginForm) return; // Not on admin page
+
+    // Check if already logged in as admin from session
+    const savedSession = localStorage.getItem("marwari_session");
+    if (savedSession) {
+      try {
+        const session = JSON.parse(savedSession);
+        if (session && session.role === 'admin') {
+          app.currentUser = session;
+          showDashboard(session);
+          return;
+        }
+      } catch(e) {}
+    }
+
+    // Admin Login Form
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("admin-login-email").value.trim();
+      const password = document.getElementById("admin-login-password").value;
+      const submitBtn = document.getElementById("admin-login-btn");
+
+      submitBtn.textContent = "Authenticating...";
+      submitBtn.disabled = true;
+
+      try {
+        const res = await app.apiFetch('/auth/admin-login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password })
+        });
+
+        if (res.success) {
+          app.currentUser = res.user;
+          app.saveLocalStorage("marwari_session", res.user);
+          if (res.nonce) app.nonce = res.nonce;
+          showToast(`Welcome, ${res.user.name}!`);
+          showDashboard(res.user);
+        }
+      } catch (err) {
+        showToast(err.message || "Login failed", "danger");
+      }
+
+      submitBtn.textContent = "Access Dashboard";
+      submitBtn.disabled = false;
+    });
+
+    async function showDashboard(user) {
+      loginScreen.style.display = "none";
+      dashContent.style.display = "block";
+
+      // Welcome name
+      const welcomeEl = document.getElementById("admin-welcome-name");
+      if (welcomeEl) welcomeEl.textContent = `Welcome, ${user.name}`;
+
+      // User menu with logout
+      const menuContainer = document.getElementById("user-menu-container");
+      if (menuContainer) {
+        menuContainer.innerHTML = `
+          <button class="nav-btn user-avatar-btn" style="font-weight:600; color:var(--primary);">
+            ${user.name.charAt(0).toUpperCase()}
+          </button>
+          <button class="nav-btn" id="admin-logout-btn" title="Logout" style="color:var(--danger);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          </button>
+        `;
+        document.getElementById("admin-logout-btn").addEventListener("click", async () => {
+          await app.logout();
+          location.reload();
+        });
+      }
+
+      // Load data
+      try {
+        const [products, orders, customers] = await Promise.all([
+          app.apiFetch('/products'),
+          app.apiFetch('/orders'),
+          app.apiFetch('/admin/customers')
+        ]);
+
+        renderDashStats(products, orders, customers);
+        renderRevenueChart(orders);
+        renderOrderStatusChart(orders);
+        renderDashOrders(orders);
+        renderDashProducts(products);
+        renderDashCustomers(customers);
+      } catch (err) {
+        showToast("Failed to load dashboard data: " + err.message, "danger");
+      }
+    }
+
+    function renderDashStats(products, orders, customers) {
+      const revenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
+      document.getElementById("dash-stat-revenue").textContent = `₹${revenue.toLocaleString('en-IN')}`;
+      document.getElementById("dash-stat-products").textContent = products.length;
+      document.getElementById("dash-stat-orders").textContent = orders.length;
+      document.getElementById("dash-stat-customers").textContent = customers.length;
+    }
+
+    function renderRevenueChart(orders) {
+      const container = document.getElementById("revenue-chart");
+      if (!container) return;
+
+      // Group orders by month
+      const monthData = {};
+      const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      
+      orders.forEach(o => {
+        const d = new Date(o.date);
+        const key = `${monthNames[d.getMonth()]} ${d.getFullYear().toString().slice(-2)}`;
+        monthData[key] = (monthData[key] || 0) + (o.total || 0);
+      });
+
+      const entries = Object.entries(monthData).slice(-7); // Last 7 months
+      const maxVal = Math.max(...entries.map(e => e[1]), 1);
+
+      if (entries.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted); text-align:center; width:100%; align-self:center;">No revenue data yet</p>';
+        return;
+      }
+
+      container.innerHTML = entries.map(([label, val]) => {
+        const height = Math.max((val / maxVal) * 200, 8);
+        return `
+          <div class="chart-bar-group">
+            <span class="chart-bar-value">₹${(val/1000).toFixed(1)}k</span>
+            <div class="chart-bar" style="height:${height}px;"></div>
+            <span class="chart-bar-label">${label}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderOrderStatusChart(orders) {
+      const container = document.getElementById("order-status-chart");
+      if (!container) return;
+
+      const pending = orders.filter(o => o.status === 'Pending').length;
+      const completed = orders.filter(o => o.status === 'Completed').length;
+      const total = orders.length || 1;
+
+      const pendingPct = (pending / total) * 100;
+      const completedPct = (completed / total) * 100;
+
+      // SVG Donut Chart
+      const radius = 60;
+      const circumference = 2 * Math.PI * radius;
+      const completedDash = (completedPct / 100) * circumference;
+      const pendingDash = (pendingPct / 100) * circumference;
+
+      container.innerHTML = `
+        <div class="donut-chart-wrapper">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle cx="80" cy="80" r="${radius}" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="20"/>
+            <circle cx="80" cy="80" r="${radius}" fill="none" stroke="#10b981" stroke-width="20"
+              stroke-dasharray="${completedDash} ${circumference - completedDash}"
+              stroke-dashoffset="0" transform="rotate(-90 80 80)" stroke-linecap="round"/>
+            <circle cx="80" cy="80" r="${radius}" fill="none" stroke="#fbbf24" stroke-width="20"
+              stroke-dasharray="${pendingDash} ${circumference - pendingDash}"
+              stroke-dashoffset="${-completedDash}" transform="rotate(-90 80 80)" stroke-linecap="round"/>
+            <text x="80" y="78" text-anchor="middle" fill="var(--text-primary)" font-size="22" font-weight="700" font-family="var(--font-body)">${total}</text>
+            <text x="80" y="98" text-anchor="middle" fill="var(--text-muted)" font-size="11" font-family="var(--font-body)">Total</text>
+          </svg>
+          <div class="donut-legend">
+            <div class="donut-legend-item"><div class="donut-legend-dot" style="background:#10b981;"></div> Completed (${completed})</div>
+            <div class="donut-legend-item"><div class="donut-legend-dot" style="background:#fbbf24;"></div> Pending (${pending})</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDashOrders(orders) {
+      const tbody = document.getElementById("dash-orders-table");
+      if (!tbody) return;
+
+      if (orders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:2rem;">No orders yet</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = orders.map(o => {
+        const items = Array.isArray(o.items) ? o.items.map(i => `${i.name} ×${i.quantity}`).join(', ') : '—';
+        const date = new Date(o.date).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'2-digit' });
+        const statusClass = o.status === 'Completed' ? 'color:#10b981;' : 'color:#fbbf24; cursor:pointer;';
+        const statusClick = o.status === 'Pending' ? `onclick="window.dashUpdateOrderStatus('${o.id}')"` : '';
+        
+        return `<tr>
+          <td style="font-family:monospace; font-size:0.75rem;">${o.id}</td>
+          <td>${o.user_email || o.userEmail || '—'}</td>
+          <td style="font-size:0.8rem; max-width:200px; overflow:hidden; text-overflow:ellipsis;">${items}</td>
+          <td style="font-weight:600;">₹${(o.total || 0).toLocaleString('en-IN')}</td>
+          <td style="font-size:0.8rem;">${date}</td>
+          <td><span style="font-weight:600; ${statusClass}" ${statusClick}>${o.status}</span></td>
+        </tr>`;
+      }).join('');
+    }
+
+    // Global function for order status update
+    window.dashUpdateOrderStatus = async function(orderId) {
+      try {
+        await app.apiFetch(`/orders/${orderId}/status`, {
+          method: 'POST',
+          body: JSON.stringify({ status: 'Completed' })
+        });
+        showToast("Order marked as Completed!");
+        // Reload data
+        const [products, orders, customers] = await Promise.all([
+          app.apiFetch('/products'),
+          app.apiFetch('/orders'),
+          app.apiFetch('/admin/customers')
+        ]);
+        renderDashStats(products, orders, customers);
+        renderRevenueChart(orders);
+        renderOrderStatusChart(orders);
+        renderDashOrders(orders);
+      } catch(err) {
+        showToast(err.message, "danger");
+      }
+    };
+
+    function renderDashProducts(products) {
+      const tbody = document.getElementById("dash-products-table");
+      if (!tbody) return;
+
+      if (products.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:2rem;">No products</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = products.map(p => `<tr>
+        <td style="display:flex; align-items:center; gap:0.75rem;">
+          <img src="${p.image}" alt="${p.name}" style="width:40px; height:40px; border-radius:8px; object-fit:cover;">
+          <span style="font-weight:500;">${p.name}</span>
+        </td>
+        <td><span style="background:var(--primary-glow); color:var(--primary); padding:0.2rem 0.6rem; border-radius:20px; font-size:0.75rem; font-weight:600;">${p.category}</span></td>
+        <td style="font-weight:600;">₹${parseFloat(p.price).toLocaleString('en-IN')}</td>
+        <td><button onclick="window.dashDeleteProduct('${p.id}')" style="background:var(--danger); color:white; border:none; padding:0.4rem 0.8rem; border-radius:8px; cursor:pointer; font-size:0.75rem; font-weight:600;">Delete</button></td>
+      </tr>`).join('');
+    }
+
+    window.dashDeleteProduct = async function(productId) {
+      if (!confirm("Delete this product?")) return;
+      try {
+        await app.apiFetch(`/products/${productId}`, { method: 'DELETE' });
+        showToast("Product deleted");
+        const products = await app.apiFetch('/products');
+        renderDashProducts(products);
+        document.getElementById("dash-stat-products").textContent = products.length;
+      } catch(err) {
+        showToast(err.message, "danger");
+      }
+    };
+
+    function renderDashCustomers(customers) {
+      const tbody = document.getElementById("dash-customers-table");
+      if (!tbody) return;
+
+      if (customers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:2rem;">No customers yet</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = customers.map(c => `<tr>
+        <td style="font-weight:500;">${c.name}</td>
+        <td style="font-size:0.85rem;">${c.email}</td>
+        <td>${c.phone}</td>
+        <td style="font-weight:600; text-align:center;">${c.orders}</td>
+      </tr>`).join('');
+    }
+
+    // Add Product Form on Dashboard
+    const addForm = document.getElementById("admin-add-product-form");
+    if (addForm) {
+      addForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const submitBtn = addForm.querySelector("button[type='submit']");
+        submitBtn.textContent = "Publishing...";
+        submitBtn.disabled = true;
+
+        const product = {
+          name: document.getElementById("admin-pname").value.trim(),
+          category: document.getElementById("admin-pcategory").value,
+          price: parseFloat(document.getElementById("admin-pprice").value),
+          description: document.getElementById("admin-pdesc").value.trim(),
+          image: document.getElementById("admin-pimage").value.trim() || "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80",
+          badge: document.getElementById("admin-pbadge").value.trim() || null
+        };
+
+        try {
+          await app.apiFetch('/products', {
+            method: 'POST',
+            body: JSON.stringify(product)
+          });
+          showToast("Product published!");
+          addForm.reset();
+          const products = await app.apiFetch('/products');
+          renderDashProducts(products);
+          document.getElementById("dash-stat-products").textContent = products.length;
+        } catch(err) {
+          showToast(err.message, "danger");
+        }
+
+        submitBtn.textContent = "Publish Product";
+        submitBtn.disabled = false;
+      });
+    }
+  });
+})();
