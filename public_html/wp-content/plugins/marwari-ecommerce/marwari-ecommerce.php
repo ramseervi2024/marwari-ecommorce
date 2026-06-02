@@ -195,8 +195,8 @@ function marwari_ecommerce_enqueue_assets() {
 
     if ( $is_shop ) {
         // SHOP: app.js + style.css
-        wp_enqueue_style( 'marwari-style', plugin_dir_url( __FILE__ ) . 'style.css', array(), '2.6.0' );
-        wp_enqueue_script( 'marwari-app', plugin_dir_url( __FILE__ ) . 'app.js', array(), '2.6.0', true );
+        wp_enqueue_style( 'marwari-style', plugin_dir_url( __FILE__ ) . 'style.css', array(), '2.6.1' );
+        wp_enqueue_script( 'marwari-app', plugin_dir_url( __FILE__ ) . 'app.js', array(), '2.6.1', true );
         wp_localize_script( 'marwari-app', 'wpApiSettings', array(
             'root'     => esc_url_raw( rest_url() ),
             'nonce'    => wp_create_nonce( 'wp_rest' ),
@@ -206,8 +206,8 @@ function marwari_ecommerce_enqueue_assets() {
 
     if ( $is_admin ) {
         // ADMIN: admin-app.js + admin-style.css (completely separate)
-        wp_enqueue_style( 'marwari-admin-style', plugin_dir_url( __FILE__ ) . 'admin-style.css', array(), '2.6.0' );
-        wp_enqueue_script( 'marwari-admin-app', plugin_dir_url( __FILE__ ) . 'admin-app.js', array(), '2.6.0', true );
+        wp_enqueue_style( 'marwari-admin-style', plugin_dir_url( __FILE__ ) . 'admin-style.css', array(), '2.6.1' );
+        wp_enqueue_script( 'marwari-admin-app', plugin_dir_url( __FILE__ ) . 'admin-app.js', array(), '2.6.1', true );
         wp_localize_script( 'marwari-admin-app', 'wpApiSettings', array(
             'root'     => esc_url_raw( rest_url() ),
             'nonce'    => wp_create_nonce( 'wp_rest' ),

@@ -3,8 +3,8 @@
   "use strict";
 
   const API_ROOT = (typeof wpApiSettings !== "undefined" && wpApiSettings.root)
-    ? wpApiSettings.root + "marwari-ecommerce/v1"
-    : "/wp-json/marwari-ecommerce/v1";
+    ? wpApiSettings.root + "marwari-ecom/v1"
+    : "/wp-json/marwari-ecom/v1";
   let NONCE = (typeof wpApiSettings !== "undefined") ? wpApiSettings.nonce : "";
 
   // ===== API Helper =====
