@@ -536,6 +536,7 @@ function updateNavBarState() {
       await app.logout();
       showToast("Logged out successfully");
       updateNavBarState();
+      refreshCustomerNotifications();
       switchView("shop");
     });
 
@@ -1104,6 +1105,7 @@ function setupEventListeners() {
     if (res.success) {
       showToast(`Welcome to Mārwāri E-Commerce, ${res.user.name}!`);
       updateNavBarState();
+      refreshCustomerNotifications();
       closeModal();
       pendingVerifyEmail = null;
 

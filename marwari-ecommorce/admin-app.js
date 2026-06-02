@@ -54,7 +54,6 @@
         const session = JSON.parse(saved);
         if (session && session.role === "admin") {
           showDashboard(session);
-          return;
         }
       } catch (e) { /* ignore */ }
     }
@@ -128,6 +127,16 @@
         loadNotifHistory();
       } catch (err) {
         showToast("Failed to load data: " + err.message, "danger");
+        if (
+          err.message.includes("401") ||
+          err.message.includes("403") ||
+          err.message.toLowerCase().includes("unauthorized") ||
+          err.message.toLowerCase().includes("not allowed")
+        ) {
+          localStorage.removeItem("marwari_admin_session");
+          adminLayout.style.display = "none";
+          loginScreen.style.display = "flex";
+        }
       }
     }
 
