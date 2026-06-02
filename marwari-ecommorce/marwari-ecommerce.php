@@ -1120,7 +1120,9 @@ function marwari_ecommerce_get_orders() {
         unset( $r['shipping_details'] ); // Standardize key names
     }
 
-    return rest_ensure_response( $results );
+    $response = rest_ensure_response( $results );
+    $response->header( 'Cache-Control', 'no-cache, must-revalidate, max-age=0' );
+    return $response;
 }
 
 function marwari_ecommerce_create_order( WP_REST_Request $request ) {
@@ -1205,7 +1207,9 @@ function marwari_ecommerce_get_customers() {
         );
     }
 
-    return rest_ensure_response( $customers );
+    $response = rest_ensure_response( $customers );
+    $response->header( 'Cache-Control', 'no-cache, must-revalidate, max-age=0' );
+    return $response;
 }
 
 // D1. Send Notification
