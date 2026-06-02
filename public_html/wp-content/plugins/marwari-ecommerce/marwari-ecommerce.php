@@ -195,8 +195,8 @@ function marwari_ecommerce_enqueue_assets() {
 
     if ( $is_shop ) {
         // SHOP: app.js + style.css
-        wp_enqueue_style( 'marwari-style', plugin_dir_url( __FILE__ ) . 'style.css', array(), '2.6.2' );
-        wp_enqueue_script( 'marwari-app', plugin_dir_url( __FILE__ ) . 'app.js', array(), '2.6.2', true );
+        wp_enqueue_style( 'marwari-style', plugin_dir_url( __FILE__ ) . 'style.css', array(), '2.7.0' );
+        wp_enqueue_script( 'marwari-app', plugin_dir_url( __FILE__ ) . 'app.js', array(), '2.7.0', true );
         wp_localize_script( 'marwari-app', 'wpApiSettings', array(
             'root'     => esc_url_raw( rest_url() ),
             'nonce'    => wp_create_nonce( 'wp_rest' ),
@@ -206,8 +206,8 @@ function marwari_ecommerce_enqueue_assets() {
 
     if ( $is_admin ) {
         // ADMIN: admin-app.js + admin-style.css (completely separate)
-        wp_enqueue_style( 'marwari-admin-style', plugin_dir_url( __FILE__ ) . 'admin-style.css', array(), '2.6.2' );
-        wp_enqueue_script( 'marwari-admin-app', plugin_dir_url( __FILE__ ) . 'admin-app.js', array(), '2.6.2', true );
+        wp_enqueue_style( 'marwari-admin-style', plugin_dir_url( __FILE__ ) . 'admin-style.css', array(), '2.7.0' );
+        wp_enqueue_script( 'marwari-admin-app', plugin_dir_url( __FILE__ ) . 'admin-app.js', array(), '2.7.0', true );
         wp_localize_script( 'marwari-admin-app', 'wpApiSettings', array(
             'root'     => esc_url_raw( rest_url() ),
             'nonce'    => wp_create_nonce( 'wp_rest' ),
@@ -244,6 +244,12 @@ function marwari_ecommerce_render_storefront() {
                     <!-- Theme Toggle -->
                     <button class="nav-btn" id="theme-toggle" title="Switch Theme">
                         <span id="theme-icon"></span>
+                    </button>
+
+                    <!-- Notification Bell Trigger -->
+                    <button class="nav-btn" id="notif-trigger" title="Notifications" style="display: none; position: relative; margin-right: 0.25rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        <span class="cart-count" id="notif-count" style="display: none; position: absolute; top: -3px; right: -3px; background: var(--primary); color: #000; font-size: 0.65rem; min-width: 15px; height: 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">0</span>
                     </button>
 
                     <!-- Cart Trigger -->
@@ -637,6 +643,19 @@ function marwari_ecommerce_render_storefront() {
                         <button type="submit" class="auth-submit-btn">Place Order & Ship</button>
                     </form>
                 </div>
+            <!-- 4. Notifications Modal -->
+            <div class="modal-content small" id="notifications-modal" style="display: none;">
+                <button class="modal-close-btn" onclick="closeModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+                <div style="padding: 1.5rem;">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        🔔 Royal Notifications
+                    </h3>
+                    <div id="customer-notif-list" style="max-height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; padding-right: 0.25rem;">
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; text-align: center; padding: 2rem 0;">No new notifications</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -803,6 +822,12 @@ function marwari_ecommerce_register_rest_endpoints() {
         'methods'             => WP_REST_Server::READABLE,
         'callback'            => 'marwari_ecommerce_get_notifications',
         'permission_callback' => 'marwari_ecommerce_admin_permissions_check',
+    ));
+
+    register_rest_route( $ns, '/notifications/my', array(
+        'methods'             => WP_REST_Server::READABLE,
+        'callback'            => 'marwari_ecommerce_get_my_notifications',
+        'permission_callback' => 'marwari_ecommerce_logged_in_permissions_check',
     ));
 }
 
@@ -1233,6 +1258,32 @@ function marwari_ecommerce_get_notifications() {
     // Return reversed (newest first)
     return rest_ensure_response( array_reverse( $history ) );
 }
+
+// D3. Get Logged-In Customer's Notifications
+function marwari_ecommerce_get_my_notifications() {
+    $current_user = wp_get_current_user();
+    if ( ! $current_user->exists() ) {
+        return new WP_Error( 'not_logged_in', 'You must be logged in to view notifications.', array( 'status' => 401 ) );
+    }
+    
+    $email = $current_user->user_email;
+    $history = get_option( 'marwari_notifications', array() );
+    
+    $filtered = array();
+    foreach ( $history as $n ) {
+        if ( $n['target'] === 'all' || strtolower($n['target']) === strtolower($email) ) {
+            $filtered[] = array(
+                'id'      => $n['id'] ?? '',
+                'subject' => $n['subject'],
+                'message' => $n['message'],
+                'date'    => $n['date']
+            );
+        }
+    }
+    
+    return rest_ensure_response( array_reverse( $filtered ) );
+}
+
 
 // D. Admin Direct Login (uses wp_check_password, bypasses wp_authenticate hooks)
 function marwari_ecommerce_admin_direct_login( WP_REST_Request $request ) {

@@ -277,6 +277,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderStorefront();
   updateNavBarState();
   setupEventListeners();
+  initCustomerNotifications();
 
   // Admin Mode: If this is the /admin/ page, handle admin-specific behavior
   const pageMode = (typeof wpApiSettings !== 'undefined' && wpApiSettings.pageMode) ? wpApiSettings.pageMode : 'shop';
@@ -571,6 +572,7 @@ function updateNavBarState() {
       openModal("auth-modal");
     });
   }
+  refreshCustomerNotifications();
 }
 
 // Switch views
@@ -871,6 +873,99 @@ function showToast(message, type = "success") {
     toast.style.animation = "slideDown 0.3s forwards, fadeOut 0.3s forwards";
     setTimeout(() => toast.remove(), 300);
   }, 3000);
+}
+
+// Customer Notifications logic
+let customerNotifs = [];
+
+async function refreshCustomerNotifications() {
+  const notifTrigger = document.getElementById("notif-trigger");
+  const notifCount = document.getElementById("notif-count");
+  if (!notifTrigger) return;
+
+  if (!app.currentUser) {
+    notifTrigger.style.display = "none";
+    if (notifCount) notifCount.style.display = "none";
+    return;
+  }
+
+  // Show the bell icon
+  notifTrigger.style.display = "inline-block";
+
+  try {
+    const notifs = await app.apiFetch("/notifications/my");
+    customerNotifs = notifs;
+
+    // Get read notifications list
+    let readIds = [];
+    try {
+      const saved = localStorage.getItem("marwari_read_notifications");
+      readIds = saved ? JSON.parse(saved) : [];
+    } catch (e) { /* ignore */ }
+
+    // Count unread
+    const unread = notifs.filter(n => n.id && !readIds.includes(n.id));
+
+    if (notifCount) {
+      if (unread.length > 0) {
+        notifCount.textContent = unread.length;
+        notifCount.style.display = "flex";
+      } else {
+        notifCount.style.display = "none";
+      }
+    }
+  } catch (err) {
+    console.error("Failed to load customer notifications:", err);
+  }
+}
+
+function initCustomerNotifications() {
+  const notifTrigger = document.getElementById("notif-trigger");
+  if (!notifTrigger) return;
+
+  notifTrigger.addEventListener("click", () => {
+    openModal("notifications-modal");
+
+    // Mark all as read
+    const readIds = customerNotifs.map(n => n.id).filter(Boolean);
+    localStorage.setItem("marwari_read_notifications", JSON.stringify(readIds));
+
+    // Reset badge count
+    const notifCount = document.getElementById("notif-count");
+    if (notifCount) notifCount.style.display = "none";
+
+    // Render list
+    const listContainer = document.getElementById("customer-notif-list");
+    if (!listContainer) return;
+
+    if (customerNotifs.length === 0) {
+      listContainer.innerHTML = `<p style="color: var(--text-secondary); font-size: 0.9rem; text-align: center; padding: 2rem 0;">No notifications yet</p>`;
+    } else {
+      listContainer.innerHTML = customerNotifs.map(n => {
+        const date = new Date(n.date).toLocaleString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        return `
+          <div class="notif-item" style="padding: 0.85rem; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 0.35rem; transition: transform 0.2s ease;">
+            <div style="font-weight: 600; color: var(--text-primary); font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="color: var(--primary);">✦</span> ${n.subject}
+            </div>
+            <div style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.45; white-space: pre-wrap;">${n.message}</div>
+            <div style="color: var(--text-muted); font-size: 0.72rem; align-self: flex-end; margin-top: 0.2rem;">${date}</div>
+          </div>
+        `;
+      }).join("");
+    }
+  });
+
+  // Fetch immediately
+  refreshCustomerNotifications();
+
+  // Poll for new notifications every 15 seconds
+  setInterval(refreshCustomerNotifications, 15000);
 }
 
 // Setup Event Listeners
