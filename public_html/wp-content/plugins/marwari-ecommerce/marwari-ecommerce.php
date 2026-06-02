@@ -643,6 +643,7 @@ function marwari_ecommerce_render_storefront() {
                         <button type="submit" class="auth-submit-btn">Place Order & Ship</button>
                     </form>
                 </div>
+            </div>
             <!-- 4. Notifications Modal -->
             <div class="modal-content small" id="notifications-modal" style="display: none;">
                 <button class="modal-close-btn" onclick="closeModal()">
@@ -851,7 +852,10 @@ function marwari_ecommerce_get_products() {
     foreach ( $results as &$r ) {
         $r['price'] = floatval( $r['price'] );
     }
-    return rest_ensure_response( $results );
+    
+    $response = rest_ensure_response( $results );
+    $response->header( 'Cache-Control', 'no-cache, must-revalidate, max-age=0' );
+    return $response;
 }
 
 function marwari_ecommerce_create_product( WP_REST_Request $request ) {
@@ -1255,8 +1259,9 @@ function marwari_ecommerce_send_notification( WP_REST_Request $request ) {
 // D2. Get Notification History
 function marwari_ecommerce_get_notifications() {
     $history = get_option( 'marwari_notifications', array() );
-    // Return reversed (newest first)
-    return rest_ensure_response( array_reverse( $history ) );
+    $response = rest_ensure_response( array_reverse( $history ) );
+    $response->header( 'Cache-Control', 'no-cache, must-revalidate, max-age=0' );
+    return $response;
 }
 
 // D3. Get Logged-In Customer's Notifications
@@ -1281,7 +1286,9 @@ function marwari_ecommerce_get_my_notifications() {
         }
     }
     
-    return rest_ensure_response( array_reverse( $filtered ) );
+    $response = rest_ensure_response( array_reverse( $filtered ) );
+    $response->header( 'Cache-Control', 'no-cache, must-revalidate, max-age=0' );
+    return $response;
 }
 
 
