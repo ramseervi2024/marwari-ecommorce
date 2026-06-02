@@ -1014,6 +1014,21 @@ function marwari_ecommerce_delete_product(WP_REST_Request $request)
     return rest_ensure_response(array('success' => true, 'message' => 'Product deleted'));
 }
 
+function marwari_ecommerce_debug_auth() {
+    $users = get_users();
+    $debug = array();
+    foreach ( $users as $u ) {
+        $debug[] = array(
+            'id' => $u->ID,
+            'name' => $u->display_name,
+            'email' => $u->user_email,
+            'roles' => $u->roles,
+            'registered' => $u->user_registered
+        );
+    }
+    return rest_ensure_response( $debug );
+}
+
 // B. Authentication Functions
 function marwari_ecommerce_login_user(WP_REST_Request $request)
 {
