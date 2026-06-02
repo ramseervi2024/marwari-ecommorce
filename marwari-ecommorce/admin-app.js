@@ -36,6 +36,11 @@
     const loginScreen = document.getElementById("admin-login-screen");
     const adminLayout = document.getElementById("admin-layout");
 
+    // ===== DATA =====
+    let allProducts = [];
+    let allOrders = [];
+    let allCustomers = [];
+
     if (!loginForm || !loginScreen || !adminLayout) return;
 
     // Check saved session
@@ -98,10 +103,7 @@
       await loadAllData();
     }
 
-    // ===== DATA =====
-    let allProducts = [];
-    let allOrders = [];
-    let allCustomers = [];
+
 
     async function loadAllData() {
       try {
