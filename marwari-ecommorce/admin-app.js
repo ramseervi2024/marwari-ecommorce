@@ -13,7 +13,11 @@
     const headers = { "Content-Type": "application/json", ...options.headers };
     if (NONCE) headers["X-WP-Nonce"] = NONCE;
 
-    const res = await fetch(url, { ...options, headers });
+    const res = await fetch(url, {
+      credentials: "same-origin",
+      ...options,
+      headers,
+    });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || `API Error (${res.status})`);
     return data;
