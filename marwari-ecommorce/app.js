@@ -29,12 +29,12 @@ class WordPressAppState {
   // General Fetch API Helper
   async apiFetch(endpoint, options = {}) {
     const url = `${this.apiRoot}${endpoint}`;
-    
+
     const headers = {
       'Content-Type': 'application/json',
       ...options.headers
     };
-    
+
     if (this.nonce) {
       headers['X-WP-Nonce'] = this.nonce;
     }
@@ -49,7 +49,7 @@ class WordPressAppState {
     try {
       const response = await fetch(url, fetchOptions);
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || `API Error (Status ${response.status})`);
       }
@@ -325,7 +325,7 @@ function toggleTheme() {
 function showStorefrontLoading() {
   const container = document.getElementById("products-container");
   if (!container) return;
-  
+
   container.innerHTML = "";
   for (let i = 0; i < 4; i++) {
     const card = document.createElement("div");
@@ -351,7 +351,7 @@ function showStorefrontLoading() {
 function renderStorefront(category = "All", query = "") {
   const container = document.getElementById("products-container");
   if (!container) return;
-  
+
   container.innerHTML = "";
 
   let filtered = app.products;
@@ -394,7 +394,7 @@ function renderStorefront(category = "All", query = "") {
         </div>
       </div>
     `;
-    
+
     // Add Click listener to open detail modal
     card.addEventListener("click", (e) => {
       if (e.target.closest(".add-cart-btn")) {
@@ -629,7 +629,7 @@ function restoreButton(btn) {
 function openModal(modalId) {
   const overlay = document.getElementById("modal-overlay-container");
   const modals = document.querySelectorAll(".modal-content");
-  
+
   modals.forEach(m => m.style.display = "none");
   const target = document.getElementById(modalId);
   if (target) {
@@ -733,13 +733,13 @@ function renderAdminDashboard() {
 
       row.querySelector(".delete").addEventListener("click", async (e) => {
         const btn = e.currentTarget;
-        if(confirm(`Are you sure you want to delete "${p.name}"?`)) {
+        if (confirm(`Are you sure you want to delete "${p.name}"?`)) {
           showLoadingButton(btn, "");
           try {
             await app.deleteProduct(p.id);
             showToast("Product deleted successfully");
             renderAdminDashboard();
-          } catch(err) {
+          } catch (err) {
             showToast(err.message, "danger");
             restoreButton(btn);
           }
@@ -783,7 +783,7 @@ function renderAdminDashboard() {
             await app.updateOrderStatus(o.id, "Completed");
             showToast("Order status updated to Completed");
             renderAdminDashboard();
-          } catch(err) {
+          } catch (err) {
             showToast(err.message, "danger");
             restoreButton(statusBtn);
           }
@@ -819,7 +819,7 @@ function renderOrdersHistory() {
       <div class="order-history-header">
         <div>
           <h4>Order ID: #${o.id.slice(-6).toUpperCase()}</h4>
-          <p>Placed on: ${new Date(o.date).toLocaleDateString("en-IN", {year:'numeric', month:'short', day:'numeric'})}</p>
+          <p>Placed on: ${new Date(o.date).toLocaleDateString("en-IN", { year: 'numeric', month: 'short', day: 'numeric' })}</p>
         </div>
         <div>
           <span class="badge-status ${o.status.toLowerCase()}">${o.status}</span>
@@ -855,8 +855,8 @@ function showToast(message, type = "success") {
 
   const toast = document.createElement("div");
   toast.className = `toast ${type}`;
-  
-  const icon = type === "success" 
+
+  const icon = type === "success"
     ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="${app.currentUser && app.currentUser.role === 'admin' ? 'var(--primary)' : 'var(--success)'}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m22 4-10 10.01-3-3"/></svg>`
     : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="var(--danger)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>`;
 
@@ -914,7 +914,7 @@ function setupEventListeners() {
     tab.addEventListener("click", (e) => {
       catTabs.forEach(t => t.classList.remove("active"));
       tab.classList.add("active");
-      
+
       const category = tab.dataset.category;
       renderStorefront(category, searchInput.value);
     });
@@ -1040,7 +1040,7 @@ function setupEventListeners() {
     btn.disabled = true;
 
     const res = await app.resendCode(pendingVerifyEmail);
-    
+
     if (res.success) {
       showToast("New verification code sent to your email!");
     } else {
@@ -1104,7 +1104,7 @@ function setupEventListeners() {
 
     document.getElementById("checkout-name").value = app.currentUser.name;
     document.getElementById("checkout-phone").value = app.currentUser.phone || "";
-    
+
     closeCartFn();
     openModal("checkout-modal");
   });
@@ -1129,11 +1129,11 @@ function setupEventListeners() {
       closeModal();
       showToast("Order placed successfully! Padharo Mhare Des.");
       updateCartUI();
-      
+
       setTimeout(() => {
         switchView("orders");
       }, 500);
-    } catch(err) {
+    } catch (err) {
       showToast(err.message, "danger");
       restoreButton(submitBtn);
     }
@@ -1161,7 +1161,7 @@ function setupEventListeners() {
         showToast(`Product "${product.name}" published successfully`);
         addProductForm.reset();
         renderAdminDashboard();
-      } catch(err) {
+      } catch (err) {
         showToast(err.message, "danger");
         restoreButton(submitBtn);
       }
@@ -1169,7 +1169,7 @@ function setupEventListeners() {
   }
 }
 
-window.onclick = function(event) {
+window.onclick = function (event) {
   const overlay = document.getElementById("modal-overlay-container");
   if (event.target === overlay) {
     closeModal();
@@ -1177,17 +1177,17 @@ window.onclick = function(event) {
 };
 
 // ===== ADMIN DASHBOARD MODULE (Sidebar Layout) =====
-(function() {
+(function () {
   const pageMode = (typeof wpApiSettings !== 'undefined' && wpApiSettings.pageMode) ? wpApiSettings.pageMode : 'shop';
   if (pageMode !== 'admin') return;
 
   document.addEventListener("DOMContentLoaded", () => {
     initTheme();
-    
+
     const loginForm = document.getElementById("admin-login-form");
     const loginScreen = document.getElementById("admin-login-screen");
     const adminLayout = document.getElementById("admin-layout");
-    
+
     if (!loginForm) return;
 
     // Check saved admin session
@@ -1200,7 +1200,7 @@ window.onclick = function(event) {
           showDashboard(session);
           return;
         }
-      } catch(e) {}
+      } catch (e) { }
     }
 
     // Admin Login
@@ -1286,7 +1286,7 @@ window.onclick = function(event) {
         logoutBtn.addEventListener("click", async () => {
           localStorage.removeItem("marwari_session");
           app.currentUser = null;
-          try { await app.apiFetch('/auth/logout', { method: 'POST' }); } catch(e) {}
+          try { await app.apiFetch('/auth/logout', { method: 'POST' }); } catch (e) { }
           location.reload();
         });
       }
@@ -1322,7 +1322,7 @@ window.onclick = function(event) {
       const container = document.getElementById("revenue-chart");
       if (!container) return;
       const monthData = {};
-      const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       orders.forEach(o => {
         const d = new Date(o.date);
         const key = `${monthNames[d.getMonth()]} ${d.getFullYear().toString().slice(-2)}`;
@@ -1336,7 +1336,7 @@ window.onclick = function(event) {
       }
       container.innerHTML = entries.map(([label, val]) => {
         const height = Math.max((val / maxVal) * 200, 8);
-        return `<div class="chart-bar-group"><span class="chart-bar-value">₹${(val/1000).toFixed(1)}k</span><div class="chart-bar" style="height:${height}px;"></div><span class="chart-bar-label">${label}</span></div>`;
+        return `<div class="chart-bar-group"><span class="chart-bar-value">₹${(val / 1000).toFixed(1)}k</span><div class="chart-bar" style="height:${height}px;"></div><span class="chart-bar-label">${label}</span></div>`;
       }).join('');
     }
 
@@ -1358,14 +1358,14 @@ window.onclick = function(event) {
       if (orders.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:2rem;">No orders yet</td></tr>'; return; }
       tbody.innerHTML = orders.map(o => {
         const items = Array.isArray(o.items) ? o.items.map(i => `${i.name} ×${i.quantity}`).join(', ') : '—';
-        const date = new Date(o.date).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'2-digit' });
+        const date = new Date(o.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' });
         const statusStyle = o.status === 'Completed' ? 'color:#10b981;' : 'color:#fbbf24; cursor:pointer;';
         const statusClick = o.status === 'Pending' ? `onclick="window.dashUpdateOrderStatus('${o.id}')"` : '';
         return `<tr><td style="font-family:monospace; font-size:0.75rem;">${o.id}</td><td>${o.user_email || '—'}</td><td style="font-size:0.8rem; max-width:200px; overflow:hidden; text-overflow:ellipsis;">${items}</td><td style="font-weight:600;">₹${(o.total || 0).toLocaleString('en-IN')}</td><td style="font-size:0.8rem;">${date}</td><td><span style="font-weight:600; ${statusStyle}" ${statusClick}>${o.status}</span></td></tr>`;
       }).join('');
     }
 
-    window.dashUpdateOrderStatus = async function(orderId) {
+    window.dashUpdateOrderStatus = async function (orderId) {
       try {
         await app.apiFetch(`/orders/${orderId}/status`, { method: 'POST', body: JSON.stringify({ status: 'Completed' }) });
         showToast("Order marked as Completed!");
@@ -1374,7 +1374,7 @@ window.onclick = function(event) {
         renderRevenueChart(orders);
         renderOrderStatusChart(orders);
         renderDashOrders(orders);
-      } catch(err) { showToast(err.message, "danger"); }
+      } catch (err) { showToast(err.message, "danger"); }
     };
 
     function renderDashProducts(products) {
@@ -1384,7 +1384,7 @@ window.onclick = function(event) {
       tbody.innerHTML = products.map(p => `<tr><td style="display:flex; align-items:center; gap:0.75rem;"><img src="${p.image}" alt="${p.name}" style="width:40px; height:40px; border-radius:8px; object-fit:cover;"><span style="font-weight:500;">${p.name}</span></td><td><span style="background:var(--primary-glow); color:var(--primary); padding:0.2rem 0.6rem; border-radius:20px; font-size:0.75rem; font-weight:600;">${p.category}</span></td><td style="font-weight:600;">₹${parseFloat(p.price).toLocaleString('en-IN')}</td><td><button onclick="window.dashDeleteProduct('${p.id}')" style="background:var(--danger); color:white; border:none; padding:0.4rem 0.8rem; border-radius:8px; cursor:pointer; font-size:0.75rem; font-weight:600;">Delete</button></td></tr>`).join('');
     }
 
-    window.dashDeleteProduct = async function(productId) {
+    window.dashDeleteProduct = async function (productId) {
       if (!confirm("Delete this product?")) return;
       try {
         await app.apiFetch(`/products/${productId}`, { method: 'DELETE' });
@@ -1392,7 +1392,7 @@ window.onclick = function(event) {
         const products = await app.apiFetch('/products');
         renderDashProducts(products);
         document.getElementById("dash-stat-products").textContent = products.length;
-      } catch(err) { showToast(err.message, "danger"); }
+      } catch (err) { showToast(err.message, "danger"); }
     };
 
     function renderDashCustomers(customers) {
@@ -1400,7 +1400,7 @@ window.onclick = function(event) {
       if (!tbody) return;
       if (customers.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">No customers yet</td></tr>'; return; }
       tbody.innerHTML = customers.map(c => {
-        const regDate = new Date(c.registered).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'2-digit' });
+        const regDate = new Date(c.registered).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' });
         return `<tr><td style="font-weight:500;">${c.name}</td><td style="font-size:0.85rem;">${c.email}</td><td>${c.phone}</td><td style="font-weight:600; text-align:center;">${c.orders}</td><td style="font-size:0.8rem;">${regDate}</td></tr>`;
       }).join('');
     }
@@ -1428,7 +1428,7 @@ window.onclick = function(event) {
           const products = await app.apiFetch('/products');
           renderDashProducts(products);
           document.getElementById("dash-stat-products").textContent = products.length;
-        } catch(err) { showToast(err.message, "danger"); }
+        } catch (err) { showToast(err.message, "danger"); }
         submitBtn.textContent = "Publish Product";
         submitBtn.disabled = false;
       });

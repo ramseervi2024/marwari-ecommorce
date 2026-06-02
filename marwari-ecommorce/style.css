@@ -1704,6 +1704,7 @@ body:has(.marwari-ecommerce-wrapper) footer:not(.marwari-ecommerce-wrapper foote
   .admin-charts-row {
     grid-template-columns: 1fr;
   }
+
   .admin-welcome-banner {
     flex-direction: column;
     text-align: center;
@@ -1833,8 +1834,15 @@ body:has(.marwari-ecommerce-wrapper) footer:not(.marwari-ecommerce-wrapper foote
 }
 
 @keyframes fadeInSection {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .sidebar-toggle {
@@ -1856,21 +1864,27 @@ body:has(.marwari-ecommerce-wrapper) footer:not(.marwari-ecommerce-wrapper foote
   .admin-sidebar {
     transform: translateX(-100%);
   }
+
   .admin-sidebar.open {
     transform: translateX(0);
   }
+
   .admin-main {
     margin-left: 0;
   }
+
   .sidebar-toggle {
     display: flex;
   }
+
   .admin-topbar {
     padding-left: 3.5rem;
   }
+
   .admin-section {
     padding: 1rem;
   }
+
   .admin-stats-grid {
     grid-template-columns: 1fr 1fr !important;
   }
