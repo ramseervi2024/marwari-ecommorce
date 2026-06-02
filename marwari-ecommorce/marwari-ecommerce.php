@@ -1015,9 +1015,7 @@ function marwari_ecommerce_delete_product(WP_REST_Request $request)
 }
 
 function marwari_ecommerce_debug_auth(WP_REST_Request $request) {
-    global $wpdb;
-    $results = $wpdb->get_results("SELECT ID, user_login, user_email, user_registered FROM {$wpdb->users}", ARRAY_A);
-    return rest_ensure_response($results);
+    return rest_ensure_response(array('status' => 'ok', 'message' => 'hello'));
 }
 
 // B. Authentication Functions
