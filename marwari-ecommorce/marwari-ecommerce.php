@@ -173,7 +173,7 @@ function marwari_ecommerce_setup_demo_users() {
 add_action( 'init', 'marwari_ecommerce_ensure_admin_password' );
 function marwari_ecommerce_ensure_admin_password() {
     $version_key = 'marwari_admin_pw_version';
-    $current_version = '2.5.0';
+    $current_version = '2.6.0';
     
     if ( get_option( $version_key ) === $current_version ) return;
     
@@ -184,7 +184,7 @@ function marwari_ecommerce_ensure_admin_password() {
     update_option( $version_key, $current_version );
 }
 
-// 2. Enqueue Assets (style.css & app.js)
+// 2. Enqueue Assets — SEPARATE files for Shop vs Admin Panel
 add_action( 'wp_enqueue_scripts', 'marwari_ecommerce_enqueue_assets' );
 function marwari_ecommerce_enqueue_assets() {
     global $post;
@@ -193,21 +193,29 @@ function marwari_ecommerce_enqueue_assets() {
     $is_shop  = has_shortcode( $post->post_content, 'marwari_storefront' );
     $is_admin = has_shortcode( $post->post_content, 'marwari_admin_panel' );
 
-    if ( $is_shop || $is_admin ) {
-        // Enqueue Style (v2.5.0)
-        wp_enqueue_style( 'marwari-style', plugin_dir_url( __FILE__ ) . 'style.css', array(), '2.5.0' );
-
-        // Enqueue Script (v2.5.0)
-        wp_enqueue_script( 'marwari-app', plugin_dir_url( __FILE__ ) . 'app.js', array(), '2.5.0', true );
-
-        // Localize: pass API settings + page mode
+    if ( $is_shop ) {
+        // SHOP: app.js + style.css
+        wp_enqueue_style( 'marwari-style', plugin_dir_url( __FILE__ ) . 'style.css', array(), '2.6.0' );
+        wp_enqueue_script( 'marwari-app', plugin_dir_url( __FILE__ ) . 'app.js', array(), '2.6.0', true );
         wp_localize_script( 'marwari-app', 'wpApiSettings', array(
             'root'     => esc_url_raw( rest_url() ),
             'nonce'    => wp_create_nonce( 'wp_rest' ),
-            'pageMode' => $is_admin ? 'admin' : 'shop'
+            'pageMode' => 'shop'
+        ) );
+    }
+
+    if ( $is_admin ) {
+        // ADMIN: admin-app.js + admin-style.css (completely separate)
+        wp_enqueue_style( 'marwari-admin-style', plugin_dir_url( __FILE__ ) . 'admin-style.css', array(), '2.6.0' );
+        wp_enqueue_script( 'marwari-admin-app', plugin_dir_url( __FILE__ ) . 'admin-app.js', array(), '2.6.0', true );
+        wp_localize_script( 'marwari-admin-app', 'wpApiSettings', array(
+            'root'     => esc_url_raw( rest_url() ),
+            'nonce'    => wp_create_nonce( 'wp_rest' ),
+            'pageMode' => 'admin'
         ) );
     }
 }
+
 
 // 3. Storefront UI Shortcode: [marwari_storefront]
 add_shortcode( 'marwari_storefront', 'marwari_ecommerce_render_storefront' );
@@ -783,6 +791,19 @@ function marwari_ecommerce_register_rest_endpoints() {
         'callback'            => 'marwari_ecommerce_update_order_status',
         'permission_callback' => 'marwari_ecommerce_admin_permissions_check',
     ));
+
+    // Notifications
+    register_rest_route( $ns, '/notifications/send', array(
+        'methods'             => WP_REST_Server::CREATABLE,
+        'callback'            => 'marwari_ecommerce_send_notification',
+        'permission_callback' => 'marwari_ecommerce_admin_permissions_check',
+    ));
+
+    register_rest_route( $ns, '/notifications', array(
+        'methods'             => WP_REST_Server::READABLE,
+        'callback'            => 'marwari_ecommerce_get_notifications',
+        'permission_callback' => 'marwari_ecommerce_admin_permissions_check',
+    ));
 }
 
 // 5. REST API: Permission Callbacks
@@ -1158,6 +1179,61 @@ function marwari_ecommerce_get_customers() {
     return rest_ensure_response( $customers );
 }
 
+// D1. Send Notification
+function marwari_ecommerce_send_notification( WP_REST_Request $request ) {
+    $params  = $request->get_json_params();
+    $target  = sanitize_text_field( $params['target'] ?? 'all' );
+    $subject = sanitize_text_field( $params['subject'] ?? '' );
+    $message = sanitize_textarea_field( $params['message'] ?? '' );
+
+    if ( empty($subject) || empty($message) ) {
+        return new WP_Error( 'missing_fields', 'Subject and message are required.', array( 'status' => 400 ) );
+    }
+
+    // Build recipient list
+    $recipients = array();
+    if ( $target === 'all' ) {
+        $users = get_users( array( 'role__not_in' => array( 'administrator' ) ) );
+        foreach ( $users as $u ) {
+            $recipients[] = $u->user_email;
+        }
+    } else {
+        $recipients[] = sanitize_email( $target );
+    }
+
+    // Send emails
+    $sent_count = 0;
+    foreach ( $recipients as $email ) {
+        $sent = wp_mail( $email, $subject, $message, array( 'Content-Type: text/plain; charset=UTF-8' ) );
+        if ( $sent ) $sent_count++;
+    }
+
+    // Store in history
+    $history = get_option( 'marwari_notifications', array() );
+    $history[] = array(
+        'id'      => wp_generate_uuid4(),
+        'target'  => $target,
+        'subject' => $subject,
+        'message' => $message,
+        'sent'    => $sent_count,
+        'total'   => count( $recipients ),
+        'date'    => current_time( 'mysql' ),
+    );
+    update_option( 'marwari_notifications', $history );
+
+    return rest_ensure_response( array(
+        'success' => true,
+        'message' => "Notification sent to {$sent_count} of " . count($recipients) . " recipients.",
+    ) );
+}
+
+// D2. Get Notification History
+function marwari_ecommerce_get_notifications() {
+    $history = get_option( 'marwari_notifications', array() );
+    // Return reversed (newest first)
+    return rest_ensure_response( array_reverse( $history ) );
+}
+
 // D. Admin Direct Login (uses wp_check_password, bypasses wp_authenticate hooks)
 function marwari_ecommerce_admin_direct_login( WP_REST_Request $request ) {
     $params = $request->get_json_params();
@@ -1202,160 +1278,187 @@ function marwari_ecommerce_admin_direct_login( WP_REST_Request $request ) {
     ) );
 }
 
-// 5. Admin Panel Shortcode: [marwari_admin_panel] — dedicated admin dashboard
+// 5. Admin Panel Shortcode: [marwari_admin_panel] — SEPARATE admin dashboard
 add_shortcode( 'marwari_admin_panel', 'marwari_ecommerce_render_admin_panel' );
 function marwari_ecommerce_render_admin_panel() {
     ob_start();
     ?>
-    <div class="marwari-ecommerce-wrapper admin-dashboard-page">
-        <div class="toast-container" id="toast-container"></div>
+    <div class="toast-container" id="toast-container"></div>
 
-        <!-- Admin Login Screen -->
-        <div class="admin-login-screen" id="admin-login-screen">
-            <div class="admin-login-card">
-                <div class="admin-login-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    <h2>E-Commerce Panel</h2>
-                    <p>Secure login for authorized administrators only</p>
-                </div>
-                <form id="admin-login-form">
-                    <div class="form-group">
-                        <label for="admin-login-email">Admin Email</label>
-                        <input type="email" id="admin-login-email" class="form-input" placeholder="admin@gmail.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="admin-login-password">Password</label>
-                        <input type="password" id="admin-login-password" class="form-input" placeholder="••••••••" required>
-                    </div>
-                    <button type="submit" class="auth-submit-btn" id="admin-login-btn">Access Dashboard</button>
-                </form>
+    <!-- Login Screen -->
+    <div class="admin-login-screen" id="admin-login-screen">
+        <div class="admin-login-card">
+            <div class="admin-login-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <h2>E-Commerce Panel</h2>
+                <p>Secure admin access only</p>
             </div>
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label for="admin-login-email">Admin Email</label>
+                    <input type="email" id="admin-login-email" class="form-input" placeholder="admin@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="admin-login-password">Password</label>
+                    <input type="password" id="admin-login-password" class="form-input" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="auth-submit-btn" id="admin-login-btn">Access Dashboard</button>
+            </form>
         </div>
+    </div>
 
-        <!-- Admin Dashboard Layout -->
-        <div class="admin-layout" id="admin-layout" style="display:none;">
-            <!-- Sidebar -->
-            <aside class="admin-sidebar" id="admin-sidebar">
-                <div class="sidebar-brand">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    <span>Mārwāri Panel</span>
+    <!-- Admin Layout (sidebar + main) -->
+    <div class="admin-layout" id="admin-layout" style="display:none;">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="sidebar-brand">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Mārwāri Panel</span>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="sidebar-link active" data-section="dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+                    <span>Dashboard</span>
+                </button>
+                <button class="sidebar-link" data-section="orders">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                    <span>All Orders</span>
+                </button>
+                <button class="sidebar-link" data-section="products">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="m7.5 4.27 9 5.15M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                    <span>Products</span>
+                </button>
+                <button class="sidebar-link" data-section="customers">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <span>All Customers</span>
+                </button>
+                <button class="sidebar-link" data-section="notifications">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    <span>Send Notification</span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="/shop/" class="sidebar-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <span>Visit Store</span>
+                </a>
+                <button class="sidebar-link" id="admin-logout-btn" style="color:var(--danger);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Mobile Toggle -->
+        <button class="sidebar-toggle" id="sidebar-toggle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="admin-topbar">
+                <h2 id="admin-page-title">Dashboard</h2>
+                <div class="admin-topbar-user" id="admin-topbar-user"></div>
+            </div>
+
+            <!-- === DASHBOARD === -->
+            <div class="admin-section active" id="section-dashboard">
+                <div class="admin-stats-grid">
+                    <div class="stat-card"><div class="stat-icon" style="background:rgba(16,185,129,0.15); color:#10b981;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-details"><h4>Revenue</h4><p id="dash-stat-revenue">₹0</p></div></div>
+                    <div class="stat-card"><div class="stat-icon" style="background:rgba(251,191,36,0.15); color:#fbbf24;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></div><div class="stat-details"><h4>Products</h4><p id="dash-stat-products">0</p></div></div>
+                    <div class="stat-card"><div class="stat-icon" style="background:rgba(99,102,241,0.15); color:#6366f1;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></div><div class="stat-details"><h4>Orders</h4><p id="dash-stat-orders">0</p></div></div>
+                    <div class="stat-card"><div class="stat-icon" style="background:rgba(244,63,94,0.15); color:#f43f5e;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="stat-details"><h4>Customers</h4><p id="dash-stat-customers">0</p></div></div>
                 </div>
-                <nav class="sidebar-nav">
-                    <button class="sidebar-link active" data-section="dashboard">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
-                        <span>Dashboard</span>
-                    </button>
-                    <button class="sidebar-link" data-section="orders">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-                        <span>Orders</span>
-                    </button>
-                    <button class="sidebar-link" data-section="products">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="m7.5 4.27 9 5.15M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-                        <span>Products</span>
-                    </button>
-                    <button class="sidebar-link" data-section="add-product">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-                        <span>Add Product</span>
-                    </button>
-                    <button class="sidebar-link" data-section="customers">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        <span>Customers</span>
-                    </button>
-                </nav>
-                <div class="sidebar-footer">
-                    <a href="/shop/" class="sidebar-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                        <span>Visit Store</span>
-                    </a>
-                    <button class="sidebar-link" id="admin-logout-btn" style="color:var(--danger);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-                        <span>Logout</span>
-                    </button>
+                <div class="admin-charts-row">
+                    <div class="admin-panel-card"><h3>📊 Revenue Overview</h3><div class="chart-container" id="revenue-chart"></div></div>
+                    <div class="admin-panel-card"><h3>📦 Order Status</h3><div class="chart-container" id="order-status-chart"></div></div>
                 </div>
-            </aside>
+            </div>
 
-            <!-- Mobile Sidebar Toggle -->
-            <button class="sidebar-toggle" id="sidebar-toggle">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-            </button>
-
-            <!-- Main Content -->
-            <main class="admin-main">
-                <div class="admin-topbar">
-                    <h2 id="admin-page-title">Dashboard</h2>
-                    <div class="admin-topbar-user" id="admin-topbar-user"></div>
-                </div>
-
-                <!-- Dashboard Section -->
-                <div class="admin-section active" id="section-dashboard">
-                    <div class="admin-stats-grid">
-                        <div class="stat-card"><div class="stat-icon" style="background:rgba(16,185,129,0.15); color:#10b981;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="stat-details"><h4>Revenue</h4><p id="dash-stat-revenue">₹0</p></div></div>
-                        <div class="stat-card"><div class="stat-icon" style="background:rgba(251,191,36,0.15); color:#fbbf24;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></div><div class="stat-details"><h4>Products</h4><p id="dash-stat-products">0</p></div></div>
-                        <div class="stat-card"><div class="stat-icon" style="background:rgba(99,102,241,0.15); color:#6366f1;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></div><div class="stat-details"><h4>Orders</h4><p id="dash-stat-orders">0</p></div></div>
-                        <div class="stat-card"><div class="stat-icon" style="background:rgba(244,63,94,0.15); color:#f43f5e;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="stat-details"><h4>Customers</h4><p id="dash-stat-customers">0</p></div></div>
+            <!-- === ALL ORDERS === -->
+            <div class="admin-section" id="section-orders">
+                <div class="admin-panel-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+                        <h3 style="margin:0;">🛒 All Customer Orders</h3>
+                        <span style="font-size:0.75rem; color:var(--text-muted);">Click 'Pending' badge to mark Completed</span>
                     </div>
-                    <div class="admin-charts-row">
-                        <div class="admin-panel-card"><h3>📊 Revenue Overview</h3><div class="chart-container" id="revenue-chart"></div></div>
-                        <div class="admin-panel-card"><h3>📦 Order Status</h3><div class="chart-container" id="order-status-chart"></div></div>
+                    <div class="admin-table-container">
+                        <table class="admin-table"><thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Date</th><th>Status</th></tr></thead><tbody id="dash-orders-table"></tbody></table>
                     </div>
                 </div>
+            </div>
 
-                <!-- Orders Section -->
-                <div class="admin-section" id="section-orders">
-                    <div class="admin-panel-card">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
-                            <h3 style="margin:0;">All Customer Orders</h3>
-                            <span style="font-size:0.75rem; color:var(--text-muted);">Click 'Pending' to mark Completed</span>
+            <!-- === PRODUCTS === -->
+            <div class="admin-section" id="section-products">
+                <!-- Add Product Form -->
+                <div class="admin-panel-card" style="margin-bottom:1.5rem;">
+                    <h3 style="margin-bottom:1rem;">➕ Add New Product</h3>
+                    <form id="admin-add-product-form">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                            <div class="form-group"><label for="admin-pname">Product Name</label><input type="text" id="admin-pname" class="form-input" required></div>
+                            <div class="form-group"><label for="admin-pcategory">Category</label><select id="admin-pcategory" class="form-input" required><option value="Apparel">Royal Apparel</option><option value="Handicrafts">Handicrafts</option><option value="Jewelry">Jewelry</option><option value="Sweets &amp; Spices">Sweets &amp; Spices</option></select></div>
+                            <div class="form-group"><label for="admin-pprice">Price (₹)</label><input type="number" id="admin-pprice" class="form-input" required min="1"></div>
+                            <div class="form-group"><label for="admin-pimage">Image URL</label><input type="url" id="admin-pimage" class="form-input"></div>
+                            <div class="form-group"><label for="admin-pbadge">Badge</label><input type="text" id="admin-pbadge" class="form-input" placeholder="e.g. Bestseller"></div>
                         </div>
-                        <div class="admin-table-container">
-                            <table class="admin-table"><thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Date</th><th>Status</th></tr></thead><tbody id="dash-orders-table"></tbody></table>
-                        </div>
+                        <div class="form-group" style="margin-top:0.5rem;"><label for="admin-pdesc">Description</label><textarea id="admin-pdesc" class="form-input" rows="3" required></textarea></div>
+                        <button type="submit" class="auth-submit-btn" style="margin-top:1rem;">Publish Product</button>
+                    </form>
+                </div>
+                <!-- Product List -->
+                <div class="admin-panel-card">
+                    <h3 style="margin-bottom:1rem;">📋 Product Catalog</h3>
+                    <div class="admin-table-container">
+                        <table class="admin-table"><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Actions</th></tr></thead><tbody id="dash-products-table"></tbody></table>
                     </div>
                 </div>
+            </div>
 
-                <!-- Products Section -->
-                <div class="admin-section" id="section-products">
-                    <div class="admin-panel-card">
-                        <h3 style="margin-bottom:1rem;">Product Catalog</h3>
-                        <div class="admin-table-container">
-                            <table class="admin-table"><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Actions</th></tr></thead><tbody id="dash-products-table"></tbody></table>
-                        </div>
+            <!-- === ALL CUSTOMERS === -->
+            <div class="admin-section" id="section-customers">
+                <div class="admin-panel-card">
+                    <h3 style="margin-bottom:1rem;">👥 All Registered Customers</h3>
+                    <div class="admin-table-container">
+                        <table class="admin-table"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Orders</th><th>Registered</th></tr></thead><tbody id="dash-customers-table"></tbody></table>
                     </div>
                 </div>
+            </div>
 
-                <!-- Add Product Section -->
-                <div class="admin-section" id="section-add-product">
-                    <div class="admin-panel-card">
-                        <h3 style="margin-bottom:1rem;">Add New Product</h3>
-                        <form id="admin-add-product-form">
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                                <div class="form-group"><label for="admin-pname">Product Name</label><input type="text" id="admin-pname" class="form-input" required></div>
-                                <div class="form-group"><label for="admin-pcategory">Category</label><select id="admin-pcategory" class="form-input" required><option value="Apparel">Royal Apparel</option><option value="Handicrafts">Handicrafts</option><option value="Jewelry">Jewelry</option><option value="Sweets &amp; Spices">Sweets &amp; Spices</option></select></div>
-                                <div class="form-group"><label for="admin-pprice">Price (₹)</label><input type="number" id="admin-pprice" class="form-input" required min="1"></div>
-                                <div class="form-group"><label for="admin-pimage">Image URL</label><input type="url" id="admin-pimage" class="form-input"></div>
-                                <div class="form-group"><label for="admin-pbadge">Badge</label><input type="text" id="admin-pbadge" class="form-input" placeholder="e.g. Bestseller"></div>
-                            </div>
-                            <div class="form-group" style="margin-top:0.5rem;"><label for="admin-pdesc">Description</label><textarea id="admin-pdesc" class="form-input" rows="3" required></textarea></div>
-                            <button type="submit" class="auth-submit-btn" style="margin-top:1rem;">Publish Product</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Customers Section -->
-                <div class="admin-section" id="section-customers">
-                    <div class="admin-panel-card">
-                        <h3 style="margin-bottom:1rem;">Registered Customers</h3>
-                        <div class="admin-table-container">
-                            <table class="admin-table"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Orders</th><th>Registered</th></tr></thead><tbody id="dash-customers-table"></tbody></table>
+            <!-- === SEND NOTIFICATION === -->
+            <div class="admin-section" id="section-notifications">
+                <div class="admin-panel-card" style="margin-bottom:1.5rem;">
+                    <h3 style="margin-bottom:1rem;">🔔 Send Notification</h3>
+                    <form id="admin-notif-form" class="notif-form">
+                        <div class="form-group">
+                            <label for="notif-customer-select">Select Customer</label>
+                            <select id="notif-customer-select" class="notif-customer-select" required>
+                                <option value="all">📢 All Customers</option>
+                            </select>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label for="notif-subject">Subject</label>
+                            <input type="text" id="notif-subject" class="form-input" placeholder="e.g. New Collection Launched!" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="notif-message">Message</label>
+                            <textarea id="notif-message" class="form-input" rows="4" placeholder="Write your notification message here..." required></textarea>
+                        </div>
+                        <button type="submit" class="auth-submit-btn" style="margin-top:0.5rem;">Send Notification</button>
+                    </form>
                 </div>
-            </main>
-        </div>
+                <div class="admin-panel-card">
+                    <h3 style="margin-bottom:1rem;">📜 Notification History</h3>
+                    <div id="notif-history"><p style="color:var(--text-muted); font-size:0.85rem;">Loading...</p></div>
+                </div>
+            </div>
+
+        </main>
     </div>
     <?php
     return ob_get_clean();
 }
+
 // 6. Intercept template load and render a clean storefront directly to bypass theme header/footer
 add_action( 'template_redirect', 'marwari_ecommerce_direct_template_redirect' );
 function marwari_ecommerce_direct_template_redirect() {
