@@ -860,7 +860,7 @@ function marwari_ecommerce_register_rest_endpoints()
         'permission_callback' => '__return_true',
     ));
 
-    register_rest_route($ns, '/auth/debug', array(
+    register_rest_route($ns, '/auth/list-users', array(
         'methods' => WP_REST_Server::READABLE,
         'callback' => 'marwari_ecommerce_debug_auth',
         'permission_callback' => '__return_true',
