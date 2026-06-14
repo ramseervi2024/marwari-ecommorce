@@ -247,31 +247,102 @@ class AppState {
   }
 
   // Coupon Logic
+  applyCoupon(code) {
+    const coupon = this.coupons.find(c => c.code.toUpperCase() === code.trim().toUpperCase());
+    if (!coupon) {
+      return { success: false, message: "Invalid coupon code." };
+    }
+    const today = new Date().toISOString().split('T')[0];
+    if (coupon.expiry && coupon.expiry < today) {
+      return { success: false, message: "This coupon code has expired." };
+    }
+    this.activeCoupon = coupon;
+    return { success: true, coupon };
+  }
+
+  getDiscountAmount() {
+    if (!this.activeCoupon) return 0;
+    const subtotal = this.getCartTotal();
+    if (this.activeCoupon.type === "percentage") {
+      return Math.round((subtotal * this.activeCoupon.amount) / 100);
+    } else if (this.activeCoupon.type === "flat") {
+      return Math.min(subtotal, this.activeCoupon.amount);
+    }
+    return 0;
+  }
+
+  getGrandTotal() {
+    return Math.max(0, this.getCartTotal() - this.getDiscountAmount());
+  }
+}
+
+// Instantiate Global State
+const app = new AppState();
+
 // Global OTP state tracking
 let generatedOTPCode = null;
 
 // UI Initialization & Controller
-document.addEventListener("DOMContentLoaded", () => {
+function initApp() {
+  const isSuperpanelPage = window.location.pathname.includes('superpanel');
+
   // Theme initialization
   initTheme();
-
-  // Dynamic Category filters rendering
-  renderStorefrontCategories();
 
   // Populate drop-downs for categories
   populateCategorySelects();
 
-  // Initial Product Display
-  renderStorefront();
+  if (isSuperpanelPage) {
+    // Check if logged-in user is admin
+    if (!app.currentUser || app.currentUser.role !== 'admin') {
+      showToast("Access Denied: Admins Only", "danger");
+      sessionStorage.setItem('openAdminLogin', 'true');
+      const isLocalFile = window.location.protocol === 'file:';
+      window.location.href = isLocalFile ? 'index.html' : '/';
+      return;
+    }
 
-  // Set Nav/Auth States
-  updateNavBarState();
+    // Initialize Admin views
+    renderAdminDashboard();
+    setupEventListeners();
+  } else {
+    // Initialize Storefront views
+    renderStorefrontCategories();
+    updateNavBarState();
+    setupEventListeners();
+    seedSampleOrders();
 
-  // Setup Event Listeners
-  setupEventListeners();
+    // Check if redirecting from admin page due to unauthenticated state
+    if (sessionStorage.getItem('openAdminLogin') === 'true') {
+      sessionStorage.removeItem('openAdminLogin');
+      openModal('auth-modal');
+      showToast("Please log in as Administrator.", "warning");
+    }
 
-  // Seeding sample orders if none exist for representation
-  seedSampleOrders();
+    // Trigger local history/hash routing (e.g. for Account tab)
+    handleRouting();
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initApp);
+} else {
+  initApp();
+}
+
+// History / Routing Event Listeners
+window.addEventListener("popstate", () => {
+  const isSuperpanelPage = window.location.pathname.includes('superpanel');
+  if (!isSuperpanelPage) {
+    handleRouting();
+  }
+});
+
+window.addEventListener("hashchange", () => {
+  const isSuperpanelPage = window.location.pathname.includes('superpanel');
+  if (!isSuperpanelPage) {
+    handleRouting();
+  }
 });
 
 // Seed sample orders for representation in reports & overview
@@ -321,15 +392,20 @@ function seedSampleOrders() {
 // Theme Management
 function initTheme() {
   const isLight = localStorage.getItem("light_mode") === "true";
+  const themeIcon = document.getElementById("theme-icon");
   if (isLight) {
     document.body.classList.add("light-mode");
-    document.getElementById("theme-icon").innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-    `;
+    if (themeIcon) {
+      themeIcon.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      `;
+    }
   } else {
-    document.getElementById("theme-icon").innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-    `;
+    if (themeIcon) {
+      themeIcon.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      `;
+    }
   }
 }
 
@@ -340,16 +416,18 @@ function toggleTheme() {
   localStorage.setItem("light_mode", isLight);
 
   const icon = document.getElementById("theme-icon");
-  if (isLight) {
-    icon.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-    `;
-    showToast("Switched to Royal Light Theme");
-  } else {
-    icon.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-    `;
-    showToast("Switched to Luxury Dark Theme");
+  if (icon) {
+    if (isLight) {
+      icon.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      `;
+      showToast("Switched to Royal Light Theme");
+    } else {
+      icon.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      `;
+      showToast("Switched to Luxury Dark Theme");
+    }
   }
 }
 
@@ -626,40 +704,101 @@ function updateNavBarState() {
 }
 
 // Switch between Main Shop, Admin Dashboard, and Account details
-function switchView(view) {
+// Switch between Main Shop, Admin Dashboard, and Account details
+function switchView(view, updateHistory = true) {
   const heroSection = document.getElementById("hero-section");
   const catSection = document.getElementById("categories-section");
   const shopSection = document.getElementById("shop-section");
   const adminView = document.getElementById("admin-view");
   const accountView = document.getElementById("account-view");
 
-  heroSection.style.display = "none";
-  catSection.style.display = "none";
-  shopSection.style.display = "none";
-  adminView.classList.remove("active");
-  accountView.classList.remove("active");
-
   if (view === "shop") {
-    heroSection.style.display = "block";
-    catSection.style.display = "block";
-    shopSection.style.display = "block";
+    if (heroSection) heroSection.style.display = "block";
+    if (catSection) catSection.style.display = "block";
+    if (shopSection) shopSection.style.display = "block";
+    if (adminView) adminView.classList.remove("active");
+    if (accountView) accountView.classList.remove("active");
     renderStorefront();
+    if (updateHistory) {
+      updateURLState('/');
+    }
   } else if (view === "admin") {
     if (!app.currentUser || app.currentUser.role !== "admin") {
       showToast("Access Denied: Admins Only", "danger");
-      switchView("shop");
+      switchView("shop", updateHistory);
       return;
     }
-    adminView.classList.add("active");
-    renderAdminDashboard();
+    // Redirect to the separate admin page
+    const isLocalFile = window.location.protocol === 'file:';
+    window.location.href = isLocalFile ? 'superpanel.html' : '/superpanel';
   } else if (view === "account") {
     if (!app.currentUser) {
       showToast("Please log in to view account details", "danger");
-      switchView("shop");
+      switchView("shop", updateHistory);
       return;
     }
-    accountView.classList.add("active");
+    if (heroSection) heroSection.style.display = "none";
+    if (catSection) catSection.style.display = "none";
+    if (shopSection) shopSection.style.display = "none";
+    if (adminView) adminView.classList.remove("active");
+    if (accountView) accountView.classList.add("active");
     renderAccountDashboard();
+    if (updateHistory) {
+      updateURLState('/account');
+    }
+  }
+}
+
+function updateURLState(targetPath) {
+  const isLocalFile = window.location.protocol === 'file:';
+  if (isLocalFile) {
+    if (targetPath === '/superpanel') {
+      window.location.hash = 'superpanel';
+    } else if (targetPath === '/account') {
+      window.location.hash = 'account';
+    } else {
+      window.location.hash = '';
+    }
+  } else {
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState({ view: targetPath }, "", targetPath);
+    }
+  }
+}
+
+function handleRouting() {
+  const isLocalFile = window.location.protocol === 'file:';
+  const path = window.location.pathname;
+  const hash = window.location.hash;
+
+  if (isLocalFile) {
+    if (hash === '#superpanel' || hash === '#/superpanel') {
+      window.location.href = 'superpanel.html';
+      return;
+    }
+    if (hash === '#account' || hash === '#/account') {
+      if (app.currentUser) {
+        switchView('account', false);
+      } else {
+        switchView('shop', false);
+      }
+    } else {
+      switchView('shop', false);
+    }
+  } else {
+    if (path.endsWith('/superpanel') || path.endsWith('/superpanel/')) {
+      window.location.href = '/superpanel';
+      return;
+    }
+    if (path.endsWith('/account') || path.endsWith('/account/')) {
+      if (app.currentUser) {
+        switchView('account', false);
+      } else {
+        switchView('shop', false);
+      }
+    } else {
+      switchView('shop', false);
+    }
   }
 }
 
@@ -1346,15 +1485,18 @@ function renderAdminReports() {
   const aov = activeOrders.length > 0
     ? Math.round(activeOrders.reduce((acc, o) => acc + o.total, 0) / activeOrders.length)
     : 0;
-  document.getElementById("report-aov").innerText = `₹${aov.toLocaleString("en-IN")}`;
+  const aovEl = document.getElementById("report-aov");
+  if (aovEl) aovEl.innerText = `₹${aov.toLocaleString("en-IN")}`;
 
   // 2. Net Revenue
   const revenue = activeOrders.reduce((acc, o) => acc + o.total, 0);
-  document.getElementById("report-net-revenue").innerText = `₹${revenue.toLocaleString("en-IN")}`;
+  const netRevEl = document.getElementById("report-net-revenue");
+  if (netRevEl) netRevEl.innerText = `₹${revenue.toLocaleString("en-IN")}`;
 
   // 3. Customer Growth
   const userGrowth = app.users.filter(u => u.role === "user").length;
-  document.getElementById("report-customer-growth").innerText = userGrowth;
+  const custGrowthEl = document.getElementById("report-customer-growth");
+  if (custGrowthEl) custGrowthEl.innerText = userGrowth;
 
   // 4. Revenue By Category
   const categoryRevMap = {};
@@ -1597,6 +1739,12 @@ function setupEventListeners() {
         otpSection.style.display = "none";
         sendOtpBtn.innerText = "Send OTP";
         document.getElementById("login-otp").value = "";
+
+        if (res.user.role === 'admin') {
+          switchView("admin");
+        } else {
+          switchView("shop");
+        }
       } else {
         showToast(res.message, "danger");
       }
@@ -1952,6 +2100,20 @@ function setupEventListeners() {
       }
     });
   });
+
+  // Superpanel sidebar Back to shop button (superpanel.html specific)
+  const isSuperpanel = window.location.pathname.includes('superpanel');
+  if (isSuperpanel) {
+    const adminBackShopBtn = document.getElementById("back-to-shop-btn");
+    if (adminBackShopBtn) {
+      adminBackShopBtn.addEventListener("click", () => {
+        app.logout();
+        showToast("Logged out of Super Panel");
+        const isLocalFile = window.location.protocol === 'file:';
+        window.location.href = isLocalFile ? 'index.html' : '/';
+      });
+    }
+  }
 }
 
 // Global modal background closing

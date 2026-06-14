@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/superpanel", "destination": "/superpanel.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

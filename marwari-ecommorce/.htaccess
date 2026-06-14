@@ -1,0 +1,11 @@
+RewriteEngine On
+RewriteBase /
+
+# Serve superpanel.html for /superpanel requests
+RewriteRule ^superpanel$ superpanel.html [L]
+RewriteRule ^superpanel/$ superpanel.html [L]
+
+# SPA storefront fallback routing
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.html [L]
