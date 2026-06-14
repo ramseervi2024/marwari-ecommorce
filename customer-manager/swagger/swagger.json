@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://yourdomain.com/wp-json/customer-manager/v1"
+      "url": "https://rpsdigitalworld.store/wp-json/customer-manager/v1"
     }
   ],
   "components": {
@@ -25,6 +25,31 @@
     }
   ],
   "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register a new API user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "password": { "type": "string" },
+                  "role": { "type": "string", "enum": ["api_super_admin", "api_manager", "api_viewer"] },
+                  "name": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User registered successfully" }
+        }
+      }
+    },
     "/auth/login": {
       "post": {
         "summary": "Authenticate user and get JWT",
