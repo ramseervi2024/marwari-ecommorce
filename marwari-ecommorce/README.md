@@ -4,6 +4,6 @@ admin email: admin@gmail.com : password123
 user email : user@gmail.com : password123
 
 
-https://marwari-ecommorce.rpsdigitalworld.store/
+https://rpsdigitalworld.store/
 
-i have added https://marwari-ecommorce.rpsdigitalworld.store/ and created file now how to handle everything on wordpreess
+i have added https://rpsdigitalworld.store/ and created file now how to handle everything on wordpreess

@@ -1546,3 +1546,280 @@ select.form-input {
     /* Hide on mobile navbar for cleanliness */
   }
 }
+
+/* ==========================================
+   MARWARI PREMIUM ACCENTS & PANELS ADDITIONS
+   ========================================== */
+
+/* Account Layout (Profile / Addresses / Orders Dashboard) */
+.account-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+@media (min-width: 768px) {
+  .account-layout {
+    grid-template-columns: 240px 1fr;
+  }
+}
+
+.account-sidebar {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 0.75rem;
+  border-radius: 16px;
+  height: fit-content;
+}
+
+@media (min-width: 768px) {
+  .account-sidebar {
+    flex-direction: column;
+    overflow-x: visible;
+  }
+}
+
+.account-tab-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.8rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-radius: 10px;
+  white-space: nowrap;
+  transition: var(--transition);
+  width: 100%;
+}
+
+.account-tab-link:hover {
+  background: var(--primary-glow);
+  color: var(--primary);
+}
+
+.account-tab-link.active {
+  background: var(--primary);
+  color: #000;
+}
+
+.account-panel {
+  display: none;
+}
+
+.account-panel.active {
+  display: block;
+}
+
+.address-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.25rem;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: var(--transition);
+}
+
+.address-card:hover {
+  border-color: var(--primary);
+}
+
+.address-card.default {
+  border-color: var(--success);
+  background: rgba(16, 185, 129, 0.02);
+}
+
+.address-badge {
+  background: var(--success);
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 99px;
+  font-weight: 700;
+  margin-left: 0.5rem;
+}
+
+/* Sidebar Layout for Admin Dashboard */
+@media (min-width: 768px) {
+  .admin-view-wrapper.active {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 80px);
+    padding: 0;
+    gap: 0;
+  }
+
+  .admin-sidebar {
+    position: sticky;
+    top: 80px;
+    /* navbar height */
+    height: calc(100vh - 80px);
+    background: var(--bg-card);
+    border-right: 1px solid var(--border-color);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
+.admin-sidebar {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .admin-sidebar {
+    border-bottom: none;
+  }
+}
+
+.admin-logo {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+}
+
+.admin-logo span {
+  color: var(--primary);
+}
+
+.admin-nav-links {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .admin-nav-links {
+    flex-direction: column;
+    overflow-x: visible;
+    margin-bottom: 0;
+    gap: 0.5rem;
+  }
+}
+
+.admin-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: var(--transition);
+  white-space: nowrap;
+  text-align: left;
+  width: 100%;
+}
+
+.admin-nav-link:hover {
+  background: var(--primary-glow);
+  color: var(--primary);
+}
+
+.admin-nav-link.active {
+  background: var(--primary);
+  color: #000;
+}
+
+.admin-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: var(--transition);
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
+.admin-logout-btn:hover {
+  color: var(--danger);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.admin-content-area {
+  padding: 2.5rem;
+  overflow-y: auto;
+  background: var(--bg-app);
+}
+
+.admin-panel {
+  display: none;
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.admin-panel.active {
+  display: block;
+}
+
+.admin-panel-header {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.admin-panel-header h2 {
+  font-size: 2rem;
+}
+
+.admin-panel-header p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* Reports dynamic category percentage bars */
+.report-bar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.report-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.report-bar-track {
+  width: 100%;
+  height: 8px;
+  background: var(--border-color);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.report-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 99px;
+}
+
+/* Account Details and general improvements */
+.account-view-wrapper {
+  display: none;
+}
+
+.account-view-wrapper.active {
+  display: block;
+}
