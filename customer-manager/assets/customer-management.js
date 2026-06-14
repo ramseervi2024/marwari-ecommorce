@@ -126,9 +126,11 @@ function showLayer(layer) {
   if (layer === 'auth') {
     authLayer.style.display = 'flex';
     panelLayer.style.display = 'none';
+    panelLayer.classList.remove('active');
   } else {
     authLayer.style.display = 'none';
-    panelLayer.style.display = 'block';
+    panelLayer.style.display = '';
+    panelLayer.classList.add('active');
   }
 }
 
@@ -629,6 +631,15 @@ async function handleImportCSV(e) {
 function initEventListeners() {
   // Theme button
   document.getElementById('theme-toggle-btn').addEventListener('click', toggleTheme);
+
+  // Mobile Logout
+  const mobLogout = document.getElementById('mobile-logout-btn');
+  if (mobLogout) {
+    mobLogout.addEventListener('click', () => {
+      handleLogout();
+      showToast('Logged out of session.');
+    });
+  }
 
   // Login toggles
   document.getElementById('show-register-link').addEventListener('click', (e) => {

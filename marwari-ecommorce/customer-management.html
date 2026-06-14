@@ -279,10 +279,95 @@
       border-color: var(--primary);
       color: var(--primary);
     }
-    .filter-btn.active {
-      background: var(--primary);
-      color: #000;
-      border-color: var(--primary);
+    .mobile-only-logout {
+      display: none;
+    }
+    @media (max-width: 767px) {
+      .admin-view-wrapper.active {
+        display: flex !important;
+        flex-direction: column !important;
+        min-height: 100vh !important;
+        padding: 0 !important;
+        gap: 0 !important;
+      }
+      .admin-sidebar {
+        border-bottom: 1px solid var(--border-color) !important;
+        padding: 1.25rem !important;
+        height: auto !important;
+        position: static !important;
+      }
+      .admin-logo {
+        margin-bottom: 1rem !important;
+        text-align: center !important;
+      }
+      .nav-user-info {
+        justify-content: center !important;
+        margin-bottom: 1rem !important;
+        padding-bottom: 0.75rem !important;
+      }
+      .admin-nav-links {
+        flex-direction: row !important;
+        overflow-x: auto !important;
+        gap: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+        margin-bottom: 0 !important;
+        justify-content: flex-start !important;
+        width: 100% !important;
+      }
+      .admin-nav-link {
+        width: auto !important;
+        padding: 0.6rem 1rem !important;
+        font-size: 0.85rem !important;
+      }
+      .admin-logout-btn {
+        display: none !important;
+      }
+      .mobile-only-logout {
+        display: flex !important;
+      }
+      .admin-content-area {
+        padding: 1.25rem !important;
+      }
+      .admin-panel-header h2 {
+        font-size: 1.6rem !important;
+      }
+      .action-header-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 1rem !important;
+      }
+      .search-bar {
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+      .filter-tabs {
+        width: 100% !important;
+        justify-content: space-between !important;
+      }
+      .filter-btn {
+        flex: 1 !important;
+        text-align: center !important;
+      }
+      .action-buttons-group {
+        width: 100% !important;
+        flex-wrap: wrap !important;
+        gap: 0.5rem !important;
+      }
+      .action-buttons-group .btn-primary {
+        flex: 1 !important;
+        justify-content: center !important;
+        font-size: 0.85rem !important;
+        padding: 0.6rem 1rem !important;
+      }
+      .pagination-wrapper {
+        flex-direction: column !important;
+        gap: 1rem !important;
+        align-items: center !important;
+      }
+      .auth-card {
+        padding: 1.5rem !important;
+        border-radius: 16px !important;
+      }
     }
   </style>
 </head>
@@ -424,14 +509,25 @@
           API Connection Stable
         </div>
         
-        <!-- Theme Switch Toggle -->
-        <button class="nav-btn" id="theme-toggle-btn" title="Toggle Theme" style="border-radius:12px; width:40px; height:40px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="4" />
-            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-          </svg>
-        </button>
+        <!-- Actions Wrapper -->
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <!-- Theme Switch Toggle -->
+          <button class="nav-btn" id="theme-toggle-btn" title="Toggle Theme" style="border-radius:12px; width:40px; height:40px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+            </svg>
+          </button>
+          
+          <!-- Mobile Logout Button -->
+          <button class="nav-btn mobile-only-logout" id="mobile-logout-btn" title="Sign Out" style="border-radius:12px; width:40px; height:40px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <!-- PANEL 1: OVERVIEW -->
