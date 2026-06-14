@@ -1,0 +1,11 @@
+{
+    "name": "ramseervi/fleet-track",
+    "description": "Enterprise-grade Fleet Management System API for WordPress",
+    "type": "wordpress-plugin",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "FleetTrackPro\\": ""
+        }
+    }
+}

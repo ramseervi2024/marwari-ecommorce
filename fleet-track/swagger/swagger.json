@@ -1,0 +1,540 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "FleetTrack Pro API",
+    "description": "Custom REST API for Fleet Management in Headless CMS environments (vehicles, drivers, routes, trips, expenses, fuel, documents, dashboard, reports).",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/wp-json/fleet-track/v1",
+      "description": "Local server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "email", "password", "name"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "password": { "type": "string", "minLength": 6 },
+                  "name": { "type": "string" },
+                  "role": { "type": "string", "enum": ["fleet_super_admin", "fleet_manager", "fleet_accountant", "fleet_driver"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Successfully registered" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Authenticate user",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "password"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "JWT returned" }
+        }
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "summary": "Rotate tokens",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["refresh_token"],
+                "properties": {
+                  "refresh_token": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "New tokens returned" }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Get authenticated user profile details",
+        "responses": {
+          "200": { "description": "User details" }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Logout active session",
+        "responses": {
+          "200": { "description": "Session revoked" }
+        }
+      }
+    },
+    "/vehicles": {
+      "get": {
+        "summary": "List vehicles",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } },
+          { "name": "status", "in": "query", "schema": { "type": "string", "enum": ["ACTIVE", "MAINTENANCE", "OUT_OF_SERVICE"] } }
+        ],
+        "responses": { "200": { "description": "Vehicles fetched" } }
+      },
+      "post": {
+        "summary": "Create vehicle",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["vehicle_number", "vehicle_type", "vehicle_brand", "vehicle_model"],
+                "properties": {
+                  "vehicle_number": { "type": "string" },
+                  "vehicle_type": { "type": "string" },
+                  "vehicle_brand": { "type": "string" },
+                  "vehicle_model": { "type": "string" },
+                  "vehicle_year": { "type": "integer" },
+                  "fuel_type": { "type": "string" },
+                  "capacity": { "type": "string" },
+                  "insurance_expiry": { "type": "string", "format": "date" },
+                  "fitness_expiry": { "type": "string", "format": "date" },
+                  "permit_expiry": { "type": "string", "format": "date" },
+                  "status": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/vehicles/{id}": {
+      "get": {
+        "summary": "Get vehicle details",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Vehicle fetched" } }
+      },
+      "put": {
+        "summary": "Update vehicle",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object" } } }
+        },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete vehicle",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/drivers": {
+      "get": {
+        "summary": "List drivers",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } },
+          { "name": "status", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "Drivers fetched" } }
+      },
+      "post": {
+        "summary": "Create driver",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "phone", "license_number"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string" },
+                  "phone": { "type": "string" },
+                  "license_number": { "type": "string" },
+                  "license_expiry": { "type": "string", "format": "date" },
+                  "salary": { "type": "number" },
+                  "joining_date": { "type": "string", "format": "date" },
+                  "status": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/drivers/{id}": {
+      "get": {
+        "summary": "Get driver details",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Driver fetched" } }
+      },
+      "put": {
+        "summary": "Update driver",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object" } } }
+        },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete driver",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/routes": {
+      "get": {
+        "summary": "List routes",
+        "responses": { "200": { "description": "Routes fetched" } }
+      },
+      "post": {
+        "summary": "Create route",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["route_name", "source", "destination", "distance_km"],
+                "properties": {
+                  "route_name": { "type": "string" },
+                  "source": { "type": "string" },
+                  "destination": { "type": "string" },
+                  "distance_km": { "type": "number" },
+                  "estimated_time": { "type": "string" },
+                  "status": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/routes/{id}": {
+      "get": {
+        "summary": "Get route details",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Fetched" } }
+      },
+      "put": {
+        "summary": "Update route",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object" } } }
+        },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete route",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/trips": {
+      "get": {
+        "summary": "List trips",
+        "responses": { "200": { "description": "Trips fetched" } }
+      },
+      "post": {
+        "summary": "Create trip",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["vehicle_id", "driver_id", "route_id", "trip_date"],
+                "properties": {
+                  "vehicle_id": { "type": "integer" },
+                  "driver_id": { "type": "integer" },
+                  "route_id": { "type": "integer" },
+                  "trip_date": { "type": "string", "format": "date" },
+                  "start_km": { "type": "number" },
+                  "end_km": { "type": "number" },
+                  "revenue": { "type": "number" },
+                  "status": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/trips/{id}": {
+      "get": {
+        "summary": "Get trip details",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Fetched" } }
+      },
+      "put": {
+        "summary": "Update trip status",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object" } } }
+        },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete trip",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/expenses": {
+      "get": {
+        "summary": "List expenses",
+        "responses": { "200": { "description": "Fetched" } }
+      },
+      "post": {
+        "summary": "Create expense",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["expense_type", "amount", "expense_date"],
+                "properties": {
+                  "vehicle_id": { "type": "integer" },
+                  "driver_id": { "type": "integer" },
+                  "trip_id": { "type": "integer" },
+                  "expense_type": { "type": "string", "enum": ["Fuel", "Maintenance", "Toll", "Tyre", "Insurance", "Permit", "Salary", "Repair", "Parking", "Miscellaneous"] },
+                  "amount": { "type": "number" },
+                  "expense_date": { "type": "string", "format": "date" },
+                  "description": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/expenses/{id}": {
+      "get": {
+        "summary": "Get expense details",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Fetched" } }
+      },
+      "put": {
+        "summary": "Update expense details",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object" } } }
+        },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete expense",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/fuel": {
+      "get": {
+        "summary": "List fuel logs",
+        "responses": { "200": { "description": "Fetched" } }
+      },
+      "post": {
+        "summary": "Create fuel log",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["vehicle_id", "fuel_quantity", "fuel_cost", "fuel_date"],
+                "properties": {
+                  "vehicle_id": { "type": "integer" },
+                  "trip_id": { "type": "integer" },
+                  "fuel_quantity": { "type": "number" },
+                  "fuel_cost": { "type": "number" },
+                  "fuel_price_per_liter": { "type": "number" },
+                  "fuel_station": { "type": "string" },
+                  "fuel_date": { "type": "string", "format": "date" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/fuel/{id}": {
+      "put": {
+        "summary": "Update fuel log",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object" } } }
+        },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete fuel log",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/media/upload": {
+      "post": {
+        "summary": "Upload vehicle/driver documents",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": { "type": "string", "format": "binary" },
+                  "related_type": { "type": "string", "enum": ["vehicle", "driver"] },
+                  "related_id": { "type": "integer" },
+                  "document_type": { "type": "string", "enum": ["RC", "Insurance", "Permit", "Fitness", "Pollution", "License", "Aadhaar", "PAN", "Medical"] },
+                  "expiry_date": { "type": "string", "format": "date" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Uploaded successfully" }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "summary": "Dashboard metrics",
+        "responses": { "200": { "description": "Calculations returned" } }
+      }
+    },
+    "/reports/profit-loss": {
+      "get": {
+        "summary": "Profit and Loss monthly breakdown statement",
+        "parameters": [
+          { "name": "start_date", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "name": "end_date", "in": "query", "schema": { "type": "string", "format": "date" } }
+        ],
+        "responses": { "200": { "description": "P&L Report" } }
+      }
+    },
+    "/reports/revenue": {
+      "get": {
+        "summary": "Detailed revenue report",
+        "parameters": [
+          { "name": "start_date", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "name": "end_date", "in": "query", "schema": { "type": "string", "format": "date" } }
+        ],
+        "responses": { "200": { "description": "Revenue data" } }
+      }
+    },
+    "/reports/expenses": {
+      "get": {
+        "summary": "Expenses report with breakdown",
+        "parameters": [
+          { "name": "start_date", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "name": "end_date", "in": "query", "schema": { "type": "string", "format": "date" } }
+        ],
+        "responses": { "200": { "description": "Expenses data" } }
+      }
+    },
+    "/reports/fuel": {
+      "get": {
+        "summary": "Fuel logs consumption analysis",
+        "parameters": [
+          { "name": "start_date", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "name": "end_date", "in": "query", "schema": { "type": "string", "format": "date" } }
+        ],
+        "responses": { "200": { "description": "Fuel data" } }
+      }
+    },
+    "/reports/vehicle": {
+      "get": {
+        "summary": "Vehicle utilization and efficiency report",
+        "parameters": [
+          { "name": "start_date", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "name": "end_date", "in": "query", "schema": { "type": "string", "format": "date" } }
+        ],
+        "responses": { "200": { "description": "Vehicle performance data" } }
+      }
+    },
+    "/reports/driver": {
+      "get": {
+        "summary": "Driver performance analysis report",
+        "parameters": [
+          { "name": "start_date", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "name": "end_date", "in": "query", "schema": { "type": "string", "format": "date" } }
+        ],
+        "responses": { "200": { "description": "Driver performance data" } }
+      }
+    },
+    "/reports/trips": {
+      "get": {
+        "summary": "Detailed trips report logs",
+        "parameters": [
+          { "name": "start_date", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "name": "end_date", "in": "query", "schema": { "type": "string", "format": "date" } }
+        ],
+        "responses": { "200": { "description": "Trips data" } }
+      }
+    }
+  }
+}
