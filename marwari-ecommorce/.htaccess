@@ -5,6 +5,10 @@ RewriteBase /
 RewriteRule ^superpanel$ superpanel.html [L]
 RewriteRule ^superpanel/$ superpanel.html [L]
 
+# Serve customer-management.html for /customer-management requests
+RewriteRule ^customer-management$ customer-management.html [L]
+RewriteRule ^customer-management/$ customer-management.html [L]
+
 # SPA storefront fallback routing
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

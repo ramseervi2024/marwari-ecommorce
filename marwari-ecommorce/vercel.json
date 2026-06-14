@@ -1,6 +1,7 @@
 {
   "rewrites": [
     { "source": "/superpanel", "destination": "/superpanel.html" },
+    { "source": "/customer-management", "destination": "/customer-management.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
