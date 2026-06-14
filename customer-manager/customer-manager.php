@@ -47,8 +47,7 @@ require_once __DIR__ . '/routes/dashboard.php';
 register_activation_hook(__FILE__, 'customer_manager_activate_plugin');
 
 function customer_manager_activate_plugin() {
-    customer_manager_create_tables();
-    customer_manager_create_roles();
+    \CustomerManager\Database\Migrations::activate();
     add_rewrite_rule('^customer-api-docs/?$', 'index.php?customer_api_docs=1', 'top');
     flush_rewrite_rules();
 }
