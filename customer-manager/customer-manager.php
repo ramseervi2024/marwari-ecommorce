@@ -49,6 +49,7 @@ register_activation_hook(__FILE__, 'customer_manager_activate_plugin');
 function customer_manager_activate_plugin() {
     \CustomerManager\Database\Migrations::activate();
     add_rewrite_rule('^customer-api-docs/?$', 'index.php?customer_api_docs=1', 'top');
+    add_rewrite_rule('^customer-management/?$', 'index.php?customer_management=1', 'top');
     flush_rewrite_rules();
 }
 
@@ -76,19 +77,25 @@ add_action('rest_api_init', function () {
     });
 }, 15);
 
-// 7. Serve Swagger documentation
+// 7. Serve Swagger documentation and Customer Management views
 add_action('init', function() {
     add_rewrite_rule('^customer-api-docs/?$', 'index.php?customer_api_docs=1', 'top');
+    add_rewrite_rule('^customer-management/?$', 'index.php?customer_management=1', 'top');
 });
 
 add_filter('query_vars', function($vars) {
     $vars[] = 'customer_api_docs';
+    $vars[] = 'customer_management';
     return $vars;
 });
 
 add_action('template_redirect', function() {
     if (get_query_var('customer_api_docs')) {
         include plugin_dir_path(__FILE__) . 'swagger/index.php';
+        exit;
+    }
+    if (get_query_var('customer_management')) {
+        include plugin_dir_path(__FILE__) . 'views/customer-management.php';
         exit;
     }
 });
