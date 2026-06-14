@@ -1,20 +1,85 @@
-// Marwari E-Commerce - WordPress API Logic & Application State
+// Marwari E-Commerce - Main Logic & Application State
 
-class WordPressAppState {
+// Initial Seed Data
+const DEFAULT_PRODUCTS = [
+  {
+    id: "prod-1",
+    name: "Royal Jaipuri Silk Bandhani Saree",
+    category: "Apparel",
+    price: 8499,
+    description: "Experience the royal heritage of Rajasthan with this premium pure silk Bandhani Saree. Hand-dyed by traditional artisans in Jaipur using the classic tie-dye technique, featuring intricate golden zari borders and elegant motifs perfect for festive occasions.",
+    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80",
+    badge: "Bestseller"
+  },
+  {
+    id: "prod-2",
+    name: "Classic Navy Blue Royal Jodhpuri Suit",
+    category: "Apparel",
+    price: 12999,
+    description: "An epitome of sophistication, this Jodhpuri Suit is tailored to perfection. Crafted from premium wool-blend fabric, it features a bandhgala collar, structured shoulders, and brass crest buttons. Represents the true legacy of Marwari aristocracy.",
+    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=600&q=80",
+    badge: "Royal Exclusive"
+  },
+  {
+    id: "prod-3",
+    name: "Handcrafted Gold-Leaf Jaipuri Quilt",
+    category: "Handicrafts",
+    price: 3499,
+    description: "This world-famous Jaipuri Razai (quilt) is incredibly lightweight yet provides exceptional warmth. Made of 100% pure organic cotton and filled with carded cotton, it is detailed with traditional gold-leaf hand-block printing.",
+    image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=600&q=80",
+    badge: "100% Cotton"
+  },
+  {
+    id: "prod-4",
+    name: "Pure Silver Meenakari Pearl Jhumkas",
+    category: "Jewelry",
+    price: 4999,
+    description: "Exquisite traditional earrings featuring intricate Meenakari (enamel) artwork hand-painted on pure sterling silver. Suspended with premium freshwater pearls and detailed with delicate filigree work inspired by Royal Rajasthani palaces.",
+    image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=600&q=80",
+    badge: "Handmade"
+  },
+  {
+    id: "prod-5",
+    name: "Traditional Camel Leather Mojaris",
+    category: "Apparel",
+    price: 1899,
+    description: "Authentic Marwari Mojaris made from genuine, double-tanned camel leather. Hand-stitched with premium silk and golden zari threads. Designed with a soft cushioned sole for comfort and durability while maintaining absolute style.",
+    image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80",
+    badge: "Artisan Leather"
+  },
+  {
+    id: "prod-6",
+    name: "Premium Saffron & Cardamom Kesaria Peda",
+    category: "Sweets & Spices",
+    price: 899,
+    description: "Indulge in the true taste of Marwar. Our Kesaria Peda is cooked slowly using fresh condensed milk (khoya), flavored with organic Kashmiri saffron (kesar) and ground green cardamom, garnished with premium sliced pistachios and almonds.",
+    image: "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80",
+    badge: "Freshly Made"
+  },
+  {
+    id: "prod-7",
+    name: "Jaipur Traditional Blue Pottery Vase",
+    category: "Handicrafts",
+    price: 2299,
+    description: "Add a touch of elegance to your home with this authentic Jaipur Blue Pottery decorative vase. Crafted with Egyptian paste clay, hand-painted with cobalt blue dye in traditional floral motifs, and glazed to a premium shine.",
+    image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80",
+    badge: "Heritage Art"
+  }
+];
+
+const DEFAULT_USERS = [
+  { email: "admin@gmail.com", password: "password123", name: "Marwari Admin", role: "admin", phone: "9876543210" },
+  { email: "user@gmail.com", password: "password123", name: "Ramesh Seervi", role: "user", phone: "9001122334" }
+];
+
+// Global Application State Manager
+class AppState {
   constructor() {
-    // Read localized WordPress settings
-    const hasWpSettings = typeof wpApiSettings !== 'undefined';
-    this.apiRoot = hasWpSettings ? wpApiSettings.root + 'marwari-ecom/v1' : '';
-    this.nonce = hasWpSettings ? wpApiSettings.nonce : '';
-
-    // In-memory active states
-    this.products = [];
-    this.orders = [];
-    // Restore user session from localStorage so UI shows login state immediately on refresh
-    this.currentUser = this.loadLocalStorage("marwari_session", null);
-
-    // Cart is maintained in client LocalStorage until checkout
+    this.products = this.loadLocalStorage("marwari_products", DEFAULT_PRODUCTS);
+    this.users = this.loadLocalStorage("marwari_users", DEFAULT_USERS);
+    this.orders = this.loadLocalStorage("marwari_orders", []);
     this.cart = this.loadLocalStorage("marwari_cart", []);
+    this.currentUser = this.loadLocalStorage("marwari_session", null);
   }
 
   loadLocalStorage(key, defaultValue) {
@@ -22,83 +87,15 @@ class WordPressAppState {
     return data ? JSON.parse(data) : defaultValue;
   }
 
-  saveLocalStorage(key, data) {
-    localStorage.setItem(key, JSON.stringify(data));
+  saveState() {
+    localStorage.setItem("marwari_products", JSON.stringify(this.products));
+    localStorage.setItem("marwari_users", JSON.stringify(this.users));
+    localStorage.setItem("marwari_orders", JSON.stringify(this.orders));
+    localStorage.setItem("marwari_cart", JSON.stringify(this.cart));
+    localStorage.setItem("marwari_session", JSON.stringify(this.currentUser));
   }
 
-  // General Fetch API Helper
-  async apiFetch(endpoint, options = {}) {
-    const url = `${this.apiRoot}${endpoint}`;
-
-    const headers = {
-      'Content-Type': 'application/json',
-      ...options.headers
-    };
-
-    if (this.nonce) {
-      headers['X-WP-Nonce'] = this.nonce;
-    }
-
-    // Include credentials (cookies) to support WordPress native cookie authentication
-    const fetchOptions = {
-      credentials: 'same-origin',
-      ...options,
-      headers
-    };
-
-    try {
-      const response = await fetch(url, fetchOptions);
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || `API Error (Status ${response.status})`);
-      }
-      return data;
-    } catch (error) {
-      console.error(`WordPress API Fetch Error on ${endpoint}:`, error);
-      throw error;
-    }
-  }
-
-  // Load initial configurations from WordPress
-  async initSession() {
-    try {
-      // 1. Always fetch products
-      this.products = await this.apiFetch('/products');
-    } catch (e) {
-      console.warn("Failed to load products:", e.message);
-    }
-
-    // 2. If we have a cached session, fetch orders silently
-    if (this.currentUser) {
-      try {
-        this.orders = await this.apiFetch('/orders');
-      } catch (e) {
-        console.warn("Failed to load orders (session may have expired):", e.message);
-      }
-    }
-
-    // 3. Silently verify session with server in background — never force logout
-    //    Only update localStorage if server confirms a valid session
-    try {
-      const serverUser = await this.apiFetch('/auth/current');
-      if (serverUser) {
-        this.currentUser = serverUser;
-        this.saveLocalStorage("marwari_session", serverUser);
-        // If we didn't already load orders, load them now
-        if (this.orders.length === 0) {
-          this.orders = await this.apiFetch('/orders');
-        }
-      }
-      // NOTE: if serverUser is null, we do NOT clear the session.
-      // Session is ONLY cleared by the logout button or browser data clear.
-    } catch (e) {
-      // Server check failed silently — keep the cached localStorage session
-      console.warn("Background session check failed, keeping cached session.", e.message);
-    }
-  }
-
-  // Cart Local Operations
+  // Cart Management
   addToCart(productId, quantity = 1) {
     const product = this.products.find(p => p.id === productId);
     if (!product) return false;
@@ -109,7 +106,7 @@ class WordPressAppState {
     } else {
       this.cart.push({ product, quantity });
     }
-    this.saveLocalStorage("marwari_cart", this.cart);
+    this.saveState();
     return true;
   }
 
@@ -121,7 +118,7 @@ class WordPressAppState {
       } else {
         this.cart[itemIndex].quantity = quantity;
       }
-      this.saveLocalStorage("marwari_cart", this.cart);
+      this.saveState();
       return true;
     }
     return false;
@@ -129,12 +126,12 @@ class WordPressAppState {
 
   removeFromCart(productId) {
     this.cart = this.cart.filter(item => item.product.id !== productId);
-    this.saveLocalStorage("marwari_cart", this.cart);
+    this.saveState();
   }
 
   clearCart() {
     this.cart = [];
-    this.saveLocalStorage("marwari_cart", this.cart);
+    this.saveState();
   }
 
   getCartTotal() {
@@ -145,171 +142,80 @@ class WordPressAppState {
     return this.cart.reduce((count, item) => count + item.quantity, 0);
   }
 
-  // Authentication REST Operations — Email + OTP Code (no passwords)
-  async loginWithEmail(email) {
-    try {
-      const res = await this.apiFetch('/auth/login', {
-        method: 'POST',
-        body: JSON.stringify({ email })
-      });
-      return res;
-    } catch (e) {
-      return { success: false, message: e.message };
+  // User Authentication
+  loginWithEmail(email, password) {
+    const user = this.users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+    if (user) {
+      this.currentUser = { email: user.email, name: user.name, role: user.role, phone: user.phone };
+      this.saveState();
+      return { success: true, user: this.currentUser };
     }
+    return { success: false, message: "Invalid email or password" };
   }
 
-  async registerUser(name, email, phone) {
-    try {
-      const res = await this.apiFetch('/auth/register', {
-        method: 'POST',
-        body: JSON.stringify({ name, email, phone })
-      });
-      return res;
-    } catch (e) {
-      return { success: false, message: e.message };
+  loginWithOTP(phone, otpInput, generatedOTP) {
+    if (!otpInput || otpInput !== generatedOTP) {
+      return { success: false, message: "Incorrect OTP. Please enter the code displayed." };
     }
+
+    // Check if user exists, else register a new user
+    let user = this.users.find(u => u.phone === phone);
+    if (!user) {
+      user = {
+        email: `${phone}@marwari.com`,
+        password: "otp-login-pwd",
+        name: `Guest ${phone.slice(-4)}`,
+        role: "user",
+        phone: phone
+      };
+      this.users.push(user);
+    }
+
+    this.currentUser = { email: user.email, name: user.name, role: user.role, phone: user.phone };
+    this.saveState();
+    return { success: true, user: this.currentUser };
   }
 
-  async verifyEmailCode(email, code) {
-    try {
-      const res = await this.apiFetch('/auth/verify-email', {
-        method: 'POST',
-        body: JSON.stringify({ email, code })
-      });
-      if (res.success) {
-        this.currentUser = res.user;
-        this.saveLocalStorage("marwari_session", res.user);
-        if (res.nonce) this.nonce = res.nonce;
-        this.orders = await this.apiFetch('/orders');
-        return { success: true, user: this.currentUser };
-      }
-      return { success: false, message: "Verification failed" };
-    } catch (e) {
-      return { success: false, message: e.message };
-    }
-  }
-
-  async resendCode(email) {
-    try {
-      const res = await this.apiFetch('/auth/resend-code', {
-        method: 'POST',
-        body: JSON.stringify({ email })
-      });
-      return res;
-    } catch (e) {
-      return { success: false, message: e.message };
-    }
-  }
-
-  async logout() {
-    try {
-      await this.apiFetch('/auth/logout', { method: 'POST' });
-    } catch (e) {
-      console.warn("Logout request failed, cleaning local state anyway:", e.message);
-    }
+  logout() {
     this.currentUser = null;
-    this.orders = [];
-    localStorage.removeItem("marwari_session"); // Clear persisted session
-    this.clearCart();
-  }
-
-  // Products Database Modifications (Admin)
-  async addProduct(product) {
-    const res = await this.apiFetch('/products', {
-      method: 'POST',
-      body: JSON.stringify(product)
-    });
-    this.products.push(res);
-    return res;
-  }
-
-  async deleteProduct(productId) {
-    await this.apiFetch(`/products/${productId}`, {
-      method: 'DELETE'
-    });
-    this.products = this.products.filter(p => p.id !== productId);
-  }
-
-  // Orders REST Actions
-  async submitCheckoutOrder(shippingDetails) {
-    const res = await this.apiFetch('/orders', {
-      method: 'POST',
-      body: JSON.stringify({
-        items: this.cart,
-        total: this.getCartTotal(),
-        shippingDetails
-      })
-    });
-    this.orders.unshift(res);
-    this.clearCart();
-    return res;
-  }
-
-  async updateOrderStatus(orderId, status) {
-    const res = await this.apiFetch(`/orders/${orderId}/status`, {
-      method: 'POST',
-      body: JSON.stringify({ status })
-    });
-    const order = this.orders.find(o => o.id === orderId);
-    if (order) {
-      order.status = res.status;
-    }
-    return res;
+    this.cart = []; // Optional: Clear cart on logout
+    this.saveState();
   }
 }
 
-const app = new WordPressAppState();
+// Instantiate Global State
+const app = new AppState();
+
+// Global OTP state tracking
+let generatedOTPCode = null;
 
 // UI Initialization & Controller
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
+  // Theme initialization
   initTheme();
 
-  // Immediately render navbar from cached localStorage session (no flicker on refresh)
-  updateNavBarState();
-
-  // Show loading skeleton placeholders
-  showStorefrontLoading();
-
-  // Initialize DB data and verify server session
-  await app.initSession();
-
-  // Re-render navbar and storefront with confirmed server state
+  // Initial Product Display
   renderStorefront();
-  updateNavBarState();
-  setupEventListeners();
-  initCustomerNotifications();
 
-  // Admin Mode: If this is the /admin/ page, handle admin-specific behavior
-  const pageMode = (typeof wpApiSettings !== 'undefined' && wpApiSettings.pageMode) ? wpApiSettings.pageMode : 'shop';
-  if (pageMode === 'admin') {
-    if (app.currentUser && app.currentUser.role === 'admin') {
-      // Already logged in as admin — go directly to dashboard
-      switchView("admin");
-    } else if (app.currentUser) {
-      // Logged in but not admin
-      showToast("Access denied. Admin credentials required.", "danger");
-    } else {
-      // Not logged in — auto-open login modal
-      openModal("auth-modal");
-    }
-  }
+  // Set Nav/Auth States
+  updateNavBarState();
+
+  // Setup Event Listeners
+  setupEventListeners();
 });
 
+// Theme Management
 function initTheme() {
   const isLight = localStorage.getItem("light_mode") === "true";
-  const icon = document.getElementById("theme-icon");
-  if (!icon) return;
-
   if (isLight) {
     document.body.classList.add("light-mode");
-    icon.innerHTML = `
+    document.getElementById("theme-icon").innerHTML = `
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-    `;
+    `; // Show moon icon if in light mode (to switch back to dark)
   } else {
-    document.body.classList.remove("light-mode");
-    icon.innerHTML = `
+    document.getElementById("theme-icon").innerHTML = `
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-    `;
+    `; // Show sun icon if in dark mode
   }
 }
 
@@ -318,43 +224,29 @@ function toggleTheme() {
   body.classList.toggle("light-mode");
   const isLight = body.classList.contains("light-mode");
   localStorage.setItem("light_mode", isLight);
-  initTheme();
-  showToast(isLight ? "Switched to Royal Light Theme" : "Switched to Luxury Dark Theme");
-}
 
-// Show animated skeletons while retrieving database entries
-function showStorefrontLoading() {
-  const container = document.getElementById("products-container");
-  if (!container) return;
-
-  container.innerHTML = "";
-  for (let i = 0; i < 4; i++) {
-    const card = document.createElement("div");
-    card.className = "product-card skeleton-card";
-    card.style.opacity = "0.6";
-    card.innerHTML = `
-      <div style="width: 100%; padding-top: 85%; background: var(--border-color); animation: pulse 1.5s infinite;"></div>
-      <div style="padding: 1.5rem;">
-        <div style="width: 40%; height: 12px; background: var(--border-color); margin-bottom: 0.8rem;"></div>
-        <div style="width: 85%; height: 20px; background: var(--border-color); margin-bottom: 0.5rem;"></div>
-        <div style="width: 100%; height: 35px; background: var(--border-color); margin-bottom: 1.2rem;"></div>
-        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1rem;">
-          <div style="width: 30%; height: 20px; background: var(--border-color);"></div>
-          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--border-color);"></div>
-        </div>
-      </div>
+  const icon = document.getElementById("theme-icon");
+  if (isLight) {
+    icon.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
     `;
-    container.appendChild(card);
+    showToast("Switched to Royal Light Theme");
+  } else {
+    icon.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    `;
+    showToast("Switched to Luxury Dark Theme");
   }
 }
 
-// Render Products catalog
+// Render Main Storefront Products
 function renderStorefront(category = "All", query = "") {
   const container = document.getElementById("products-container");
   if (!container) return;
 
   container.innerHTML = "";
 
+  // Filter products by category and search query
   let filtered = app.products;
   if (category !== "All") {
     filtered = filtered.filter(p => p.category === category);
@@ -369,7 +261,7 @@ function renderStorefront(category = "All", query = "") {
       <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: var(--text-muted);">
         <svg style="margin: 0 auto 1.5rem; display: block;" xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         <h3 style="font-family: var(--font-body); font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">No products found</h3>
-        <p>Try searching another heritage category or title.</p>
+        <p>Try matching another category, title, or keyword.</p>
       </div>
     `;
     return;
@@ -388,7 +280,7 @@ function renderStorefront(category = "All", query = "") {
         <h3 class="product-name" title="${p.name}">${p.name}</h3>
         <p class="product-description-snippet">${p.description}</p>
         <div class="product-footer">
-          <span class="product-price">₹${parseFloat(p.price).toLocaleString("en-IN")}</span>
+          <span class="product-price">₹${p.price.toLocaleString("en-IN")}</span>
           <button class="add-cart-btn" data-id="${p.id}" title="Quick Add to Cart">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg>
           </button>
@@ -398,6 +290,7 @@ function renderStorefront(category = "All", query = "") {
 
     // Add Click listener to open detail modal
     card.addEventListener("click", (e) => {
+      // Avoid opening modal if adding to cart directly
       if (e.target.closest(".add-cart-btn")) {
         e.stopPropagation();
         const id = e.target.closest(".add-cart-btn").dataset.id;
@@ -415,6 +308,7 @@ function renderStorefront(category = "All", query = "") {
 
 // Update Cart Badge and Drawer items
 function updateCartUI() {
+  // Counts
   const count = app.getCartCount();
   const badges = document.querySelectorAll(".cart-count");
   badges.forEach(b => {
@@ -422,6 +316,7 @@ function updateCartUI() {
     b.style.display = count > 0 ? "flex" : "none";
   });
 
+  // Drawer list
   const drawerBody = document.getElementById("cart-drawer-list");
   if (!drawerBody) return;
 
@@ -446,7 +341,7 @@ function updateCartUI() {
       <img class="cart-item-img" src="${item.product.image}" alt="${item.product.name}">
       <div class="cart-item-info">
         <h4 class="cart-item-name">${item.product.name}</h4>
-        <span class="cart-item-price">₹${parseFloat(item.product.price).toLocaleString("en-IN")}</span>
+        <span class="cart-item-price">₹${item.product.price.toLocaleString("en-IN")}</span>
         <div class="cart-item-actions">
           <div class="cart-item-qty">
             <button class="cart-item-qty-btn decrease" data-id="${item.product.id}">-</button>
@@ -461,6 +356,7 @@ function updateCartUI() {
       </div>
     `;
 
+    // Bind quantity handlers
     itemEl.querySelector(".decrease").addEventListener("click", () => {
       app.updateCartQuantity(item.product.id, item.quantity - 1);
       updateCartUI();
@@ -485,12 +381,13 @@ function updateCartUI() {
   document.getElementById("cart-total").innerText = `₹${total.toLocaleString("en-IN")}`;
 }
 
-// Update login state trigger menus
+// Authentication Modal and Dropdown menu state
 function updateNavBarState() {
   const profileContainer = document.getElementById("user-menu-container");
   if (!profileContainer) return;
 
   if (app.currentUser) {
+    // Logged In state
     profileContainer.innerHTML = `
       <button class="btn-primary" id="profile-menu-trigger">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -524,6 +421,7 @@ function updateNavBarState() {
       </div>
     `;
 
+    // Dropdown toggle
     const trigger = document.getElementById("profile-menu-trigger");
     const menu = document.getElementById("profile-dropdown-menu");
     trigger.addEventListener("click", (e) => {
@@ -531,12 +429,13 @@ function updateNavBarState() {
       menu.classList.toggle("active");
     });
 
-    document.getElementById("logout-btn").addEventListener("click", async () => {
-      showLoadingButton(document.getElementById("logout-btn"), "Logging out...");
-      await app.logout();
+    // Sub-buttons
+    const logoutBtn = document.getElementById("logout-btn");
+    logoutBtn.addEventListener("click", () => {
+      app.logout();
       showToast("Logged out successfully");
       updateNavBarState();
-      refreshCustomerNotifications();
+      // Reset view to storefront if logged out from admin/orders
       switchView("shop");
     });
 
@@ -556,12 +455,14 @@ function updateNavBarState() {
       });
     }
 
-    document.getElementById("back-to-shop-btn").addEventListener("click", () => {
+    const backShopBtn = document.getElementById("back-to-shop-btn");
+    backShopBtn.addEventListener("click", () => {
       switchView("shop");
       menu.classList.remove("active");
     });
 
   } else {
+    // Logged Out state
     profileContainer.innerHTML = `
       <button class="btn-primary" id="open-auth-btn">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
@@ -569,14 +470,14 @@ function updateNavBarState() {
       </button>
     `;
 
-    document.getElementById("open-auth-btn").addEventListener("click", () => {
+    const openAuth = document.getElementById("open-auth-btn");
+    openAuth.addEventListener("click", () => {
       openModal("auth-modal");
     });
   }
-  refreshCustomerNotifications();
 }
 
-// Switch views
+// Switch between Main Shop, Admin Dashboard, and Order History
 function switchView(view) {
   const heroSection = document.getElementById("hero-section");
   const catSection = document.getElementById("categories-section");
@@ -584,6 +485,7 @@ function switchView(view) {
   const adminView = document.getElementById("admin-view");
   const ordersView = document.getElementById("orders-view");
 
+  // Deactivate all
   heroSection.style.display = "none";
   catSection.style.display = "none";
   shopSection.style.display = "none";
@@ -614,21 +516,7 @@ function switchView(view) {
   }
 }
 
-// Global Loading Button Helper
-function showLoadingButton(btn, text = "Loading...") {
-  btn.disabled = true;
-  btn.dataset.originalHtml = btn.innerHTML;
-  btn.innerHTML = `<span class="loading-spinner"></span> ${text}`;
-}
-
-function restoreButton(btn) {
-  btn.disabled = false;
-  if (btn.dataset.originalHtml) {
-    btn.innerHTML = btn.dataset.originalHtml;
-  }
-}
-
-// Modal actions
+// Modal Handlers
 function openModal(modalId) {
   const overlay = document.getElementById("modal-overlay-container");
   const modals = document.querySelectorAll(".modal-content");
@@ -642,10 +530,11 @@ function openModal(modalId) {
 }
 
 function closeModal() {
-  document.getElementById("modal-overlay-container").classList.remove("active");
+  const overlay = document.getElementById("modal-overlay-container");
+  overlay.classList.remove("active");
 }
 
-// Product Details Modal
+// Product Details Modal Renders
 function openProductDetailModal(product) {
   const detailModal = document.getElementById("product-detail-modal");
   if (!detailModal) return;
@@ -661,7 +550,7 @@ function openProductDetailModal(product) {
       <span class="detail-category">${product.category}</span>
       <h2 class="detail-name">${product.name}</h2>
       <div class="detail-price">
-        <span>₹${parseFloat(product.price).toLocaleString("en-IN")}</span>
+        <span>₹${product.price.toLocaleString("en-IN")}</span>
         ${product.badge ? `<span class="product-badge" style="position:static;">${product.badge}</span>` : ''}
       </div>
       <p class="detail-desc">${product.description}</p>
@@ -671,7 +560,7 @@ function openProductDetailModal(product) {
           <span class="quantity-value">1</span>
           <button class="quantity-btn inc-btn">+</button>
         </div>
-        <button class="btn-primary add-detail-cart" style="flex-grow: 1; justify-content: center;">
+        <button class="btn-primary add-detail-cart" style="flex-grow:1; justify-content:center;">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
           Add to Bag
         </button>
@@ -679,6 +568,7 @@ function openProductDetailModal(product) {
     </div>
   `;
 
+  // Bind Events
   let qty = 1;
   const qtyVal = detailModal.querySelector(".quantity-value");
   detailModal.querySelector(".dec-btn").addEventListener("click", () => {
@@ -703,8 +593,9 @@ function openProductDetailModal(product) {
   openModal("product-detail-modal");
 }
 
-// Admin Panel Dashboard rendering
+// Admin Dashboard Controls
 function renderAdminDashboard() {
+  // Statistics
   const totalSales = app.orders.reduce((total, o) => total + o.total, 0);
   const productsCount = app.products.length;
   const totalOrders = app.orders.length;
@@ -713,6 +604,7 @@ function renderAdminDashboard() {
   document.getElementById("stat-products").innerText = productsCount;
   document.getElementById("stat-orders").innerText = totalOrders;
 
+  // Render Product Table list
   const prodTableBody = document.getElementById("admin-products-table");
   if (prodTableBody) {
     prodTableBody.innerHTML = "";
@@ -726,7 +618,7 @@ function renderAdminDashboard() {
           </div>
         </td>
         <td>${p.category}</td>
-        <td>₹${parseFloat(p.price).toLocaleString("en-IN")}</td>
+        <td>₹${p.price.toLocaleString("en-IN")}</td>
         <td>
           <button class="action-icon-btn delete" data-id="${p.id}" title="Delete Product">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6"/></svg>
@@ -734,18 +626,12 @@ function renderAdminDashboard() {
         </td>
       `;
 
-      row.querySelector(".delete").addEventListener("click", async (e) => {
-        const btn = e.currentTarget;
+      row.querySelector(".delete").addEventListener("click", () => {
         if (confirm(`Are you sure you want to delete "${p.name}"?`)) {
-          showLoadingButton(btn, "");
-          try {
-            await app.deleteProduct(p.id);
-            showToast("Product deleted successfully");
-            renderAdminDashboard();
-          } catch (err) {
-            showToast(err.message, "danger");
-            restoreButton(btn);
-          }
+          app.products = app.products.filter(item => item.id !== p.id);
+          app.saveState();
+          showToast("Product deleted successfully");
+          renderAdminDashboard();
         }
       });
 
@@ -753,6 +639,7 @@ function renderAdminDashboard() {
     });
   }
 
+  // Render Orders Queue table
   const ordersTableBody = document.getElementById("admin-orders-table");
   if (ordersTableBody) {
     ordersTableBody.innerHTML = "";
@@ -770,7 +657,7 @@ function renderAdminDashboard() {
           <div style="font-size:0.75rem; color:var(--text-secondary);">${o.shippingDetails.phone}</div>
         </td>
         <td>${o.items.map(item => `${item.product.name} (x${item.quantity})`).join(", ")}</td>
-        <td>₹${parseFloat(o.total).toLocaleString("en-IN")}</td>
+        <td>₹${o.total.toLocaleString("en-IN")}</td>
         <td>
           <button class="badge-status ${o.status.toLowerCase()}" data-id="${o.id}">
             ${o.status}
@@ -778,18 +665,15 @@ function renderAdminDashboard() {
         </td>
       `;
 
+      // Status update handler (Pending -> Completed)
       const statusBtn = row.querySelector(".badge-status");
-      statusBtn.addEventListener("click", async () => {
-        if (o.status === "Pending") {
-          showLoadingButton(statusBtn, "");
-          try {
-            await app.updateOrderStatus(o.id, "Completed");
-            showToast("Order status updated to Completed");
-            renderAdminDashboard();
-          } catch (err) {
-            showToast(err.message, "danger");
-            restoreButton(statusBtn);
-          }
+      statusBtn.addEventListener("click", () => {
+        const order = app.orders.find(item => item.id === o.id);
+        if (order && order.status === "Pending") {
+          order.status = "Completed";
+          app.saveState();
+          showToast("Order status updated to Completed");
+          renderAdminDashboard();
         }
       });
 
@@ -798,12 +682,13 @@ function renderAdminDashboard() {
   }
 }
 
-// User order histories
+// User Orders History View
 function renderOrdersHistory() {
   const container = document.getElementById("orders-history-list");
   if (!container) return;
 
-  if (app.orders.length === 0) {
+  const myOrders = app.orders.filter(o => o.userEmail === app.currentUser.email);
+  if (myOrders.length === 0) {
     container.innerHTML = `
       <div style="text-align:center; padding: 4rem 1rem; background: var(--bg-card); border-radius:20px; border:1px solid var(--border-color); color:var(--text-muted);">
         <svg style="margin: 0 auto 1rem; display:block;" xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
@@ -815,7 +700,7 @@ function renderOrdersHistory() {
   }
 
   container.innerHTML = "";
-  app.orders.forEach(o => {
+  myOrders.forEach(o => {
     const card = document.createElement("div");
     card.className = "order-history-card";
     card.innerHTML = `
@@ -835,7 +720,7 @@ function renderOrdersHistory() {
               <img src="${item.product.image}" alt="${item.product.name}" style="width:48px; height:48px; border-radius:6px; object-fit:cover; border: 1px solid var(--border-color);">
               <div>
                 <div style="font-weight:600; font-size:0.9rem;">${item.product.name}</div>
-                <div style="font-size:0.8rem; color:var(--text-secondary);">Qty: ${item.quantity} x ₹${parseFloat(item.product.price).toLocaleString("en-IN")}</div>
+                <div style="font-size:0.8rem; color:var(--text-secondary);">Qty: ${item.quantity} x ₹${item.product.price}</div>
               </div>
             </div>
             <div style="font-weight:700;">₹${(item.product.price * item.quantity).toLocaleString("en-IN")}</div>
@@ -843,15 +728,15 @@ function renderOrdersHistory() {
         `).join("")}
       </div>
       <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:0.85rem; color:var(--text-secondary);">Shipment Address: ${o.shippingDetails.address}, ${o.shippingDetails.city}</span>
-        <span style="font-weight:800; font-size:1.1rem; color:var(--primary);">Total: ₹${parseFloat(o.total).toLocaleString("en-IN")}</span>
+        <span style="font-size:0.85rem; color:var(--text-secondary);">Shipment Address: ${o.shippingDetails.address}</span>
+        <span style="font-weight:800; font-size:1.1rem; color:var(--primary);">Total: ₹${o.total.toLocaleString("en-IN")}</span>
       </div>
     `;
     container.appendChild(card);
   });
 }
 
-// Toast Notification popup
+// Global Toast System
 function showToast(message, type = "success") {
   const container = document.getElementById("toast-container");
   if (!container) return;
@@ -870,122 +755,37 @@ function showToast(message, type = "success") {
 
   container.appendChild(toast);
 
+  // Auto remove after 3s
   setTimeout(() => {
     toast.style.animation = "slideDown 0.3s forwards, fadeOut 0.3s forwards";
     setTimeout(() => toast.remove(), 300);
   }, 3000);
 }
 
-// Customer Notifications logic
-let customerNotifs = [];
-
-async function refreshCustomerNotifications() {
-  const notifTrigger = document.getElementById("notif-trigger");
-  const notifCount = document.getElementById("notif-count");
-  if (!notifTrigger) return;
-
-  if (!app.currentUser) {
-    notifTrigger.style.display = "none";
-    if (notifCount) notifCount.style.display = "none";
-    return;
-  }
-
-  // Show the bell icon
-  notifTrigger.style.display = "inline-block";
-
-  try {
-    const notifs = await app.apiFetch("/notifications/my");
-    customerNotifs = notifs;
-
-    // Get read notifications list
-    let readIds = [];
-    try {
-      const saved = localStorage.getItem("marwari_read_notifications");
-      readIds = saved ? JSON.parse(saved) : [];
-    } catch (e) { /* ignore */ }
-
-    // Count unread
-    const unread = notifs.filter(n => n.id && !readIds.includes(n.id));
-
-    if (notifCount) {
-      if (unread.length > 0) {
-        notifCount.textContent = unread.length;
-        notifCount.style.display = "flex";
-      } else {
-        notifCount.style.display = "none";
-      }
-    }
-  } catch (err) {
-    console.error("Failed to load customer notifications:", err);
-  }
-}
-
-function initCustomerNotifications() {
-  const notifTrigger = document.getElementById("notif-trigger");
-  if (!notifTrigger) return;
-
-  notifTrigger.addEventListener("click", () => {
-    openModal("notifications-modal");
-
-    // Mark all as read
-    const readIds = customerNotifs.map(n => n.id).filter(Boolean);
-    localStorage.setItem("marwari_read_notifications", JSON.stringify(readIds));
-
-    // Reset badge count
-    const notifCount = document.getElementById("notif-count");
-    if (notifCount) notifCount.style.display = "none";
-
-    // Render list
-    const listContainer = document.getElementById("customer-notif-list");
-    if (!listContainer) return;
-
-    if (customerNotifs.length === 0) {
-      listContainer.innerHTML = `<p style="color: var(--text-secondary); font-size: 0.9rem; text-align: center; padding: 2rem 0;">No notifications yet</p>`;
-    } else {
-      listContainer.innerHTML = customerNotifs.map(n => {
-        const date = new Date(n.date).toLocaleString("en-IN", {
-          day: "2-digit",
-          month: "short",
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-        return `
-          <div class="notif-item" style="padding: 0.85rem; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 0.35rem; transition: transform 0.2s ease;">
-            <div style="font-weight: 600; color: var(--text-primary); font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;">
-              <span style="color: var(--primary);">✦</span> ${n.subject}
-            </div>
-            <div style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.45; white-space: pre-wrap;">${n.message}</div>
-            <div style="color: var(--text-muted); font-size: 0.72rem; align-self: flex-end; margin-top: 0.2rem;">${date}</div>
-          </div>
-        `;
-      }).join("");
-    }
-  });
-
-  // Fetch immediately
-  refreshCustomerNotifications();
-
-  // Poll for new notifications every 15 seconds
-  setInterval(refreshCustomerNotifications, 15000);
-}
-
-// Setup Event Listeners
+// Event Listeners setup
 function setupEventListeners() {
-  document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
+  // Theme toggle click
+  const themeToggle = document.getElementById("theme-toggle");
+  if (themeToggle) {
+    themeToggle.addEventListener("click", toggleTheme);
+  }
 
+  // Cart Drawer open/close
   const cartTrigger = document.getElementById("cart-trigger");
   const cartOverlay = document.getElementById("cart-drawer-overlay");
   const cartDrawer = document.getElementById("cart-drawer");
   const cartClose = document.getElementById("cart-close");
 
-  cartTrigger.addEventListener("click", () => {
-    updateCartUI();
-    cartOverlay.style.display = "block";
-    setTimeout(() => {
-      cartOverlay.classList.add("active");
-      cartDrawer.classList.add("active");
-    }, 50);
-  });
+  if (cartTrigger) {
+    cartTrigger.addEventListener("click", () => {
+      updateCartUI();
+      cartOverlay.style.display = "block";
+      setTimeout(() => {
+        cartOverlay.classList.add("active");
+        cartDrawer.classList.add("active");
+      }, 50);
+    });
+  }
 
   const closeCartFn = () => {
     cartOverlay.classList.remove("active");
@@ -995,16 +795,20 @@ function setupEventListeners() {
     }, 300);
   };
 
-  cartClose.addEventListener("click", closeCartFn);
-  cartOverlay.addEventListener("click", closeCartFn);
+  if (cartClose) cartClose.addEventListener("click", closeCartFn);
+  if (cartOverlay) cartOverlay.addEventListener("click", closeCartFn);
 
+  // Search input change handler
   const searchInput = document.getElementById("search-input");
-  searchInput.addEventListener("input", (e) => {
-    const activeTab = document.querySelector(".category-tab.active");
-    const category = activeTab ? activeTab.dataset.category : "All";
-    renderStorefront(category, e.target.value);
-  });
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      const activeTab = document.querySelector(".category-tab.active");
+      const category = activeTab ? activeTab.dataset.category : "All";
+      renderStorefront(category, e.target.value);
+    });
+  }
 
+  // Category Tab navigation clicks
   const catTabs = document.querySelectorAll(".category-tab");
   catTabs.forEach(tab => {
     tab.addEventListener("click", (e) => {
@@ -1012,237 +816,180 @@ function setupEventListeners() {
       tab.classList.add("active");
 
       const category = tab.dataset.category;
-      renderStorefront(category, searchInput.value);
+      const searchVal = searchInput ? searchInput.value : "";
+      renderStorefront(category, searchVal);
     });
   });
 
-  // Auth Modal Tab Switching
+  // Auth modal Tabs
   const authTabBtns = document.querySelectorAll(".auth-tab-btn");
-  const authLoginForm = document.getElementById("auth-login-form");
-  const authRegisterForm = document.getElementById("auth-register-form");
-  const authVerifyForm = document.getElementById("auth-verify-form");
-  const authAdminForm = document.getElementById("auth-admin-form");
-
-  let pendingVerifyEmail = null; // Track which email is being verified
+  const authEmailForm = document.getElementById("auth-email-form");
+  const authPhoneForm = document.getElementById("auth-phone-form");
 
   authTabBtns.forEach(btn => {
     btn.addEventListener("click", () => {
       authTabBtns.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
-      const tab = btn.dataset.tab;
-      authLoginForm.style.display = tab === "login" ? "block" : "none";
-      authRegisterForm.style.display = tab === "register" ? "block" : "none";
-      authVerifyForm.style.display = "none"; // Always hide verify when switching tabs
-      if (authAdminForm) authAdminForm.style.display = tab === "admin-panel" ? "block" : "none";
+      const type = btn.dataset.tab;
+      if (type === "email") {
+        authEmailForm.style.display = "block";
+        authPhoneForm.style.display = "none";
+      } else {
+        authEmailForm.style.display = "none";
+        authPhoneForm.style.display = "block";
+      }
     });
   });
 
-  // Helper: Show verify screen
-  function showVerifyScreen(email) {
-    pendingVerifyEmail = email;
-    authLoginForm.style.display = "none";
-    authRegisterForm.style.display = "none";
-    authVerifyForm.style.display = "block";
-    document.getElementById("verify-email-hint").textContent = `We sent a 6-digit code to ${email}`;
-    document.getElementById("verify-code").value = "";
-    document.getElementById("verify-code").focus();
-  }
-
-  // Login Form Submit — email only, sends verification code
-  authLoginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("login-email").value.trim();
-    const submitBtn = authLoginForm.querySelector(".auth-submit-btn");
-
-    showLoadingButton(submitBtn, "Sending Code...");
-    const res = await app.loginWithEmail(email);
-    restoreButton(submitBtn);
-
-    if (res.success && res.requiresCode) {
-      showToast("Verification code sent to your email!");
-      showVerifyScreen(res.email);
-    } else if (!res.success) {
-      showToast(res.message, "danger");
-    }
-  });
-
-  // Registration Form Submit — no password
-  authRegisterForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const name = document.getElementById("register-name").value.trim();
-    const email = document.getElementById("register-email").value.trim();
-    const phone = document.getElementById("register-phone").value.trim();
-    const submitBtn = authRegisterForm.querySelector(".auth-submit-btn");
-
-    showLoadingButton(submitBtn, "Creating Account...");
-    const res = await app.registerUser(name, email, phone);
-    restoreButton(submitBtn);
-
-    if (res.success) {
-      showToast("Account created! Check your email for the verification code.");
-      showVerifyScreen(email);
-    } else {
-      showToast(res.message, "danger");
-    }
-  });
-
-  // Email Verification Form Submit
-  authVerifyForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const code = document.getElementById("verify-code").value.trim();
-    const submitBtn = authVerifyForm.querySelector(".auth-submit-btn");
-
-    if (!pendingVerifyEmail) {
-      showToast("Please register first", "danger");
-      return;
-    }
-
-    showLoadingButton(submitBtn, "Verifying...");
-    const res = await app.verifyEmailCode(pendingVerifyEmail, code);
-    restoreButton(submitBtn);
-
-    if (res.success) {
-      showToast(`Welcome to Mārwāri E-Commerce, ${res.user.name}!`);
-      updateNavBarState();
-      refreshCustomerNotifications();
-      closeModal();
-      pendingVerifyEmail = null;
-
-      // Reset forms
-      authRegisterForm.reset();
-      authVerifyForm.style.display = "none";
-      authLoginForm.style.display = "block";
-      authTabBtns.forEach(b => b.classList.remove("active"));
-      authTabBtns[0].classList.add("active");
-
-      // Admin page: auto-switch to admin dashboard after login
-      const currentPageMode = (typeof wpApiSettings !== 'undefined' && wpApiSettings.pageMode) ? wpApiSettings.pageMode : 'shop';
-      if (currentPageMode === 'admin' && res.user.role === 'admin') {
-        switchView("admin");
-      } else if (currentPageMode === 'admin' && res.user.role !== 'admin') {
-        showToast("You are not an admin. Redirecting to shop...", "danger");
-        setTimeout(() => { window.location.href = '/shop/'; }, 2000);
-      }
-    } else {
-      showToast(res.message, "danger");
-    }
-  });
-
-  // Resend Code Button
-  document.getElementById("resend-code-btn").addEventListener("click", async () => {
-    if (!pendingVerifyEmail) return;
-    const btn = document.getElementById("resend-code-btn");
-    btn.textContent = "Sending...";
-    btn.disabled = true;
-
-    const res = await app.resendCode(pendingVerifyEmail);
-
-    if (res.success) {
-      showToast("New verification code sent to your email!");
-    } else {
-      showToast(res.message || "Failed to resend code", "danger");
-    }
-
-    btn.textContent = "Resend Verification Code";
-    btn.disabled = false;
-  });
-
-  // Admin Panel Login Form Submit
-  if (authAdminForm) {
-    authAdminForm.addEventListener("submit", async (e) => {
+  // Email login form submit handler
+  if (authEmailForm) {
+    authEmailForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const email = document.getElementById("admin-email").value.trim();
-      const password = document.getElementById("admin-password").value;
-      const submitBtn = authAdminForm.querySelector(".auth-submit-btn");
+      const email = document.getElementById("login-email").value.trim();
+      const password = document.getElementById("login-password").value;
 
-      showLoadingButton(submitBtn, "Authenticating...");
+      const res = app.loginWithEmail(email, password);
+      if (res.success) {
+        showToast(`Welcome back, ${res.user.name}!`);
+        updateNavBarState();
+        closeModal();
 
-      try {
-        const res = await app.apiFetch('/auth/admin-login', {
-          method: 'POST',
-          body: JSON.stringify({ email, password })
-        });
-
-        restoreButton(submitBtn);
-
-        if (res.success) {
-          app.currentUser = res.user;
-          app.saveLocalStorage("marwari_session", res.user);
-          if (res.nonce) app.nonce = res.nonce;
-          app.orders = await app.apiFetch('/orders');
-
-          showToast(`Welcome, ${res.user.name}! Loading dashboard...`);
-          updateNavBarState();
-          closeModal();
-
-          // Switch to admin dashboard view
+        // If logged in as admin, redirect to Admin View
+        if (res.user.role === 'admin') {
           switchView("admin");
         }
-      } catch (err) {
-        restoreButton(submitBtn);
-        showToast(err.message || "Admin login failed", "danger");
+      } else {
+        showToast(res.message, "danger");
       }
     });
   }
 
-  document.getElementById("checkout-trigger-btn").addEventListener("click", () => {
-    if (app.cart.length === 0) {
-      showToast("Your cart is empty", "danger");
-      return;
-    }
+  // Mobile login OTP display and mock handler
+  const sendOtpBtn = document.getElementById("send-otp-btn");
+  const otpSection = document.getElementById("otp-verification-section");
+  const otpPhoneInput = document.getElementById("login-phone");
 
-    if (!app.currentUser) {
-      showToast("Please log in to purchase products", "danger");
+  if (sendOtpBtn) {
+    sendOtpBtn.addEventListener("click", () => {
+      const phone = otpPhoneInput.value.trim();
+      if (!phone || phone.length < 10) {
+        showToast("Please enter a valid 10-digit mobile number", "danger");
+        return;
+      }
+
+      // Generate a mock 4 digit OTP code
+      generatedOTPCode = Math.floor(1000 + Math.random() * 9000).toString();
+
+      // Reveal OTP input box
+      otpSection.style.display = "block";
+      sendOtpBtn.innerText = "Resend OTP";
+
+      // Alert the OTP using Toast so the user can easily see it
+      alert(`[Demo OTP Service] Your OTP code to log in is: ${generatedOTPCode}`);
+      showToast(`OTP code sent to +91 ${phone}`);
+    });
+  }
+
+  if (authPhoneForm) {
+    authPhoneForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const phone = otpPhoneInput.value.trim();
+      const otpInput = document.getElementById("login-otp").value.trim();
+
+      if (!generatedOTPCode) {
+        showToast("Please click 'Send OTP' first", "danger");
+        return;
+      }
+
+      const res = app.loginWithOTP(phone, otpInput, generatedOTPCode);
+      if (res.success) {
+        showToast(`Welcome to Marwari E-Commerce!`);
+        updateNavBarState();
+        closeModal();
+        // Reset states
+        generatedOTPCode = null;
+        otpSection.style.display = "none";
+        sendOtpBtn.innerText = "Send OTP";
+        document.getElementById("login-otp").value = "";
+      } else {
+        showToast(res.message, "danger");
+      }
+    });
+  }
+
+  // Checkout trigger
+  const checkoutTrigger = document.getElementById("checkout-trigger-btn");
+  if (checkoutTrigger) {
+    checkoutTrigger.addEventListener("click", () => {
+      if (app.cart.length === 0) {
+        showToast("Your cart is empty", "danger");
+        return;
+      }
+
+      if (!app.currentUser) {
+        showToast("Please log in to purchase products", "danger");
+        closeCartFn();
+        openModal("auth-modal");
+        return;
+      }
+
+      // Populate shipping details form in Checkout Modal if user exists
+      document.getElementById("checkout-name").value = app.currentUser.name;
+      document.getElementById("checkout-phone").value = app.currentUser.phone || "";
+
       closeCartFn();
-      openModal("auth-modal");
-      return;
-    }
+      openModal("checkout-modal");
+    });
+  }
 
-    document.getElementById("checkout-name").value = app.currentUser.name;
-    document.getElementById("checkout-phone").value = app.currentUser.phone || "";
-
-    closeCartFn();
-    openModal("checkout-modal");
-  });
-
+  // Checkout Form Submission
   const checkoutForm = document.getElementById("checkout-payment-form");
-  checkoutForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const submitBtn = checkoutForm.querySelector(".auth-submit-btn");
+  if (checkoutForm) {
+    checkoutForm.addEventListener("submit", (e) => {
+      e.preventDefault();
 
-    const shippingDetails = {
-      name: document.getElementById("checkout-name").value.trim(),
-      phone: document.getElementById("checkout-phone").value.trim(),
-      address: document.getElementById("checkout-address").value.trim(),
-      city: document.getElementById("checkout-city").value.trim(),
-      zip: document.getElementById("checkout-zip").value.trim()
-    };
+      const order = {
+        id: "ord-" + Math.random().toString(36).substr(2, 9),
+        userEmail: app.currentUser.email,
+        items: [...app.cart],
+        total: app.getCartTotal(),
+        status: "Pending",
+        date: new Date().toISOString(),
+        shippingDetails: {
+          name: document.getElementById("checkout-name").value.trim(),
+          phone: document.getElementById("checkout-phone").value.trim(),
+          address: document.getElementById("checkout-address").value.trim(),
+          city: document.getElementById("checkout-city").value.trim(),
+          zip: document.getElementById("checkout-zip").value.trim()
+        }
+      };
 
-    showLoadingButton(submitBtn, "Placing Order...");
-    try {
-      await app.submitCheckoutOrder(shippingDetails);
-      restoreButton(submitBtn);
+      // Save order
+      app.orders.push(order);
+      app.clearCart();
+      app.saveState();
+
       closeModal();
       showToast("Order placed successfully! Padharo Mhare Des.");
       updateCartUI();
 
+      // Show success animation overlay or modal
       setTimeout(() => {
+        // Switch view to orders history to verify
         switchView("orders");
       }, 500);
-    } catch (err) {
-      showToast(err.message, "danger");
-      restoreButton(submitBtn);
-    }
-  });
+    });
+  }
 
+  // Add Product form handler (Admin)
   const addProductForm = document.getElementById("admin-add-product-form");
   if (addProductForm) {
-    addProductForm.addEventListener("submit", async (e) => {
+    addProductForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const submitBtn = addProductForm.querySelector("button[type='submit']");
 
-      const product = {
+      const newProd = {
+        id: "prod-" + Math.random().toString(36).substr(2, 9),
         name: document.getElementById("admin-pname").value.trim(),
         category: document.getElementById("admin-pcategory").value,
         price: parseFloat(document.getElementById("admin-pprice").value),
@@ -1251,285 +998,20 @@ function setupEventListeners() {
         badge: document.getElementById("admin-pbadge").value.trim() || null
       };
 
-      showLoadingButton(submitBtn, "Publishing...");
-      try {
-        await app.addProduct(product);
-        restoreButton(submitBtn);
-        showToast(`Product "${product.name}" published successfully`);
-        addProductForm.reset();
-        renderAdminDashboard();
-      } catch (err) {
-        showToast(err.message, "danger");
-        restoreButton(submitBtn);
-      }
+      app.products.push(newProd);
+      app.saveState();
+
+      showToast(`Product "${newProd.name}" added successfully`);
+      addProductForm.reset();
+      renderAdminDashboard();
     });
   }
 }
 
+// Global modal background closing
 window.onclick = function (event) {
   const overlay = document.getElementById("modal-overlay-container");
   if (event.target === overlay) {
     closeModal();
   }
 };
-
-// ===== ADMIN DASHBOARD MODULE (Sidebar Layout) =====
-(function () {
-  const pageMode = (typeof wpApiSettings !== 'undefined' && wpApiSettings.pageMode) ? wpApiSettings.pageMode : 'shop';
-  if (pageMode !== 'admin') return;
-
-  document.addEventListener("DOMContentLoaded", () => {
-    initTheme();
-
-    const loginForm = document.getElementById("admin-login-form");
-    const loginScreen = document.getElementById("admin-login-screen");
-    const adminLayout = document.getElementById("admin-layout");
-
-    if (!loginForm) return;
-
-    // Check saved admin session
-    const savedSession = localStorage.getItem("marwari_session");
-    if (savedSession) {
-      try {
-        const session = JSON.parse(savedSession);
-        if (session && session.role === 'admin') {
-          app.currentUser = session;
-          showDashboard(session);
-          return;
-        }
-      } catch (e) { }
-    }
-
-    // Admin Login
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("admin-login-email").value.trim();
-      const password = document.getElementById("admin-login-password").value;
-      const submitBtn = document.getElementById("admin-login-btn");
-
-      submitBtn.textContent = "Authenticating...";
-      submitBtn.disabled = true;
-
-      try {
-        const res = await app.apiFetch('/auth/admin-login', {
-          method: 'POST',
-          body: JSON.stringify({ email, password })
-        });
-
-        if (res.success) {
-          app.currentUser = res.user;
-          app.saveLocalStorage("marwari_session", res.user);
-          if (res.nonce) app.nonce = res.nonce;
-          showToast(`Welcome, ${res.user.name}!`);
-          showDashboard(res.user);
-        }
-      } catch (err) {
-        showToast(err.message || "Login failed", "danger");
-      }
-
-      submitBtn.textContent = "Access Dashboard";
-      submitBtn.disabled = false;
-    });
-
-    async function showDashboard(user) {
-      loginScreen.style.display = "none";
-      adminLayout.style.display = "flex";
-
-      // Topbar user
-      const topbarUser = document.getElementById("admin-topbar-user");
-      if (topbarUser) {
-        topbarUser.innerHTML = `<span style="font-weight:600; color:var(--primary);">👤 ${user.name}</span>`;
-      }
-
-      // Sidebar navigation
-      const sidebarLinks = document.querySelectorAll(".sidebar-link[data-section]");
-      const sections = document.querySelectorAll(".admin-section");
-      const pageTitle = document.getElementById("admin-page-title");
-      const sidebar = document.getElementById("admin-sidebar");
-
-      sidebarLinks.forEach(link => {
-        link.addEventListener("click", () => {
-          const section = link.dataset.section;
-
-          // Update active states
-          sidebarLinks.forEach(l => l.classList.remove("active"));
-          link.classList.add("active");
-
-          // Show section
-          sections.forEach(s => s.classList.remove("active"));
-          const target = document.getElementById("section-" + section);
-          if (target) target.classList.add("active");
-
-          // Update title
-          const titles = { dashboard: "Dashboard", orders: "Orders", products: "Products", "add-product": "Add Product", customers: "Customers" };
-          if (pageTitle) pageTitle.textContent = titles[section] || "Dashboard";
-
-          // Close mobile sidebar
-          if (sidebar) sidebar.classList.remove("open");
-        });
-      });
-
-      // Mobile sidebar toggle
-      const toggleBtn = document.getElementById("sidebar-toggle");
-      if (toggleBtn && sidebar) {
-        toggleBtn.addEventListener("click", () => {
-          sidebar.classList.toggle("open");
-        });
-      }
-
-      // Logout
-      const logoutBtn = document.getElementById("admin-logout-btn");
-      if (logoutBtn) {
-        logoutBtn.addEventListener("click", async () => {
-          localStorage.removeItem("marwari_session");
-          app.currentUser = null;
-          try { await app.apiFetch('/auth/logout', { method: 'POST' }); } catch (e) { }
-          location.reload();
-        });
-      }
-
-      // Load data
-      try {
-        const [products, orders, customers] = await Promise.all([
-          app.apiFetch('/products'),
-          app.apiFetch('/orders'),
-          app.apiFetch('/admin/customers')
-        ]);
-
-        renderDashStats(products, orders, customers);
-        renderRevenueChart(orders);
-        renderOrderStatusChart(orders);
-        renderDashOrders(orders);
-        renderDashProducts(products);
-        renderDashCustomers(customers);
-      } catch (err) {
-        showToast("Failed to load data: " + err.message, "danger");
-      }
-    }
-
-    function renderDashStats(products, orders, customers) {
-      const revenue = orders.reduce((sum, o) => sum + (o.total || 0), 0);
-      document.getElementById("dash-stat-revenue").textContent = `₹${revenue.toLocaleString('en-IN')}`;
-      document.getElementById("dash-stat-products").textContent = products.length;
-      document.getElementById("dash-stat-orders").textContent = orders.length;
-      document.getElementById("dash-stat-customers").textContent = customers.length;
-    }
-
-    function renderRevenueChart(orders) {
-      const container = document.getElementById("revenue-chart");
-      if (!container) return;
-      const monthData = {};
-      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      orders.forEach(o => {
-        const d = new Date(o.date);
-        const key = `${monthNames[d.getMonth()]} ${d.getFullYear().toString().slice(-2)}`;
-        monthData[key] = (monthData[key] || 0) + (o.total || 0);
-      });
-      const entries = Object.entries(monthData).slice(-7);
-      const maxVal = Math.max(...entries.map(e => e[1]), 1);
-      if (entries.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-muted); text-align:center; width:100%; align-self:center;">No revenue data yet</p>';
-        return;
-      }
-      container.innerHTML = entries.map(([label, val]) => {
-        const height = Math.max((val / maxVal) * 200, 8);
-        return `<div class="chart-bar-group"><span class="chart-bar-value">₹${(val / 1000).toFixed(1)}k</span><div class="chart-bar" style="height:${height}px;"></div><span class="chart-bar-label">${label}</span></div>`;
-      }).join('');
-    }
-
-    function renderOrderStatusChart(orders) {
-      const container = document.getElementById("order-status-chart");
-      if (!container) return;
-      const pending = orders.filter(o => o.status === 'Pending').length;
-      const completed = orders.filter(o => o.status === 'Completed').length;
-      const total = orders.length || 1;
-      const radius = 60, circumference = 2 * Math.PI * radius;
-      const completedDash = (completed / total) * circumference;
-      const pendingDash = (pending / total) * circumference;
-      container.innerHTML = `<div class="donut-chart-wrapper"><svg width="160" height="160" viewBox="0 0 160 160"><circle cx="80" cy="80" r="${radius}" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="20"/><circle cx="80" cy="80" r="${radius}" fill="none" stroke="#10b981" stroke-width="20" stroke-dasharray="${completedDash} ${circumference - completedDash}" stroke-dashoffset="0" transform="rotate(-90 80 80)" stroke-linecap="round"/><circle cx="80" cy="80" r="${radius}" fill="none" stroke="#fbbf24" stroke-width="20" stroke-dasharray="${pendingDash} ${circumference - pendingDash}" stroke-dashoffset="${-completedDash}" transform="rotate(-90 80 80)" stroke-linecap="round"/><text x="80" y="78" text-anchor="middle" fill="var(--text-primary)" font-size="22" font-weight="700" font-family="var(--font-body)">${total}</text><text x="80" y="98" text-anchor="middle" fill="var(--text-muted)" font-size="11" font-family="var(--font-body)">Total</text></svg><div class="donut-legend"><div class="donut-legend-item"><div class="donut-legend-dot" style="background:#10b981;"></div> Completed (${completed})</div><div class="donut-legend-item"><div class="donut-legend-dot" style="background:#fbbf24;"></div> Pending (${pending})</div></div></div>`;
-    }
-
-    function renderDashOrders(orders) {
-      const tbody = document.getElementById("dash-orders-table");
-      if (!tbody) return;
-      if (orders.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:2rem;">No orders yet</td></tr>'; return; }
-      tbody.innerHTML = orders.map(o => {
-        const items = Array.isArray(o.items) ? o.items.map(i => `${i.name} ×${i.quantity}`).join(', ') : '—';
-        const date = new Date(o.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' });
-        const statusStyle = o.status === 'Completed' ? 'color:#10b981;' : 'color:#fbbf24; cursor:pointer;';
-        const statusClick = o.status === 'Pending' ? `onclick="window.dashUpdateOrderStatus('${o.id}')"` : '';
-        return `<tr><td style="font-family:monospace; font-size:0.75rem;">${o.id}</td><td>${o.user_email || '—'}</td><td style="font-size:0.8rem; max-width:200px; overflow:hidden; text-overflow:ellipsis;">${items}</td><td style="font-weight:600;">₹${(o.total || 0).toLocaleString('en-IN')}</td><td style="font-size:0.8rem;">${date}</td><td><span style="font-weight:600; ${statusStyle}" ${statusClick}>${o.status}</span></td></tr>`;
-      }).join('');
-    }
-
-    window.dashUpdateOrderStatus = async function (orderId) {
-      try {
-        await app.apiFetch(`/orders/${orderId}/status`, { method: 'POST', body: JSON.stringify({ status: 'Completed' }) });
-        showToast("Order marked as Completed!");
-        const [products, orders, customers] = await Promise.all([app.apiFetch('/products'), app.apiFetch('/orders'), app.apiFetch('/admin/customers')]);
-        renderDashStats(products, orders, customers);
-        renderRevenueChart(orders);
-        renderOrderStatusChart(orders);
-        renderDashOrders(orders);
-      } catch (err) { showToast(err.message, "danger"); }
-    };
-
-    function renderDashProducts(products) {
-      const tbody = document.getElementById("dash-products-table");
-      if (!tbody) return;
-      if (products.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:2rem;">No products</td></tr>'; return; }
-      tbody.innerHTML = products.map(p => `<tr><td style="display:flex; align-items:center; gap:0.75rem;"><img src="${p.image}" alt="${p.name}" style="width:40px; height:40px; border-radius:8px; object-fit:cover;"><span style="font-weight:500;">${p.name}</span></td><td><span style="background:var(--primary-glow); color:var(--primary); padding:0.2rem 0.6rem; border-radius:20px; font-size:0.75rem; font-weight:600;">${p.category}</span></td><td style="font-weight:600;">₹${parseFloat(p.price).toLocaleString('en-IN')}</td><td><button onclick="window.dashDeleteProduct('${p.id}')" style="background:var(--danger); color:white; border:none; padding:0.4rem 0.8rem; border-radius:8px; cursor:pointer; font-size:0.75rem; font-weight:600;">Delete</button></td></tr>`).join('');
-    }
-
-    window.dashDeleteProduct = async function (productId) {
-      if (!confirm("Delete this product?")) return;
-      try {
-        await app.apiFetch(`/products/${productId}`, { method: 'DELETE' });
-        showToast("Product deleted");
-        const products = await app.apiFetch('/products');
-        renderDashProducts(products);
-        document.getElementById("dash-stat-products").textContent = products.length;
-      } catch (err) { showToast(err.message, "danger"); }
-    };
-
-    function renderDashCustomers(customers) {
-      const tbody = document.getElementById("dash-customers-table");
-      if (!tbody) return;
-      if (customers.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">No customers yet</td></tr>'; return; }
-      tbody.innerHTML = customers.map(c => {
-        const regDate = new Date(c.registered).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: '2-digit' });
-        return `<tr><td style="font-weight:500;">${c.name}</td><td style="font-size:0.85rem;">${c.email}</td><td>${c.phone}</td><td style="font-weight:600; text-align:center;">${c.orders}</td><td style="font-size:0.8rem;">${regDate}</td></tr>`;
-      }).join('');
-    }
-
-    // Add Product Form
-    const addForm = document.getElementById("admin-add-product-form");
-    if (addForm) {
-      addForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const submitBtn = addForm.querySelector("button[type='submit']");
-        submitBtn.textContent = "Publishing...";
-        submitBtn.disabled = true;
-        const product = {
-          name: document.getElementById("admin-pname").value.trim(),
-          category: document.getElementById("admin-pcategory").value,
-          price: parseFloat(document.getElementById("admin-pprice").value),
-          description: document.getElementById("admin-pdesc").value.trim(),
-          image: document.getElementById("admin-pimage").value.trim() || "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80",
-          badge: document.getElementById("admin-pbadge").value.trim() || null
-        };
-        try {
-          await app.apiFetch('/products', { method: 'POST', body: JSON.stringify(product) });
-          showToast("Product published!");
-          addForm.reset();
-          const products = await app.apiFetch('/products');
-          renderDashProducts(products);
-          document.getElementById("dash-stat-products").textContent = products.length;
-        } catch (err) { showToast(err.message, "danger"); }
-        submitBtn.textContent = "Publish Product";
-        submitBtn.disabled = false;
-      });
-    }
-  });
-})();
-
