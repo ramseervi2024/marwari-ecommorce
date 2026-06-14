@@ -167,6 +167,7 @@ class Migrations {
 
         // 10. Register Custom Roles and Capabilities
         self::register_roles();
+        self::seed_test_accounts();
     }
     
     /**
@@ -248,6 +249,32 @@ class Migrations {
             foreach ($super_admin_caps as $cap => $grant) {
                 $admin_role->add_cap($cap);
             }
+        }
+    }
+
+    /**
+     * Seeds initial mock credentials for testing the REST API
+     */
+    private static function seed_test_accounts() {
+        self::create_test_user('fleet_admin', 'admin@fleettrack.pro', 'adminpassword123', 'Fleet Super Admin', 'fleet_super_admin');
+        self::create_test_user('fleet_manager', 'manager@fleettrack.pro', 'managerpassword123', 'Fleet Manager', 'fleet_manager');
+        self::create_test_user('fleet_accountant', 'accountant@fleettrack.pro', 'accountantpassword123', 'Fleet Accountant', 'fleet_accountant');
+        self::create_test_user('fleet_driver', 'driver@fleettrack.pro', 'driverpassword123', 'Fleet Driver', 'fleet_driver');
+    }
+
+    /**
+     * Helper to insert test accounts
+     */
+    private static function create_test_user(string $username, string $email, string $password, string $display_name, string $role) {
+        if (!username_exists($username) && !email_exists($email)) {
+            wp_insert_user([
+                'user_login' => $username,
+                'user_email' => $email,
+                'user_pass' => $password,
+                'display_name' => $display_name,
+                'first_name' => $display_name,
+                'role' => $role
+            ]);
         }
     }
 }
