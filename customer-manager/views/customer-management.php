@@ -8,7 +8,7 @@
   <!-- SEO Meta Tags -->
   <meta name="description" content="Manage your customers, view stats, and import/export CSV contacts with JWT auth.">
   <meta name="author" content="Mārwāri E-Commerce Team">
-  <link rel="stylesheet" href="<?php echo plugin_dir_url(dirname(__FILE__)) . 'assets/style.css'; ?>">
+  <link rel="stylesheet" href="<?php echo plugin_dir_url(dirname(dirname(__FILE__)) . '/customer-manager.php') . 'assets/style.css'; ?>">
   <style>
     /* Specific styles for Customer Management Panel */
     .connection-status {
@@ -799,7 +799,7 @@
 
   </div>
 
-  <script src="<?php echo plugin_dir_url(dirname(__FILE__)) . 'assets/customer-management.js'; ?>"></script>
+  <script src="<?php echo plugin_dir_url(dirname(dirname(__FILE__)) . '/customer-manager.php') . 'assets/customer-management.js'; ?>"></script>
 </body>
 
 </html>
