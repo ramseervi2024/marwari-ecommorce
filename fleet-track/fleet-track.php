@@ -58,6 +58,7 @@ register_activation_hook(__FILE__, 'fleet_track_activate_plugin');
 function fleet_track_activate_plugin() {
     \FleetTrackPro\Database\Migrations::activate();
     add_rewrite_rule('^fleettrack-api-docs/?$', 'index.php?fleettrack_api_docs=1', 'top');
+    add_rewrite_rule('^fleet-track/?$', 'index.php?fleet_track=1', 'top');
     flush_rewrite_rules();
 }
 
@@ -95,16 +96,22 @@ add_action('rest_api_init', function () {
 // 7. Serve Swagger documentation
 add_action('init', function() {
     add_rewrite_rule('^fleettrack-api-docs/?$', 'index.php?fleettrack_api_docs=1', 'top');
+    add_rewrite_rule('^fleet-track/?$', 'index.php?fleet_track=1', 'top');
 });
 
 add_filter('query_vars', function($vars) {
     $vars[] = 'fleettrack_api_docs';
+    $vars[] = 'fleet_track';
     return $vars;
 });
 
 add_action('template_redirect', function() {
     if (get_query_var('fleettrack_api_docs')) {
         include plugin_dir_path(__FILE__) . 'swagger/index.php';
+        exit;
+    }
+    if (get_query_var('fleet_track')) {
+        include plugin_dir_path(__FILE__) . 'views/fleet-dashboard.php';
         exit;
     }
 });

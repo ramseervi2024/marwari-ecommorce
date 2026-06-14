@@ -174,3 +174,12 @@ Calculates operational indicators for each driver:
 Access the interactive visual testing client directly:
 - **URL Path**: `https://rpsdigitalworld.store/fleettrack-api-docs/`
 - **Utility**: Allows administrators to input Bearer keys, test API responses, upload document file types (up to 20MB), and review request formats.
+
+---
+
+## 6. Frontend Logistics Dashboard Panel
+
+A premium night-themed frontend dashboard is included directly in the plugin to manage operations visually:
+
+- **Dashboard URL**: `https://rpsdigitalworld.store/fleet-track/`
+- **Utility**: Renders interactive tabs for **Overview Metrics**, **Vehicles Inventory**, **Drivers Directory**, **Trips Registry**, **Fuel & Expenses logs**, and **Financial Reports**. Supports real-time client-side CRUD operations and custom report generations within date range parameters.
