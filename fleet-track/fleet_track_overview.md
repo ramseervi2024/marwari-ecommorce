@@ -182,4 +182,4 @@ Access the interactive visual testing client directly:
 A premium night-themed frontend dashboard is included directly in the plugin to manage operations visually:
 
 - **Dashboard URL**: `https://rpsdigitalworld.store/fleet-track/`
-- **Utility**: Renders interactive tabs for **Overview Metrics**, **Vehicles Inventory**, **Drivers Directory**, **Trips Registry**, **Fuel & Expenses logs**, and **Financial Reports**. Supports real-time client-side CRUD operations and custom report generations within date range parameters.
+- **Utility**: Renders interactive tabs for **Overview Metrics**, **Vehicles Inventory**, **Drivers Directory**, **Routes Directory**, **Trips Registry**, **Fuel & Expenses logs**, and **Financial Reports**. Supports real-time client-side CRUD operations and custom report generations within date range parameters.

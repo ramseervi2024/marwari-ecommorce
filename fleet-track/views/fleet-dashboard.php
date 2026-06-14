@@ -96,6 +96,9 @@
           <button class="admin-nav-link" data-panel="drivers-panel" id="nav-drivers-btn">
             Drivers List
           </button>
+          <button class="admin-nav-link" data-panel="routes-panel" id="nav-routes-btn">
+            Routes Directory
+          </button>
           <button class="admin-nav-link" data-panel="trips-panel" id="nav-trips-btn">
             Trips Registry
           </button>
@@ -225,6 +228,36 @@
                 </tr>
               </thead>
               <tbody id="drivers-list-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL: ROUTES DIRECTORY -->
+      <div class="admin-panel" id="routes-panel">
+        <div class="admin-panel-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+          <div>
+            <h2>Routes Directory</h2>
+            <p>Register, monitor, and update delivery routes database.</p>
+          </div>
+          <button class="auth-submit-btn" id="add-route-btn" style="width:auto; padding: 0.6rem 1.2rem;">+ Add Route</button>
+        </div>
+
+        <div class="admin-panel-card">
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Route Name</th>
+                  <th>Source</th>
+                  <th>Destination</th>
+                  <th>Distance (KM)</th>
+                  <th>Estimated Time</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="routes-list-tbody"></tbody>
             </table>
           </div>
         </div>
@@ -506,6 +539,42 @@
             </select>
           </div>
           <button type="submit" class="auth-submit-btn" style="margin-top:1rem;">Save Trip</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Route Modal -->
+    <div class="modal-content" id="route-modal" style="display:none;">
+      <button class="modal-close-btn" onclick="closeModal()">X</button>
+      <div style="padding: 2.5rem;">
+        <h3 id="route-modal-title" style="margin-bottom:1.5rem; font-size:1.3rem;">Add Route</h3>
+        <form id="route-form">
+          <input type="hidden" id="route-id">
+          <div class="form-group">
+            <label for="rte-name">Route Name</label>
+            <input type="text" id="rte-name" class="form-input" placeholder="e.g. Mumbai to Pune Expressway" required>
+          </div>
+          <div style="display:flex; gap:1rem;">
+            <div class="form-group" style="flex:1;">
+              <label for="rte-source">Source</label>
+              <input type="text" id="rte-source" class="form-input" placeholder="e.g. Mumbai" required>
+            </div>
+            <div class="form-group" style="flex:1;">
+              <label for="rte-dest">Destination</label>
+              <input type="text" id="rte-dest" class="form-input" placeholder="e.g. Pune" required>
+            </div>
+          </div>
+          <div style="display:flex; gap:1rem;">
+            <div class="form-group" style="flex:1;">
+              <label for="rte-distance">Distance (KM)</label>
+              <input type="number" id="rte-distance" step="0.01" class="form-input" placeholder="e.g. 150.50" required>
+            </div>
+            <div class="form-group" style="flex:1;">
+              <label for="rte-time">Estimated Time</label>
+              <input type="text" id="rte-time" class="form-input" placeholder="e.g. 3h 30m" required>
+            </div>
+          </div>
+          <button type="submit" class="auth-submit-btn" style="margin-top:1rem;">Save Route</button>
         </form>
       </div>
     </div>

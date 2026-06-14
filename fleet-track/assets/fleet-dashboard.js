@@ -99,6 +99,8 @@ function showPanel(panelId) {
     fetchTrips();
   } else if (panelId === 'expenses-panel') {
     fetchExpenses();
+  } else if (panelId === 'routes-panel') {
+    fetchRoutes();
   }
 }
 
@@ -120,6 +122,7 @@ function configureRoleAccess() {
   // Show vehicles and drivers links
   document.getElementById('nav-vehicles-btn').style.display = driverOnly ? 'none' : 'flex';
   document.getElementById('nav-drivers-btn').style.display = driverOnly ? 'none' : 'flex';
+  document.getElementById('nav-routes-btn').style.display = driverOnly ? 'none' : 'flex';
 
   // Default panel view
   if (driverOnly) {
@@ -342,6 +345,105 @@ async function fetchExpenses() {
     }
   } catch (err) {
     tbody.innerHTML = '<tr><td colspan="6">Failed to load expenses.</td></tr>';
+  }
+}
+
+// Routes CRUD
+async function fetchRoutes() {
+  const tbody = document.getElementById('routes-list-tbody');
+  tbody.innerHTML = '<tr><td colspan="7">Loading routes...</td></tr>';
+  
+  try {
+    const res = await makeRequest('/routes');
+    if (res.success && res.data.data) {
+      tbody.innerHTML = '';
+      if (res.data.data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7">No routes registered.</td></tr>';
+        return;
+      }
+      res.data.data.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-weight:700; color:var(--primary);">${r.route_name}</td>
+          <td>${r.source}</td>
+          <td>${r.destination}</td>
+          <td>${parseFloat(r.distance_km).toFixed(2)} KM</td>
+          <td>${r.estimated_time || 'N/A'}</td>
+          <td><span class="badge-status ${r.status.toLowerCase()}">${r.status}</span></td>
+          <td>
+            <button onclick="editRoute(${r.id})" style="color:var(--primary); margin-right:8px;">Edit</button>
+            <button onclick="deleteRoute(${r.id})" style="color:var(--danger);">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+  } catch (err) {
+    tbody.innerHTML = '<tr><td colspan="7">Failed to load routes.</td></tr>';
+  }
+}
+
+window.editRoute = async function(id) {
+  try {
+    const res = await makeRequest(`/routes/${id}`);
+    if (res.success && res.data) {
+      const r = res.data;
+      document.getElementById('route-id').value = r.id;
+      document.getElementById('rte-name').value = r.route_name;
+      document.getElementById('rte-source').value = r.source;
+      document.getElementById('rte-dest').value = r.destination;
+      document.getElementById('rte-distance').value = r.distance_km;
+      document.getElementById('rte-time').value = r.estimated_time;
+      
+      document.getElementById('route-modal-title').textContent = 'Edit Route';
+      openModal('route-modal');
+    }
+  } catch (err) {
+    showToast(err.message, 'danger');
+  }
+};
+
+window.deleteRoute = async function(id) {
+  if (confirm('Delete this route?')) {
+    try {
+      const res = await makeRequest(`/routes/${id}`, { method: 'DELETE' });
+      if (res.success) {
+        showToast('Route deleted successfully');
+        fetchRoutes();
+      }
+    } catch (err) {
+      showToast(err.message, 'danger');
+    }
+  }
+};
+
+async function saveRoute(e) {
+  e.preventDefault();
+  const id = document.getElementById('route-id').value;
+  const payload = {
+    route_name: document.getElementById('rte-name').value.trim(),
+    source: document.getElementById('rte-source').value.trim(),
+    destination: document.getElementById('rte-dest').value.trim(),
+    distance_km: parseFloat(document.getElementById('rte-distance').value),
+    estimated_time: document.getElementById('rte-time').value.trim(),
+    status: 'ACTIVE'
+  };
+
+  try {
+    const method = id ? 'PUT' : 'POST';
+    const endpoint = id ? `/routes/${id}` : '/routes';
+    const res = await makeRequest(endpoint, {
+      method: method,
+      body: JSON.stringify(payload)
+    });
+
+    if (res.success) {
+      showToast(id ? 'Route details updated!' : 'Route registered successfully!');
+      closeModal();
+      fetchRoutes();
+    }
+  } catch (err) {
+    showToast(err.message, 'danger');
   }
 }
 
@@ -801,12 +903,20 @@ function initEventListeners() {
     openModal('fuel-modal');
   });
 
+  document.getElementById('add-route-btn').addEventListener('click', () => {
+    document.getElementById('route-form').reset();
+    document.getElementById('route-id').value = '';
+    document.getElementById('route-modal-title').textContent = 'Add Route';
+    openModal('route-modal');
+  });
+
   // Form submits
   document.getElementById('vehicle-form').addEventListener('submit', saveVehicle);
   document.getElementById('driver-form').addEventListener('submit', saveDriver);
   document.getElementById('trip-form').addEventListener('submit', saveTrip);
   document.getElementById('expense-form').addEventListener('submit', saveExpense);
   document.getElementById('fuel-form').addEventListener('submit', saveFuel);
+  document.getElementById('route-form').addEventListener('submit', saveRoute);
   
   // Reports form
   document.getElementById('report-filter-form').addEventListener('submit', generateReport);
