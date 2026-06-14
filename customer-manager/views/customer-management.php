@@ -8,7 +8,7 @@
   <!-- SEO Meta Tags -->
   <meta name="description" content="Manage your customers, view stats, and import/export CSV contacts with JWT auth.">
   <meta name="author" content="Mārwāri E-Commerce Team">
-  <link rel="stylesheet" href="<?php echo plugin_dir_url(dirname(dirname(__FILE__)) . '/customer-manager.php') . 'assets/style.css'; ?>">
+  <link rel="stylesheet" href="<?php echo plugin_dir_url(dirname(dirname(__FILE__)) . '/customer-manager.php') . 'assets/style.css?v=' . (defined('CUSTOMER_MANAGER_VERSION') ? CUSTOMER_MANAGER_VERSION : time()); ?>">
   <style>
     /* Specific styles for Customer Management Panel */
     .connection-status {
@@ -635,8 +635,8 @@
                 <tr>
                   <th style="cursor: pointer;" id="th-name">Customer Name <span id="sort-name-indicator">↕</span></th>
                   <th style="cursor: pointer;" id="th-email">Email <span id="sort-email-indicator">↕</span></th>
-                  <th>Phone Number</th>
-                  <th>Location</th>
+                  <th class="hide-mobile">Phone Number</th>
+                  <th class="hide-mobile">Location</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -799,7 +799,7 @@
 
   </div>
 
-  <script src="<?php echo plugin_dir_url(dirname(dirname(__FILE__)) . '/customer-manager.php') . 'assets/customer-management.js'; ?>"></script>
+  <script src="<?php echo plugin_dir_url(dirname(dirname(__FILE__)) . '/customer-manager.php') . 'assets/customer-management.js?v=' . (defined('CUSTOMER_MANAGER_VERSION') ? CUSTOMER_MANAGER_VERSION : time()); ?>"></script>
 </body>
 
 </html>

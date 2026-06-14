@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Customer Manager API
  * Description: Custom REST API for managing customers and providing statistics.
- * Version: 1.0.0
+ * Version: 1.0.3
  * Author: Your Name
  * Text Domain: customer-manager
  */
@@ -10,6 +10,8 @@
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
+
+define('CUSTOMER_MANAGER_VERSION', '1.0.3');
 
 // 1. Simple PSR-4 Autoloader (Replaces Composer Autoloader for ZIP deployment)
 spl_autoload_register(function ($class) {

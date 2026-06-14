@@ -353,8 +353,8 @@ function renderCustomersTable() {
     tr.innerHTML = `
       <td style="font-weight:600; color:var(--text-primary);">${c.first_name} ${c.last_name}</td>
       <td>${c.email}</td>
-      <td>${c.phone}</td>
-      <td>${c.city ? `${c.city}, ${c.state || ''}` : 'N/A'}</td>
+      <td class="hide-mobile">${c.phone}</td>
+      <td class="hide-mobile">${c.city ? `${c.city}, ${c.state || ''}` : 'N/A'}</td>
       <td>
         <span class="badge-status ${c.status.toLowerCase() === 'active' ? 'completed' : 'pending'}">
           ${c.status}

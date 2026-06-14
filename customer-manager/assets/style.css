@@ -1527,6 +1527,10 @@ select.form-input {
 
 /* Responsiveness adjustments */
 @media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+
   .hero-slider {
     flex-direction: column;
     text-align: center;
@@ -1650,18 +1654,17 @@ select.form-input {
 /* Sidebar Layout for Admin Dashboard */
 @media (min-width: 768px) {
   .admin-view-wrapper.active {
-    display: grid;
+    display: grid !important;
     grid-template-columns: 260px 1fr;
-    min-height: calc(100vh - 80px);
+    min-height: 100vh;
     padding: 0;
     gap: 0;
   }
 
   .admin-sidebar {
     position: sticky;
-    top: 80px;
-    /* navbar height */
-    height: calc(100vh - 80px);
+    top: 0;
+    height: 100vh;
     background: var(--bg-card);
     border-right: 1px solid var(--border-color);
     padding: 2rem 1.5rem;
