@@ -1,0 +1,14 @@
+{
+    "name": "ramseervi/customer-manager",
+    "description": "WordPress Customer Management API with Swagger UI",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "CustomerManager\\": ""
+        }
+    },
+    "require": {
+        "php": ">=8.0"
+    }
+}
