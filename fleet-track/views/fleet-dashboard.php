@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="<?php echo plugin_dir_url(dirname(__FILE__)) . 'assets/fleet-style.css?v=' . (defined('FLEET_TRACK_VERSION') ? FLEET_TRACK_VERSION : time()); ?>">
+  <link rel="stylesheet" href="<?php echo plugin_dir_url(dirname(__FILE__)) . 'assets/fleet-style.css?v=' . time(); ?>">
 </head>
 <body>
 
@@ -655,6 +655,6 @@
 
   </div>
 
-  <script src="<?php echo plugin_dir_url(dirname(__FILE__)) . 'assets/fleet-dashboard.js?v=' . (defined('FLEET_TRACK_VERSION') ? FLEET_TRACK_VERSION : time()); ?>"></script>
+  <script src="<?php echo plugin_dir_url(dirname(__FILE__)) . 'assets/fleet-dashboard.js?v=' . time(); ?>"></script>
 </body>
 </html>

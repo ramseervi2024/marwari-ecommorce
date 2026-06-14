@@ -2,7 +2,7 @@
 /**
  * Plugin Name: FleetTrack Pro API
  * Description: Custom REST API for Fleet Management (vehicles, drivers, routes, trips, expenses, fuel, documents, dashboard, reports).
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Ramesh Seervi
  * Text Domain: fleet-track
  */
@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
-define('FLEET_TRACK_VERSION', '1.0.0');
+define('FLEET_TRACK_VERSION', '1.0.1');
 
 // 1. PSR-4 Autoloader
 spl_autoload_register(function ($class) {
