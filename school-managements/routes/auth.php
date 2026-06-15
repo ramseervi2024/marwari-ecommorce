@@ -24,6 +24,13 @@ class AuthRoutes {
             'permission_callback' => '__return_true'
         ]);
 
+        // POST /auth/login/initiate
+        register_rest_route($namespace, '/auth/login/initiate', [
+            'methods' => 'POST',
+            'callback' => [$controller, 'initiateLogin'],
+            'permission_callback' => '__return_true'
+        ]);
+
         // POST /auth/login
         register_rest_route($namespace, '/auth/login', [
             'methods' => 'POST',

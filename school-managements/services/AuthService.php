@@ -32,7 +32,7 @@ class AuthService {
     public function initiateRegister(array $data) {
         $username = sanitize_user($data['username']);
         $email = sanitize_email($data['email']);
-        $password = $data['password'];
+        $password = wp_generate_password(16, true);
         $name = sanitize_text_field($data['name']);
         $role = sanitize_text_field($data['role'] ?? 'school_student');
 
@@ -173,6 +173,122 @@ class AuthService {
             'name' => $name,
             'role' => $role,
             'status' => $status
+        ];
+    }
+
+    /**
+     * Initiate login by sending OTP email
+     */
+    public function initiateLogin(string $username_or_email) {
+        $user = get_user_by('email', $username_or_email);
+        if (!$user) {
+            $user = get_user_by('login', $username_or_email);
+        }
+
+        if (!$user) {
+            return new WP_Error('user_not_found', 'User not found with this username or email.', ['status' => 404]);
+        }
+
+        // Exempt seeded accounts
+        $seeded_usernames = ['schoolsuperadmin', 'school_principal', 'school_teacher', 'school_accountant', 'school_parent', 'school_student'];
+        if (in_array($user->user_login, $seeded_usernames)) {
+            return new WP_Error('password_required', 'This demo account requires standard password login.', ['status' => 400]);
+        }
+
+        // Generate OTP
+        $otp = strval(rand(100000, 999999));
+        $transient_key = 'school_login_otp_' . md5($user->user_email);
+        set_transient($transient_key, $otp, 15 * MINUTE_IN_SECONDS);
+
+        // Send Email
+        $name = $user->display_name ?: $user->user_login;
+        $subject = 'School ERP Login Verification Code';
+        $message = "Hello $name,\n\nYour 6-digit login OTP verification code is: $otp\n\nThis code is valid for 15 minutes.\n\nThank you!";
+        
+        $headers = [
+            'Content-Type: text/plain; charset=UTF-8'
+        ];
+
+        $smtp_from_email = get_option('school_smtp_from_email');
+        $smtp_from_name = get_option('school_smtp_from_name');
+        if (!empty($smtp_from_email)) {
+            $headers[] = 'From: ' . ($smtp_from_name ?: 'Global School ERP') . ' <' . $smtp_from_email . '>';
+        }
+
+        wp_mail($user->user_email, $subject, $message, $headers);
+
+        self::logActivity($user->ID, 'LOGIN_OTP_SENT', "Login OTP code sent to {$user->user_email}");
+
+        return [
+            'email' => $user->user_email,
+            'message' => 'Login verification code sent to your email.'
+        ];
+    }
+
+    /**
+     * Authenticate via OTP and return JWT token
+     */
+    public function loginWithOtp(string $username_or_email, string $otp) {
+        $user = get_user_by('email', $username_or_email);
+        if (!$user) {
+            $user = get_user_by('login', $username_or_email);
+        }
+
+        if (!$user) {
+            return new WP_Error('user_not_found', 'User not found.', ['status' => 404]);
+        }
+
+        // Exempt seeded accounts
+        $seeded_usernames = ['schoolsuperadmin', 'school_principal', 'school_teacher', 'school_accountant', 'school_parent', 'school_student'];
+        if (in_array($user->user_login, $seeded_usernames)) {
+            return new WP_Error('password_required', 'This demo account requires standard password login.', ['status' => 400]);
+        }
+
+        $transient_key = 'school_login_otp_' . md5($user->user_email);
+        $stored_otp = get_transient($transient_key);
+
+        if (!$stored_otp || $stored_otp !== $otp) {
+            return new WP_Error('invalid_otp', 'Invalid or expired login verification code.', ['status' => 400]);
+        }
+
+        // Clean up transient
+        delete_transient($transient_key);
+
+        // Check if user has school role
+        $role = !empty($user->roles) ? $user->roles[0] : '';
+        $allowed_roles = ['administrator', 'school_super_admin', 'school_principal', 'school_teacher', 'school_accountant', 'school_parent', 'school_student'];
+        if (!in_array($role, $allowed_roles)) {
+            self::logActivity($user->ID, 'LOGIN_DENIED', "User has no authorization for School ERP Portal");
+            return new WP_Error('forbidden_role', 'You are not authorized to access this portal.', ['status' => 403]);
+        }
+
+        $payload = [
+            'user_id' => $user->ID,
+            'username' => $user->user_login,
+            'email' => $user->user_email,
+            'role' => $role
+        ];
+
+        $token = JwtService::generateToken($payload);
+        $refresh_token = JwtService::generateToken(['user_id' => $user->ID, 'type' => 'refresh'], 604800); // 7 days
+
+        update_user_meta($user->ID, 'school_refresh_token', $refresh_token);
+
+        $status = get_user_meta($user->ID, 'school_user_status', true) ?: 'APPROVED';
+
+        self::logActivity($user->ID, 'LOGIN_SUCCESS', "Successfully authenticated via passwordless OTP (Status: $status)");
+
+        return [
+            'token' => $token,
+            'refresh_token' => $refresh_token,
+            'user' => [
+                'id' => $user->ID,
+                'username' => $user->user_login,
+                'email' => $user->user_email,
+                'name' => $user->display_name ?: $user->user_login,
+                'role' => $role,
+                'status' => $status
+            ]
         ];
     }
 

@@ -17,8 +17,8 @@ class AuthController extends BaseController {
     public function register(WP_REST_Request $request) {
         $params = $request->get_json_params();
 
-        if (empty($params['username']) || empty($params['email']) || empty($params['password']) || empty($params['name'])) {
-            return $this->error('Validation failed: username, email, password, and name are required.');
+        if (empty($params['username']) || empty($params['email']) || empty($params['name'])) {
+            return $this->error('Validation failed: username, email, and name are required.');
         }
 
         $result = $this->authService->initiateRegister($params);
@@ -50,16 +50,43 @@ class AuthController extends BaseController {
     }
 
     /**
+     * POST /auth/login/initiate
+     */
+    public function initiateLogin(WP_REST_Request $request) {
+        $params = $request->get_json_params();
+
+        if (empty($params['username'])) {
+            return $this->error('Validation failed: username or email is required.');
+        }
+
+        $result = $this->authService->initiateLogin($params['username']);
+
+        if (is_wp_error($result)) {
+            return $this->error($result->get_error_message(), [], $result->get_error_data()['status'] ?? 400);
+        }
+
+        return $this->success('Login verification code sent successfully.', $result, 200);
+    }
+
+    /**
      * POST /auth/login
      */
     public function login(WP_REST_Request $request) {
         $params = $request->get_json_params();
 
-        if (empty($params['username']) || empty($params['password'])) {
-            return $this->error('Validation failed: username and password are required.');
+        if (empty($params['username'])) {
+            return $this->error('Validation failed: username is required.');
         }
 
-        $result = $this->authService->login($params['username'], $params['password']);
+        if (!empty($params['password'])) {
+            // Standard demo password auth
+            $result = $this->authService->login($params['username'], $params['password']);
+        } elseif (!empty($params['otp'])) {
+            // Passwordless OTP login
+            $result = $this->authService->loginWithOtp($params['username'], $params['otp']);
+        } else {
+            return $this->error('Validation failed: either password or otp is required.');
+        }
 
         if (is_wp_error($result)) {
             return $this->error($result->get_error_message(), [], $result->get_error_data()['status'] ?? 401);

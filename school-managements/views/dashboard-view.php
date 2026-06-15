@@ -723,13 +723,17 @@
             <form id="login-form">
                 <div class="form-group">
                     <label>Username / Email</label>
-                    <input type="text" id="username" class="form-input" placeholder="Select a role above or type..." required>
+                    <input type="text" id="username" class="form-input" placeholder="Select a role above or type..." oninput="checkLoginType()" required>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="login-pass-group">
                     <label>Password</label>
-                    <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                    <input type="password" id="password" class="form-input" placeholder="••••••••">
                 </div>
-                <button type="submit" class="auth-submit-btn">Authorize & Login</button>
+                <div class="form-group" id="login-otp-group" style="display: none;">
+                    <label>6-Digit Login Code</label>
+                    <input type="text" id="login-otp" class="form-input" placeholder="e.g. 6-digit OTP code" maxlength="6">
+                </div>
+                <button type="submit" id="login-submit-btn" class="auth-submit-btn">Authorize & Login</button>
                 <p class="auth-toggle-tip">
                     Don't have an account? <a href="#" onclick="showRegister(event)">Register here</a>
                 </p>
@@ -747,10 +751,6 @@
                 <div class="form-group">
                     <label>Full Name</label>
                     <input type="text" id="reg-name" class="form-input" placeholder="e.g. Dr. Robert Carter" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="reg-password" class="form-input" placeholder="••••••••" required>
                 </div>
                 <div class="form-group">
                     <label>Account Role Type</label>
@@ -1223,11 +1223,48 @@
         let authToken = localStorage.getItem('school_jwt_token') || '';
         let currentUser = null;
 
+        // Check login type (demo vs OTP based)
+        function checkLoginType() {
+            const usernameInput = document.getElementById('username');
+            const passGroup = document.getElementById('login-pass-group');
+            const passwordInput = document.getElementById('password');
+            const otpGroup = document.getElementById('login-otp-group');
+            const otpInput = document.getElementById('login-otp');
+            const submitBtn = document.getElementById('login-submit-btn');
+
+            const val = usernameInput.value.trim().toLowerCase();
+            const demoUsers = [
+                'schoolsuperadmin', 'school_principal', 'school_teacher', 'school_accountant', 'school_parent', 'school_student',
+                'admin@school.erp', 'principal@school.erp', 'teacher@school.erp', 'accountant@school.erp', 'parent@school.erp', 'student@school.erp'
+            ];
+
+            if (demoUsers.includes(val)) {
+                // Demo accounts: Password required
+                passGroup.style.display = 'block';
+                passwordInput.required = true;
+                otpGroup.style.display = 'none';
+                otpInput.required = false;
+                submitBtn.innerText = 'Authorize & Login';
+            } else {
+                // Other accounts: OTP required, password hidden
+                passGroup.style.display = 'none';
+                passwordInput.required = false;
+                passwordInput.value = '';
+                
+                if (otpGroup.style.display === 'none') {
+                    submitBtn.innerText = 'Request Login Code';
+                } else {
+                    submitBtn.innerText = 'Verify & Login';
+                }
+            }
+        }
+
         // Prefill credential fields based on select
         function prefillUser(username, password) {
             showLogin();
             document.getElementById('username').value = username;
             document.getElementById('password').value = password;
+            checkLoginType();
             toast(`Prefilled as ${username.replace('school_', '').toUpperCase()}! Click login.`, 'success');
         }
 
@@ -1250,10 +1287,11 @@
             document.getElementById('register-form').style.display = 'none';
             
             // Reset OTP fields
-            document.getElementById('reg-otp-group').style.display = 'none';
-            document.getElementById('reg-otp').required = false;
-            document.getElementById('reg-otp').value = '';
-            document.getElementById('reg-submit-btn').innerText = 'Register Account';
+            document.getElementById('login-otp-group').style.display = 'none';
+            document.getElementById('login-otp').required = false;
+            document.getElementById('login-otp').value = '';
+            document.getElementById('login-submit-btn').innerText = 'Authorize & Login';
+            checkLoginType();
         }
 
         // User registration handler
@@ -1267,9 +1305,8 @@
             const u = document.getElementById('reg-username').value;
             const em = document.getElementById('reg-email').value;
             const n = document.getElementById('reg-name').value;
-            const p = document.getElementById('reg-password').value;
             const r = document.getElementById('reg-role').value;
-
+ 
             // Phase 1: OTP initiation
             if (otpGroup.style.display === 'none') {
                 submitBtn.disabled = true;
@@ -1278,7 +1315,7 @@
                 fetch(`${API_URL}/auth/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: u, email: em, name: n, password: p, role: r })
+                    body: JSON.stringify({ username: u, email: em, name: n, role: r })
                 })
                 .then(res => {
                     if (!res.ok) {
@@ -1324,7 +1361,6 @@
                     toast('Verification successful! Account created. Please wait for super admin approval.', 'success');
                     showLogin();
                     document.getElementById('username').value = u;
-                    document.getElementById('password').value = p;
                 })
                 .catch(err => {
                     toast(err.message, 'error');
@@ -1567,28 +1603,114 @@
         // Login Handler
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const u = document.getElementById('username').value;
-            const p = document.getElementById('password').value;
+            
+            const usernameInput = document.getElementById('username');
+            const passGroup = document.getElementById('login-pass-group');
+            const passwordInput = document.getElementById('password');
+            const otpGroup = document.getElementById('login-otp-group');
+            const otpInput = document.getElementById('login-otp');
+            const submitBtn = document.getElementById('login-submit-btn');
 
-            fetch(`${API_URL}/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: u, password: p })
-            })
-            .then(res => {
-                if (!res.ok) throw new Error('Invalid login credentials.');
-                return res.json();
-            })
-            .then(body => {
-                authToken = body.data.token;
-                localStorage.setItem('school_jwt_token', authToken);
-                currentUser = body.data.user;
-                toast(`Logged in as ${currentUser.role.replace('school_', '').toUpperCase()}!`, 'success');
-                showAppScreen();
-            })
-            .catch(err => {
-                toast(err.message, 'error');
-            });
+            const u = usernameInput.value.trim();
+            const p = passwordInput.value;
+            const otpVal = otpInput.value.trim();
+
+            const demoUsers = [
+                'schoolsuperadmin', 'school_principal', 'school_teacher', 'school_accountant', 'school_parent', 'school_student',
+                'admin@school.erp', 'principal@school.erp', 'teacher@school.erp', 'accountant@school.erp', 'parent@school.erp', 'student@school.erp'
+            ];
+
+            const isDemo = demoUsers.includes(u.toLowerCase());
+
+            if (isDemo) {
+                // Phase 1: Demo Password Auth
+                submitBtn.disabled = true;
+                submitBtn.innerText = 'Authorizing...';
+                
+                fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, password: p })
+                })
+                .then(res => {
+                    if (!res.ok) return res.json().then(b => { throw new Error(b.message || 'Invalid login credentials.'); });
+                    return res.json();
+                })
+                .then(body => {
+                    authToken = body.data.token;
+                    localStorage.setItem('school_jwt_token', authToken);
+                    currentUser = body.data.user;
+                    toast(`Logged in as ${currentUser.role.replace('school_', '').toUpperCase()}!`, 'success');
+                    showAppScreen();
+                    submitBtn.disabled = false;
+                })
+                .catch(err => {
+                    toast(err.message, 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'Authorize & Login';
+                });
+            } else {
+                // Passwordless OTP Flow
+                if (otpGroup.style.display === 'none') {
+                    // Phase 1: Request OTP
+                    submitBtn.disabled = true;
+                    submitBtn.innerText = 'Sending Code...';
+
+                    fetch(`${API_URL}/auth/login/initiate`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: u })
+                    })
+                    .then(res => {
+                        if (!res.ok) return res.json().then(b => { throw new Error(b.message || 'Failed to send login code.'); });
+                        return res.json();
+                    })
+                    .then(body => {
+                        toast('Login verification code sent to your email. Check inbox!', 'success');
+                        otpGroup.style.display = 'block';
+                        otpInput.required = true;
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = 'Verify & Login';
+                    })
+                    .catch(err => {
+                        toast(err.message, 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = 'Request Login Code';
+                    });
+                } else {
+                    // Phase 2: Verify OTP and Login
+                    if (!otpVal || otpVal.length < 6) {
+                        toast('Please enter the 6-digit login verification code.', 'error');
+                        return;
+                    }
+
+                    submitBtn.disabled = true;
+                    submitBtn.innerText = 'Verifying...';
+
+                    fetch(`${API_URL}/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: u, otp: otpVal })
+                    })
+                    .then(res => {
+                        if (!res.ok) return res.json().then(b => { throw new Error(b.message || 'Verification failed. Invalid code.'); });
+                        return res.json();
+                    })
+                    .then(body => {
+                        authToken = body.data.token;
+                        localStorage.setItem('school_jwt_token', authToken);
+                        currentUser = body.data.user;
+                        toast(`Logged in as ${currentUser.role.replace('school_', '').toUpperCase()}!`, 'success');
+                        showAppScreen();
+                        submitBtn.disabled = false;
+                    })
+                    .catch(err => {
+                        toast(err.message, 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = 'Verify & Login';
+                    });
+                }
+            }
         });
 
         // Load dashboard stats
