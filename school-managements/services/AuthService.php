@@ -66,16 +66,21 @@ class AuthService {
         
         set_transient($transient_key, $saved_data, 15 * MINUTE_IN_SECONDS);
 
-        // Send email with From header matching domain to satisfy hosting SPF rules
-        $domain = parse_url(site_url(), PHP_URL_HOST);
-        $domain = preg_replace('/^www\./', '', $domain);
-
         $subject = 'School ERP Registration Verification';
         $message = "Hello $name,\n\nYour 6-digit registration OTP verification code is: $otp\n\nThis code is valid for 15 minutes.\n\nThank you!";
+        
         $headers = [
-            'Content-Type: text/plain; charset=UTF-8',
-            'From: Global School ERP <noreply@' . $domain . '>'
+            'Content-Type: text/plain; charset=UTF-8'
         ];
+
+        // If custom SMTP Sender is defined in our plugin settings, we use it.
+        // Otherwise, we omit the From header to let standard WordPress mailer/SMTP plugins handle it.
+        $smtp_from_email = get_option('school_smtp_from_email');
+        $smtp_from_name = get_option('school_smtp_from_name');
+        if (!empty($smtp_from_email)) {
+            $headers[] = 'From: ' . ($smtp_from_name ?: 'Global School ERP') . ' <' . $smtp_from_email . '>';
+        }
+
         wp_mail($email, $subject, $message, $headers);
 
         self::logActivity(null, 'REGISTER_OTP_SENT', "OTP sent to $email for username: $username");
