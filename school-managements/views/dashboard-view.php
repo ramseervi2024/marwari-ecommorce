@@ -730,6 +730,43 @@
                     <input type="password" id="password" class="form-input" placeholder="••••••••" required>
                 </div>
                 <button type="submit" class="auth-submit-btn">Authorize & Login</button>
+                <p class="auth-toggle-tip">
+                    Don't have an account? <a href="#" onclick="showRegister(event)">Register here</a>
+                </p>
+            </form>
+
+            <form id="register-form" style="display: none;" onsubmit="handleUserRegister(event)">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="reg-username" class="form-input" placeholder="e.g. principal_carter" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="reg-email" class="form-input" placeholder="e.g. carter@school.erp" required>
+                </div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="reg-name" class="form-input" placeholder="e.g. Dr. Robert Carter" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="reg-password" class="form-input" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label>Account Role Type</label>
+                    <select id="reg-role" class="form-input" style="background: #111827;" required>
+                        <option value="school_super_admin">Super Admin</option>
+                        <option value="school_principal">Principal</option>
+                        <option value="school_teacher">Teacher</option>
+                        <option value="school_accountant">Accountant</option>
+                        <option value="school_parent">Parent</option>
+                        <option value="school_student">Student</option>
+                    </select>
+                </div>
+                <button type="submit" class="auth-submit-btn">Register Account</button>
+                <p class="auth-toggle-tip">
+                    Already have an account? <a href="#" onclick="showLogin(event)">Log in here</a>
+                </p>
             </form>
         </div>
     </div>
@@ -1077,9 +1114,54 @@
 
         // Prefill credential fields based on select
         function prefillUser(username, password) {
+            showLogin();
             document.getElementById('username').value = username;
             document.getElementById('password').value = password;
             toast(`Prefilled as ${username.replace('school_', '').toUpperCase()}! Click login.`, 'success');
+        }
+
+        // Toggle Auth views
+        function showRegister(e) {
+            if (e) e.preventDefault();
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('register-form').style.display = 'block';
+        }
+
+        function showLogin(e) {
+            if (e) e.preventDefault();
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('register-form').style.display = 'none';
+        }
+
+        // User registration handler
+        function handleUserRegister(e) {
+            e.preventDefault();
+            const u = document.getElementById('reg-username').value;
+            const em = document.getElementById('reg-email').value;
+            const n = document.getElementById('reg-name').value;
+            const p = document.getElementById('reg-password').value;
+            const r = document.getElementById('reg-role').value;
+
+            fetch(`${API_URL}/auth/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: u, email: em, name: n, password: p, role: r })
+            })
+            .then(res => {
+                if (!res.ok) {
+                    return res.json().then(body => { throw new Error(body.message || 'Registration failed'); });
+                }
+                return res.json();
+            })
+            .then(body => {
+                toast('Registration successful! Please log in.', 'success');
+                showLogin();
+                document.getElementById('username').value = u;
+                document.getElementById('password').value = p;
+            })
+            .catch(err => {
+                toast(err.message, 'error');
+            });
         }
 
         // Switch panel tabs
