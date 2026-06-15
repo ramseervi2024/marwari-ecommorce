@@ -1,0 +1,942 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "School Management API",
+    "description": "Custom Headless REST API ERP and School Management System for Schools, Colleges, and Coaching Institutes.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/wp-json/school-management/v1",
+      "description": "WordPress REST API base"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register user",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "email", "password", "name"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "password": { "type": "string" },
+                  "name": { "type": "string" },
+                  "role": { "type": "string", "enum": ["school_super_admin", "school_principal", "school_teacher", "school_accountant", "school_parent", "school_student"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User created" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Authenticate user credentials",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "password"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Access JWT returned" }
+        }
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "summary": "Rotate access token",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["refresh_token"],
+                "properties": {
+                  "refresh_token": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "New access JWT returned" }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Current authenticated user profile",
+        "responses": {
+          "200": { "description": "Profile details" }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Revoke active refresh tokens",
+        "responses": {
+          "200": { "description": "Logged out" }
+        }
+      }
+    },
+    "/students": {
+      "get": {
+        "summary": "List students",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } },
+          { "name": "class_id", "in": "query", "schema": { "type": "integer" } },
+          { "name": "section_id", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "List returned" }
+        }
+      },
+      "post": {
+        "summary": "Register student",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["admission_no", "first_name", "last_name"],
+                "properties": {
+                  "admission_no": { "type": "string" },
+                  "roll_no": { "type": "string" },
+                  "first_name": { "type": "string" },
+                  "last_name": { "type": "string" },
+                  "gender": { "type": "string" },
+                  "dob": { "type": "string", "format": "date" },
+                  "mobile": { "type": "string" },
+                  "email": { "type": "string" },
+                  "address": { "type": "string" },
+                  "class_id": { "type": "integer" },
+                  "section_id": { "type": "integer" },
+                  "parent_id": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Student registered" }
+        }
+      }
+    },
+    "/students/{id}": {
+      "get": {
+        "summary": "Get student details",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Details returned" } }
+      },
+      "put": {
+        "summary": "Update student",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object" } } }
+        },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete student",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/teachers": {
+      "get": {
+        "summary": "List teachers",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "List returned" } }
+      },
+      "post": {
+        "summary": "Create teacher",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["employee_code", "name", "mobile", "email"],
+                "properties": {
+                  "employee_code": { "type": "string" },
+                  "name": { "type": "string" },
+                  "mobile": { "type": "string" },
+                  "email": { "type": "string" },
+                  "qualification": { "type": "string" },
+                  "salary": { "type": "number" },
+                  "joining_date": { "type": "string", "format": "date" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/teachers/{id}": {
+      "get": {
+        "summary": "Get teacher details",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Details returned" } }
+      },
+      "put": {
+        "summary": "Update teacher",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object" } } }
+        },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete teacher",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/classes": {
+      "get": { "summary": "List classes", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Create class",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["class_name"],
+                "properties": { "class_name": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/classes/{id}": {
+      "put": {
+        "summary": "Update class name",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object" } } }
+        },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete class",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/sections": {
+      "get": { "summary": "List sections", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Create section",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["section_name", "class_id"],
+                "properties": { "section_name": { "type": "string" }, "class_id": { "type": "integer" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/sections/{id}": {
+      "put": {
+        "summary": "Update section",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete section",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/subjects": {
+      "get": { "summary": "List subjects", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Create subject",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["subject_name", "class_id"],
+                "properties": { "subject_name": { "type": "string" }, "subject_code": { "type": "string" }, "class_id": { "type": "integer" }, "teacher_id": { "type": "integer" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/subjects/{id}": {
+      "put": {
+        "summary": "Update subject",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete subject",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/attendance/students": {
+      "get": { "summary": "Get student attendance logs", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Submit student attendance",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["student_id", "attendance_date", "status"],
+                "properties": { "student_id": { "type": "integer" }, "attendance_date": { "type": "string", "format": "date" }, "status": { "type": "string", "enum": ["Present", "Absent", "Late", "Half Day"] }, "remarks": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Registered" } }
+      }
+    },
+    "/attendance/students/{id}": {
+      "put": {
+        "summary": "Update student attendance",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated" } }
+      }
+    },
+    "/attendance/teachers": {
+      "get": { "summary": "Get teacher attendance logs", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Submit teacher attendance",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["teacher_id", "attendance_date", "status"],
+                "properties": { "teacher_id": { "type": "integer" }, "attendance_date": { "type": "string", "format": "date" }, "status": { "type": "string", "enum": ["Present", "Absent", "Late", "Half Day"] }, "remarks": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Registered" } }
+      }
+    },
+    "/attendance/teachers/{id}": {
+      "put": {
+        "summary": "Update teacher attendance",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated" } }
+      }
+    },
+    "/timetable": {
+      "get": { "summary": "List timetable rules", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Post timetable entry",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["class_id", "day", "slots"],
+                "properties": {
+                  "class_id": { "type": "integer" },
+                  "day": { "type": "string" },
+                  "slots": {
+                    "type": "array",
+                    "items": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/timetable/{id}": {
+      "put": {
+        "summary": "Update timetable",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete timetable entry",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/homework": {
+      "get": { "summary": "List homework updates", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Publish homework",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["class_id", "subject_id", "title", "due_date"],
+                "properties": { "class_id": { "type": "integer" }, "subject_id": { "type": "integer" }, "title": { "type": "string" }, "description": { "type": "string" }, "due_date": { "type": "string", "format": "date" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/homework/{id}": {
+      "put": {
+        "summary": "Update homework details",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Remove homework description",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/homework/submit": {
+      "post": {
+        "summary": "Student submit homework documents",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["homework_id", "student_id", "file_url"],
+                "properties": { "homework_id": { "type": "integer" }, "student_id": { "type": "integer" }, "file_url": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Submitted successfully" } }
+      }
+    },
+    "/exams": {
+      "get": { "summary": "List exam periods", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Create new exam definition",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["exam_name"],
+                "properties": { "exam_name": { "type": "string" }, "exam_type": { "type": "string" }, "start_date": { "type": "string", "format": "date" }, "end_date": { "type": "string", "format": "date" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/exams/{id}": {
+      "put": {
+        "summary": "Update exam schedule",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete exam period",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/marks": {
+      "post": {
+        "summary": "Enter exam marks for a student",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["exam_id", "student_id", "subject_id", "marks_obtained"],
+                "properties": { "exam_id": { "type": "integer" }, "student_id": { "type": "integer" }, "subject_id": { "type": "integer" }, "marks_obtained": { "type": "number" }, "max_marks": { "type": "number" }, "remarks": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Registered" } }
+      }
+    },
+    "/marks/{id}": {
+      "put": {
+        "summary": "Update student marks score",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated" } }
+      }
+    },
+    "/marks/student/{studentId}": {
+      "get": {
+        "summary": "List all marks score details for a student",
+        "parameters": [{ "name": "studentId", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "List fetched" } }
+      }
+    },
+    "/report-cards": {
+      "get": { "summary": "Get index of report cards", "responses": { "200": { "description": "Fetched" } } }
+    },
+    "/report-cards/{studentId}": {
+      "get": {
+        "summary": "Generate a printable Base64 HTML report card for student",
+        "parameters": [{ "name": "studentId", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Report card data generated" } }
+      }
+    },
+    "/fees/structures": {
+      "get": { "summary": "List fee schedules", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Create fee structure",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "amount", "class_id"],
+                "properties": { "class_id": { "type": "integer" }, "title": { "type": "string" }, "amount": { "type": "number" }, "due_date": { "type": "string", "format": "date" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/fees/structures/{id}": {
+      "put": {
+        "summary": "Update fee structure",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete fee structure definition",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/fees/collections": {
+      "get": { "summary": "List collected fees registry", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Register mock fee collections (Razorpay checkouts)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["student_id", "title", "amount"],
+                "properties": { "student_id": { "type": "integer" }, "title": { "type": "string" }, "amount": { "type": "number" }, "payment_method": { "type": "string" }, "transaction_id": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Collection registered" } }
+      }
+    },
+    "/reports/fees": {
+      "get": { "summary": "Tuition collections and deficits analytics reports", "responses": { "200": { "description": "Fetched" } } }
+    },
+    "/payroll": {
+      "get": { "summary": "List payroll histories", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Generate payroll salary statements",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["teacher_id", "month", "year", "salary_amount"],
+                "properties": { "teacher_id": { "type": "integer" }, "month": { "type": "integer" }, "year": { "type": "integer" }, "salary_amount": { "type": "number" }, "allowance": { "type": "number" }, "deduction": { "type": "number" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/payroll/{id}": {
+      "put": {
+        "summary": "Update payroll paid state and get printable payslips",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated and payslip generated" } }
+      },
+      "delete": {
+        "summary": "Delete payroll item",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/library/books": {
+      "get": { "summary": "List books inside library", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Add book registry to catalog",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "author"],
+                "properties": { "title": { "type": "string" }, "author": { "type": "string" }, "isbn": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/library/books/{id}": {
+      "put": {
+        "summary": "Update book registry info",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Remove book registry from catalog",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/library/issue": {
+      "post": {
+        "summary": "Issue a book to a student",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["book_id", "student_id"],
+                "properties": { "book_id": { "type": "integer" }, "student_id": { "type": "integer" }, "return_date": { "type": "string", "format": "date" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Recorded successfully" } }
+      }
+    },
+    "/library/return": {
+      "post": {
+        "summary": "Return a loaned book",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["issue_id"],
+                "properties": { "issue_id": { "type": "integer" } }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Returned successfully" } }
+      }
+    },
+    "/transport": {
+      "get": { "summary": "List bus routes", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Create bus route assignment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["route_name", "source", "destination", "vehicle_number", "driver_name"],
+                "properties": { "route_name": { "type": "string" }, "source": { "type": "string" }, "destination": { "type": "string" }, "vehicle_number": { "type": "string" }, "driver_name": { "type": "string" }, "driver_mobile": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/transport/{id}": {
+      "put": {
+        "summary": "Update bus route details",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete bus route details",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/hostels": {
+      "get": { "summary": "List hostel rooms status", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Create hostel room assignment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["hostel_name", "room_no"],
+                "properties": { "hostel_name": { "type": "string" }, "room_no": { "type": "string" }, "room_type": { "type": "string" }, "capacity": { "type": "integer" }, "student_id": { "type": "integer" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/hostels/{id}": {
+      "put": {
+        "summary": "Update room assignment",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete room assignment",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/events": {
+      "get": { "summary": "List school events", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Publish school event calendar notice",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "event_date"],
+                "properties": { "title": { "type": "string" }, "description": { "type": "string" }, "event_date": { "type": "string", "format": "date-time" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/events/{id}": {
+      "put": {
+        "summary": "Update event detail",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "summary": "Delete event",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/notices": {
+      "get": { "summary": "List general notice board items", "responses": { "200": { "description": "Fetched" } } },
+      "post": {
+        "summary": "Post notice board announcement",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "description"],
+                "properties": { "title": { "type": "string" }, "description": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/notifications/email": {
+      "post": {
+        "summary": "Broadcast school email alert to address",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["recipient", "subject", "message"],
+                "properties": { "recipient": { "type": "string" }, "subject": { "type": "string" }, "message": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Broadcast queued" } }
+      }
+    },
+    "/notifications/sms": {
+      "post": {
+        "summary": "Broadcast school SMS notification alert (Mock Gateway)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["recipient", "message"],
+                "properties": { "recipient": { "type": "string" }, "message": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Broadcast queued" } }
+      }
+    },
+    "/notifications/push": {
+      "post": {
+        "summary": "Broadcast school push notification alert (Mock FCM)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["recipient", "message"],
+                "properties": { "recipient": { "type": "string" }, "title": { "type": "string" }, "message": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Broadcast queued" } }
+      }
+    },
+    "/notifications/whatsapp": {
+      "post": {
+        "summary": "Broadcast WhatsApp messaging alert (Mock Meta)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["recipient", "message"],
+                "properties": { "recipient": { "type": "string" }, "message": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Broadcast queued" } }
+      }
+    },
+    "/media/upload": {
+      "post": {
+        "summary": "Upload files (20MB, JPG/JPEG/PNG/WEBP/PDF/DOCX) to library",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": { "type": "string", "format": "binary" },
+                  "related_type": { "type": "string", "enum": ["STUDENT", "TEACHER", "PARENT"] },
+                  "related_id": { "type": "integer" },
+                  "document_type": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "File upload catalog success" }
+        }
+      }
+    },
+    "/analytics": {
+      "get": {
+        "summary": "Academic, attendance, fees, and staff summary analysis charts reports data",
+        "responses": {
+          "200": { "description": "Statements payload returned" }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "summary": "Dashboard summary statistics cards and metrics data",
+        "responses": {
+          "200": { "description": "Metrics payload returned" }
+        }
+      }
+    }
+  }
+}

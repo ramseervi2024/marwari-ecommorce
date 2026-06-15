@@ -1,0 +1,11 @@
+{
+    "name": "ramseervi/school-management-api",
+    "description": "Enterprise-grade School Management System API for WordPress",
+    "type": "wordpress-plugin",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "SchoolManagementApi\\": ""
+        }
+    }
+}
