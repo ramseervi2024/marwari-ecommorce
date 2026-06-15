@@ -83,13 +83,13 @@
             border: 1px solid var(--glass-border);
             border-radius: 24px;
             width: 100%;
-            max-width: 440px;
+            max-width: 500px;
             padding: 40px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.6);
         }
         .auth-logo {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         .auth-logo h2 {
             font-weight: 700;
@@ -144,43 +144,37 @@
             box-shadow: 0 6px 20px rgba(59, 130, 246, 0.45);
             transform: translateY(-1px);
         }
-        .auth-toggle-tip {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-        .auth-toggle-tip a {
-            color: var(--accent-blue);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .auth-toggle-tip a:hover {
-            text-decoration: underline;
-        }
-        .demo-credentials {
-            background: rgba(255,255,255,0.02);
-            border: 1px dashed var(--glass-border);
-            border-radius: 12px;
-            padding: 15px;
+        
+        /* Grid of test users for quick selection */
+        .demo-roles-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
             margin-bottom: 20px;
-            font-size: 12px;
         }
-        .demo-credentials h5 {
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--accent-blue);
-        }
-        .demo-btn {
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--accent-blue);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            padding: 4px 8px;
-            border-radius: 6px;
+        .demo-role-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 10px;
+            border-radius: 10px;
+            text-align: left;
             cursor: pointer;
-            margin-left: 8px;
-            font-size: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .demo-role-btn:hover {
+            background: rgba(59, 130, 246, 0.08);
+            border-color: var(--accent-blue);
+        }
+        .demo-role-title {
+            font-size: 12px;
             font-weight: 600;
+            color: #fff;
+        }
+        .demo-role-user {
+            font-size: 10px;
+            color: var(--text-muted);
         }
 
         /* App Layout */
@@ -695,20 +689,41 @@
                 <p>Custom JWT School Management API Service</p>
             </div>
 
-            <!-- Prefilled credentials helper -->
-            <div class="demo-credentials">
-                <h5>Demo Quick Access</h5>
-                <p>Login with administrative privileges:</p>
-                <div style="margin-top: 8px; display:flex; justify-content:space-between; align-items:center;">
-                    <span>User: <strong>school_admin</strong></span>
-                    <button class="demo-btn" onclick="prefillDemoLogin()">Prefill Login</button>
+            <!-- Prefilled credentials helpers -->
+            <div style="margin-bottom: 20px;">
+                <h5 style="font-size: 12px; color: var(--accent-blue); font-weight:600; margin-bottom: 8px;">Quick-Access Account Select</h5>
+                <div class="demo-roles-grid">
+                    <button class="demo-role-btn" onclick="prefillUser('school_admin', 'adminpass123')">
+                        <span class="demo-role-title">Super Admin</span>
+                        <span class="demo-role-user">school_admin</span>
+                    </button>
+                    <button class="demo-role-btn" onclick="prefillUser('school_principal', 'principalpass123')">
+                        <span class="demo-role-title">Principal</span>
+                        <span class="demo-role-user">school_principal</span>
+                    </button>
+                    <button class="demo-role-btn" onclick="prefillUser('school_teacher', 'teacherpass123')">
+                        <span class="demo-role-title">Teacher</span>
+                        <span class="demo-role-user">school_teacher</span>
+                    </button>
+                    <button class="demo-role-btn" onclick="prefillUser('school_accountant', 'accountantpass123')">
+                        <span class="demo-role-title">Accountant</span>
+                        <span class="demo-role-user">school_accountant</span>
+                    </button>
+                    <button class="demo-role-btn" onclick="prefillUser('school_parent', 'parentpass123')">
+                        <span class="demo-role-title">Parent</span>
+                        <span class="demo-role-user">school_parent</span>
+                    </button>
+                    <button class="demo-role-btn" onclick="prefillUser('school_student', 'studentpass123')">
+                        <span class="demo-role-title">Student</span>
+                        <span class="demo-role-user">school_student</span>
+                    </button>
                 </div>
             </div>
 
             <form id="login-form">
                 <div class="form-group">
                     <label>Username / Email</label>
-                    <input type="text" id="username" class="form-input" placeholder="e.g. school_admin" required>
+                    <input type="text" id="username" class="form-input" placeholder="Select a role above or type..." required>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
@@ -728,15 +743,15 @@
                     <div class="brand-icon">S</div>
                     <span>Global School ERP</span>
                 </div>
-                <ul class="menu-list">
-                    <li><button class="menu-item active" onclick="switchTab('dashboard')">Dashboard</button></li>
-                    <li><button class="menu-item" onclick="switchTab('students')">Students</button></li>
-                    <li><button class="menu-item" onclick="switchTab('teachers')">Teachers</button></li>
-                    <li><button class="menu-item" onclick="switchTab('attendance')">Attendance</button></li>
-                    <li><button class="menu-item" onclick="switchTab('timetable')">Timetable</button></li>
-                    <li><button class="menu-item" onclick="switchTab('fees')">Fees Module</button></li>
-                    <li><button class="menu-item" onclick="switchTab('library')">Library</button></li>
-                    <li><button class="menu-item" onclick="switchTab('transport')">Transport</button></li>
+                <ul class="menu-list" id="sidebar-menu-list">
+                    <li id="menu-dashboard"><button class="menu-item active" onclick="switchTab('dashboard')">Dashboard</button></li>
+                    <li id="menu-students"><button class="menu-item" onclick="switchTab('students')">Students</button></li>
+                    <li id="menu-teachers"><button class="menu-item" onclick="switchTab('teachers')">Teachers</button></li>
+                    <li id="menu-attendance"><button class="menu-item" onclick="switchTab('attendance')">Attendance</button></li>
+                    <li id="menu-timetable"><button class="menu-item" onclick="switchTab('timetable')">Timetable</button></li>
+                    <li id="menu-fees"><button class="menu-item" onclick="switchTab('fees')">Fees Module</button></li>
+                    <li id="menu-library"><button class="menu-item" onclick="switchTab('library')">Library</button></li>
+                    <li id="menu-transport"><button class="menu-item" onclick="switchTab('transport')">Transport</button></li>
                 </ul>
             </div>
             
@@ -855,7 +870,7 @@
                 <div class="table-container">
                     <div class="table-header-row">
                         <h3>Student Registry</h3>
-                        <div class="table-controls">
+                        <div class="table-controls" id="student-actions-wrapper">
                             <button class="btn" onclick="openCreateModal('student')">+ Add Student</button>
                         </div>
                     </div>
@@ -868,7 +883,7 @@
                                 <th>Email</th>
                                 <th>Mobile</th>
                                 <th>Status</th>
-                                <th>Actions</th>
+                                <th class="actions-header-column">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="students-table-body">
@@ -883,7 +898,7 @@
                 <div class="table-container">
                     <div class="table-header-row">
                         <h3>Teacher Directory</h3>
-                        <div class="table-controls">
+                        <div class="table-controls" id="teacher-actions-wrapper">
                             <button class="btn" onclick="openCreateModal('teacher')">+ Add Teacher</button>
                         </div>
                     </div>
@@ -897,7 +912,7 @@
                                 <th>Qualification</th>
                                 <th>Salary</th>
                                 <th>Status</th>
-                                <th>Actions</th>
+                                <th class="actions-header-column">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="teachers-table-body">
@@ -1060,11 +1075,11 @@
         let authToken = localStorage.getItem('school_jwt_token') || '';
         let currentUser = null;
 
-        // Prefill credential fields
-        function prefillDemoLogin() {
-            document.getElementById('username').value = 'school_admin';
-            document.getElementById('password').value = 'adminpass123';
-            toast('Prefilled credentials! Click login.', 'success');
+        // Prefill credential fields based on select
+        function prefillUser(username, password) {
+            document.getElementById('username').value = username;
+            document.getElementById('password').value = password;
+            toast(`Prefilled as ${username.replace('school_', '').toUpperCase()}! Click login.`, 'success');
         }
 
         // Switch panel tabs
@@ -1109,6 +1124,56 @@
             } else if (tabName === 'transport') {
                 loadTransport();
             }
+        }
+
+        // Adjust visible sidebar elements and CRUD permissions based on logged role
+        function configureUIPermissions() {
+            if (!currentUser) return;
+            const role = currentUser.role;
+
+            // Define visible menus for roles
+            const menuMapping = {
+                'administrator': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport'],
+                'school_super_admin': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport'],
+                'school_principal': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'library', 'transport'],
+                'school_teacher': ['dashboard', 'students', 'attendance', 'timetable'],
+                'school_accountant': ['dashboard', 'teachers', 'fees'],
+                'school_parent': ['dashboard', 'attendance', 'timetable', 'fees'],
+                'school_student': ['dashboard', 'attendance', 'timetable', 'library']
+            };
+
+            const visibleMenus = menuMapping[role] || ['dashboard'];
+
+            // Show/hide menu items
+            const menus = ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport'];
+            menus.forEach(menu => {
+                const el = document.getElementById(`menu-${menu}`);
+                if (el) {
+                    if (visibleMenus.includes(menu)) {
+                        el.style.display = 'block';
+                    } else {
+                        el.style.display = 'none';
+                    }
+                }
+            });
+
+            // Adjust CRUD Buttons
+            const writePrivilegeRoles = ['administrator', 'school_super_admin', 'school_principal'];
+            const studentActions = document.getElementById('student-actions-wrapper');
+            const teacherActions = document.getElementById('teacher-actions-wrapper');
+
+            if (studentActions) {
+                studentActions.style.display = writePrivilegeRoles.includes(role) ? 'block' : 'none';
+            }
+            if (teacherActions) {
+                teacherActions.style.display = writePrivilegeRoles.includes(role) ? 'block' : 'none';
+            }
+
+            // Adjust Action column in student/teacher tables
+            const hideActions = !writePrivilegeRoles.includes(role);
+            document.querySelectorAll('.actions-header-column').forEach(el => {
+                el.style.display = hideActions ? 'none' : 'table-cell';
+            });
         }
 
         // Toast alert helper
@@ -1183,6 +1248,7 @@
                 document.getElementById('profile-avatar').innerText = currentUser.name.split(' ').map(n=>n[0]).join('').toUpperCase().substring(0, 2);
             }
             
+            configureUIPermissions();
             switchTab('dashboard');
         }
 
@@ -1213,7 +1279,7 @@
                 authToken = body.data.token;
                 localStorage.setItem('school_jwt_token', authToken);
                 currentUser = body.data.user;
-                toast('Logged in successfully!', 'success');
+                toast(`Logged in as ${currentUser.role.replace('school_', '').toUpperCase()}!`, 'success');
                 showAppScreen();
             })
             .catch(err => {
@@ -1250,6 +1316,7 @@
                     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No students found</td></tr>';
                     return;
                 }
+                const hideActions = !['administrator', 'school_super_admin', 'school_principal'].includes(currentUser.role);
                 body.data.data.forEach(student => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -1259,7 +1326,7 @@
                         <td>${student.email || '-'}</td>
                         <td>${student.mobile || '-'}</td>
                         <td><span class="badge active">${student.status}</span></td>
-                        <td>
+                        <td class="actions-header-column" style="display: ${hideActions ? 'none' : 'table-cell'};">
                             <button class="action-icon-btn" onclick="deleteRecord('students', ${student.id}, loadStudents)">🗑</button>
                         </td>
                     `;
@@ -1282,6 +1349,7 @@
                     tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No teachers registered</td></tr>';
                     return;
                 }
+                const hideActions = !['administrator', 'school_super_admin', 'school_principal'].includes(currentUser.role);
                 body.data.data.forEach(t => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -1292,7 +1360,7 @@
                         <td>${t.qualification || '-'}</td>
                         <td>$${Number(t.salary).toLocaleString()}</td>
                         <td><span class="badge active">${t.status}</span></td>
-                        <td>
+                        <td class="actions-header-column" style="display: ${hideActions ? 'none' : 'table-cell'};">
                             <button class="action-icon-btn" onclick="deleteRecord('teachers', ${t.id}, loadTeachers)">🗑</button>
                         </td>
                     `;
