@@ -21,13 +21,32 @@ class AuthController extends BaseController {
             return $this->error('Validation failed: username, email, password, and name are required.');
         }
 
-        $result = $this->authService->register($params);
+        $result = $this->authService->initiateRegister($params);
 
         if (is_wp_error($result)) {
             return $this->error($result->get_error_message(), [], $result->get_error_data()['status'] ?? 400);
         }
 
-        return $this->success('User registered successfully', $result, 201);
+        return $this->success('Verification code sent successfully to email.', $result, 200);
+    }
+
+    /**
+     * POST /auth/register/verify
+     */
+    public function verifyRegister(WP_REST_Request $request) {
+        $params = $request->get_json_params();
+
+        if (empty($params['email']) || empty($params['otp'])) {
+            return $this->error('Validation failed: email and otp are required.');
+        }
+
+        $result = $this->authService->verifyRegister($params['email'], $params['otp']);
+
+        if (is_wp_error($result)) {
+            return $this->error($result->get_error_message(), [], $result->get_error_data()['status'] ?? 400);
+        }
+
+        return $this->success('Registration completed successfully.', $result, 201);
     }
 
     /**

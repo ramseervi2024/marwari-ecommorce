@@ -17,6 +17,13 @@ class AuthRoutes {
             'permission_callback' => '__return_true'
         ]);
 
+        // POST /auth/register/verify
+        register_rest_route($namespace, '/auth/register/verify', [
+            'methods' => 'POST',
+            'callback' => [$controller, 'verifyRegister'],
+            'permission_callback' => '__return_true'
+        ]);
+
         // POST /auth/login
         register_rest_route($namespace, '/auth/login', [
             'methods' => 'POST',

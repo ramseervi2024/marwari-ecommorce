@@ -27,6 +27,90 @@ class AuthService {
     }
 
     /**
+     * Initiate registration by sending OTP email
+     */
+    public function initiateRegister(array $data) {
+        $username = sanitize_user($data['username']);
+        $email = sanitize_email($data['email']);
+        $password = $data['password'];
+        $name = sanitize_text_field($data['name']);
+        $role = sanitize_text_field($data['role'] ?? 'school_student');
+
+        // Validate role is allowed
+        $allowed_roles = ['school_super_admin', 'school_principal', 'school_teacher', 'school_accountant', 'school_parent', 'school_student'];
+        if (!in_array($role, $allowed_roles)) {
+            return new WP_Error('invalid_role', 'Invalid role requested.', ['status' => 400]);
+        }
+
+        if (username_exists($username)) {
+            return new WP_Error('username_exists', 'Username already exists.', ['status' => 400]);
+        }
+
+        if (email_exists($email)) {
+            return new WP_Error('email_exists', 'Email already exists.', ['status' => 400]);
+        }
+
+        // Generate OTP (random 6 digit number)
+        $otp = strval(rand(100000, 999999));
+        
+        // Save transient for 15 minutes
+        $transient_key = 'school_reg_otp_' . md5($email);
+        $saved_data = [
+            'username' => $username,
+            'email' => $email,
+            'password' => $password,
+            'name' => $name,
+            'role' => $role,
+            'otp' => $otp
+        ];
+        
+        set_transient($transient_key, $saved_data, 15 * MINUTE_IN_SECONDS);
+
+        // Send email
+        $subject = 'School ERP Registration Verification';
+        $message = "Hello $name,\n\nYour 6-digit registration OTP verification code is: $otp\n\nThis code is valid for 15 minutes.\n\nThank you!";
+        $headers = ['Content-Type: text/plain; charset=UTF-8'];
+        wp_mail($email, $subject, $message, $headers);
+
+        self::logActivity(null, 'REGISTER_OTP_SENT', "OTP sent to $email for username: $username");
+
+        return [
+            'email' => $email,
+            'message' => 'Verification code sent to your email.'
+        ];
+    }
+
+    /**
+     * Verify OTP and complete registration
+     */
+    public function verifyRegister(string $email, string $otp) {
+        $transient_key = 'school_reg_otp_' . md5($email);
+        $stored_data = get_transient($transient_key);
+
+        if (!$stored_data) {
+            return new WP_Error('otp_expired', 'Verification OTP expired or invalid. Please request a new code.', ['status' => 400]);
+        }
+
+        // Accept stored OTP OR guest bypass '123456'
+        if ($stored_data['otp'] !== $otp && $otp !== '123456') {
+            return new WP_Error('invalid_otp', 'Invalid verification OTP. Please try again.', ['status' => 400]);
+        }
+
+        // Proceed to complete registration
+        $result = $this->register($stored_data);
+        if (is_wp_error($result)) {
+            return $result;
+        }
+
+        // Clean up transient
+        delete_transient($transient_key);
+
+        self::logActivity($result['id'], 'REGISTER_VERIFIED', "User verified email OTP and completed registration.");
+
+        return $result;
+    }
+
+    /**
      * Register a new user and assign custom school role
      */
     public function register(array $data) {

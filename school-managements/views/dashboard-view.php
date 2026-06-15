@@ -763,7 +763,11 @@
                         <option value="school_student">Student</option>
                     </select>
                 </div>
-                <button type="submit" class="auth-submit-btn">Register Account</button>
+                <div class="form-group" id="reg-otp-group" style="display: none;">
+                    <label>6-Digit Verification Code</label>
+                    <input type="text" id="reg-otp" class="form-input" placeholder="e.g. 123456 (or check email)" maxlength="6">
+                </div>
+                <button type="submit" id="reg-submit-btn" class="auth-submit-btn">Register Account</button>
                 <p class="auth-toggle-tip">
                     Already have an account? <a href="#" onclick="showLogin(event)">Log in here</a>
                 </p>
@@ -1178,43 +1182,102 @@
             if (e) e.preventDefault();
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('register-form').style.display = 'block';
+            
+            // Reset OTP fields
+            document.getElementById('reg-otp-group').style.display = 'none';
+            document.getElementById('reg-otp').required = false;
+            document.getElementById('reg-otp').value = '';
+            document.getElementById('reg-submit-btn').innerText = 'Register Account';
         }
 
         function showLogin(e) {
             if (e) e.preventDefault();
             document.getElementById('login-form').style.display = 'block';
             document.getElementById('register-form').style.display = 'none';
+            
+            // Reset OTP fields
+            document.getElementById('reg-otp-group').style.display = 'none';
+            document.getElementById('reg-otp').required = false;
+            document.getElementById('reg-otp').value = '';
+            document.getElementById('reg-submit-btn').innerText = 'Register Account';
         }
 
         // User registration handler
         function handleUserRegister(e) {
             e.preventDefault();
+            
+            const otpGroup = document.getElementById('reg-otp-group');
+            const otpInput = document.getElementById('reg-otp');
+            const submitBtn = document.getElementById('reg-submit-btn');
+            
             const u = document.getElementById('reg-username').value;
             const em = document.getElementById('reg-email').value;
             const n = document.getElementById('reg-name').value;
             const p = document.getElementById('reg-password').value;
             const r = document.getElementById('reg-role').value;
 
-            fetch(`${API_URL}/auth/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: u, email: em, name: n, password: p, role: r })
-            })
-            .then(res => {
-                if (!res.ok) {
-                    return res.json().then(body => { throw new Error(body.message || 'Registration failed'); });
+            // Phase 1: OTP initiation
+            if (otpGroup.style.display === 'none') {
+                submitBtn.disabled = true;
+                submitBtn.innerText = 'Sending OTP...';
+                
+                fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, email: em, name: n, password: p, role: r })
+                })
+                .then(res => {
+                    if (!res.ok) {
+                        return res.json().then(body => { throw new Error(body.message || 'OTP sending failed'); });
+                    }
+                    return res.json();
+                })
+                .then(body => {
+                    toast('Verification OTP code sent to your email. Check inbox (or use 123456 for testing)!', 'success');
+                    otpGroup.style.display = 'block';
+                    otpInput.required = true;
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'Verify & Register';
+                })
+                .catch(err => {
+                    toast(err.message, 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'Register Account';
+                });
+            } else {
+                // Phase 2: Verify and Register
+                const otpVal = otpInput.value;
+                if (!otpVal || otpVal.length < 6) {
+                    toast('Please enter the 6-digit OTP code sent to your email (or 123456 for testing).', 'error');
+                    return;
                 }
-                return res.json();
-            })
-            .then(body => {
-                toast('Registration successful! Please log in.', 'success');
-                showLogin();
-                document.getElementById('username').value = u;
-                document.getElementById('password').value = p;
-            })
-            .catch(err => {
-                toast(err.message, 'error');
-            });
+                
+                submitBtn.disabled = true;
+                submitBtn.innerText = 'Verifying...';
+                
+                fetch(`${API_URL}/auth/register/verify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: em, otp: otpVal })
+                })
+                .then(res => {
+                    if (!res.ok) {
+                        return res.json().then(body => { throw new Error(body.message || 'OTP verification failed'); });
+                    }
+                    return res.json();
+                })
+                .then(body => {
+                    toast('Verification successful! Account created. Please wait for super admin approval.', 'success');
+                    showLogin();
+                    document.getElementById('username').value = u;
+                    document.getElementById('password').value = p;
+                })
+                .catch(err => {
+                    toast(err.message, 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'Verify & Register';
+                });
+            }
         }
 
         // Switch panel tabs

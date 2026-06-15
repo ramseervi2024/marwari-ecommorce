@@ -65,15 +65,17 @@ During plugin activation, standard mock user accounts are generated automaticall
 | `school_parent` | `parentpass123` | `school_parent` | View child attendance, grades, notices, and fees |
 | `school_student` | `studentpass123` | `school_student` | View own attendance, grades, timetable, and homework |
 
-### User Registration Approval Flow
+### User Registration OTP & Approval Flow
 
+- **OTP Dispatch**: New user registrations require 2-step verification. Initiating registration sends a 6-digit verification code to the requested email address.
+- **Guest / Test Bypass**: For guest users and testing/visiting purposes, entering the OTP `123456` will bypass the email check and succeed.
 - **Approval Requirement**: All new user registrations (except `school_super_admin`) receive a default status of `PENDING` upon registration.
 - **Login Behavior**: Pending users can successfully login and receive a JWT token, but will be intercepted by the UI and shown a message: *"Soon school_super_admin will approve and you will be having access of your panel."*
 - **Super Admin Review Page**: Under the **User Approvals** tab, the Super Admin can review registered accounts and set their status to `APPROVED`, `HOLD`, or `BLOCKED`, or permanently `DELETE` them.
 
 ### Authentication Endpoints
 
-#### Register a Portal User
+#### 1. Initiate Registration (OTP Request)
 * **Endpoint**: `POST /wp-json/school-management/v1/auth/register`
 * **Request Payload**:
   ```json
@@ -85,6 +87,18 @@ During plugin activation, standard mock user accounts are generated automaticall
     "role": "school_principal"
   }
   ```
+* **Response**: OTP code is dispatched via email and temporary registration details are stored in a WordPress transient.
+
+#### 2. Verify OTP & Create User
+* **Endpoint**: `POST /wp-json/school-management/v1/auth/register/verify`
+* **Request Payload**:
+  ```json
+  {
+    "email": "robert@school.erp",
+    "otp": "123456"
+  }
+  ```
+* **Response**: Registers user account in WordPress and sets the status to `PENDING` (needs super admin approval).
 
 #### Log In to Retrieve Tokens
 * **Endpoint**: `POST /wp-json/school-management/v1/auth/login`
