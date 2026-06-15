@@ -808,6 +808,7 @@
                     <li id="menu-library"><button class="menu-item" onclick="switchTab('library')">Library</button></li>
                     <li id="menu-transport"><button class="menu-item" onclick="switchTab('transport')">Transport</button></li>
                     <li id="menu-approvals"><button class="menu-item" onclick="switchTab('approvals')">User Approvals</button></li>
+                    <li id="menu-apidocs"><button class="menu-item" onclick="switchTab('apidocs')">Portal APIs Doc</button></li>
                 </ul>
             </div>
             
@@ -1121,17 +1122,25 @@
                 </div>
             </div>
 
-            <!-- Quick Action Panel -->
-            <footer class="quick-actions" style="margin-top: 30px;">
-                <div>
-                    <h4>Interactive API & Portal Operations</h4>
-                    <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">Inspect backend capabilities using interactive Swagger tool and Postman specs</p>
+            <!-- TAB 10: PORTAL APIs DOC -->
+            <div class="tab-panel" id="tab-apidocs">
+                <div class="table-container" style="padding: 30px;">
+                    <h3 style="font-size: 22px; font-weight: 600; margin-bottom: 12px; background: linear-gradient(to right, #ffffff, #d1d5db); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Portal APIs Doc & Integration Specs</h3>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px; line-height: 1.6;">
+                        Inspect, test, and learn about the backend capabilities of the custom REST API plugin using the interactive Swagger UI and developer documentation.
+                    </p>
+                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); padding: 24px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <h4 style="font-size: 16px; font-weight: 600;">Interactive Swagger API Documentation</h4>
+                            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Run active request queries, verify schema models, and inspect parameters in real-time.</p>
+                        </div>
+                        <div class="btn-group">
+                            <a href="/school-management-api-docs" class="btn" target="_blank">Open Swagger API Docs</a>
+                            <button class="btn btn-secondary" onclick="testApiConnection()">Test API Connection</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="btn-group">
-                    <a href="/school-management-api-docs" class="btn" target="_blank">Open Swagger API Docs</a>
-                    <button class="btn btn-secondary" onclick="testApiConnection()">Test API Connection</button>
-                </div>
-            </footer>
+            </div>
         </main>
     </div>
 
@@ -1251,6 +1260,9 @@
                 loadTransport();
             } else if (tabName === 'approvals') {
                 loadApprovals();
+            } else if (tabName === 'apidocs') {
+                headerTitle.innerText = "Portal APIs Doc";
+                headerSubtitle.innerText = "Developer integration guides, Swagger endpoints list, and connectivity checks";
             }
         }
 
@@ -1261,8 +1273,8 @@
 
             // Define visible menus for roles
             const menuMapping = {
-                'administrator': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport', 'approvals'],
-                'school_super_admin': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport', 'approvals'],
+                'administrator': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport', 'approvals', 'apidocs'],
+                'school_super_admin': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport', 'approvals', 'apidocs'],
                 'school_principal': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'library', 'transport'],
                 'school_teacher': ['dashboard', 'students', 'attendance', 'timetable'],
                 'school_accountant': ['dashboard', 'teachers', 'fees'],
@@ -1273,7 +1285,7 @@
             const visibleMenus = menuMapping[role] || ['dashboard'];
 
             // Show/hide menu items
-            const menus = ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport', 'approvals'];
+            const menus = ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport', 'approvals', 'apidocs'];
             menus.forEach(menu => {
                 const el = document.getElementById(`menu-${menu}`);
                 if (el) {
