@@ -290,16 +290,113 @@
             color: var(--text-muted);
         }
 
-        .logout-icon-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
+        .user-profile-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: rgba(239, 68, 68, 0.12);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 18px;
+            transition: all 0.3s ease;
             outline: none;
         }
-        .logout-icon-btn:hover {
-            color: var(--accent-pink);
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.22);
+            border-color: rgba(239, 68, 68, 0.45);
+            color: #f87171;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.12);
+        }
+        .logout-btn-icon {
+            width: 15px;
+            height: 15px;
+            stroke-width: 2.5;
+        }
+
+        /* Custom Checklist Widget styles */
+        .checklist-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-main);
+            cursor: pointer;
+        }
+        .checklist-item input[type="checkbox"] {
+            accent-color: var(--accent-purple);
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+        .checklist-item.checked span {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        /* Homework list & planner styles */
+        .homework-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .homework-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 13px;
+        }
+        .homework-item h5 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+        .homework-item p {
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .homework-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .homework-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .homework-badge.active { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); }
+        .homework-badge.submitted { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); }
+
+        .dashboard-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
         }
 
         /* Main Content Panel */
@@ -816,15 +913,20 @@
                 </ul>
             </div>
             
-            <div class="user-profile">
-                <div class="user-profile-inner">
-                    <div class="avatar" id="profile-avatar">AD</div>
-                    <div class="user-info">
-                        <h4 id="profile-name">Admin Portal</h4>
-                        <p id="profile-role">Super Administrator</p>
+            <div class="user-profile-wrapper">
+                <div class="user-profile">
+                    <div class="user-profile-inner">
+                        <div class="avatar" id="profile-avatar">AD</div>
+                        <div class="user-info">
+                            <h4 id="profile-name">Admin Portal</h4>
+                            <p id="profile-role">Super Administrator</p>
+                        </div>
                     </div>
                 </div>
-                <button class="logout-icon-btn" onclick="logout()" title="Sign Out">✖</button>
+                <button class="logout-btn" onclick="confirmLogout()">
+                    <svg class="logout-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                    Sign Out
+                </button>
             </div>
         </aside>
 
@@ -843,87 +945,9 @@
 
             <!-- TAB 1: DASHBOARD -->
             <div class="tab-panel active" id="tab-dashboard">
-                <!-- Statistical Cards -->
-                <section class="cards-grid">
-                    <div class="stat-card">
-                        <div class="card-icon">🎓</div>
-                        <div class="card-label">Total Active Students</div>
-                        <div class="card-value" id="card-total-students">1,248</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="card-icon">👨‍🏫</div>
-                        <div class="card-label">Certified Teachers</div>
-                        <div class="card-value" id="card-total-teachers">84</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="card-icon">💵</div>
-                        <div class="card-label">Monthly Fees Collected</div>
-                        <div class="card-value" id="card-monthly-fees">$42,560</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="card-icon">📅</div>
-                        <div class="card-label">Today's Attendance (Present)</div>
-                        <div class="card-value" id="card-today-attendance">1</div>
-                    </div>
-                </section>
-
-                <!-- Interactive Chart Rows -->
-                <section class="charts-row">
-                    <!-- Admissions Trend Chart -->
-                    <div class="chart-box">
-                        <div class="chart-header">
-                            <h3>Student Admissions & Fees Collection Trends (Last 6 Months)</h3>
-                            <span style="font-size: 12px; color: var(--text-muted);">Real-time aggregated stats</span>
-                        </div>
-                        <div class="chart-canvas">
-                            <svg class="svg-chart" viewBox="0 0 500 200" preserveAspectRatio="none">
-                                <defs>
-                                    <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.4"/>
-                                        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0"/>
-                                    </linearGradient>
-                                    <linearGradient id="purpleGrad" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.4"/>
-                                        <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.0"/>
-                                    </linearGradient>
-                                </defs>
-                                <line x1="0" y1="50" x2="500" y2="50" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
-                                <line x1="0" y1="100" x2="500" y2="100" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
-                                <line x1="0" y1="150" x2="500" y2="150" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
-                                
-                                <path d="M 0 160 Q 100 120 200 130 T 400 80 L 500 60 L 500 200 L 0 200 Z" fill="url(#blueGrad)" />
-                                <path d="M 0 160 Q 100 120 200 130 T 400 80 L 500 60" fill="none" stroke="var(--accent-blue)" stroke-width="3" />
-                                
-                                <path d="M 0 180 Q 100 140 200 150 T 400 100 L 500 90 L 500 200 L 0 200 Z" fill="url(#purpleGrad)" />
-                                <path d="M 0 180 Q 100 140 200 150 T 400 100 L 500 90" fill="none" stroke="var(--accent-purple)" stroke-width="3" />
-                                
-                                <circle cx="200" cy="130" r="5" fill="#3b82f6" stroke="#fff" stroke-width="1.5" />
-                                <circle cx="400" cy="80" r="5" fill="#3b82f6" stroke="#fff" stroke-width="1.5" />
-                                <circle cx="200" cy="150" r="5" fill="#8b5cf6" stroke="#fff" stroke-width="1.5" />
-                                <circle cx="400" cy="100" r="5" fill="#8b5cf6" stroke="#fff" stroke-width="1.5" />
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- Notice Board -->
-                    <div class="chart-box">
-                        <div class="chart-header">
-                            <h3>Notice Board</h3>
-                        </div>
-                        <div class="notice-list" id="notice-board-container">
-                            <div class="notice-item">
-                                <h5>Summer Holidays Announcement</h5>
-                                <p>School campuses will remain closed for summer recess from June 20 to July 10, 2026.</p>
-                                <div class="notice-date">Just now</div>
-                            </div>
-                            <div class="notice-item" style="border-left-color: var(--accent-pink);">
-                                <h5>Annual Science Exhibition</h5>
-                                <p>Students will present their science models in the main auditorium. Parents are invited.</p>
-                                <div class="notice-date">2 hours ago</div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                <div id="dashboard-dynamic-content">
+                    <!-- Dynamic role-based dashboard injected here -->
+                </div>
             </div>
 
             <!-- TAB 2: STUDENTS -->
@@ -1217,6 +1241,19 @@
         </div>
     </div>
 
+    <!-- LOGOUT CONFIRMATION MODAL -->
+    <div class="modal-overlay" id="logout-confirm-modal" style="display: none;">
+        <div class="modal-card" style="max-width: 400px; text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 15px;">👋</div>
+            <h3 style="font-size: 20px; margin-bottom: 12px; color: var(--text-main);">Confirm Sign Out</h3>
+            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5;">Are you sure you want to sign out from Global School ERP? You will need to sign in again to access the portal.</p>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button class="btn btn-secondary" onclick="closeLogoutModal()" style="flex: 1; padding: 12px; margin: 0; justify-content: center;">Cancel</button>
+                <button class="btn" onclick="executeLogout()" style="flex: 1; padding: 12px; margin: 0; background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple)); justify-content: center;">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript REST Logic -->
     <script>
         const API_URL = '/wp-json/school-management/v1';
@@ -1469,6 +1506,12 @@
             document.querySelectorAll('.actions-header-column').forEach(el => {
                 el.style.display = hideActions ? 'none' : 'table-cell';
             });
+
+            // Toggle notice add button for Super Admin / Admin
+            const addNoticeBtn = document.getElementById('add-notice-btn');
+            if (addNoticeBtn) {
+                addNoticeBtn.style.display = ['administrator', 'school_super_admin'].includes(role) ? 'inline-block' : 'none';
+            }
         }
 
         // Toast alert helper
@@ -1591,13 +1634,24 @@
             switchTab(activeTab);
         }
 
-        function logout() {
+        function confirmLogout() {
+            document.getElementById('logout-confirm-modal').style.display = 'flex';
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logout-confirm-modal').style.display = 'none';
+        }
+
+        function executeLogout() {
             localStorage.removeItem('school_jwt_token');
             localStorage.removeItem('school_active_tab');
             authToken = '';
             currentUser = null;
-            showAuthScreen();
-            toast('Logged out successfully', 'success');
+            window.location.reload();
+        }
+
+        function logout() {
+            executeLogout();
         }
 
         // Login Handler
@@ -1713,6 +1767,929 @@
             }
         });
 
+        // Helper to draw dynamic SVG line charts
+        function drawLineChartSvg(data, xKey, yKey, colorGradId, strokeColor) {
+            if (!data || data.length === 0) {
+                return `<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:50px 0;">No trend data available.</div>`;
+            }
+            
+            const width = 500;
+            const height = 150;
+            const padding = 25;
+            const chartWidth = width - 2 * padding;
+            const chartHeight = height - 2 * padding;
+            
+            const yValues = data.map(d => parseFloat(d[yKey]) || 0);
+            const maxY = Math.max(...yValues, 10);
+            const minY = 0;
+            
+            const points = data.map((d, index) => {
+                const x = padding + (index / (data.length - 1 || 1)) * chartWidth;
+                const val = parseFloat(d[yKey]) || 0;
+                const y = padding + chartHeight - ((val - minY) / (maxY - minY)) * chartHeight;
+                let label = d[xKey];
+                if (label && label.includes('-')) {
+                    const parts = label.split('-');
+                    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    const mIdx = parseInt(parts[1]) - 1;
+                    if (mIdx >= 0 && mIdx < 12) {
+                        label = monthNames[mIdx] + ' ' + parts[0].slice(-2);
+                    }
+                }
+                return { x, y, label, value: val };
+            });
+            
+            let pathD = `M ${points[0].x} ${points[0].y}`;
+            for (let i = 1; i < points.length; i++) {
+                pathD += ` L ${points[i].x} ${points[i].y}`;
+            }
+            
+            let areaD = `${pathD} L ${points[points.length - 1].x} ${height - padding} L ${points[0].x} ${height - padding} Z`;
+            
+            return `
+                <svg class="svg-chart" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                    <defs>
+                        <linearGradient id="${colorGradId}" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="${strokeColor}" stop-opacity="0.3"/>
+                            <stop offset="100%" stop-color="${strokeColor}" stop-opacity="0.0"/>
+                        </linearGradient>
+                    </defs>
+                    <line x1="${padding}" y1="${padding}" x2="${width - padding}" y2="${padding}" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+                    <line x1="${padding}" y1="${padding + chartHeight/2}" x2="${width - padding}" y2="${padding + chartHeight/2}" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+                    <line x1="${padding}" y1="${padding + chartHeight}" x2="${width - padding}" y2="${padding + chartHeight}" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+                    
+                    <path d="${areaD}" fill="url(#${colorGradId})" />
+                    <path d="${pathD}" fill="none" stroke="${strokeColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                    
+                    ${points.map(p => `
+                        <circle cx="${p.x}" cy="${p.y}" r="4.5" fill="${strokeColor}" stroke="#fff" stroke-width="1.5">
+                            <title>${p.label}: ${p.value}</title>
+                        </circle>
+                    `).join('')}
+                </svg>
+                <div style="display:flex; justify-content:space-between; padding:0 ${padding}px; margin-top:8px; font-size:11px; color:var(--text-muted);">
+                    ${points.map(p => `<span>${p.label}</span>`).join('')}
+                </div>
+            `;
+        }
+
+        // Helper to draw dynamic SVG bar charts for Exam Performance
+        function drawExamBarChartSvg(data, examKey, avgKey, fillGradientId, barColor) {
+            if (!data || data.length === 0) {
+                return `<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:50px 0;">No exam averages available.</div>`;
+            }
+            
+            const width = 500;
+            const height = 150;
+            const padding = 25;
+            const chartWidth = width - 2 * padding;
+            const chartHeight = height - 2 * padding;
+            
+            const maxY = 100;
+            const minY = 0;
+            const barWidth = Math.max(15, (chartWidth / data.length) - 15);
+            
+            return `
+                <svg class="svg-chart" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                    <defs>
+                        <linearGradient id="${fillGradientId}" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="${barColor}" stop-opacity="0.85"/>
+                            <stop offset="100%" stop-color="${barColor}" stop-opacity="0.3"/>
+                        </linearGradient>
+                    </defs>
+                    <line x1="${padding}" y1="${padding}" x2="${width - padding}" y2="${padding}" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+                    <line x1="${padding}" y1="${padding + chartHeight/2}" x2="${width - padding}" y2="${padding + chartHeight/2}" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+                    <line x1="${padding}" y1="${padding + chartHeight}" x2="${width - padding}" y2="${padding + chartHeight}" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+                    
+                    ${data.map((d, index) => {
+                        const val = parseFloat(d[avgKey]) || 0;
+                        const x = padding + index * (chartWidth / data.length) + (chartWidth / data.length - barWidth)/2;
+                        const barHeight = (val / maxY) * chartHeight;
+                        const y = padding + chartHeight - barHeight;
+                        return `
+                            <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="4" fill="url(#${fillGradientId})">
+                                <title>${d[examKey]}: ${val.toFixed(1)}%</title>
+                            </rect>
+                        `;
+                    }).join('')}
+                </svg>
+                <div style="display:flex; justify-content:space-between; padding:0 ${padding}px; margin-top:8px; font-size:11px; color:var(--text-muted);">
+                    ${data.map(d => `<span style="width:${chartWidth / data.length}px; text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${d[examKey]}</span>`).join('')}
+                </div>
+            `;
+        }
+
+        // Generic checklist helper (stored in localStorage)
+        function toggleDashboardChecklist(checkbox, id) {
+            const key = `school_checklist_${id}`;
+            localStorage.setItem(key, checkbox.checked ? '1' : '0');
+            checkbox.closest('.checklist-item').classList.toggle('checked', checkbox.checked);
+        }
+
+        function loadChecklistState() {
+            document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(cb => {
+                const key = `school_checklist_${cb.id}`;
+                const val = localStorage.getItem(key);
+                if (val === '1') {
+                    cb.checked = true;
+                    cb.closest('.checklist-item').classList.add('checked');
+                } else {
+                    cb.checked = false;
+                    cb.closest('.checklist-item').classList.remove('checked');
+                }
+            });
+        }
+
+        // Load dashboard pending registrations
+        function loadDashboardPendingApprovals() {
+            const tbody = document.getElementById('dashboard-pending-approvals-tbody');
+            if (!tbody) return;
+            
+            fetch(`${API_URL}/auth/users`, {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            })
+            .then(res => res.json())
+            .then(body => {
+                tbody.innerHTML = '';
+                const pendingUsers = (body.data || []).filter(u => u.status === 'PENDING' && u.id !== currentUser.id);
+                
+                if (pendingUsers.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:20px;">No pending registration requests.</td></tr>';
+                    return;
+                }
+                
+                pendingUsers.forEach(user => {
+                    const roleName = user.role.replace('school_', '').replace('_', ' ').toUpperCase();
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${user.username}</td>
+                        <td>${user.email || '-'}</td>
+                        <td>${user.name}</td>
+                        <td><span class="badge active" style="background:rgba(59,130,246,0.1); color:var(--accent-blue);">${roleName}</span></td>
+                        <td>${user.registered_at ? new Date(user.registered_at).toLocaleDateString() : '-'}</td>
+                        <td style="text-align: right;">
+                            <button class="action-icon-btn" onclick="changeApprovalStatus(${user.id}, 'APPROVED')" title="Approve" style="border-color: var(--accent-emerald); color: var(--accent-emerald); padding:2px 8px; font-size:12px;">✓ Approve</button>
+                            <button class="action-icon-btn" onclick="changeApprovalStatus(${user.id}, 'BLOCKED')" title="Block/Reject" style="border-color: var(--accent-pink); color: var(--accent-pink); padding:2px 8px; font-size:12px; margin-left:6px;">🚫 Block</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(() => {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-pink);">Failed to fetch pending requests.</td></tr>';
+            });
+        }
+
+        // Homework Planner Handlers for Teachers
+        function toggleHomeworkForm() {
+            const el = document.getElementById('teacher-homework-form-container');
+            if (el) {
+                el.style.display = el.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        function postTeacherHomework(e) {
+            e.preventDefault();
+            const body = {
+                title: document.getElementById('th-title').value,
+                description: document.getElementById('th-desc').value,
+                class_id: document.getElementById('th-class').value,
+                subject_id: 1, // Default subject id
+                due_date: document.getElementById('th-duedate').value
+            };
+            
+            fetch(`${API_URL}/homework`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(body)
+            })
+            .then(res => {
+                if (res.ok) {
+                    toast('Homework published successfully!', 'success');
+                    toggleHomeworkForm();
+                    loadDashboardHomeworkList();
+                } else {
+                    toast('Failed to publish homework.', 'error');
+                }
+            })
+            .catch(() => toast('Server error.', 'error'));
+        }
+
+        function loadDashboardHomeworkList() {
+            const container = document.getElementById('dashboard-homework-list');
+            if (!container) return;
+            
+            fetch(`${API_URL}/homework`, {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            })
+            .then(res => res.json())
+            .then(body => {
+                container.innerHTML = '';
+                const list = body.data.data || [];
+                if (list.length === 0) {
+                    container.innerHTML = '<div style="color:var(--text-muted); font-size:12px; text-align:center; padding:20px;">No homework assignments found.</div>';
+                    return;
+                }
+                
+                list.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'homework-item';
+                    div.style.marginBottom = '10px';
+                    
+                    const details = item.details || {};
+                    const dueDateStr = details.due_date ? new Date(details.due_date).toLocaleDateString() : 'No due date';
+                    
+                    let actionButton = '';
+                    if (currentUser.role === 'school_teacher') {
+                        actionButton = `<button class="action-icon-btn" onclick="deleteRecord('homework', ${item.id}, loadDashboardHomeworkList)" style="border-color:#ef4444; color:#ef4444; font-size:11px; padding:2px 6px;">🗑 Delete</button>`;
+                    } else if (currentUser.role === 'school_student') {
+                        actionButton = `<button class="btn" style="padding:4px 10px; font-size:11px; height:auto; margin:0;" onclick="openSubmissionModal(${item.id})">📤 Submit Work</button>`;
+                    }
+                    
+                    div.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <h5 style="margin:0; font-size:13px; font-weight:600;">${item.title}</h5>
+                            ${actionButton}
+                        </div>
+                        <p style="margin:6px 0 8px; font-size:12px; color:var(--text-muted); line-height:1.4;">${details.description || 'No description provided'}</p>
+                        <div class="homework-meta">
+                            <span>Due: ${dueDateStr}</span>
+                            <span>Class: Grade ${details.class_id || 10}</span>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            })
+            .catch(() => {
+                container.innerHTML = '<div style="color:var(--text-pink); font-size:12px; text-align:center; padding:20px;">Error loading homework list.</div>';
+            });
+        }
+
+        // Student submission handlers
+        function openSubmissionModal(hwId) {
+            const el = document.getElementById('student-submission-modal');
+            if (el) {
+                document.getElementById('sub-hw-id').value = hwId;
+                el.style.display = 'flex';
+            }
+        }
+        function closeSubmissionModal() {
+            const el = document.getElementById('student-submission-modal');
+            if (el) el.style.display = 'none';
+        }
+        function submitStudentHomework(e) {
+            e.preventDefault();
+            const hwId = document.getElementById('sub-hw-id').value;
+            const fileUrl = document.getElementById('sub-file-url').value;
+            
+            const body = {
+                homework_id: hwId,
+                student_id: currentUser.id,
+                file_url: fileUrl
+            };
+            
+            fetch(`${API_URL}/homework/submit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(body)
+            })
+            .then(res => {
+                if (res.ok) {
+                    toast('Homework submitted successfully!', 'success');
+                    closeSubmissionModal();
+                    loadDashboardHomeworkList();
+                } else {
+                    toast('Failed to submit homework.', 'error');
+                }
+            })
+            .catch(() => toast('Server error.', 'error'));
+        }
+
+        // Dynamic Role-Specific Dashboard Renderer
+        function renderRoleDashboard(role, data) {
+            const container = document.getElementById('dashboard-dynamic-content');
+            if (!container) return;
+            
+            const cards = data.cards;
+            const charts = data.charts;
+
+            let badgeHtml = '';
+            let dashboardTitle = '';
+            
+            if (role === 'administrator' || role === 'school_super_admin') {
+                badgeHtml = `<span class="live-dot" style="background-color: var(--accent-blue);"></span> System Administrator`;
+                dashboardTitle = `School Management Overview`;
+            } else if (role === 'school_principal') {
+                badgeHtml = `<span class="live-dot" style="background-color: var(--accent-purple);"></span> Academic Operations`;
+                dashboardTitle = `Principal's Command Dashboard`;
+            } else if (role === 'school_teacher') {
+                badgeHtml = `<span class="live-dot" style="background-color: var(--accent-emerald);"></span> Educator Hub`;
+                dashboardTitle = `Teacher's Classroom Center`;
+            } else if (role === 'school_accountant') {
+                badgeHtml = `<span class="live-dot" style="background-color: #f59e0b;"></span> Financial Auditor`;
+                dashboardTitle = `Finance & Billing Ledger`;
+            } else if (role === 'school_student') {
+                badgeHtml = `<span class="live-dot" style="background-color: var(--accent-blue);"></span> Learning Workspace`;
+                dashboardTitle = `My Academic Dashboard`;
+            } else if (role === 'school_parent') {
+                badgeHtml = `<span class="live-dot" style="background-color: var(--accent-pink);"></span> Parent Portal`;
+                dashboardTitle = `Parent Care & Progress Center`;
+            }
+
+            const liveBadge = document.querySelector('.badge-live');
+            if (liveBadge) {
+                liveBadge.innerHTML = badgeHtml;
+            }
+            const pageHeaderTitle = document.getElementById('tab-title-header');
+            if (pageHeaderTitle && localStorage.getItem('school_active_tab') === 'dashboard') {
+                pageHeaderTitle.innerText = dashboardTitle;
+            }
+
+            let dashboardHtml = '';
+
+            if (role === 'administrator' || role === 'school_super_admin') {
+                const formattedFees = '$' + Number(cards.monthly_fee_collection).toLocaleString();
+                dashboardHtml = `
+                    <section class="cards-grid">
+                        <div class="stat-card">
+                            <div class="card-icon">🎓</div>
+                            <div class="card-label">Total Active Students</div>
+                            <div class="card-value" style="color:var(--accent-blue);">${cards.total_students}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">👨‍🏫</div>
+                            <div class="card-label">Certified Faculty</div>
+                            <div class="card-value" style="color:var(--accent-purple);">${cards.total_teachers}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">💵</div>
+                            <div class="card-label">Monthly Collections</div>
+                            <div class="card-value" style="color:var(--accent-emerald);">${formattedFees}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">📅</div>
+                            <div class="card-label">Today's Presence (Students)</div>
+                            <div class="card-value" style="color:var(--accent-pink);">${cards.today_attendance.Present || 0}</div>
+                        </div>
+                    </section>
+                    
+                    <section class="charts-row">
+                        <div class="chart-box">
+                            <div class="chart-header">
+                                <h3>Student Admissions Trend</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Aggregated student registrations</span>
+                            </div>
+                            <div class="chart-canvas" style="height:170px;">
+                                ${drawLineChartSvg(charts.admission_trends, 'month', 'count', 'blueGradDynamic', 'var(--accent-blue)')}
+                            </div>
+                        </div>
+                        
+                        <div class="chart-box">
+                            <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                <h3 style="margin: 0;">Notice Board</h3>
+                                <button id="add-notice-btn" class="btn" style="padding: 6px 14px; font-size: 12px; height: auto; margin: 0; display: inline-block;" onclick="openCreateModal('notice')">+ Add Notice</button>
+                            </div>
+                            <div class="notice-list" id="notice-board-container" style="max-height: 200px; overflow-y: auto;">
+                                <!-- Notices loaded dynamically -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="charts-row" style="margin-top: 30px;">
+                        <div class="chart-box" style="flex: 1 1 100%;">
+                            <div class="chart-header">
+                                <h3>Pending Registration Approvals</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Quick system approval module</span>
+                            </div>
+                            <div class="table-container" style="margin-top: 15px; background: transparent; padding: 0; border: none; box-shadow: none;">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                            <th>Name</th>
+                                            <th>Role</th>
+                                            <th>Date Requested</th>
+                                            <th style="text-align: right;">Quick Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashboard-pending-approvals-tbody">
+                                        <tr><td colspan="6" style="text-align:center;color:var(--text-muted);">Loading pending accounts...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                `;
+                container.innerHTML = dashboardHtml;
+                loadDashboardPendingApprovals();
+            } else if (role === 'school_principal') {
+                dashboardHtml = `
+                    <section class="cards-grid">
+                        <div class="stat-card">
+                            <div class="card-icon">🎓</div>
+                            <div class="card-label">Active Student Body</div>
+                            <div class="card-value" style="color:var(--accent-blue);">${cards.total_students}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">👨‍🏫</div>
+                            <div class="card-label">Total Faculty</div>
+                            <div class="card-value" style="color:var(--accent-purple);">${cards.total_teachers}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">🏫</div>
+                            <div class="card-label">Active Classrooms</div>
+                            <div class="card-value" style="color:var(--accent-emerald);">${cards.active_classes}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">📝</div>
+                            <div class="card-label">Upcoming Exams</div>
+                            <div class="card-value" style="color:var(--accent-pink);">${cards.upcoming_exams}</div>
+                        </div>
+                    </section>
+                    
+                    <section class="charts-row">
+                        <div class="chart-box">
+                            <div class="chart-header">
+                                <h3>School Exam Performance Index</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Average score percentages across exams</span>
+                            </div>
+                            <div class="chart-canvas" style="height:170px;">
+                                ${drawExamBarChartSvg(charts.exam_performance, 'exam_name', 'average_percentage', 'purpleGradDynamic', 'var(--accent-purple)')}
+                            </div>
+                        </div>
+                        
+                        <div class="chart-box">
+                            <div class="chart-header">
+                                <h3 style="margin: 0;">Notice Board</h3>
+                            </div>
+                            <div class="notice-list" id="notice-board-container" style="max-height: 200px; overflow-y: auto;">
+                                <!-- Notices loaded dynamically -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="charts-row" style="margin-top: 30px;">
+                        <div class="chart-box" style="flex: 1;">
+                            <div class="chart-header">
+                                <h3>Principal's Operations Checklist</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Academic checklist tracking</span>
+                            </div>
+                            <div class="checklist-container">
+                                <label class="checklist-item" id="p-item-1">
+                                    <input type="checkbox" id="pr-chk-1" onchange="toggleDashboardChecklist(this, 'pr-chk-1')">
+                                    <span>Approve monthly timetable drafts</span>
+                                </label>
+                                <label class="checklist-item" id="p-item-2">
+                                    <input type="checkbox" id="pr-chk-2" onchange="toggleDashboardChecklist(this, 'pr-chk-2')">
+                                    <span>Perform faculty evaluation walk-throughs</span>
+                                </label>
+                                <label class="checklist-item" id="p-item-3">
+                                    <input type="checkbox" id="pr-chk-3" onchange="toggleDashboardChecklist(this, 'pr-chk-3')">
+                                    <span>Coordinate parent-teacher association schedules</span>
+                                </label>
+                                <label class="checklist-item" id="p-item-4">
+                                    <input type="checkbox" id="pr-chk-4" onchange="toggleDashboardChecklist(this, 'pr-chk-4')">
+                                    <span>Review scholarship & fee-concession structures</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="chart-box" style="flex: 1;">
+                            <div class="chart-header">
+                                <h3>Active Grade Classrooms</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Live school grades index</span>
+                            </div>
+                            <div style="margin-top: 15px; display:flex; flex-direction:column; gap:8px;" id="principal-classes-list">
+                                <div class="homework-item" style="padding:10px;">
+                                    <h5 style="margin:0; font-size:13px;">Grade 10 - Section A</h5>
+                                    <div class="homework-meta" style="margin-top:5px;"><span>Class ID: #1</span><span>Supervised Class</span></div>
+                                </div>
+                                <div class="homework-item" style="padding:10px;">
+                                    <h5 style="margin:0; font-size:13px;">Grade 11 - Section A</h5>
+                                    <div class="homework-meta" style="margin-top:5px;"><span>Class ID: #2</span><span>Science & Tech stream</span></div>
+                                </div>
+                                <div class="homework-item" style="padding:10px;">
+                                    <h5 style="margin:0; font-size:13px;">Grade 12 - Section A</h5>
+                                    <div class="homework-meta" style="margin-top:5px;"><span>Class ID: #3</span><span>Commerce stream</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                `;
+                container.innerHTML = dashboardHtml;
+                loadChecklistState();
+            } else if (role === 'school_teacher') {
+                dashboardHtml = `
+                    <section class="cards-grid">
+                        <div class="stat-card">
+                            <div class="card-icon">📚</div>
+                            <div class="card-label">Assigned Subjects</div>
+                            <div class="card-value" style="color:var(--accent-blue);">3</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">🎓</div>
+                            <div class="card-label">Supervised Students</div>
+                            <div class="card-value" style="color:var(--accent-purple);">${cards.total_students}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">📅</div>
+                            <div class="card-label">Present Today</div>
+                            <div class="card-value" style="color:var(--accent-emerald);">${cards.today_attendance.Present || 0}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">📝</div>
+                            <div class="card-label">Upcoming Exams</div>
+                            <div class="card-value" style="color:var(--accent-pink);">${cards.upcoming_exams}</div>
+                        </div>
+                    </section>
+                    
+                    <section class="charts-row">
+                        <div class="chart-box">
+                            <div class="chart-header">
+                                <h3>Student Performance Indexes</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Exam averages in registered subjects</span>
+                            </div>
+                            <div class="chart-canvas" style="height:170px;">
+                                ${drawExamBarChartSvg(charts.exam_performance, 'exam_name', 'average_percentage', 'emeraldGradDynamic', 'var(--accent-emerald)')}
+                            </div>
+                        </div>
+                        
+                        <div class="chart-box">
+                            <div class="chart-header">
+                                <h3 style="margin: 0;">Notice Board</h3>
+                            </div>
+                            <div class="notice-list" id="notice-board-container" style="max-height: 200px; overflow-y: auto;">
+                                <!-- Notices loaded dynamically -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="charts-row" style="margin-top: 30px;">
+                        <div class="chart-box" style="flex: 1.2;">
+                            <div class="chart-header" style="display:flex; justify-content:space-between; align-items:center;">
+                                <h3>Homework Assignments & Lesson Plans</h3>
+                                <button class="btn" style="padding:6px 14px; font-size:12px; height:auto; margin:0;" onclick="toggleHomeworkForm()">+ Create Homework</button>
+                            </div>
+                            
+                            <div id="teacher-homework-form-container" class="homework-item" style="display:none; margin-top:15px; border-color:var(--accent-blue);">
+                                <h5 style="margin-bottom:12px; color:var(--accent-blue);">Post Homework Assignment</h5>
+                                <form onsubmit="postTeacherHomework(event)" class="dashboard-form">
+                                    <div class="form-group" style="margin-bottom:8px;">
+                                        <label style="font-size:11px; margin-bottom:4px;">Assignment Title</label>
+                                        <input type="text" id="th-title" class="form-input" style="padding:6px; font-size:12px;" placeholder="e.g. Chapter 4 Practice Exercises" required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:8px;">
+                                        <label style="font-size:11px; margin-bottom:4px;">Description / Instructions</label>
+                                        <textarea id="th-desc" class="form-input" style="padding:6px; font-size:12px; min-height:60px;" placeholder="Solve questions 1-10 on page 42" required></textarea>
+                                    </div>
+                                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                                        <div class="form-group" style="margin-bottom:8px;">
+                                            <label style="font-size:11px; margin-bottom:4px;">Classroom (Grade)</label>
+                                            <select id="th-class" class="form-input" style="padding:6px; font-size:12px; background:#111827;" required>
+                                                <option value="1">Grade 10</option>
+                                                <option value="2">Grade 11</option>
+                                                <option value="3">Grade 12</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom:8px;">
+                                            <label style="font-size:11px; margin-bottom:4px;">Due Date</label>
+                                            <input type="date" id="th-duedate" class="form-input" style="padding:6px; font-size:12px;" required>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; gap:8px; justify-content:flex-end;">
+                                        <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:12px;" onclick="toggleHomeworkForm()">Cancel</button>
+                                        <button type="submit" class="btn" style="padding:6px 12px; font-size:12px;">Publish</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="homework-list" id="dashboard-homework-list">
+                                <div style="color:var(--text-muted); font-size:12px; text-align:center; padding:20px;">Fetching homework...</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-box" style="flex: 0.8;">
+                            <div class="chart-header">
+                                <h3>Teacher Class Schedule</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Daily lecture slots</span>
+                            </div>
+                            <div class="homework-list">
+                                <div class="homework-item" style="border-left: 3px solid var(--accent-blue);">
+                                    <h5>09:00 AM - 10:00 AM</h5>
+                                    <p style="margin: 0; font-size: 12px;">Mathematics (Grade 10 - Sec A)</p>
+                                </div>
+                                <div class="homework-item" style="border-left: 3px solid var(--accent-purple);">
+                                    <h5>10:15 AM - 11:15 AM</h5>
+                                    <p style="margin: 0; font-size: 12px;">Advanced Algebra (Grade 11 - Sec A)</p>
+                                </div>
+                                <div class="homework-item" style="border-left: 3px solid var(--accent-pink);">
+                                    <h5>01:00 PM - 02:00 PM</h5>
+                                    <p style="margin: 0; font-size: 12px;">Geometry Workshop (Grade 12 - Sec A)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                `;
+                container.innerHTML = dashboardHtml;
+                loadDashboardHomeworkList();
+            } else if (role === 'school_accountant') {
+                const formattedCollected = '$' + Number(cards.monthly_fee_collection).toLocaleString();
+                const formattedPending = '$' + Number(cards.pending_fees).toLocaleString();
+                dashboardHtml = `
+                    <section class="cards-grid">
+                        <div class="stat-card">
+                            <div class="card-icon">💵</div>
+                            <div class="card-label">Monthly Collected Fees</div>
+                            <div class="card-value" style="color:var(--accent-emerald);">${formattedCollected}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">💰</div>
+                            <div class="card-label">Outstanding Receivables</div>
+                            <div class="card-value" style="color:var(--accent-pink);">${formattedPending}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">👨‍👩‍👧</div>
+                            <div class="card-label">Parents Registry</div>
+                            <div class="card-value" style="color:var(--accent-blue);">${cards.total_parents}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">🏫</div>
+                            <div class="card-label">Billing Classrooms</div>
+                            <div class="card-value" style="color:var(--accent-purple);">${cards.active_classes}</div>
+                        </div>
+                    </section>
+                    
+                    <section class="charts-row">
+                        <div class="chart-box">
+                            <div class="chart-header">
+                                <h3>Monthly Fee Collections Trend</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Collections ledger history</span>
+                            </div>
+                            <div class="chart-canvas" style="height:170px;">
+                                ${drawLineChartSvg(charts.fee_trends, 'month', 'collected', 'emeraldGradDynamic', 'var(--accent-emerald)')}
+                            </div>
+                        </div>
+                        
+                        <div class="chart-box">
+                            <div class="chart-header">
+                                <h3 style="margin: 0;">Notice Board</h3>
+                            </div>
+                            <div class="notice-list" id="notice-board-container" style="max-height: 200px; overflow-y: auto;">
+                                <!-- Notices loaded dynamically -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="charts-row" style="margin-top: 30px;">
+                        <div class="chart-box" style="flex: 1.2;">
+                            <div class="chart-header">
+                                <h3>Recent Transactions Overview</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Recent billing collections</span>
+                            </div>
+                            <div style="margin-top: 15px; display:flex; flex-direction:column; gap:8px;" id="accountant-recent-payments">
+                                <div class="homework-item" style="padding:10px; display:flex; justify-content:space-between; align-items:center;">
+                                    <div>
+                                        <h5 style="margin:0; font-size:13px;">John Doe (Grade 10)</h5>
+                                        <div class="homework-meta" style="margin-top:3px;"><span>Receipt ID: #RE1029</span><span>Paid via CASH</span></div>
+                                    </div>
+                                    <div style="color:var(--accent-emerald); font-weight:700; font-size:14px;">$250.00</div>
+                                </div>
+                                <div class="homework-item" style="padding:10px; display:flex; justify-content:space-between; align-items:center;">
+                                    <div>
+                                        <h5 style="margin:0; font-size:13px;">Sarah Jenkins (Grade 11)</h5>
+                                        <div class="homework-meta" style="margin-top:3px;"><span>Receipt ID: #RE1030</span><span>Paid via CARD</span></div>
+                                    </div>
+                                    <div style="color:var(--accent-emerald); font-weight:700; font-size:14px;">$350.00</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-box" style="flex: 0.8;">
+                            <div class="chart-header">
+                                <h3>Accountant's Financial Checklist</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Audit tracking</span>
+                            </div>
+                            <div class="checklist-container">
+                                <label class="checklist-item" id="ac-item-1">
+                                    <input type="checkbox" id="ac-chk-1" onchange="toggleDashboardChecklist(this, 'ac-chk-1')">
+                                    <span>Reconcile monthly bank statement</span>
+                                </label>
+                                <label class="checklist-item" id="ac-item-2">
+                                    <input type="checkbox" id="ac-chk-2" onchange="toggleDashboardChecklist(this, 'ac-chk-2')">
+                                    <span>Verify staff payroll & disbursements</span>
+                                </label>
+                                <label class="checklist-item" id="ac-item-3">
+                                    <input type="checkbox" id="ac-chk-3" onchange="toggleDashboardChecklist(this, 'ac-chk-3')">
+                                    <span>Dispatch fee overdue alerts to parents</span>
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+                `;
+                container.innerHTML = dashboardHtml;
+                loadChecklistState();
+            } else if (role === 'school_student') {
+                const formattedPending = cards.pending_fees > 0 ? '$' + Number(cards.pending_fees).toLocaleString() : '$0';
+                dashboardHtml = `
+                    <section class="cards-grid">
+                        <div class="stat-card">
+                            <div class="card-icon">📅</div>
+                            <div class="card-label">My Attendance Rate</div>
+                            <div class="card-value" style="color:var(--accent-blue);">95.4%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">💵</div>
+                            <div class="card-label">Outstanding Fees</div>
+                            <div class="card-value" style="color:var(--accent-pink);">${formattedPending}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">🏆</div>
+                            <div class="card-label">My Performance Average</div>
+                            <div class="card-value" style="color:var(--accent-purple);">84.2%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">📚</div>
+                            <div class="card-label">Library Books Checked Out</div>
+                            <div class="card-value" style="color:var(--accent-emerald);">3</div>
+                        </div>
+                    </section>
+                    
+                    <section class="charts-row">
+                        <div class="chart-box">
+                            <div class="chart-header">
+                                <h3>My Term Exam Performance</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Scores in last term exams</span>
+                            </div>
+                            <div class="chart-canvas" style="height:170px;">
+                                ${drawExamBarChartSvg(charts.exam_performance, 'exam_name', 'average_percentage', 'blueGradDynamic', 'var(--accent-blue)')}
+                            </div>
+                        </div>
+                        
+                        <div class="chart-box">
+                            <div class="chart-header">
+                                <h3 style="margin: 0;">Notice Board</h3>
+                            </div>
+                            <div class="notice-list" id="notice-board-container" style="max-height: 200px; overflow-y: auto;">
+                                <!-- Notices loaded dynamically -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="charts-row" style="margin-top: 30px;">
+                        <div class="chart-box" style="flex: 1.2;">
+                            <div class="chart-header">
+                                <h3>My Homework & Assignments</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Assigned homework checklist</span>
+                            </div>
+                            <div class="homework-list" id="dashboard-homework-list">
+                                <div style="color:var(--text-muted); font-size:12px; text-align:center; padding:20px;">Loading assignments...</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-box" style="flex: 0.8;">
+                            <div class="chart-header">
+                                <h3>My Daily Period Schedule</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Class timetable today</span>
+                            </div>
+                            <div class="homework-list">
+                                <div class="homework-item" style="border-left: 3px solid var(--accent-blue);">
+                                    <h5>09:00 AM - 10:00 AM</h5>
+                                    <p style="margin: 0; font-size: 12px;">Mathematics (Grade 10 - Room 102)</p>
+                                </div>
+                                <div class="homework-item" style="border-left: 3px solid var(--accent-purple);">
+                                    <h5>10:15 AM - 11:15 AM</h5>
+                                    <p style="margin: 0; font-size: 12px;">Physics Laboratory (Room 205)</p>
+                                </div>
+                                <div class="homework-item" style="border-left: 3px solid var(--accent-pink);">
+                                    <h5>11:30 AM - 12:30 PM</h5>
+                                    <p style="margin: 0; font-size: 12px;">History & Social Studies (Room 101)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Student Submission Overlay -->
+                    <div id="student-submission-modal" class="modal-overlay" style="display:none;">
+                        <div class="modal-card" style="max-width:400px;">
+                            <button class="modal-close" onclick="closeSubmissionModal()">✖</button>
+                            <h3 style="font-size:18px; margin-bottom:15px; color:var(--accent-blue);">Submit Homework</h3>
+                            <form onsubmit="submitStudentHomework(event)" class="dashboard-form">
+                                <input type="hidden" id="sub-hw-id">
+                                <div class="form-group">
+                                    <label>Attachment URL / File link</label>
+                                    <input type="text" id="sub-file-url" class="form-input" placeholder="e.g. Google Drive link or file URL" required>
+                                </div>
+                                <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:10px;">
+                                    <button type="button" class="btn btn-secondary" onclick="closeSubmissionModal()">Cancel</button>
+                                    <button type="submit" class="btn">Submit Work</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML = dashboardHtml;
+                loadDashboardHomeworkList();
+            } else if (role === 'school_parent') {
+                const formattedPending = '$' + Number(cards.pending_fees).toLocaleString();
+                dashboardHtml = `
+                    <section class="cards-grid">
+                        <div class="stat-card">
+                            <div class="card-icon">📅</div>
+                            <div class="card-label">Child's Attendance Rate</div>
+                            <div class="card-value" style="color:var(--accent-blue);">96.2%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">💵</div>
+                            <div class="card-label">Outstanding Fees</div>
+                            <div class="card-value" style="color:var(--accent-pink);">${formattedPending}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">🏆</div>
+                            <div class="card-label">Child's Exam Average</div>
+                            <div class="card-value" style="color:var(--accent-purple);">88.5%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="card-icon">📚</div>
+                            <div class="card-label">Library Books Borrowed</div>
+                            <div class="card-value" style="color:var(--accent-emerald);">2</div>
+                        </div>
+                    </section>
+                    
+                    <section class="charts-row">
+                        <div class="chart-box">
+                            <div class="chart-header">
+                                <h3>Child's Exam Progress</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Student terminal score metrics</span>
+                            </div>
+                            <div class="chart-canvas" style="height:170px;">
+                                ${drawExamBarChartSvg(charts.exam_performance, 'exam_name', 'average_percentage', 'pinkGradDynamic', 'var(--accent-pink)')}
+                            </div>
+                        </div>
+                        
+                        <div class="chart-box">
+                            <div class="chart-header">
+                                <h3 style="margin: 0;">Notice Board</h3>
+                            </div>
+                            <div class="notice-list" id="notice-board-container" style="max-height: 200px; overflow-y: auto;">
+                                <!-- Notices loaded dynamically -->
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="charts-row" style="margin-top: 30px;">
+                        <div class="chart-box" style="flex: 1.1;">
+                            <div class="chart-header">
+                                <h3>Child's Daily Subject Timetable</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Period slots today</span>
+                            </div>
+                            <div class="homework-list" style="margin-top:15px;">
+                                <div class="homework-item" style="border-left: 3px solid var(--accent-blue);">
+                                    <h5>09:00 AM - 10:00 AM</h5>
+                                    <p style="margin: 0; font-size: 12px;">Mathematics (Grade 10 - Dr. Robert Carter)</p>
+                                </div>
+                                <div class="homework-item" style="border-left: 3px solid var(--accent-purple);">
+                                    <h5>10:15 AM - 11:15 AM</h5>
+                                    <p style="margin: 0; font-size: 12px;">Physics Laboratory (Room 205)</p>
+                                </div>
+                                <div class="homework-item" style="border-left: 3px solid var(--accent-pink);">
+                                    <h5>11:30 AM - 12:30 PM</h5>
+                                    <p style="margin: 0; font-size: 12px;">History & Social Studies (Room 101)</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-box" style="flex: 0.9;">
+                            <div class="chart-header">
+                                <h3>Teacher Directory & Support</h3>
+                                <span style="font-size: 12px; color: var(--text-muted);">Quick advisor contacts</span>
+                            </div>
+                            <div class="homework-list" id="parent-teacher-directory">
+                                <div class="homework-item">
+                                    <h5 style="margin-bottom:4px;">Dr. Robert Carter</h5>
+                                    <p style="margin: 0; font-size: 11px; color:var(--text-muted);">Class Tutor / Math Dept</p>
+                                    <div style="font-size:11px; color:var(--accent-blue); margin-top:6px;">robert.carter@school.erp</div>
+                                </div>
+                                <div class="homework-item">
+                                    <h5 style="margin-bottom:4px;">School Support Helpdesk</h5>
+                                    <p style="margin: 0; font-size: 11px; color:var(--text-muted);">Administration / Operations</p>
+                                    <div style="font-size:11px; color:var(--accent-blue); margin-top:6px;">support@school.erp</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                `;
+                container.innerHTML = dashboardHtml;
+            }
+
+            loadNotices();
+        }
+
         // Load dashboard stats
         function loadDashboardData() {
             fetch(`${API_URL}/dashboard`, {
@@ -1720,11 +2697,43 @@
             })
             .then(res => res.json())
             .then(body => {
-                const c = body.data.cards;
-                document.getElementById('card-total-students').innerText = c.total_students;
-                document.getElementById('card-total-teachers').innerText = c.total_teachers;
-                document.getElementById('card-monthly-fees').innerText = '$' + Number(c.monthly_fee_collection).toLocaleString();
-                document.getElementById('card-today-attendance').innerText = c.today_attendance.Present || 0;
+                renderRoleDashboard(currentUser.role, body.data);
+            })
+            .catch(() => {});
+        }
+
+        // Fetch notices from the server and display them
+        function loadNotices() {
+            fetch(`${API_URL}/notices`, {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            })
+            .then(res => res.json())
+            .then(body => {
+                const container = document.getElementById('notice-board-container');
+                if (!container) return;
+                container.innerHTML = '';
+                if (!body.data || !body.data.data || body.data.data.length === 0) {
+                    container.innerHTML = '<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px;">No notices posted yet.</div>';
+                    return;
+                }
+                
+                // Colors list for borders
+                const colors = ['var(--accent-blue)', 'var(--accent-pink)', 'var(--accent-emerald)', '#f59e0b'];
+
+                body.data.data.forEach((notice, idx) => {
+                    const div = document.createElement('div');
+                    div.className = 'notice-item';
+                    div.style.borderLeftColor = colors[idx % colors.length];
+                    
+                    const dateStr = notice.created_at ? new Date(notice.created_at).toLocaleDateString() : 'Just now';
+                    
+                    div.innerHTML = `
+                        <h5>${notice.title}</h5>
+                        <p>${notice.description || ''}</p>
+                        <div class="notice-date">${dateStr}</div>
+                    `;
+                    container.appendChild(div);
+                });
             })
             .catch(() => {});
         }
@@ -2001,6 +3010,18 @@
                         <input type="email" id="t-email" class="form-input" placeholder="e.g. robert@school.erp" required>
                     </div>
                 `;
+            } else if (type === 'notice') {
+                title.innerText = "Post Notice to Board";
+                fields.innerHTML = `
+                    <div class="form-group">
+                        <label>Notice Title</label>
+                        <input type="text" id="n-title" class="form-input" placeholder="e.g. Summer Vacation Announcement" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Details / Description</label>
+                        <textarea id="n-desc" class="form-input" placeholder="Enter notice details here..." style="min-height: 100px; resize: vertical;" required></textarea>
+                    </div>
+                `;
             }
 
             document.getElementById('crud-modal').style.display = 'flex';
@@ -2063,6 +3084,30 @@
                         loadTeachers();
                     } else {
                         toast('Failed to create teacher record.', 'error');
+                    }
+                })
+                .catch(() => toast('Server error.', 'error'));
+            } else if (type === 'notice') {
+                const body = {
+                    title: document.getElementById('n-title').value,
+                    description: document.getElementById('n-desc').value
+                };
+
+                fetch(`${API_URL}/notices`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(body)
+                })
+                .then(res => {
+                    if (res.ok) {
+                        toast('Notice posted to board successfully!', 'success');
+                        closeCrudModal();
+                        loadNotices();
+                    } else {
+                        toast('Failed to post notice.', 'error');
                     }
                 })
                 .catch(() => toast('Server error.', 'error'));
