@@ -122,3 +122,10 @@ add_action('template_redirect', function() {
         exit;
     }
 });
+
+// 8. Log wp_mail errors to activity log
+add_action('wp_mail_failed', function($error) {
+    if (is_wp_error($error)) {
+        \SchoolManagementApi\Services\AuthService::logActivity(null, 'MAIL_FAILED', $error->get_error_message());
+    }
+});

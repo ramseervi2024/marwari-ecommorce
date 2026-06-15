@@ -122,9 +122,7 @@ class AuthController extends BaseController {
      * GET /auth/users
      */
     public function getUsers(WP_REST_Request $request) {
-        $roles = ['school_super_admin', 'school_principal', 'school_teacher', 'school_accountant', 'school_parent', 'school_student'];
         $users = get_users([
-            'role__in' => $roles,
             'orderby' => 'ID',
             'order' => 'DESC'
         ]);
@@ -136,7 +134,7 @@ class AuthController extends BaseController {
                 'username' => $user->user_login,
                 'email' => $user->user_email,
                 'name' => $user->display_name ?: $user->user_login,
-                'role' => !empty($user->roles) ? $user->roles[0] : '',
+                'role' => !empty($user->roles) ? $user->roles[0] : 'WordPress Core User',
                 'status' => get_user_meta($user->ID, 'school_user_status', true) ?: 'APPROVED',
                 'registered_at' => $user->user_registered
             ];
