@@ -1219,6 +1219,7 @@
 
         // Switch panel tabs
         function switchTab(tabName) {
+            localStorage.setItem('school_active_tab', tabName);
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
             
@@ -1414,11 +1415,31 @@
             document.getElementById('profile-avatar').innerText = currentUser.name.split(' ').map(n=>n[0]).join('').toUpperCase().substring(0, 2);
             
             configureUIPermissions();
-            switchTab('dashboard');
+            
+            // Restore active tab or default to dashboard
+            const menuMapping = {
+                'administrator': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport', 'approvals', 'apidocs'],
+                'school_super_admin': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport', 'approvals', 'apidocs'],
+                'school_principal': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'library', 'transport'],
+                'school_teacher': ['dashboard', 'students', 'attendance', 'timetable'],
+                'school_accountant': ['dashboard', 'teachers', 'fees'],
+                'school_parent': ['dashboard', 'attendance', 'timetable', 'fees'],
+                'school_student': ['dashboard', 'attendance', 'timetable', 'library']
+            };
+            const role = currentUser.role;
+            const allowedTabs = menuMapping[role] || ['dashboard'];
+
+            let activeTab = localStorage.getItem('school_active_tab') || 'dashboard';
+            if (!allowedTabs.includes(activeTab)) {
+                activeTab = 'dashboard';
+            }
+
+            switchTab(activeTab);
         }
 
         function logout() {
             localStorage.removeItem('school_jwt_token');
+            localStorage.removeItem('school_active_tab');
             authToken = '';
             currentUser = null;
             showAuthScreen();
