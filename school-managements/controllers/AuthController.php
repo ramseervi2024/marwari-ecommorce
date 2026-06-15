@@ -235,19 +235,12 @@ class AuthController extends BaseController {
         return $this->success('User deleted successfully');
     }
 
-    /**
-     * GET /auth/smtp
-     */
     public function getSmtpSettings(WP_REST_Request $request) {
-        return $this->success('SMTP settings retrieved successfully.', [
-            'host' => get_option('school_smtp_host', ''),
-            'port' => get_option('school_smtp_port', '587'),
-            'auth' => get_option('school_smtp_auth', 'yes'),
-            'username' => get_option('school_smtp_username', ''),
-            'password' => get_option('school_smtp_password', ''),
-            'secure' => get_option('school_smtp_secure', 'tls'),
+        return $this->success('Email settings retrieved successfully.', [
             'from_email' => get_option('school_smtp_from_email', 'rameshseervi242628@gmail.com'),
-            'from_name' => get_option('school_smtp_from_name', 'Global School ERP')
+            'from_name' => get_option('school_smtp_from_name', 'Global School ERP'),
+            'subject' => get_option('school_email_subject', 'School ERP Verification Code'),
+            'template' => get_option('school_email_template', "Hello {name},\n\nYour 6-digit verification code is: {otp}\n\nThis code is valid for 15 minutes.\n\nThank you!")
         ]);
     }
 
@@ -257,19 +250,13 @@ class AuthController extends BaseController {
     public function saveSmtpSettings(WP_REST_Request $request) {
         $params = $request->get_json_params();
 
-        update_option('school_smtp_host', sanitize_text_field($params['host'] ?? ''));
-        update_option('school_smtp_port', sanitize_text_field($params['port'] ?? '587'));
-        update_option('school_smtp_auth', sanitize_text_field($params['auth'] ?? 'yes'));
-        update_option('school_smtp_username', sanitize_text_field($params['username'] ?? ''));
-        if (isset($params['password'])) {
-            update_option('school_smtp_password', sanitize_text_field($params['password']));
-        }
-        update_option('school_smtp_secure', sanitize_text_field($params['secure'] ?? 'tls'));
         update_option('school_smtp_from_email', sanitize_email($params['from_email'] ?? ''));
         update_option('school_smtp_from_name', sanitize_text_field($params['from_name'] ?? ''));
+        update_option('school_email_subject', sanitize_text_field($params['subject'] ?? ''));
+        update_option('school_email_template', sanitize_textarea_field($params['template'] ?? ''));
 
-        AuthService::logActivity(get_current_user_id(), 'SMTP_UPDATE', 'Updated SMTP configuration settings');
+        AuthService::logActivity(get_current_user_id(), 'EMAIL_SETTINGS_UPDATE', 'Updated email service configuration settings');
 
-        return $this->success('SMTP settings saved successfully.');
+        return $this->success('Email settings saved successfully.');
     }
 }

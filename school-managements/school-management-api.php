@@ -123,37 +123,7 @@ add_action('template_redirect', function() {
     }
 });
 
-// 8. SMTP Configuration Setup hook
-add_action('phpmailer_init', function($phpmailer) {
-    $host = get_option('school_smtp_host');
-    if (empty($host)) {
-        return;
-    }
-    
-    $phpmailer->isSMTP();
-    $phpmailer->Host       = $host;
-    $phpmailer->SMTPAuth   = get_option('school_smtp_auth', 'yes') === 'yes';
-    $phpmailer->Port       = (int)get_option('school_smtp_port', 587);
-    $phpmailer->Username   = get_option('school_smtp_username');
-    $phpmailer->Password   = get_option('school_smtp_password');
-    
-    $secure = get_option('school_smtp_secure', 'tls');
-    if ($secure === 'tls' || $secure === 'ssl') {
-        $phpmailer->SMTPSecure = $secure;
-    } else {
-        $phpmailer->SMTPSecure = '';
-    }
-    
-    $from_email = get_option('school_smtp_from_email');
-    if (!empty($from_email)) {
-        $phpmailer->From = $from_email;
-    }
-    
-    $from_name = get_option('school_smtp_from_name');
-    if (!empty($from_name)) {
-        $phpmailer->FromName = $from_name;
-    }
-});
+// 8. SMTP Configuration Setup hook bypassed - using default WP mail server
 
 // 9. Log wp_mail errors to activity log and public diagnostics file
 add_action('wp_mail_failed', function($error) {

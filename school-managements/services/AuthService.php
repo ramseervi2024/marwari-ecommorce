@@ -66,19 +66,18 @@ class AuthService {
         
         set_transient($transient_key, $saved_data, 15 * MINUTE_IN_SECONDS);
 
-        $subject = 'School ERP Registration Verification';
-        $message = "Hello $name,\n\nYour 6-digit registration OTP verification code is: $otp\n\nThis code is valid for 15 minutes.\n\nThank you!";
+        $subject = get_option('school_email_subject', 'School ERP Verification Code');
+        $template = get_option('school_email_template', "Hello {name},\n\nYour 6-digit verification code is: {otp}\n\nThis code is valid for 15 minutes.\n\nThank you!");
+        $message = str_replace(['{name}', '{otp}'], [$name, $otp], $template);
         
         $headers = [
             'Content-Type: text/plain; charset=UTF-8'
         ];
 
-        // If custom SMTP Sender is defined in our plugin settings, we use it.
-        // Otherwise, we omit the From header to let standard WordPress mailer/SMTP plugins handle it.
-        $smtp_from_email = get_option('school_smtp_from_email');
-        $smtp_from_name = get_option('school_smtp_from_name');
+        $smtp_from_email = get_option('school_smtp_from_email', 'rameshseervi242628@gmail.com');
+        $smtp_from_name = get_option('school_smtp_from_name', 'Global School ERP');
         if (!empty($smtp_from_email)) {
-            $headers[] = 'From: ' . ($smtp_from_name ?: 'Global School ERP') . ' <' . $smtp_from_email . '>';
+            $headers[] = 'From: ' . $smtp_from_name . ' <' . $smtp_from_email . '>';
         }
 
         wp_mail($email, $subject, $message, $headers);
@@ -202,17 +201,18 @@ class AuthService {
 
         // Send Email
         $name = $user->display_name ?: $user->user_login;
-        $subject = 'School ERP Login Verification Code';
-        $message = "Hello $name,\n\nYour 6-digit login OTP verification code is: $otp\n\nThis code is valid for 15 minutes.\n\nThank you!";
+        $subject = get_option('school_email_subject', 'School ERP Verification Code');
+        $template = get_option('school_email_template', "Hello {name},\n\nYour 6-digit verification code is: {otp}\n\nThis code is valid for 15 minutes.\n\nThank you!");
+        $message = str_replace(['{name}', '{otp}'], [$name, $otp], $template);
         
         $headers = [
             'Content-Type: text/plain; charset=UTF-8'
         ];
 
-        $smtp_from_email = get_option('school_smtp_from_email');
-        $smtp_from_name = get_option('school_smtp_from_name');
+        $smtp_from_email = get_option('school_smtp_from_email', 'rameshseervi242628@gmail.com');
+        $smtp_from_name = get_option('school_smtp_from_name', 'Global School ERP');
         if (!empty($smtp_from_email)) {
-            $headers[] = 'From: ' . ($smtp_from_name ?: 'Global School ERP') . ' <' . $smtp_from_email . '>';
+            $headers[] = 'From: ' . $smtp_from_name . ' <' . $smtp_from_email . '>';
         }
 
         wp_mail($user->user_email, $subject, $message, $headers);

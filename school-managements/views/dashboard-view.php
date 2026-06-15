@@ -783,12 +783,12 @@
         <div class="auth-card">
             <div class="auth-logo">
                 <h2>Global School ERP</h2>
-                <p>Custom JWT School Management API Service</p>
+                <p>School ERP System to Manage Everything</p>
             </div>
 
             <!-- Prefilled credentials helpers -->
-            <div style="margin-bottom: 20px;">
-                <h5 style="font-size: 12px; color: var(--accent-blue); font-weight:600; margin-bottom: 8px;">Quick-Access Account Select</h5>
+            <div style="margin-bottom: 20px;" id="credentials-helper-container">
+                <h5 style="font-size: 12px; color: var(--accent-blue); font-weight:600; margin-bottom: 8px;">Test Credentials for fast development</h5>
                 <div class="demo-roles-grid">
                     <button class="demo-role-btn" onclick="prefillUser('schoolsuperadmin', '123456')">
                         <span class="demo-role-title">Super Admin</span>
@@ -822,7 +822,7 @@
                     <label>Username / Email</label>
                     <input type="text" id="username" class="form-input" placeholder="Select a role above or type..." oninput="checkLoginType()" required>
                 </div>
-                <div class="form-group" id="login-pass-group">
+                <div class="form-group" id="login-pass-group" style="display: none;">
                     <label>Password</label>
                     <input type="password" id="password" class="form-input" placeholder="••••••••">
                 </div>
@@ -830,7 +830,7 @@
                     <label>6-Digit Login Code</label>
                     <input type="text" id="login-otp" class="form-input" placeholder="e.g. 6-digit OTP code" maxlength="6">
                 </div>
-                <button type="submit" id="login-submit-btn" class="auth-submit-btn">Authorize & Login</button>
+                <button type="submit" id="login-submit-btn" class="auth-submit-btn">Login</button>
                 <p class="auth-toggle-tip">
                     Don't have an account? <a href="#" onclick="showRegister(event)">Register here</a>
                 </p>
@@ -1275,13 +1275,19 @@
                 'admin@school.erp', 'principal@school.erp', 'teacher@school.erp', 'accountant@school.erp', 'parent@school.erp', 'student@school.erp'
             ];
 
-            if (demoUsers.includes(val)) {
+            if (val === '') {
+                passGroup.style.display = 'none';
+                passwordInput.required = false;
+                otpGroup.style.display = 'none';
+                otpInput.required = false;
+                submitBtn.innerText = 'Login';
+            } else if (demoUsers.includes(val)) {
                 // Demo accounts: Password required
                 passGroup.style.display = 'block';
                 passwordInput.required = true;
                 otpGroup.style.display = 'none';
                 otpInput.required = false;
-                submitBtn.innerText = 'Authorize & Login';
+                submitBtn.innerText = 'Login';
             } else {
                 // Other accounts: OTP required, password hidden
                 passGroup.style.display = 'none';
@@ -1302,7 +1308,7 @@
             document.getElementById('username').value = username;
             document.getElementById('password').value = password;
             checkLoginType();
-            toast(`Prefilled as ${username.replace('school_', '').toUpperCase()}! Click login.`, 'success');
+            toast(`Prefilled as ${username.replace('school_', '').toUpperCase()}! Click Login.`, 'success');
         }
 
         // Toggle Auth views
@@ -1310,6 +1316,10 @@
             if (e) e.preventDefault();
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('register-form').style.display = 'block';
+            
+            // Hide credentials helper on register
+            const helper = document.getElementById('credentials-helper-container');
+            if (helper) helper.style.display = 'none';
             
             // Reset OTP fields
             document.getElementById('reg-otp-group').style.display = 'none';
@@ -1323,11 +1333,15 @@
             document.getElementById('login-form').style.display = 'block';
             document.getElementById('register-form').style.display = 'none';
             
+            // Show credentials helper on login
+            const helper = document.getElementById('credentials-helper-container');
+            if (helper) helper.style.display = 'block';
+            
             // Reset OTP fields
             document.getElementById('login-otp-group').style.display = 'none';
             document.getElementById('login-otp').required = false;
             document.getElementById('login-otp').value = '';
-            document.getElementById('login-submit-btn').innerText = 'Authorize & Login';
+            document.getElementById('login-submit-btn').innerText = 'Login';
             checkLoginType();
         }
 
@@ -1701,7 +1715,7 @@
                 .catch(err => {
                     toast(err.message, 'error');
                     submitBtn.disabled = false;
-                    submitBtn.innerText = 'Authorize & Login';
+                    submitBtn.innerText = 'Login';
                 });
             } else {
                 // Passwordless OTP Flow
