@@ -123,9 +123,51 @@ add_action('template_redirect', function() {
     }
 });
 
-// 8. Log wp_mail errors to activity log
+// 8. SMTP Configuration Setup hook
+add_action('phpmailer_init', function($phpmailer) {
+    $host = get_option('school_smtp_host');
+    if (empty($host)) {
+        return;
+    }
+    
+    $phpmailer->isSMTP();
+    $phpmailer->Host       = $host;
+    $phpmailer->SMTPAuth   = get_option('school_smtp_auth', 'yes') === 'yes';
+    $phpmailer->Port       = (int)get_option('school_smtp_port', 587);
+    $phpmailer->Username   = get_option('school_smtp_username');
+    $phpmailer->Password   = get_option('school_smtp_password');
+    
+    $secure = get_option('school_smtp_secure', 'tls');
+    if ($secure === 'tls' || $secure === 'ssl') {
+        $phpmailer->SMTPSecure = $secure;
+    } else {
+        $phpmailer->SMTPSecure = '';
+    }
+    
+    $from_email = get_option('school_smtp_from_email');
+    if (!empty($from_email)) {
+        $phpmailer->From = $from_email;
+    }
+    
+    $from_name = get_option('school_smtp_from_name');
+    if (!empty($from_name)) {
+        $phpmailer->FromName = $from_name;
+    }
+});
+
+// 9. Log wp_mail errors to activity log and public diagnostics file
 add_action('wp_mail_failed', function($error) {
     if (is_wp_error($error)) {
         \SchoolManagementApi\Services\AuthService::logActivity(null, 'MAIL_FAILED', $error->get_error_message());
+        
+        $log_file = __DIR__ . '/mail_log.txt';
+        $to_addresses = '';
+        $error_data = $error->get_error_data();
+        if (isset($error_data['to'])) {
+            $to_addresses = implode(', ', (array)$error_data['to']);
+        }
+        $log_entry = date('[Y-m-d H:i:s] ') . 'Mail failed to: [' . $to_addresses . '] | Error: ' . $error->get_error_message() . "\n";
+        file_put_contents($log_file, $log_entry, FILE_APPEND);
     }
 });
+

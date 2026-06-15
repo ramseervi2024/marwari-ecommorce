@@ -97,8 +97,8 @@ class AuthService {
             return new WP_Error('otp_expired', 'Verification OTP expired or invalid. Please request a new code.', ['status' => 400]);
         }
 
-        // Accept stored OTP OR guest bypass '123456'
-        if ($stored_data['otp'] !== $otp && $otp !== '123456') {
+        // Accept stored OTP
+        if ($stored_data['otp'] !== $otp) {
             return new WP_Error('invalid_otp', 'Invalid verification OTP. Please try again.', ['status' => 400]);
         }
 

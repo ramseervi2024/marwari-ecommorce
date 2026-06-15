@@ -765,7 +765,7 @@
                 </div>
                 <div class="form-group" id="reg-otp-group" style="display: none;">
                     <label>6-Digit Verification Code</label>
-                    <input type="text" id="reg-otp" class="form-input" placeholder="e.g. 123456 (or check email)" maxlength="6">
+                    <input type="text" id="reg-otp" class="form-input" placeholder="e.g. 6-digit OTP code" maxlength="6">
                 </div>
                 <button type="submit" id="reg-submit-btn" class="auth-submit-btn">Register Account</button>
                 <p class="auth-toggle-tip">
@@ -1143,6 +1143,60 @@
                             <button class="btn btn-secondary" onclick="testApiConnection()">Test API Connection</button>
                         </div>
                     </div>
+
+                    <!-- SMTP Settings Panel -->
+                    <div style="margin-top: 35px; border-top: 1px solid var(--glass-border); padding-top: 30px;">
+                        <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #fff;">SMTP Email Server Configuration</h4>
+                        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px; line-height: 1.5;">
+                            Configure mail server SMTP details to send real verification OTP codes to registered users during signup.
+                        </p>
+                        
+                        <form id="smtp-settings-form" onsubmit="saveSmtpSettings(event)" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                            <div class="form-group">
+                                <label for="smtp-host">SMTP Host</label>
+                                <input type="text" id="smtp-host" class="form-input" placeholder="e.g. smtp.gmail.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="smtp-port">SMTP Port</label>
+                                <input type="text" id="smtp-port" class="form-input" placeholder="e.g. 587" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="smtp-secure">Encryption / Secure Connection</label>
+                                <select id="smtp-secure" class="form-input" style="background: rgb(20, 20, 30);">
+                                    <option value="tls">TLS (Recommended for port 587)</option>
+                                    <option value="ssl">SSL (Recommended for port 465)</option>
+                                    <option value="none">None</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="smtp-auth">Authentication Required</label>
+                                <select id="smtp-auth" class="form-input" style="background: rgb(20, 20, 30);">
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="smtp-username">SMTP Username / Email Address</label>
+                                <input type="text" id="smtp-username" class="form-input" placeholder="e.g. rameshseervi242628@gmail.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="smtp-password">SMTP Password / App Password</label>
+                                <input type="password" id="smtp-password" class="form-input" placeholder="••••••••" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="smtp-from-email">Sender Email Address (From Email)</label>
+                                <input type="email" id="smtp-from-email" class="form-input" placeholder="e.g. no-reply@yourdomain.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="smtp-from-name">Sender Label (FromName)</label>
+                                <input type="text" id="smtp-from-name" class="form-input" placeholder="e.g. Global School ERP" required>
+                            </div>
+                            
+                            <div style="grid-column: span 2; display: flex; justify-content: flex-end; margin-top: 10px;">
+                                <button type="submit" id="smtp-submit-btn" class="auth-submit-btn" style="width: auto; padding: 12px 30px; margin-top: 0;">Save SMTP Settings</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </main>
@@ -1233,7 +1287,7 @@
                     return res.json();
                 })
                 .then(body => {
-                    toast('Verification OTP code sent to your email. Check inbox (or use 123456 for testing)!', 'success');
+                    toast('Verification OTP code sent to your email. Check inbox!', 'success');
                     otpGroup.style.display = 'block';
                     otpInput.required = true;
                     submitBtn.disabled = false;
@@ -1248,7 +1302,7 @@
                 // Phase 2: Verify and Register
                 const otpVal = otpInput.value;
                 if (!otpVal || otpVal.length < 6) {
-                    toast('Please enter the 6-digit OTP code sent to your email (or 123456 for testing).', 'error');
+                    toast('Please enter the 6-digit OTP code sent to your email.', 'error');
                     return;
                 }
                 
@@ -1327,6 +1381,7 @@
             } else if (tabName === 'apidocs') {
                 headerTitle.innerText = "Portal APIs Doc";
                 headerSubtitle.innerText = "Developer integration guides, Swagger endpoints list, and connectivity checks";
+                loadSmtpSettings();
             }
         }
 
@@ -1993,6 +2048,73 @@
             })
             .catch(err => {
                 toast(err.message, 'error');
+            });
+        }
+
+        // Fetch and load SMTP settings into the dashboard form
+        function loadSmtpSettings() {
+            fetch(`${API_URL}/auth/smtp`, {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to load SMTP settings.');
+                return res.json();
+            })
+            .then(body => {
+                const data = body.data;
+                document.getElementById('smtp-host').value = data.host || '';
+                document.getElementById('smtp-port').value = data.port || '587';
+                document.getElementById('smtp-secure').value = data.secure || 'tls';
+                document.getElementById('smtp-auth').value = data.auth || 'yes';
+                document.getElementById('smtp-username').value = data.username || '';
+                document.getElementById('smtp-password').value = data.password || '';
+                document.getElementById('smtp-from-email').value = data.from_email || 'rameshseervi242628@gmail.com';
+                document.getElementById('smtp-from-name').value = data.from_name || 'Global School ERP';
+            })
+            .catch(err => {
+                toast(err.message, 'error');
+            });
+        }
+
+        // Save custom SMTP settings via REST API
+        function saveSmtpSettings(e) {
+            e.preventDefault();
+            const btn = document.getElementById('smtp-submit-btn');
+            btn.disabled = true;
+            btn.innerText = 'Saving...';
+
+            const payload = {
+                host: document.getElementById('smtp-host').value,
+                port: document.getElementById('smtp-port').value,
+                secure: document.getElementById('smtp-secure').value,
+                auth: document.getElementById('smtp-auth').value,
+                username: document.getElementById('smtp-username').value,
+                password: document.getElementById('smtp-password').value,
+                from_email: document.getElementById('smtp-from-email').value,
+                from_name: document.getElementById('smtp-from-name').value
+            };
+
+            fetch(`${API_URL}/auth/smtp`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(res => {
+                if (!res.ok) return res.json().then(b => { throw new Error(b.message || 'Failed to save settings'); });
+                return res.json();
+            })
+            .then(body => {
+                toast('SMTP Configuration saved successfully!', 'success');
+                btn.disabled = false;
+                btn.innerText = 'Save SMTP Settings';
+            })
+            .catch(err => {
+                toast(err.message, 'error');
+                btn.disabled = false;
+                btn.innerText = 'Save SMTP Settings';
             });
         }
     </script>

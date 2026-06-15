@@ -52,6 +52,20 @@ class AuthRoutes {
             'permission_callback' => RoleMiddleware::hasCapability('read')
         ]);
 
+        // GET /auth/smtp
+        register_rest_route($namespace, '/auth/smtp', [
+            'methods' => 'GET',
+            'callback' => [$controller, 'getSmtpSettings'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_users')
+        ]);
+
+        // POST /auth/smtp
+        register_rest_route($namespace, '/auth/smtp', [
+            'methods' => 'POST',
+            'callback' => [$controller, 'saveSmtpSettings'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_users')
+        ]);
+
         // GET /auth/users
         register_rest_route($namespace, '/auth/users', [
             'methods' => 'GET',

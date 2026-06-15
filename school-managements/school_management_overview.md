@@ -68,7 +68,6 @@ During plugin activation, standard mock user accounts are generated automaticall
 ### User Registration OTP & Approval Flow
 
 - **OTP Dispatch**: New user registrations require 2-step verification. Initiating registration sends a 6-digit verification code to the requested email address.
-- **Guest / Test Bypass**: For guest users and testing/visiting purposes, entering the OTP `123456` will bypass the email check and succeed.
 - **Approval Requirement**: All new user registrations (except `school_super_admin`) receive a default status of `PENDING` upon registration.
 - **Login Behavior**: Pending users can successfully login and receive a JWT token, but will be intercepted by the UI and shown a message: *"Soon school_super_admin will approve and you will be having access of your panel."*
 - **Super Admin Review Page**: Under the **User Approvals** tab, the Super Admin can review registered accounts and set their status to `APPROVED`, `HOLD`, or `BLOCKED`, or permanently `DELETE` them.
@@ -95,7 +94,7 @@ During plugin activation, standard mock user accounts are generated automaticall
   ```json
   {
     "email": "robert@school.erp",
-    "otp": "123456"
+    "otp": "839201"
   }
   ```
 * **Response**: Registers user account in WordPress and sets the status to `PENDING` (needs super admin approval).
