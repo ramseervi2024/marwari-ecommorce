@@ -84,7 +84,8 @@ class AuthController extends BaseController {
             'username' => $user->user_login,
             'email' => $user->user_email,
             'name' => $user->display_name ?: $user->user_login,
-            'role' => !empty($user->roles) ? $user->roles[0] : ''
+            'role' => !empty($user->roles) ? $user->roles[0] : '',
+            'status' => get_user_meta($user->ID, 'school_user_status', true) ?: 'APPROVED'
         ]);
     }
 
@@ -96,5 +97,97 @@ class AuthController extends BaseController {
         delete_user_meta($user_id, 'school_refresh_token');
         AuthService::logActivity($user_id, 'LOGOUT', 'Successfully revoked refresh token and logged out');
         return $this->success('Logged out successfully');
+    }
+
+    /**
+     * GET /auth/users
+     */
+    public function getUsers(WP_REST_Request $request) {
+        $roles = ['school_super_admin', 'school_principal', 'school_teacher', 'school_accountant', 'school_parent', 'school_student'];
+        $users = get_users([
+            'role__in' => $roles,
+            'orderby' => 'ID',
+            'order' => 'DESC'
+        ]);
+
+        $data = [];
+        foreach ($users as $user) {
+            $data[] = [
+                'id' => $user->ID,
+                'username' => $user->user_login,
+                'email' => $user->user_email,
+                'name' => $user->display_name ?: $user->user_login,
+                'role' => !empty($user->roles) ? $user->roles[0] : '',
+                'status' => get_user_meta($user->ID, 'school_user_status', true) ?: 'APPROVED',
+                'registered_at' => $user->user_registered
+            ];
+        }
+
+        return $this->success('Users list fetched successfully', $data);
+    }
+
+    /**
+     * POST /auth/users/status
+     */
+    public function updateUserStatus(WP_REST_Request $request) {
+        $params = $request->get_json_params();
+        if (empty($params['user_id']) || empty($params['status'])) {
+            return $this->error('Validation failed: user_id and status are required.');
+        }
+
+        $user_id = intval($params['user_id']);
+        $status = strtoupper(sanitize_text_field($params['status']));
+
+        $allowed_statuses = ['PENDING', 'APPROVED', 'HOLD', 'BLOCKED'];
+        if (!in_array($status, $allowed_statuses)) {
+            return $this->error('Invalid status value. Must be PENDING, APPROVED, HOLD, or BLOCKED.');
+        }
+
+        $user = get_userdata($user_id);
+        if (!$user) {
+            return $this->error('User not found.', [], 404);
+        }
+
+        // Prevent modifying own status
+        if ($user_id === get_current_user_id()) {
+            return $this->error('You cannot change your own status.');
+        }
+
+        update_user_meta($user_id, 'school_user_status', $status);
+        AuthService::logActivity(get_current_user_id(), 'USER_STATUS_UPDATE', "Changed user ID $user_id status to $status");
+
+        return $this->success("User status updated to $status successfully", [
+            'user_id' => $user_id,
+            'status' => $status
+        ]);
+    }
+
+    /**
+     * DELETE /auth/users/:id
+     */
+    public function deleteUser(WP_REST_Request $request) {
+        $user_id = intval($request->get_param('id'));
+
+        $user = get_userdata($user_id);
+        if (!$user) {
+            return $this->error('User not found.', [], 404);
+        }
+
+        // Prevent self deletion
+        if ($user_id === get_current_user_id()) {
+            return $this->error('You cannot delete your own account.');
+        }
+
+        // Delete WordPress user
+        require_once ABSPATH . 'wp-admin/includes/user.php';
+        $deleted = wp_delete_user($user_id);
+
+        if (!$deleted) {
+            return $this->error('Failed to delete user.');
+        }
+
+        AuthService::logActivity(get_current_user_id(), 'USER_DELETED', "Deleted user ID $user_id ($user->user_login)");
+
+        return $this->success('User deleted successfully');
     }
 }

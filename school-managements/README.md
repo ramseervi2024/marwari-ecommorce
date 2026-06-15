@@ -776,3 +776,15 @@ Error
 21. Sample Postman Collection
 
 Code should be enterprise-grade, scalable, production-ready, and follow WordPress coding standards.
+
+---
+
+# Registration Approval Flow & Updated Credentials
+
+- **Super Admin Credentials**:
+  - **Username**: `schoolsuperadmin`
+  - **Password**: `123456`
+- **Approval Workflow**:
+  - All non-super-admin role registrations default to `PENDING` status.
+  - Upon logging in, pending users are intercepted in the portal and shown a status-screen overlay: *"Soon school_super_admin will approve and you will be having access of your panel."*
+  - The `school_super_admin` has a dedicated **User Approvals** tab in the sidebar navigation to view requested roles and **Approve**, **Hold**, **Block**, or **Delete** registered accounts.

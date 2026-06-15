@@ -58,12 +58,18 @@ During plugin activation, standard mock user accounts are generated automaticall
 
 | Username | Password | Assigned Role | Capabilities / Permissions |
 | :--- | :--- | :--- | :--- |
-| `school_admin` | `adminpass123` | `school_super_admin` | Full control over settings, users, and financials |
+| `schoolsuperadmin` | `123456` | `school_super_admin` | Full control over settings, users, approvals, and financials |
 | `school_principal` | `principalpass123` | `school_principal` | Manage students, teachers, academics, and views |
 | `school_teacher` | `teacherpass123` | `school_teacher` | Manage assigned class attendance, marks, and homework |
 | `school_accountant` | `accountantpass123` | `school_accountant` | Manage fees, payroll, expenses, and invoices |
 | `school_parent` | `parentpass123` | `school_parent` | View child attendance, grades, notices, and fees |
 | `school_student` | `studentpass123` | `school_student` | View own attendance, grades, timetable, and homework |
+
+### User Registration Approval Flow
+
+- **Approval Requirement**: All new user registrations (except `school_super_admin`) receive a default status of `PENDING` upon registration.
+- **Login Behavior**: Pending users can successfully login and receive a JWT token, but will be intercepted by the UI and shown a message: *"Soon school_super_admin will approve and you will be having access of your panel."*
+- **Super Admin Review Page**: Under the **User Approvals** tab, the Super Admin can review registered accounts and set their status to `APPROVED`, `HOLD`, or `BLOCKED`, or permanently `DELETE` them.
 
 ### Authentication Endpoints
 
@@ -85,8 +91,8 @@ During plugin activation, standard mock user accounts are generated automaticall
 * **Request Payload**:
   ```json
   {
-    "username": "school_admin",
-    "password": "adminpass123"
+    "username": "schoolsuperadmin",
+    "password": "123456"
   }
   ```
 * **Response Payload**:
@@ -99,10 +105,11 @@ During plugin activation, standard mock user accounts are generated automaticall
       "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX...",
       "user": {
         "id": 5,
-        "username": "school_admin",
+        "username": "schoolsuperadmin",
         "email": "admin@school.erp",
         "name": "School Super Admin",
-        "role": "school_super_admin"
+        "role": "school_super_admin",
+        "status": "APPROVED"
       }
     }
   }

@@ -693,9 +693,9 @@
             <div style="margin-bottom: 20px;">
                 <h5 style="font-size: 12px; color: var(--accent-blue); font-weight:600; margin-bottom: 8px;">Quick-Access Account Select</h5>
                 <div class="demo-roles-grid">
-                    <button class="demo-role-btn" onclick="prefillUser('school_admin', 'adminpass123')">
+                    <button class="demo-role-btn" onclick="prefillUser('schoolsuperadmin', '123456')">
                         <span class="demo-role-title">Super Admin</span>
-                        <span class="demo-role-user">school_admin</span>
+                        <span class="demo-role-user">schoolsuperadmin</span>
                     </button>
                     <button class="demo-role-btn" onclick="prefillUser('school_principal', 'principalpass123')">
                         <span class="demo-role-title">Principal</span>
@@ -771,6 +771,24 @@
         </div>
     </div>
 
+    <!-- 3. PENDING APPROVAL SCREEN -->
+    <div class="auth-container" id="pending-screen" style="display: none;">
+        <div class="auth-card" style="text-align: center;">
+            <div class="auth-logo">
+                <h2>Access Pending Approval</h2>
+                <p>Global School ERP</p>
+            </div>
+            <div style="margin: 30px 0; display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                <div class="live-dot" style="width: 20px; height: 20px; background-color: var(--accent-pink);"></div>
+                <h3 id="pending-title" style="font-size: 18px; font-weight: 600;">Account Under Review</h3>
+                <p id="pending-message" style="color: var(--text-muted); font-size: 14px; line-height: 1.5;">
+                    Soon school_super_admin will approve and you will be having access of your panel.
+                </p>
+            </div>
+            <button class="auth-submit-btn" onclick="logout()" style="background: rgba(239, 68, 68, 0.2); border: 1px solid var(--accent-pink); box-shadow: none;">Log Out / Back</button>
+        </div>
+    </div>
+
     <!-- 2. MAIN APP CONTAINER -->
     <div class="app-container" id="app-screen" style="display: none;">
         <!-- Sidebar Navigation -->
@@ -789,6 +807,7 @@
                     <li id="menu-fees"><button class="menu-item" onclick="switchTab('fees')">Fees Module</button></li>
                     <li id="menu-library"><button class="menu-item" onclick="switchTab('library')">Library</button></li>
                     <li id="menu-transport"><button class="menu-item" onclick="switchTab('transport')">Transport</button></li>
+                    <li id="menu-approvals"><button class="menu-item" onclick="switchTab('approvals')">User Approvals</button></li>
                 </ul>
             </div>
             
@@ -1077,6 +1096,31 @@
                 </div>
             </div>
 
+            <!-- TAB 9: APPROVALS -->
+            <div class="tab-panel" id="tab-approvals">
+                <div class="table-container">
+                    <div class="table-header-row">
+                        <h3>Requested User Roles & Registration Approvals</h3>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Registered At</th>
+                                <th style="text-align: right; width: 180px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="approvals-table-body">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <!-- Quick Action Panel -->
             <footer class="quick-actions" style="margin-top: 30px;">
                 <div>
@@ -1205,6 +1249,8 @@
                 loadLibrary();
             } else if (tabName === 'transport') {
                 loadTransport();
+            } else if (tabName === 'approvals') {
+                loadApprovals();
             }
         }
 
@@ -1215,8 +1261,8 @@
 
             // Define visible menus for roles
             const menuMapping = {
-                'administrator': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport'],
-                'school_super_admin': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport'],
+                'administrator': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport', 'approvals'],
+                'school_super_admin': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport', 'approvals'],
                 'school_principal': ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'library', 'transport'],
                 'school_teacher': ['dashboard', 'students', 'attendance', 'timetable'],
                 'school_accountant': ['dashboard', 'teachers', 'fees'],
@@ -1227,7 +1273,7 @@
             const visibleMenus = menuMapping[role] || ['dashboard'];
 
             // Show/hide menu items
-            const menus = ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport'];
+            const menus = ['dashboard', 'students', 'teachers', 'attendance', 'timetable', 'fees', 'library', 'transport', 'approvals'];
             menus.forEach(menu => {
                 const el = document.getElementById(`menu-${menu}`);
                 if (el) {
@@ -1317,18 +1363,43 @@
         function showAuthScreen() {
             document.getElementById('auth-screen').style.display = 'flex';
             document.getElementById('app-screen').style.display = 'none';
+            document.getElementById('pending-screen').style.display = 'none';
         }
 
         function showAppScreen() {
+            if (!currentUser) return;
+
+            // Check if user is approved
+            const status = currentUser.status || 'APPROVED';
+            if (status !== 'APPROVED') {
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app-screen').style.display = 'none';
+                document.getElementById('pending-screen').style.display = 'flex';
+
+                const titleEl = document.getElementById('pending-title');
+                const msgEl = document.getElementById('pending-message');
+
+                if (status === 'BLOCKED') {
+                    titleEl.innerText = "Account Blocked";
+                    msgEl.innerText = "Your account has been blocked by the school_super_admin. Please contact support.";
+                } else if (status === 'HOLD') {
+                    titleEl.innerText = "Account On Hold";
+                    msgEl.innerText = "Your account is currently on hold. Soon school_super_admin will approve and you will be having access of your panel.";
+                } else {
+                    titleEl.innerText = "Access Pending Approval";
+                    msgEl.innerText = "Soon school_super_admin will approve and you will be having access of your panel.";
+                }
+                return;
+            }
+
             document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('pending-screen').style.display = 'none';
             document.getElementById('app-screen').style.display = 'flex';
             
             // Set User card
-            if (currentUser) {
-                document.getElementById('profile-name').innerText = currentUser.name;
-                document.getElementById('profile-role').innerText = currentUser.role.replace('school_', '').replace('_', ' ').toUpperCase();
-                document.getElementById('profile-avatar').innerText = currentUser.name.split(' ').map(n=>n[0]).join('').toUpperCase().substring(0, 2);
-            }
+            document.getElementById('profile-name').innerText = currentUser.name;
+            document.getElementById('profile-role').innerText = currentUser.role.replace('school_', '').replace('_', ' ').toUpperCase();
+            document.getElementById('profile-avatar').innerText = currentUser.name.split(' ').map(n=>n[0]).join('').toUpperCase().substring(0, 2);
             
             configureUIPermissions();
             switchTab('dashboard');
@@ -1723,6 +1794,110 @@
                 })
                 .catch(() => toast('Server error.', 'error'));
             }
+        }
+
+        // Load approvals list for Super Admin
+        function loadApprovals() {
+            fetch(`${API_URL}/auth/users`, {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to load user list.');
+                return res.json();
+            })
+            .then(body => {
+                const tbody = document.getElementById('approvals-table-body');
+                tbody.innerHTML = '';
+                if (!body.data || body.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No users registered yet.</td></tr>';
+                    return;
+                }
+                body.data.forEach(user => {
+                    const tr = document.createElement('tr');
+                    
+                    // Style badges based on user status
+                    let badgeStyle = "padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block;";
+                    if (user.status === 'APPROVED') {
+                        badgeStyle += " background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald);";
+                    } else if (user.status === 'PENDING') {
+                        badgeStyle += " background: rgba(59, 130, 246, 0.15); color: var(--accent-blue);";
+                    } else if (user.status === 'HOLD') {
+                        badgeStyle += " background: rgba(245, 158, 11, 0.15); color: #f59e0b;";
+                    } else if (user.status === 'BLOCKED') {
+                        badgeStyle += " background: rgba(239, 68, 68, 0.15); color: var(--accent-pink);";
+                    }
+
+                    const isSelf = user.id === currentUser.id;
+                    const actionButtons = isSelf ? `<em>Current User</em>` : `
+                        <button class="action-icon-btn" onclick="changeApprovalStatus(${user.id}, 'APPROVED')" title="Approve" style="border-color: var(--accent-emerald); color: var(--accent-emerald);">✓</button>
+                        <button class="action-icon-btn" onclick="changeApprovalStatus(${user.id}, 'HOLD')" title="Hold" style="border-color: #f59e0b; color: #f59e0b;">⏳</button>
+                        <button class="action-icon-btn" onclick="changeApprovalStatus(${user.id}, 'BLOCKED')" title="Block" style="border-color: var(--accent-pink); color: var(--accent-pink);">🚫</button>
+                        <button class="action-icon-btn" onclick="deleteUserRecord(${user.id})" title="Delete" style="border-color: #ef4444; color: #ef4444;">🗑</button>
+                    `;
+
+                    // Format role name nicely
+                    const roleName = user.role.replace('school_', '').replace('_', ' ').toUpperCase();
+
+                    tr.innerHTML = `
+                        <td>${user.username}</td>
+                        <td>${user.email || '-'}</td>
+                        <td>${user.name}</td>
+                        <td>${roleName}</td>
+                        <td><span style="${badgeStyle}">${user.status}</span></td>
+                        <td>${user.registered_at ? new Date(user.registered_at).toLocaleDateString() : '-'}</td>
+                        <td style="text-align: right;">
+                            ${actionButtons}
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(err => {
+                toast(err.message, 'error');
+            });
+        }
+
+        // Change status of a registered user
+        function changeApprovalStatus(userId, status) {
+            fetch(`${API_URL}/auth/users/status`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify({ user_id: userId, status: status })
+            })
+            .then(res => {
+                if (!res.ok) return res.json().then(b => { throw new Error(b.message || 'Failed to update user status'); });
+                return res.json();
+            })
+            .then(body => {
+                toast(`User status updated to ${status}!`, 'success');
+                loadApprovals();
+            })
+            .catch(err => {
+                toast(err.message, 'error');
+            });
+        }
+
+        // Permanently delete a registered user
+        function deleteUserRecord(userId) {
+            if (!confirm('Are you sure you want to permanently delete this user?')) return;
+            fetch(`${API_URL}/auth/users/${userId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            })
+            .then(res => {
+                if (!res.ok) return res.json().then(b => { throw new Error(b.message || 'Failed to delete user'); });
+                return res.json();
+            })
+            .then(body => {
+                toast('User account permanently deleted!', 'success');
+                loadApprovals();
+            })
+            .catch(err => {
+                toast(err.message, 'error');
+            });
         }
     </script>
 </body>

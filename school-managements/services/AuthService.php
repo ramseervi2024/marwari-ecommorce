@@ -65,14 +65,19 @@ class AuthService {
 
         update_user_meta($user_id, 'nickname', $name);
 
-        self::logActivity($user_id, 'REGISTER', "User registered as $role from IP");
+        // Assign status: Super Admin is approved automatically; others are PENDING
+        $status = ($role === 'school_super_admin') ? 'APPROVED' : 'PENDING';
+        update_user_meta($user_id, 'school_user_status', $status);
+
+        self::logActivity($user_id, 'REGISTER', "User registered as $role with status $status from IP");
 
         return [
             'id' => $user_id,
             'username' => $username,
             'email' => $email,
             'name' => $name,
-            'role' => $role
+            'role' => $role,
+            'status' => $status
         ];
     }
 
@@ -108,7 +113,9 @@ class AuthService {
         // Store refresh token in user meta for rotation validation
         update_user_meta($user->ID, 'school_refresh_token', $refresh_token);
 
-        self::logActivity($user->ID, 'LOGIN_SUCCESS', "Successfully authenticated via JWT Bearer Token");
+        $status = get_user_meta($user->ID, 'school_user_status', true) ?: 'APPROVED';
+
+        self::logActivity($user->ID, 'LOGIN_SUCCESS', "Successfully authenticated via JWT Bearer Token (Status: $status)");
 
         return [
             'token' => $token,
@@ -118,7 +125,8 @@ class AuthService {
                 'username' => $user->user_login,
                 'email' => $user->user_email,
                 'name' => $user->display_name ?: $user->user_login,
-                'role' => $role
+                'role' => $role,
+                'status' => $status
             ]
         ];
     }
@@ -157,11 +165,21 @@ class AuthService {
 
         update_user_meta($user_id, 'school_refresh_token', $new_refresh);
 
+        $status = get_user_meta($user_id, 'school_user_status', true) ?: 'APPROVED';
+
         self::logActivity($user_id, 'TOKEN_REFRESH', "Rotated JWT and Refresh tokens");
 
         return [
             'token' => $new_token,
-            'refresh_token' => $new_refresh
+            'refresh_token' => $new_refresh,
+            'user' => [
+                'id' => $user->ID,
+                'username' => $user->user_login,
+                'email' => $user->user_email,
+                'name' => $user->display_name ?: $user->user_login,
+                'role' => $role,
+                'status' => $status
+            ]
         ];
     }
 }

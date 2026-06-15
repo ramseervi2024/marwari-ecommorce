@@ -44,5 +44,26 @@ class AuthRoutes {
             'callback' => [$controller, 'logout'],
             'permission_callback' => RoleMiddleware::hasCapability('read')
         ]);
+
+        // GET /auth/users
+        register_rest_route($namespace, '/auth/users', [
+            'methods' => 'GET',
+            'callback' => [$controller, 'getUsers'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_users')
+        ]);
+
+        // POST /auth/users/status
+        register_rest_route($namespace, '/auth/users/status', [
+            'methods' => 'POST',
+            'callback' => [$controller, 'updateUserStatus'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_users')
+        ]);
+
+        // DELETE /auth/users/:id
+        register_rest_route($namespace, '/auth/users/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$controller, 'deleteUser'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_users')
+        ]);
     }
 }

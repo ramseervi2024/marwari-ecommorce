@@ -409,11 +409,37 @@ class Migrations {
         }
     }
 
-    /**
-     * Seeds initial mock user accounts
-     */
     private static function seed_test_accounts() {
-        self::create_test_user('school_admin', 'admin@school.erp', 'adminpass123', 'School Super Admin', 'school_super_admin');
+        // Delete old school_admin if exists
+        $old_admin_id = username_exists('school_admin');
+        if ($old_admin_id) {
+            require_once ABSPATH . 'wp-admin/includes/user.php';
+            wp_delete_user($old_admin_id);
+        }
+        
+        // Ensure new schoolsuperadmin with password 123456 exists
+        $super_admin_id = username_exists('schoolsuperadmin');
+        if ($super_admin_id) {
+            wp_set_password('123456', $super_admin_id);
+            $user = get_userdata($super_admin_id);
+            if (!in_array('school_super_admin', $user->roles)) {
+                $user->set_role('school_super_admin');
+            }
+            update_user_meta($super_admin_id, 'school_user_status', 'APPROVED');
+        } else {
+            $user_id = wp_insert_user([
+                'user_login' => 'schoolsuperadmin',
+                'user_email' => 'admin@school.erp',
+                'user_pass' => '123456',
+                'display_name' => 'School Super Admin',
+                'first_name' => 'School Super Admin',
+                'role' => 'school_super_admin'
+            ]);
+            if (!is_wp_error($user_id)) {
+                update_user_meta($user_id, 'school_user_status', 'APPROVED');
+            }
+        }
+
         self::create_test_user('school_principal', 'principal@school.erp', 'principalpass123', 'School Principal', 'school_principal');
         self::create_test_user('school_teacher', 'teacher@school.erp', 'teacherpass123', 'School Teacher', 'school_teacher');
         self::create_test_user('school_accountant', 'accountant@school.erp', 'accountantpass123', 'School Accountant', 'school_accountant');
@@ -425,8 +451,9 @@ class Migrations {
      * Helper to insert test accounts
      */
     private static function create_test_user(string $username, string $email, string $password, string $display_name, string $role) {
-        if (!username_exists($username) && !email_exists($email)) {
-            wp_insert_user([
+        $user_id = username_exists($username);
+        if (!$user_id && !email_exists($email)) {
+            $user_id = wp_insert_user([
                 'user_login' => $username,
                 'user_email' => $email,
                 'user_pass' => $password,
@@ -434,6 +461,9 @@ class Migrations {
                 'first_name' => $display_name,
                 'role' => $role
             ]);
+        }
+        if ($user_id && !is_wp_error($user_id)) {
+            update_user_meta($user_id, 'school_user_status', 'APPROVED');
         }
     }
 
