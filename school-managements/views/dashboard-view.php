@@ -829,6 +829,7 @@
                 <div class="form-group" id="login-otp-group" style="display: none;">
                     <label>6-Digit Login Code</label>
                     <input type="text" id="login-otp" class="form-input" placeholder="e.g. 6-digit OTP code" maxlength="6">
+                    <div id="login-otp-timer-container" style="margin-top: 8px; font-size: 13px; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between;"></div>
                 </div>
                 <button type="submit" id="login-submit-btn" class="auth-submit-btn">Login</button>
                 <p class="auth-toggle-tip">
@@ -863,6 +864,7 @@
                 <div class="form-group" id="reg-otp-group" style="display: none;">
                     <label>6-Digit Verification Code</label>
                     <input type="text" id="reg-otp" class="form-input" placeholder="e.g. 6-digit OTP code" maxlength="6">
+                    <div id="reg-otp-timer-container" style="margin-top: 8px; font-size: 13px; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between;"></div>
                 </div>
                 <button type="submit" id="reg-submit-btn" class="auth-submit-btn">Register Account</button>
                 <p class="auth-toggle-tip">
@@ -1170,43 +1172,12 @@
 
                     <!-- SMTP Settings Panel -->
                     <div style="margin-top: 35px; border-top: 1px solid var(--glass-border); padding-top: 30px;">
-                        <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #fff;">SMTP Email Server Configuration</h4>
+                        <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #fff;">Email Verification Settings</h4>
                         <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px; line-height: 1.5;">
-                            Configure mail server SMTP details to send real verification OTP codes to registered users during signup.
+                            Configure the sender identity, subject line, and body template for verification OTP emails. The system uses WordPress's default email server configuration.
                         </p>
                         
                         <form id="smtp-settings-form" onsubmit="saveSmtpSettings(event)" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
-                            <div class="form-group">
-                                <label for="smtp-host">SMTP Host</label>
-                                <input type="text" id="smtp-host" class="form-input" placeholder="e.g. smtp.gmail.com" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="smtp-port">SMTP Port</label>
-                                <input type="text" id="smtp-port" class="form-input" placeholder="e.g. 587" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="smtp-secure">Encryption / Secure Connection</label>
-                                <select id="smtp-secure" class="form-input" style="background: rgb(20, 20, 30);">
-                                    <option value="tls">TLS (Recommended for port 587)</option>
-                                    <option value="ssl">SSL (Recommended for port 465)</option>
-                                    <option value="none">None</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="smtp-auth">Authentication Required</label>
-                                <select id="smtp-auth" class="form-input" style="background: rgb(20, 20, 30);">
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="smtp-username">SMTP Username / Email Address</label>
-                                <input type="text" id="smtp-username" class="form-input" placeholder="e.g. rameshseervi242628@gmail.com" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="smtp-password">SMTP Password / App Password</label>
-                                <input type="password" id="smtp-password" class="form-input" placeholder="••••••••" required>
-                            </div>
                             <div class="form-group">
                                 <label for="smtp-from-email">Sender Email Address (From Email)</label>
                                 <input type="email" id="smtp-from-email" class="form-input" placeholder="e.g. no-reply@yourdomain.com" required>
@@ -1215,9 +1186,20 @@
                                 <label for="smtp-from-name">Sender Label (FromName)</label>
                                 <input type="text" id="smtp-from-name" class="form-input" placeholder="e.g. Global School ERP" required>
                             </div>
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label for="smtp-subject">Email Subject</label>
+                                <input type="text" id="smtp-subject" class="form-input" placeholder="e.g. School ERP Verification Code" required>
+                            </div>
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label for="smtp-template">Email Template Body</label>
+                                <textarea id="smtp-template" class="form-input" style="min-height: 120px; resize: vertical; font-family: monospace; line-height: 1.6;" placeholder="Hello {name},\n\nYour 6-digit verification code is: {otp}\n\nThis code is valid for 15 minutes.\n\nThank you!" required></textarea>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">
+                                    Available placeholders: <code>{name}</code> (user's name) and <code>{otp}</code> (6-digit verification code).
+                                </p>
+                            </div>
                             
                             <div style="grid-column: span 2; display: flex; justify-content: flex-end; margin-top: 10px;">
-                                <button type="submit" id="smtp-submit-btn" class="auth-submit-btn" style="width: auto; padding: 12px 30px; margin-top: 0;">Save SMTP Settings</button>
+                                <button type="submit" id="smtp-submit-btn" class="auth-submit-btn" style="width: auto; padding: 12px 30px; margin-top: 0;">Save Email Settings</button>
                             </div>
                         </form>
                     </div>
@@ -1259,6 +1241,10 @@
         const API_URL = '/wp-json/school-management/v1';
         let authToken = localStorage.getItem('school_jwt_token') || '';
         let currentUser = null;
+        let otpCountdownIntervals = {
+            login: null,
+            register: null
+        };
 
         // Check login type (demo vs OTP based)
         function checkLoginType() {
@@ -1326,6 +1312,14 @@
             document.getElementById('reg-otp').required = false;
             document.getElementById('reg-otp').value = '';
             document.getElementById('reg-submit-btn').innerText = 'Register Account';
+            
+            // Reset timers
+            if (otpCountdownIntervals.login) {
+                clearInterval(otpCountdownIntervals.login);
+                otpCountdownIntervals.login = null;
+            }
+            const loginTimerContainer = document.getElementById('login-otp-timer-container');
+            if (loginTimerContainer) loginTimerContainer.innerHTML = '';
         }
 
         function showLogin(e) {
@@ -1343,6 +1337,14 @@
             document.getElementById('login-otp').value = '';
             document.getElementById('login-submit-btn').innerText = 'Login';
             checkLoginType();
+            
+            // Reset timers
+            if (otpCountdownIntervals.register) {
+                clearInterval(otpCountdownIntervals.register);
+                otpCountdownIntervals.register = null;
+            }
+            const regTimerContainer = document.getElementById('reg-otp-timer-container');
+            if (regTimerContainer) regTimerContainer.innerHTML = '';
         }
 
         // User registration handler
@@ -1380,6 +1382,7 @@
                     otpInput.required = true;
                     submitBtn.disabled = false;
                     submitBtn.innerText = 'Verify & Register';
+                    startOtpTimer('register');
                 })
                 .catch(err => {
                     toast(err.message, 'error');
@@ -1739,6 +1742,7 @@
                         otpInput.required = true;
                         submitBtn.disabled = false;
                         submitBtn.innerText = 'Verify & Login';
+                        startOtpTimer('login');
                     })
                     .catch(err => {
                         toast(err.message, 'error');
@@ -1780,6 +1784,100 @@
                 }
             }
         });
+
+        // OTP Countdown Timer Logic
+        function startOtpTimer(type) {
+            const containerId = type === 'login' ? 'login-otp-timer-container' : 'reg-otp-timer-container';
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            if (otpCountdownIntervals[type]) {
+                clearInterval(otpCountdownIntervals[type]);
+            }
+
+            let timeLeft = 60;
+            
+            function updateTimerDisplay() {
+                if (timeLeft > 0) {
+                    container.innerHTML = `<span>Resend code in <strong style="color: #fff;">${timeLeft}s</strong></span>`;
+                    timeLeft--;
+                } else {
+                    clearInterval(otpCountdownIntervals[type]);
+                    otpCountdownIntervals[type] = null;
+                    container.innerHTML = `<a href="#" onclick="resendOtp(event, '${type}')" style="color: var(--accent-blue); text-decoration: none; font-weight: 500; transition: color 0.2s;" onmouseover="this.style.color='#93c5fd'" onmouseout="this.style.color='var(--accent-blue)'">Resend OTP Code</a>`;
+                }
+            }
+
+            updateTimerDisplay();
+            otpCountdownIntervals[type] = setInterval(updateTimerDisplay, 1000);
+        }
+
+        function resendOtp(e, type) {
+            if (e) e.preventDefault();
+            
+            if (type === 'login') {
+                const usernameInput = document.getElementById('username');
+                const u = usernameInput.value.trim();
+                const container = document.getElementById('login-otp-timer-container');
+                if (!u) {
+                    toast('Please enter a username or email address.', 'error');
+                    return;
+                }
+
+                container.innerHTML = `<span style="color: var(--text-muted);">Resending...</span>`;
+
+                fetch(`${API_URL}/auth/login/initiate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u })
+                })
+                .then(res => {
+                    if (!res.ok) return res.json().then(b => { throw new Error(b.message || 'Failed to resend login code.'); });
+                    return res.json();
+                })
+                .then(body => {
+                    toast('A new login code has been sent to your email.', 'success');
+                    startOtpTimer('login');
+                })
+                .catch(err => {
+                    toast(err.message, 'error');
+                    container.innerHTML = `<a href="#" onclick="resendOtp(event, 'login')" style="color: var(--accent-blue); text-decoration: none; font-weight: 500;">Resend OTP Code</a>`;
+                });
+            } else if (type === 'register') {
+                const u = document.getElementById('reg-username').value;
+                const em = document.getElementById('reg-email').value;
+                const n = document.getElementById('reg-name').value;
+                const r = document.getElementById('reg-role').value;
+                const container = document.getElementById('reg-otp-timer-container');
+
+                if (!u || !em || !n || !r) {
+                    toast('Please fill out all registration fields first.', 'error');
+                    return;
+                }
+
+                container.innerHTML = `<span style="color: var(--text-muted);">Resending...</span>`;
+
+                fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, email: em, name: n, role: r })
+                })
+                .then(res => {
+                    if (!res.ok) {
+                        return res.json().then(body => { throw new Error(body.message || 'OTP resending failed'); });
+                    }
+                    return res.json();
+                })
+                .then(body => {
+                    toast('A new verification code has been sent to your email.', 'success');
+                    startOtpTimer('register');
+                })
+                .catch(err => {
+                    toast(err.message, 'error');
+                    container.innerHTML = `<a href="#" onclick="resendOtp(event, 'register')" style="color: var(--accent-blue); text-decoration: none; font-weight: 500;">Resend OTP Code</a>`;
+                });
+            }
+        }
 
         // Helper to draw dynamic SVG line charts
         function drawLineChartSvg(data, xKey, yKey, colorGradId, strokeColor) {
@@ -3243,14 +3341,10 @@
             })
             .then(body => {
                 const data = body.data;
-                document.getElementById('smtp-host').value = data.host || '';
-                document.getElementById('smtp-port').value = data.port || '587';
-                document.getElementById('smtp-secure').value = data.secure || 'tls';
-                document.getElementById('smtp-auth').value = data.auth || 'yes';
-                document.getElementById('smtp-username').value = data.username || '';
-                document.getElementById('smtp-password').value = data.password || '';
                 document.getElementById('smtp-from-email').value = data.from_email || 'rameshseervi242628@gmail.com';
                 document.getElementById('smtp-from-name').value = data.from_name || 'Global School ERP';
+                document.getElementById('smtp-subject').value = data.subject || 'School ERP Verification Code';
+                document.getElementById('smtp-template').value = data.template || '';
             })
             .catch(err => {
                 toast(err.message, 'error');
@@ -3265,14 +3359,10 @@
             btn.innerText = 'Saving...';
 
             const payload = {
-                host: document.getElementById('smtp-host').value,
-                port: document.getElementById('smtp-port').value,
-                secure: document.getElementById('smtp-secure').value,
-                auth: document.getElementById('smtp-auth').value,
-                username: document.getElementById('smtp-username').value,
-                password: document.getElementById('smtp-password').value,
                 from_email: document.getElementById('smtp-from-email').value,
-                from_name: document.getElementById('smtp-from-name').value
+                from_name: document.getElementById('smtp-from-name').value,
+                subject: document.getElementById('smtp-subject').value,
+                template: document.getElementById('smtp-template').value
             };
 
             fetch(`${API_URL}/auth/smtp`, {
@@ -3288,14 +3378,14 @@
                 return res.json();
             })
             .then(body => {
-                toast('SMTP Configuration saved successfully!', 'success');
+                toast('Email settings saved successfully!', 'success');
                 btn.disabled = false;
-                btn.innerText = 'Save SMTP Settings';
+                btn.innerText = 'Save Email Settings';
             })
             .catch(err => {
                 toast(err.message, 'error');
                 btn.disabled = false;
-                btn.innerText = 'Save SMTP Settings';
+                btn.innerText = 'Save Email Settings';
             });
         }
     </script>
