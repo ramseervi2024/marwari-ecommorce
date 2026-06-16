@@ -1,0 +1,256 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Manufacturing ERP API Documentation",
+    "version": "1.0.0",
+    "description": "Enterprise-grade REST API endpoints for factory floor production plans, raw materials, supplier POs, job work, finished inventory, quality checks, dispatches, and warehouse operations."
+  },
+  "servers": [
+    {
+      "url": "/wp-json/manufacturing-management/v1"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Initiate operator profile registration (OTP)",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "email", "name"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "name": { "type": "string" },
+                  "role": { "type": "string", "enum": ["mfg_production_manager", "mfg_purchase_manager", "mfg_store_manager", "mfg_quality_inspector", "mfg_dispatch_manager"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP verification mail dispatched successfully." }
+        }
+      }
+    },
+    "/auth/register/verify": {
+      "post": {
+        "summary": "Verify OTP and active registration",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "otp"],
+                "properties": {
+                  "email": { "type": "string" },
+                  "otp": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Operator profile created in pending state." }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Authenticate user operator",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" },
+                  "otp": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "JWT Access & Refresh tokens returned." }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Get authenticated user profile",
+        "responses": {
+          "200": { "description": "Profile data returned." }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Sign out and clear session tokens",
+        "responses": {
+          "200": { "description": "Tokens deleted." }
+        }
+      }
+    },
+    "/raw-materials": {
+      "get": {
+        "summary": "List all raw materials",
+        "responses": {
+          "200": { "description": "List returned." }
+        }
+      },
+      "post": {
+        "summary": "Create raw material input",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["material_code", "material_name"],
+                "properties": {
+                  "material_code": { "type": "string" },
+                  "material_name": { "type": "string" },
+                  "category": { "type": "string" },
+                  "unit": { "type": "string" },
+                  "minimum_stock": { "type": "number" },
+                  "current_stock": { "type": "number" },
+                  "purchase_price": { "type": "number" },
+                  "supplier_id": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Raw material registered." }
+        }
+      }
+    },
+    "/raw-materials/{id}": {
+      "get": {
+        "summary": "Get raw material detail",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Details returned." } }
+      },
+      "put": {
+        "summary": "Update raw material",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "material_name": { "type": "string" },
+                  "current_stock": { "type": "number" },
+                  "minimum_stock": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Updated." } }
+      },
+      "delete": {
+        "summary": "Delete raw material",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted." } }
+      }
+    },
+    "/suppliers": {
+      "get": { "summary": "List all suppliers" },
+      "post": { "summary": "Create supplier profile" }
+    },
+    "/purchases": {
+      "get": { "summary": "List all PO purchases" },
+      "post": { "summary": "Create PO purchase" }
+    },
+    "/bom": {
+      "get": { "summary": "List BOM formulations" },
+      "post": { "summary": "Create BOM formula" }
+    },
+    "/production-plans": {
+      "get": { "summary": "List production plans" },
+      "post": { "summary": "Create production plan" }
+    },
+    "/work-orders": {
+      "get": { "summary": "List work orders" },
+      "post": { "summary": "Create work order" }
+    },
+    "/work-orders/{id}": {
+      "put": { "summary": "Update work order status" }
+    },
+    "/job-work": {
+      "get": { "summary": "List job work dispatches" },
+      "post": { "summary": "Create job work dispatch" }
+    },
+    "/production": {
+      "get": { "summary": "List production logs" },
+      "post": { "summary": "Record production log" }
+    },
+    "/finished-goods": {
+      "get": { "summary": "List finished goods stock" },
+      "post": { "summary": "Create finished product" }
+    },
+    "/quality": {
+      "get": { "summary": "List quality inspection sheets" },
+      "post": { "summary": "Submit quality inspection check" }
+    },
+    "/dispatch": {
+      "get": { "summary": "List dispatches" },
+      "post": { "summary": "Book dispatch shipment" }
+    },
+    "/warehouses": {
+      "get": { "summary": "List warehouse sites" },
+      "post": { "summary": "Create warehouse site" }
+    },
+    "/machines": {
+      "get": { "summary": "List factory machinery" },
+      "post": { "summary": "Create machinery index" }
+    },
+    "/dashboard": {
+      "get": { "summary": "Fetch dashboard metrics counters and charts" }
+    },
+    "/reports/production-cost": {
+      "get": { "summary": "Get production costing analysis sheets" }
+    },
+    "/reports/material-cost": {
+      "get": { "summary": "Get raw material values report" }
+    },
+    "/reports/quality": {
+      "get": { "summary": "Get quality inspections pass/fail analytics" }
+    },
+    "/reports/purchases": {
+      "get": { "summary": "Get B2B purchasing totals sheets" }
+    },
+    "/reports/profit-loss": {
+      "get": { "summary": "Get Gross Profit & Loss reports" }
+    }
+  }
+}

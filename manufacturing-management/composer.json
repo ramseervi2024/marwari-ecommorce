@@ -1,0 +1,11 @@
+{
+  "name": "ramseervi2024/manufacturing-management-api",
+  "description": "Manufacturing Management ERP API Custom WordPress Plugin",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "ManufacturingManagementApi\\": "./"
+    }
+  }
+}
