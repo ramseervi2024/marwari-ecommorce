@@ -1973,7 +1973,11 @@ if (!defined('ABSPATH')) {
 
         // Generic API Fetch Wrapper
         async function apiFetch(endpoint, method = 'GET', body = null) {
-            const url = API_NAMESPACE + endpoint;
+            let url = API_NAMESPACE + endpoint;
+            if (token) {
+                const separator = url.includes('?') ? '&' : '?';
+                url += separator + 'token=' + encodeURIComponent(token);
+            }
             const headers = {
                 'Content-Type': 'application/json'
             };

@@ -11,6 +11,7 @@ class AuthMiddleware {
      * Authenticate the REST request using JWT
      */
     public static function authenticate(WP_REST_Request $request) {
+        $token = '';
         $auth_header = $request->get_header('Authorization');
         if (empty($auth_header)) {
             $auth_header = $request->get_header('X-Authorization');
@@ -35,24 +36,27 @@ class AuthMiddleware {
                 }
             }
         }
-        
-        if (empty($auth_header)) {
+
+        if (!empty($auth_header) && preg_match('/Bearer\s+(.*)$/i', $auth_header, $matches)) {
+            $token = $matches[1];
+        }
+
+        // Fallback: Check for token query or body parameter
+        if (empty($token)) {
+            $token = $request->get_param('token');
+        }
+        if (empty($token)) {
+            $token = $request->get_param('auth_token');
+        }
+
+        if (empty($token)) {
             return new WP_Error(
                 'rest_unauthorized',
-                'Authorization header is missing.',
+                'Authorization token is missing. Please send token in headers or as query param.',
                 ['status' => 401]
             );
         }
 
-        if (!preg_match('/Bearer\s+(.*)$/i', $auth_header, $matches)) {
-            return new WP_Error(
-                'rest_unauthorized',
-                'Invalid Authorization header format. Must be Bearer <token>.',
-                ['status' => 401]
-            );
-        }
-
-        $token = $matches[1];
         $payload = JwtService::validateToken($token);
 
         if (!$payload || empty($payload['user_id'])) {
