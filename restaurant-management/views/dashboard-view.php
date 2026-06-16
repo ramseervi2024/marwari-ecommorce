@@ -333,6 +333,36 @@
             text-transform: capitalize;
         }
 
+        #btn-logout {
+            background: rgba(255, 93, 143, 0.1);
+            border: 1px solid rgba(255, 93, 143, 0.2);
+            color: var(--danger);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        #btn-logout:hover {
+            background: var(--danger);
+            color: #fff;
+            box-shadow: 0 0 12px rgba(255, 93, 143, 0.4);
+            transform: scale(1.05);
+        }
+
+        #btn-logout svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
         /* MAIN CONTENT AREA */
         main {
             margin-left: var(--sidebar-width);
@@ -897,7 +927,11 @@
                     <div class="user-name" id="user-display-name">Super Admin</div>
                     <div class="user-role" id="user-display-role">superadmin</div>
                 </div>
-                <button id="btn-logout" style="background:transparent; border:none; color:var(--danger); cursor:pointer; font-weight:700; font-size:12px;">OUT</button>
+                <button id="btn-logout" title="Log Out">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                    </svg>
+                </button>
             </div>
         </aside>
 
@@ -1878,13 +1912,17 @@
         });
 
         function logout() {
-            apiFetch('/auth/logout', 'POST').finally(() => {
-                token = '';
-                user = null;
-                localStorage.removeItem('restaurant_token');
-                localStorage.removeItem('restaurant_user');
-                localStorage.removeItem('restaurant_active_tab');
-                showLogin();
+            // Clear client session immediately so logout is instant and never gets stuck
+            token = '';
+            user = null;
+            localStorage.removeItem('restaurant_token');
+            localStorage.removeItem('restaurant_user');
+            localStorage.removeItem('restaurant_active_tab');
+            showLogin();
+
+            // Asynchronously notify server in background
+            apiFetch('/auth/logout', 'POST').catch(err => {
+                console.log("Logged out locally. Server logout notification failed: ", err);
             });
         }
 
