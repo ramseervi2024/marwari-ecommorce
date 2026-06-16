@@ -73,6 +73,14 @@ class AuthRoutes {
             'permission_callback' => RoleMiddleware::hasCapability('manage_users')
         ]);
 
+        // POST /auth/smtp/test
+        register_rest_route($namespace, '/auth/smtp/test', [
+            'methods' => 'POST',
+            'callback' => [$controller, 'testSmtpSettings'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_users')
+        ]);
+
+
         // GET /auth/users
         register_rest_route($namespace, '/auth/users', [
             'methods' => 'GET',

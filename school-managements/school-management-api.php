@@ -123,7 +123,57 @@ add_action('template_redirect', function() {
     }
 });
 
-// 8. SMTP Configuration Setup hook bypassed - using default WP mail server
+// 8. SMTP and Mail configuration setup
+add_filter('wp_mail_from', 'school_management_mail_from');
+function school_management_mail_from($original_email_address) {
+    $from_email = get_option('school_smtp_from_email');
+    
+    // If From email is empty or uses a third-party Gmail address (which causes SPF/DMARC failure on default mail),
+    // default to a domain-aligned email to ensure reliability.
+    if (empty($from_email) || strpos($from_email, 'gmail.com') !== false) {
+        $domain = wp_parse_url(get_site_url(), PHP_URL_HOST);
+        return 'noreply@' . $domain;
+    }
+    return $from_email;
+}
+
+add_filter('wp_mail_from_name', 'school_management_mail_from_name');
+function school_management_mail_from_name($original_email_from_name) {
+    return get_option('school_smtp_from_name', 'Global School ERP');
+}
+
+add_action('phpmailer_init', 'school_management_phpmailer_init');
+function school_management_phpmailer_init($phpmailer) {
+    $smtp_enabled = get_option('school_smtp_enabled', 'no');
+    if ($smtp_enabled !== 'yes') {
+        return;
+    }
+
+    $phpmailer->isSMTP();
+    $phpmailer->Host       = get_option('school_smtp_host');
+    $phpmailer->SMTPAuth   = true;
+    $phpmailer->Port       = get_option('school_smtp_port', '587');
+    $phpmailer->Username   = get_option('school_smtp_username');
+    $phpmailer->Password   = get_option('school_smtp_password');
+    
+    $encryption = get_option('school_smtp_encryption', 'tls');
+    if ($encryption === 'ssl') {
+        $phpmailer->SMTPSecure = 'ssl';
+    } elseif ($encryption === 'tls') {
+        $phpmailer->SMTPSecure = 'tls';
+    } else {
+        $phpmailer->SMTPSecure = '';
+    }
+
+    $from_email = get_option('school_smtp_from_email');
+    if (!empty($from_email)) {
+        $phpmailer->From = $from_email;
+    }
+    $from_name = get_option('school_smtp_from_name');
+    if (!empty($from_name)) {
+        $phpmailer->FromName = $from_name;
+    }
+}
 
 // 9. Log wp_mail errors to activity log and public diagnostics file
 add_action('wp_mail_failed', function($error) {

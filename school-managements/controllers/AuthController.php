@@ -240,7 +240,13 @@ class AuthController extends BaseController {
             'from_email' => get_option('school_smtp_from_email', 'rameshseervi242628@gmail.com'),
             'from_name' => get_option('school_smtp_from_name', 'Global School ERP'),
             'subject' => get_option('school_email_subject', 'School ERP Verification Code'),
-            'template' => get_option('school_email_template', "Hello {name},\n\nYour 6-digit verification code is: {otp}\n\nThis code is valid for 15 minutes.\n\nThank you!")
+            'template' => get_option('school_email_template', "Hello {name},\n\nYour 6-digit verification code is: {otp}\n\nThis code is valid for 15 minutes.\n\nThank you!"),
+            'smtp_enabled' => get_option('school_smtp_enabled', 'no'),
+            'smtp_host' => get_option('school_smtp_host', ''),
+            'smtp_port' => get_option('school_smtp_port', '587'),
+            'smtp_username' => get_option('school_smtp_username', ''),
+            'smtp_password' => get_option('school_smtp_password', ''),
+            'smtp_encryption' => get_option('school_smtp_encryption', 'tls')
         ]);
     }
 
@@ -254,9 +260,51 @@ class AuthController extends BaseController {
         update_option('school_smtp_from_name', sanitize_text_field($params['from_name'] ?? ''));
         update_option('school_email_subject', sanitize_text_field($params['subject'] ?? ''));
         update_option('school_email_template', sanitize_textarea_field($params['template'] ?? ''));
+        update_option('school_smtp_enabled', sanitize_text_field($params['smtp_enabled'] ?? 'no'));
+        update_option('school_smtp_host', sanitize_text_field($params['smtp_host'] ?? ''));
+        update_option('school_smtp_port', sanitize_text_field($params['smtp_port'] ?? '587'));
+        update_option('school_smtp_username', sanitize_text_field($params['smtp_username'] ?? ''));
+        update_option('school_smtp_password', sanitize_text_field($params['smtp_password'] ?? ''));
+        update_option('school_smtp_encryption', sanitize_text_field($params['smtp_encryption'] ?? 'tls'));
 
         AuthService::logActivity(get_current_user_id(), 'EMAIL_SETTINGS_UPDATE', 'Updated email service configuration settings');
 
         return $this->success('Email settings saved successfully.');
     }
+
+    /**
+     * POST /auth/smtp/test
+     */
+    public function testSmtpSettings(WP_REST_Request $request) {
+        $params = $request->get_json_params();
+        $test_email = sanitize_email($params['test_email'] ?? '');
+
+        if (empty($test_email)) {
+            return $this->error('A test email address is required.');
+        }
+
+        // Capture any wp_mail failure logs
+        $mail_error = null;
+        $fail_hook = function($error) use (&$mail_error) {
+            if (is_wp_error($error)) {
+                $mail_error = $error->get_error_message();
+            }
+        };
+        add_action('wp_mail_failed', $fail_hook, 99);
+
+        $subject = 'School ERP Test Mail';
+        $message = "This is a test email from your Global School ERP email settings configuration.\n\nIf you are reading this message, your email delivery settings are working successfully!";
+        
+        $result = wp_mail($test_email, $subject, $message);
+
+        remove_action('wp_mail_failed', $fail_hook, 99);
+
+        if ($result && !$mail_error) {
+            return $this->success('Test email sent successfully. Please check your inbox (and spam folder) for ' . $test_email);
+        } else {
+            $err_msg = $mail_error ?: 'WordPress wp_mail function returned false without specific error logs. This usually means the server mail agent is not configured or is disabled.';
+            return $this->error('Failed to send test email: ' . $err_msg);
+        }
+    }
 }
+

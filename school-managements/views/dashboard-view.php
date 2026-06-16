@@ -1181,6 +1181,7 @@
                             <div class="form-group">
                                 <label for="smtp-from-email">Sender Email Address (From Email)</label>
                                 <input type="email" id="smtp-from-email" class="form-input" placeholder="e.g. no-reply@yourdomain.com" required>
+                                <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Must belong to your domain (e.g. @rpsdigitalworld.store) to pass DMARC/SPF checks.</p>
                             </div>
                             <div class="form-group">
                                 <label for="smtp-from-name">Sender Label (FromName)</label>
@@ -1197,11 +1198,63 @@
                                     Available placeholders: <code>{name}</code> (user's name) and <code>{otp}</code> (6-digit verification code).
                                 </p>
                             </div>
+
+                            <!-- SMTP Config Options -->
+                            <div class="form-group" style="grid-column: span 2; border-top: 1px solid var(--glass-border); padding-top: 20px; margin-top: 10px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" id="smtp-enabled" onchange="toggleSmtpFields()" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent-blue);">
+                                    <label for="smtp-enabled" style="font-size: 14px; font-weight: 600; cursor: pointer; color: #fff; margin-bottom: 0;">Enable Custom SMTP Server Routing</label>
+                                </div>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">Configure a direct SMTP server to bypass host mail limits and guarantee inbox delivery.</p>
+                            </div>
+
+                            <div id="smtp-details-section" style="grid-column: span 2; display: none; grid-template-columns: repeat(2, 1fr); gap: 20px; background: rgba(255, 255, 255, 0.01); border: 1px solid var(--glass-border); padding: 20px; border-radius: 12px; margin-bottom: 10px;">
+                                <div class="form-group">
+                                    <label for="smtp-host">SMTP Host Server</label>
+                                    <input type="text" id="smtp-host" class="form-input" placeholder="e.g. smtp.hostinger.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="smtp-port">SMTP Port</label>
+                                    <input type="text" id="smtp-port" class="form-input" placeholder="e.g. 587 or 465">
+                                </div>
+                                <div class="form-group">
+                                    <label for="smtp-username">SMTP Username / Email</label>
+                                    <input type="text" id="smtp-username" class="form-input" placeholder="e.g. info@rpsdigitalworld.store">
+                                </div>
+                                <div class="form-group">
+                                    <label for="smtp-password">SMTP Password</label>
+                                    <input type="password" id="smtp-password" class="form-input" placeholder="SMTP password string">
+                                </div>
+                                <div class="form-group" style="grid-column: span 2;">
+                                    <label for="smtp-encryption">Connection Security Type</label>
+                                    <select id="smtp-encryption" class="form-input" style="background: #111827;">
+                                        <option value="tls">STARTTLS (Usually Port 587)</option>
+                                        <option value="ssl">SSL/TLS (Usually Port 465)</option>
+                                        <option value="none">None (Plain connection / Localhost)</option>
+                                    </select>
+                                </div>
+                            </div>
                             
                             <div style="grid-column: span 2; display: flex; justify-content: flex-end; margin-top: 10px;">
                                 <button type="submit" id="smtp-submit-btn" class="auth-submit-btn" style="width: auto; padding: 12px 30px; margin-top: 0;">Save Email Settings</button>
                             </div>
                         </form>
+
+                        <!-- Diagnostics / Test Email Panel -->
+                        <div style="margin-top: 30px; border-top: 1px solid var(--glass-border); padding-top: 25px; background: rgba(239, 68, 68, 0.02); border: 1px dashed rgba(239, 68, 68, 0.2); padding: 20px; border-radius: 12px;">
+                            <h5 style="font-size: 15px; font-weight: 600; color: #f3f4f6; margin-bottom: 6px;">Email Diagnostics Tester</h5>
+                            <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 15px; line-height: 1.5;">
+                                Send a live testing mail using your configured SMTP settings to verify server routing.
+                            </p>
+                            <div style="display: flex; gap: 15px; align-items: flex-end;">
+                                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                                    <label for="smtp-test-email" style="font-size: 11px;">Recipient Address</label>
+                                    <input type="email" id="smtp-test-email" class="form-input" style="padding: 10px;" placeholder="e.g. test@gmail.com">
+                                </div>
+                                <button type="button" id="smtp-test-btn" class="btn" onclick="sendTestEmail()" style="height: 42px; padding: 0 20px; font-size: 13px; font-weight: 600; white-space: nowrap;">Send Diagnostic Test</button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -3330,6 +3383,14 @@
             });
         }
 
+        function toggleSmtpFields() {
+            const checkbox = document.getElementById('smtp-enabled');
+            const detailsSection = document.getElementById('smtp-details-section');
+            if (checkbox && detailsSection) {
+                detailsSection.style.display = checkbox.checked ? 'grid' : 'none';
+            }
+        }
+
         // Fetch and load SMTP settings into the dashboard form
         function loadSmtpSettings() {
             fetch(`${API_URL}/auth/smtp`, {
@@ -3345,6 +3406,20 @@
                 document.getElementById('smtp-from-name').value = data.from_name || 'Global School ERP';
                 document.getElementById('smtp-subject').value = data.subject || 'School ERP Verification Code';
                 document.getElementById('smtp-template').value = data.template || '';
+                
+                const enabledCheckbox = document.getElementById('smtp-enabled');
+                enabledCheckbox.checked = (data.smtp_enabled === 'yes');
+                
+                document.getElementById('smtp-host').value = data.smtp_host || '';
+                document.getElementById('smtp-port').value = data.smtp_port || '587';
+                document.getElementById('smtp-username').value = data.smtp_username || '';
+                document.getElementById('smtp-password').value = data.smtp_password || '';
+                
+                if (data.smtp_encryption) {
+                    document.getElementById('smtp-encryption').value = data.smtp_encryption;
+                }
+                
+                toggleSmtpFields();
             })
             .catch(err => {
                 toast(err.message, 'error');
@@ -3362,7 +3437,13 @@
                 from_email: document.getElementById('smtp-from-email').value,
                 from_name: document.getElementById('smtp-from-name').value,
                 subject: document.getElementById('smtp-subject').value,
-                template: document.getElementById('smtp-template').value
+                template: document.getElementById('smtp-template').value,
+                smtp_enabled: document.getElementById('smtp-enabled').checked ? 'yes' : 'no',
+                smtp_host: document.getElementById('smtp-host').value,
+                smtp_port: document.getElementById('smtp-port').value,
+                smtp_username: document.getElementById('smtp-username').value,
+                smtp_password: document.getElementById('smtp-password').value,
+                smtp_encryption: document.getElementById('smtp-encryption').value
             };
 
             fetch(`${API_URL}/auth/smtp`, {
@@ -3388,6 +3469,46 @@
                 btn.innerText = 'Save Email Settings';
             });
         }
+
+        // Send a diagnostic test email
+        function sendTestEmail() {
+            const emailInput = document.getElementById('smtp-test-email');
+            const testEmail = emailInput.value.trim();
+            if (!testEmail) {
+                toast('Please enter a valid recipient email address.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('smtp-test-btn');
+            btn.disabled = true;
+            btn.innerText = 'Sending...';
+
+            fetch(`${API_URL}/auth/smtp/test`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify({ test_email: testEmail })
+            })
+            .then(res => {
+                return res.json().then(body => {
+                    if (!res.ok) throw new Error(body.message || 'Test failed');
+                    return body;
+                });
+            })
+            .then(body => {
+                toast(body.message || 'Test email sent successfully!', 'success');
+                btn.disabled = false;
+                btn.innerText = 'Send Diagnostic Test';
+            })
+            .catch(err => {
+                toast(err.message, 'error');
+                btn.disabled = false;
+                btn.innerText = 'Send Diagnostic Test';
+            });
+        }
+
     </script>
 </body>
 </html>
