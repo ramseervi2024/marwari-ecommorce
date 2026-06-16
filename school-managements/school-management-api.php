@@ -104,7 +104,14 @@ add_action('rest_api_init', function () {
 add_action('init', function() {
     add_rewrite_rule('^school-management-api-docs/?$', 'index.php?school_management_api_docs=1', 'top');
     add_rewrite_rule('^school-management/?$', 'index.php?school_management=1', 'top');
+    
+    // Self-correct invalid email template settings
+    $template = get_option('school_email_template');
+    if (!$template || strpos($template, '{otp}') === false) {
+        update_option('school_email_template', "Hello {name},\n\nYour 6-digit verification code is: {otp}\n\nThis code is valid for 15 minutes.\n\nThank you!");
+    }
 });
+
 
 add_filter('query_vars', function($vars) {
     $vars[] = 'school_management_api_docs';

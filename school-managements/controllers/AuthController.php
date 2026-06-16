@@ -250,16 +250,18 @@ class AuthController extends BaseController {
         ]);
     }
 
-    /**
-     * POST /auth/smtp
-     */
     public function saveSmtpSettings(WP_REST_Request $request) {
         $params = $request->get_json_params();
+        $template = $params['template'] ?? '';
+
+        if (empty($template) || strpos($template, '{otp}') === false) {
+            return $this->error('Validation failed: The email template must contain the "{otp}" placeholder.');
+        }
 
         update_option('school_smtp_from_email', sanitize_email($params['from_email'] ?? ''));
         update_option('school_smtp_from_name', sanitize_text_field($params['from_name'] ?? ''));
         update_option('school_email_subject', sanitize_text_field($params['subject'] ?? ''));
-        update_option('school_email_template', sanitize_textarea_field($params['template'] ?? ''));
+        update_option('school_email_template', sanitize_textarea_field($template));
         update_option('school_smtp_enabled', sanitize_text_field($params['smtp_enabled'] ?? 'no'));
         update_option('school_smtp_host', sanitize_text_field($params['smtp_host'] ?? ''));
         update_option('school_smtp_port', sanitize_text_field($params['smtp_port'] ?? '587'));
@@ -271,6 +273,7 @@ class AuthController extends BaseController {
 
         return $this->success('Email settings saved successfully.');
     }
+
 
     /**
      * POST /auth/smtp/test
