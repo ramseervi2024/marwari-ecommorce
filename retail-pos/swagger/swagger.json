@@ -1,0 +1,446 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Retail POS ERP API",
+    "description": "Comprehensive Point of Sale (POS), inventory management, and billing ERP custom WordPress REST API documentation. Built for retail chains, pharmacies, grocery stores, and multi-branch systems.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/wp-json/retail-pos/v1",
+      "description": "Local WordPress REST API Server Namespace"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Enter the JWT access token received during login verification."
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "User registration request",
+        "description": "Requests an email OTP code to verify and create a POS account.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "email", "password", "role"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "password": { "type": "string", "format": "password" },
+                  "role": { "type": "string", "enum": ["pos_store_manager", "pos_cashier", "pos_inventory_manager"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP verification mail dispatched successfully." }
+        }
+      }
+    },
+    "/auth/register/verify": {
+      "post": {
+        "summary": "Verify registration OTP",
+        "description": "Validates the OTP and activates/registers the new POS user profile.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "otp"],
+                "properties": {
+                  "email": { "type": "string", "format": "email" },
+                  "otp": { "type": "string", "pattern": "^[0-9]{6}$" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User account created and approved." }
+        }
+      }
+    },
+    "/auth/login/initiate": {
+      "post": {
+        "summary": "Initiate POS OTP Login",
+        "description": "Sends a 6-digit OTP verification code to the registered email.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username"],
+                "properties": {
+                  "username": { "type": "string", "description": "Username or email of the account" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP sent successfully." }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Verify Login OTP & Get JWT",
+        "description": "Confirms the 6-digit OTP code and returns access/refresh JWT tokens.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "otp"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "otp": { "type": "string", "pattern": "^[0-9]{6}$" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Logged in successfully. Returns JWT tokens." }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Get authenticated user profile details",
+        "responses": {
+          "200": { "description": "User details successfully returned." }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "List products in catalog",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } },
+          { "name": "category_id", "in": "query", "schema": { "type": "integer" } },
+          { "name": "brand_id", "in": "query", "schema": { "type": "integer" } },
+          { "name": "status", "in": "query", "schema": { "type": "string", "enum": ["ACTIVE", "INACTIVE"] } }
+        ],
+        "responses": {
+          "200": { "description": "List of products retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Register a new product item",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["product_name", "purchase_price", "selling_price"],
+                "properties": {
+                  "product_name": { "type": "string" },
+                  "sku": { "type": "string" },
+                  "barcode": { "type": "string" },
+                  "category_id": { "type": "integer" },
+                  "brand_id": { "type": "integer" },
+                  "purchase_price": { "type": "number" },
+                  "selling_price": { "type": "number" },
+                  "gst_percentage": { "type": "number", "default": 18.0 },
+                  "stock_quantity": { "type": "number" },
+                  "minimum_stock": { "type": "number", "default": 5.0 },
+                  "unit": { "type": "string", "default": "PCS" },
+                  "image": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Product created successfully." }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "summary": "Retrieve product by Database ID",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Product details." }
+        }
+      },
+      "put": {
+        "summary": "Update product details",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product_name": { "type": "string" },
+                  "sku": { "type": "string" },
+                  "barcode": { "type": "string" },
+                  "category_id": { "type": "integer" },
+                  "brand_id": { "type": "integer" },
+                  "purchase_price": { "type": "number" },
+                  "selling_price": { "type": "number" },
+                  "gst_percentage": { "type": "number" },
+                  "stock_quantity": { "type": "number" },
+                  "minimum_stock": { "type": "number" },
+                  "unit": { "type": "string" },
+                  "image": { "type": "string" },
+                  "status": { "type": "string", "enum": ["ACTIVE", "INACTIVE"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Product updated successfully." }
+        }
+      },
+      "delete": {
+        "summary": "Soft delete product from catalog",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Product deleted successfully." }
+        }
+      }
+    },
+    "/products/barcode/{code}": {
+      "get": {
+        "summary": "Lookup product by SKU or Barcode",
+        "description": "Used directly in POS scanner for product line items lookup.",
+        "parameters": [
+          { "name": "code", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Product retrieved successfully." },
+          "404": { "description": "Product not found." }
+        }
+      }
+    },
+    "/products/barcode/generate": {
+      "post": {
+        "summary": "Generate Code-39 Vector Barcode SVG",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["code"],
+                "properties": {
+                  "code": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Vector SVG and base64 representation generated." }
+        }
+      }
+    },
+    "/customers": {
+      "get": {
+        "summary": "List customers & loyalty points",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Customer list." }
+        }
+      },
+      "post": {
+        "summary": "Register a new customer",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "mobile"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "mobile": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "address": { "type": "string" },
+                  "gst_number": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Customer created successfully." }
+        }
+      }
+    },
+    "/sales": {
+      "get": {
+        "summary": "Retrieve sales invoices",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "customer_id", "in": "query", "schema": { "type": "integer" } },
+          { "name": "status", "in": "query", "schema": { "type": "string", "enum": ["COMPLETED", "RETURNED"] } }
+        ],
+        "responses": {
+          "200": { "description": "Sales records." }
+        }
+      },
+      "post": {
+        "summary": "POS Billing Checkout transaction",
+        "description": "Places a POS order, decrements catalog stock, and adds loyalty points.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["items"],
+                "properties": {
+                  "customer_id": { "type": "integer" },
+                  "discount": { "type": "number" },
+                  "payment_method": { "type": "string", "enum": ["Cash", "UPI", "Card", "Loyalty Points"] },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["product_id", "quantity"],
+                      "properties": {
+                        "product_id": { "type": "integer" },
+                        "quantity": { "type": "number" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Sale created and completed." }
+        }
+      }
+    },
+    "/sales/{id}": {
+      "get": {
+        "summary": "Retrieve single invoice details",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Invoice and line items details returned." }
+        }
+      },
+      "delete": {
+        "summary": "Void invoice (Returns inventory)",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Invoice voided and items returned to stock." }
+        }
+      }
+    },
+    "/inventory": {
+      "get": {
+        "summary": "Get available stock levels",
+        "responses": {
+          "200": { "description": "List of current inventory positions." }
+        }
+      }
+    },
+    "/inventory/adjust": {
+      "post": {
+        "summary": "Manual stock adjustment and warnings",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["product_id", "available_stock"],
+                "properties": {
+                  "product_id": { "type": "integer" },
+                  "available_stock": { "type": "number" },
+                  "damaged_stock": { "type": "number" },
+                  "remarks": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Inventory adjusted successfully." }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "summary": "Retrieve daily operational KPIs and analytics charts",
+        "responses": {
+          "200": { "description": "Profit, revenue, cogs, sales charts datasets." }
+        }
+      }
+    },
+    "/reports/sales": {
+      "get": {
+        "summary": "Retrieve payments methods splits and monthly sales analytics reports",
+        "responses": {
+          "200": { "description": "Sales analysis." }
+        }
+      }
+    },
+    "/reports/gst": {
+      "get": {
+        "summary": "Retrieve CGST, SGST, IGST tax breakdown reports",
+        "responses": {
+          "200": { "description": "GST reports." }
+        }
+      }
+    },
+    "/reports/profit-loss": {
+      "get": {
+        "summary": "Retrieve monthly revenue, COGS, discounts, expenses, and net profit ledger reports",
+        "responses": {
+          "200": { "description": "Profit & loss statement." }
+        }
+      }
+    }
+  }
+}

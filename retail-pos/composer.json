@@ -1,0 +1,11 @@
+{
+    "name": "ramseervi/retail-pos-api",
+    "description": "Enterprise-grade Retail & POS ERP API for WordPress",
+    "type": "wordpress-plugin",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "RetailPosApi\\": ""
+        }
+    }
+}
