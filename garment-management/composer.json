@@ -1,0 +1,11 @@
+{
+  "name": "ramseervi2024/garment-management-api",
+  "description": "Garment & Textile Management ERP API Custom WordPress Plugin",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "GarmentManagementApi\\": "./"
+    }
+  }
+}

@@ -1,0 +1,229 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Garment & Textile ERP API Documentation",
+    "version": "1.0.0",
+    "description": "Enterprise-grade REST API endpoints for garment orders, fabric stock, accessory bins, purchase POs, Bill of Materials, production plans, cutting management, stitching management, finishing logs, worker payroll, quality, and dispatches."
+  },
+  "servers": [
+    {
+      "url": "/wp-json/garment-management/v1"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Initiate operator profile registration (OTP)",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "email", "name"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "name": { "type": "string" },
+                  "role": { "type": "string", "enum": ["garment_production_manager", "garment_inventory_manager", "garment_supervisor", "garment_quality_inspector", "garment_dispatch_manager"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP verification mail dispatched successfully." }
+        }
+      }
+    },
+    "/auth/register/verify": {
+      "post": {
+        "summary": "Verify OTP and active registration",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "otp"],
+                "properties": {
+                  "email": { "type": "string" },
+                  "otp": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Operator profile created in pending state." }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Authenticate user operator",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" },
+                  "otp": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "JWT Access & Refresh tokens returned." }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Get authenticated user profile",
+        "responses": {
+          "200": { "description": "Profile data returned." }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Sign out and clear session tokens",
+        "responses": {
+          "200": { "description": "Tokens deleted." }
+        }
+      }
+    },
+    "/order": {
+      "get": { "summary": "List sales orders" },
+      "post": { "summary": "Create sales order" }
+    },
+    "/fabric": {
+      "get": { "summary": "List fabric stocks" },
+      "post": { "summary": "Create fabric stock item" }
+    },
+    "/accessory": {
+      "get": { "summary": "List accessories stock" },
+      "post": { "summary": "Create accessory stock item" }
+    },
+    "/supplier": {
+      "get": { "summary": "List B2B suppliers" },
+      "post": { "summary": "Create supplier profile" }
+    },
+    "/purchase": {
+      "get": { "summary": "List PO purchases" },
+      "post": { "summary": "Record PO purchase" }
+    },
+    "/bom": {
+      "get": { "summary": "List BOM formulations" },
+      "post": { "summary": "Create BOM formula" }
+    },
+    "/production_plan": {
+      "get": { "summary": "List production plans" },
+      "post": { "summary": "Create production plan" }
+    },
+    "/cutting": {
+      "get": { "summary": "List cutting runs" },
+      "post": { "summary": "Record cutting run (auto fabric decrement on COMPLETED)" }
+    },
+    "/stitching": {
+      "get": { "summary": "List stitching batches" },
+      "post": { "summary": "Record stitching batch" }
+    },
+    "/finishing": {
+      "get": { "summary": "List finishing operations" },
+      "post": { "summary": "Record finishing log" }
+    },
+    "/worker": {
+      "get": { "summary": "List factory workers" },
+      "post": { "summary": "Create worker record" }
+    },
+    "/payroll": {
+      "get": { "summary": "List payroll records" },
+      "post": { "summary": "Process payroll sheet" }
+    },
+    "/quality": {
+      "get": { "summary": "List quality inspection checklists" },
+      "post": { "summary": "Submit quality inspection sheet" }
+    },
+    "/wastage": {
+      "get": { "summary": "List wastage entries" },
+      "post": { "summary": "Record material wastage" }
+    },
+    "/dispatch": {
+      "get": { "summary": "List dispatches" },
+      "post": { "summary": "Book dispatch shipment" }
+    },
+    "/inventory": {
+      "get": { "summary": "Get inventory stock totals summary" }
+    },
+    "/inventory/adjustment": {
+      "post": { "summary": "Perform inventory adjustment movement" }
+    },
+    "/inventory/low-stock": {
+      "get": { "summary": "List fabrics below safety limits" }
+    },
+    "/inventory/movements": {
+      "get": { "summary": "Get stock movement ledger logs" }
+    },
+    "/machine": {
+      "get": { "summary": "List cutting/stitching machines" },
+      "post": { "summary": "Create machine index" }
+    },
+    "/dashboard": {
+      "get": { "summary": "Fetch dashboard metrics and graphs data" }
+    },
+    "/reports/costing": {
+      "get": { "summary": "Get costing reports" }
+    },
+    "/reports/profitability": {
+      "get": { "summary": "Get style profitability reports" }
+    },
+    "/reports/orders": {
+      "get": { "summary": "Get orders summary report" }
+    },
+    "/reports/production": {
+      "get": { "summary": "Get production metrics report" }
+    },
+    "/reports/fabric": {
+      "get": { "summary": "Get fabric stock valuations report" }
+    },
+    "/reports/workers": {
+      "get": { "summary": "Get workers attendance analytics report" }
+    },
+    "/reports/quality": {
+      "get": { "summary": "Get defect analysis quality reports" }
+    },
+    "/reports/wastage": {
+      "get": { "summary": "Get wastage cost statements report" }
+    },
+    "/reports/dispatch": {
+      "get": { "summary": "Get logistics dispatches report" }
+    },
+    "/reports/profit-loss": {
+      "get": { "summary": "Get Profit & Loss reports statements" }
+    }
+  }
+}
