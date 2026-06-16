@@ -1,0 +1,11 @@
+{
+    "name": "ramseervi/restaurant-management-api",
+    "description": "Enterprise-grade Restaurant Management System and POS ERP API for WordPress",
+    "type": "wordpress-plugin",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "RestaurantManagementApi\\": ""
+        }
+    }
+}

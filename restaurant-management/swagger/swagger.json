@@ -1,0 +1,211 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Restaurant ERP API",
+    "description": "REST API POS ERP and Kitchen Display System for Restaurants, Cafes, and cloud kitchens.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/wp-json/restaurant-management/v1",
+      "description": "Local WordPress REST API Server"
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "summary": "Authenticate user operator",
+        "description": "Supports password login for seeded test users or verification codes.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" },
+                  "otp": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Authentication successful" },
+          "401": { "description": "Invalid credentials" }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Get authenticated user details",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "User profile retrieved successfully" },
+          "401": { "description": "Unauthorized token" }
+        }
+      }
+    },
+    "/tables": {
+      "get": {
+        "summary": "List all physical tables",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Tables list retrieved successfully" }
+        }
+      },
+      "post": {
+        "summary": "Register a new table coordinate",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["table_number"],
+                "properties": {
+                  "table_number": { "type": "string" },
+                  "capacity": { "type": "integer" },
+                  "floor": { "type": "string" },
+                  "status": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Table created successfully" }
+        }
+      }
+    },
+    "/menu": {
+      "get": {
+        "summary": "List all menu items",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Menu catalog retrieved successfully" }
+        }
+      },
+      "post": {
+        "summary": "Create a new menu item",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["item_name", "item_code", "category_id", "price"],
+                "properties": {
+                  "item_code": { "type": "string" },
+                  "item_name": { "type": "string" },
+                  "category_id": { "type": "integer" },
+                  "description": { "type": "string" },
+                  "price": { "type": "number" },
+                  "cost_price": { "type": "number" },
+                  "tax_percentage": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Menu item created successfully" }
+        }
+      }
+    },
+    "/orders": {
+      "get": {
+        "summary": "List all active/past orders",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Orders list retrieved successfully" }
+        }
+      },
+      "post": {
+        "summary": "Place a table order",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["order_items"],
+                "properties": {
+                  "table_id": { "type": "integer" },
+                  "customer_name": { "type": "string" },
+                  "discount": { "type": "number" },
+                  "order_items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["menu_item_id", "quantity", "price"],
+                      "properties": {
+                        "menu_item_id": { "type": "integer" },
+                        "quantity": { "type": "integer" },
+                        "price": { "type": "number" },
+                        "tax_percentage": { "type": "number" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Order placed successfully" }
+        }
+      }
+    },
+    "/billing": {
+      "post": {
+        "summary": "Create sales POS invoice checkout",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["order_id", "payment_method"],
+                "properties": {
+                  "order_id": { "type": "integer" },
+                  "customer_id": { "type": "integer" },
+                  "discount": { "type": "number" },
+                  "service_charge": { "type": "number" },
+                  "payment_method": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Invoice checkout logged successfully" }
+        }
+      }
+    },
+    "/reports/profit-loss": {
+      "get": {
+        "summary": "Retrieve P&L statement sheet",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Profit & Loss data generated" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
