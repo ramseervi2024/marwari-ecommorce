@@ -1,0 +1,11 @@
+{
+    "name": "ramseervi/hospital-management-api",
+    "description": "Enterprise-grade Hospital & Clinic ERP API for WordPress",
+    "type": "wordpress-plugin",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "HospitalManagementApi\\": ""
+        }
+    }
+}

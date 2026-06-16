@@ -1,0 +1,218 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Hospital ERP API",
+    "description": "Custom Headless REST API for Hospital Management System (HMS) and Clinic ERP. Features database migrations, JWT authentication, custom roles, and Swagger OpenAPI playground.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/wp-json/hospital-management/v1",
+      "description": "Local WordPress REST API endpoint"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Initiate register verification code",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "name": { "type": "string" },
+                  "role": { "type": "string", "enum": ["hospital_super_admin", "hospital_doctor", "hospital_receptionist", "hospital_pharmacist", "hospital_lab_technician", "hospital_patient"] }
+                },
+                "required": ["username", "email", "name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP sent successfully" }
+        }
+      }
+    },
+    "/auth/register/verify": {
+      "post": {
+        "summary": "Verify OTP and register account",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "otp": { "type": "string", "maxLength": 6 }
+                },
+                "required": ["email", "otp"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Registration successful" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Authenticate user credentials",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" },
+                  "otp": { "type": "string" }
+                },
+                "required": ["username"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "JWT Auth token payload returned" }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Retrieve authenticated user details",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "User profile returned" }
+        }
+      }
+    },
+    "/patients": {
+      "get": {
+        "summary": "Get patients registry",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "List of patients" }
+        }
+      },
+      "post": {
+        "summary": "Create patient record",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "gender": { "type": "string" },
+                  "dob": { "type": "string", "format": "date" },
+                  "mobile": { "type": "string" },
+                  "email": { "type": "string" },
+                  "address": { "type": "string" },
+                  "blood_group": { "type": "string" }
+                },
+                "required": ["name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Patient created" }
+        }
+      }
+    },
+    "/doctors": {
+      "get": {
+        "summary": "Get doctors registry",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "List of doctors" }
+        }
+      },
+      "post": {
+        "summary": "Create doctor profile",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "specialization": { "type": "string" },
+                  "mobile": { "type": "string" },
+                  "email": { "type": "string" },
+                  "consultation_fee": { "type": "number" }
+                },
+                "required": ["name", "specialization", "mobile", "email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Doctor created" }
+        }
+      }
+    },
+    "/appointments": {
+      "get": {
+        "summary": "Get appointments log",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of appointments" }
+        }
+      },
+      "post": {
+        "summary": "Book appointment",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "patient_id": { "type": "integer" },
+                  "doctor_id": { "type": "integer" },
+                  "appointment_date": { "type": "string", "format": "date" },
+                  "appointment_time": { "type": "string" }
+                },
+                "required": ["patient_id", "doctor_id", "appointment_date", "appointment_time"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Appointment booked" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
