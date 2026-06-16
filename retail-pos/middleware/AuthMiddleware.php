@@ -12,6 +12,29 @@ class AuthMiddleware {
      */
     public static function authenticate(WP_REST_Request $request) {
         $auth_header = $request->get_header('Authorization');
+        if (empty($auth_header)) {
+            $auth_header = $request->get_header('X-Authorization');
+        }
+        
+        // Apache / Hostinger authorization header bypass
+        if (empty($auth_header)) {
+            if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+                $auth_header = $_SERVER['HTTP_AUTHORIZATION'];
+            } elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+                $auth_header = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+            } elseif (isset($_SERVER['HTTP_X_AUTHORIZATION'])) {
+                $auth_header = $_SERVER['HTTP_X_AUTHORIZATION'];
+            } else {
+                $all_headers = function_exists('getallheaders') ? getallheaders() : [];
+                foreach ($all_headers as $name => $value) {
+                    $lName = strtolower($name);
+                    if ($lName === 'authorization' || $lName === 'x-authorization') {
+                        $auth_header = $value;
+                        break;
+                    }
+                }
+            }
+        }
         
         if (empty($auth_header)) {
             return new WP_Error(

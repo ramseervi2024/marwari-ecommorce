@@ -84,7 +84,7 @@ add_action('rest_api_init', function () {
         header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Expose-Headers: Link', false);
-        header('Access-Control-Allow-Headers: Authorization, X-WP-Nonce, Content-Type, X-Requested-With');
+        header('Access-Control-Allow-Headers: Authorization, X-Authorization, X-WP-Nonce, Content-Type, X-Requested-With');
         if ('OPTIONS' === $_SERVER['REQUEST_METHOD']) {
             status_header(200);
             exit();

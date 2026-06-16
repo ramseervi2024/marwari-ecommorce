@@ -1170,6 +1170,8 @@ if (!defined('ABSPATH')) {
                         <input type="text" id="product-search-input" class="form-input" placeholder="Search catalog..." style="width:250px;">
                     </div>
                     <div class="actions-right">
+                        <button class="btn btn-outline" onclick="openCategoriesModal()"><i class="fa-solid fa-tags"></i> Categories</button>
+                        <button class="btn btn-outline" onclick="openBrandsModal()"><i class="fa-solid fa-copyright"></i> Brands</button>
                         <button class="btn" onclick="openAddProductModal()"><i class="fa-solid fa-plus"></i> Add Product</button>
                     </div>
                 </div>
@@ -1776,6 +1778,64 @@ if (!defined('ABSPATH')) {
         </div>
     </div>
 
+    <!-- MODAL 9: MANAGE CATEGORIES -->
+    <div class="modal" id="modal-categories">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Manage Product Categories</h3>
+                <button class="modal-close" onclick="closeModal('modal-categories')">&times;</button>
+            </div>
+            
+            <form id="add-category-form" style="display:flex; gap:10px; margin-bottom: 20px;">
+                <input type="text" id="new-category-name" class="form-input" placeholder="Category Name" required>
+                <button type="submit" class="btn" style="width:auto; white-space:nowrap;">Add Category</button>
+            </form>
+
+            <div class="table-responsive" style="max-height: 300px; overflow-y:auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Category Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modal-categories-list-body">
+                        <!-- Dynamic rows -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 10: MANAGE BRANDS -->
+    <div class="modal" id="modal-brands">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Manage Product Brands</h3>
+                <button class="modal-close" onclick="closeModal('modal-brands')">&times;</button>
+            </div>
+            
+            <form id="add-brand-form" style="display:flex; gap:10px; margin-bottom: 20px;">
+                <input type="text" id="new-brand-name" class="form-input" placeholder="Brand Name" required>
+                <button type="submit" class="btn" style="width:auto; white-space:nowrap;">Add Brand</button>
+            </form>
+
+            <div class="table-responsive" style="max-height: 300px; overflow-y:auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Brand Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modal-brands-list-body">
+                        <!-- Dynamic rows -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT LOGIC CLIENT SIDE -->
     <script>
         // Endpoint constants
@@ -1919,6 +1979,7 @@ if (!defined('ABSPATH')) {
             };
             if (token) {
                 headers['Authorization'] = 'Bearer ' + token;
+                headers['X-Authorization'] = 'Bearer ' + token;
             }
 
             const config = {
@@ -2694,6 +2755,155 @@ if (!defined('ABSPATH')) {
                         showToast(res.message, "error");
                     }
                 });
+        }
+
+        // --- CATEGORIES & BRANDS MANAGEMENT LOGIC ---
+        function openCategoriesModal() {
+            loadCategoriesListModal();
+            openModal('modal-categories');
+        }
+
+        function loadCategoriesListModal() {
+            apiFetch('/categories?limit=100', 'GET').then(res => {
+                if (res.success) {
+                    categories = res.data.data;
+                    
+                    // Render Category dropdown options inside product forms
+                    const catSelects = [
+                        document.getElementById('pos-category-filter'),
+                        document.getElementById('prod-category')
+                    ];
+                    catSelects.forEach(sel => {
+                        if (sel) {
+                            sel.innerHTML = sel.id.includes('filter') ? '<option value="">All Categories</option>' : '<option value="">Select Category</option>';
+                            categories.forEach(c => {
+                                sel.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+                            });
+                        }
+                    });
+
+                    // Render list inside modal table
+                    const tbody = document.getElementById('modal-categories-list-body');
+                    tbody.innerHTML = '';
+                    categories.forEach(c => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td><strong>${c.name}</strong></td>
+                                <td>
+                                    <button class="btn btn-danger" style="padding: 4px 8px; font-size:0.75rem; width:auto;" onclick="deleteCategory(${c.id})">Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+            });
+        }
+
+        document.getElementById('add-category-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('new-category-name').value.trim();
+            if (!name) return;
+
+            apiFetch('/categories', 'POST', { name: name }).then(res => {
+                if (res.success) {
+                    showToast("Category created successfully.", "success");
+                    document.getElementById('new-category-name').value = '';
+                    loadCategoriesListModal();
+                    // Also refresh pos catalog filter if active
+                    if (document.getElementById('panel-pos-billing').classList.contains('active')) {
+                        loadPosCatalog();
+                    }
+                } else {
+                    showToast(res.message, "error");
+                }
+            });
+        });
+
+        function deleteCategory(id) {
+            if (confirm("Delete this category?")) {
+                apiFetch(`/categories/${id}`, 'DELETE').then(res => {
+                    if (res.success) {
+                        showToast("Category deleted successfully.", "success");
+                        loadCategoriesListModal();
+                    } else {
+                        showToast(res.message, "error");
+                    }
+                });
+            }
+        }
+
+        function openBrandsModal() {
+            loadBrandsListModal();
+            openModal('modal-brands');
+        }
+
+        function loadBrandsListModal() {
+            apiFetch('/brands?limit=100', 'GET').then(res => {
+                if (res.success) {
+                    brands = res.data.data;
+                    
+                    // Render Brand dropdown options inside product forms
+                    const brandSelects = [
+                        document.getElementById('pos-brand-filter'),
+                        document.getElementById('prod-brand')
+                    ];
+                    brandSelects.forEach(sel => {
+                        if (sel) {
+                            sel.innerHTML = sel.id.includes('filter') ? '<option value="">All Brands</option>' : '<option value="">Select Brand</option>';
+                            brands.forEach(b => {
+                                sel.innerHTML += `<option value="${b.id}">${b.name}</option>`;
+                            });
+                        }
+                    });
+
+                    // Render list inside modal table
+                    const tbody = document.getElementById('modal-brands-list-body');
+                    tbody.innerHTML = '';
+                    brands.forEach(b => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td><strong>${b.name}</strong></td>
+                                <td>
+                                    <button class="btn btn-danger" style="padding: 4px 8px; font-size:0.75rem; width:auto;" onclick="deleteBrand(${b.id})">Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+            });
+        }
+
+        document.getElementById('add-brand-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('new-brand-name').value.trim();
+            if (!name) return;
+
+            apiFetch('/brands', 'POST', { name: name }).then(res => {
+                if (res.success) {
+                    showToast("Brand created successfully.", "success");
+                    document.getElementById('new-brand-name').value = '';
+                    loadBrandsListModal();
+                    // Also refresh pos catalog filter if active
+                    if (document.getElementById('panel-pos-billing').classList.contains('active')) {
+                        loadPosCatalog();
+                    }
+                } else {
+                    showToast(res.message, "error");
+                }
+            });
+        });
+
+        function deleteBrand(id) {
+            if (confirm("Delete this brand?")) {
+                apiFetch(`/brands/${id}`, 'DELETE').then(res => {
+                    if (res.success) {
+                        showToast("Brand deleted successfully.", "success");
+                        loadBrandsListModal();
+                    } else {
+                        showToast(res.message, "error");
+                    }
+                });
+            }
         }
 
         // --- TAB 4: INVENTORY MANAGEMENT SECTION ---
