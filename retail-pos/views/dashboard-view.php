@@ -1843,7 +1843,15 @@ if (!defined('ABSPATH')) {
 
         // State Store
         let token = localStorage.getItem('pos_token') || '';
-        let user = JSON.parse(localStorage.getItem('pos_user')) || null;
+        let user = null;
+        try {
+            const savedUser = localStorage.getItem('pos_user');
+            if (savedUser) {
+                user = JSON.parse(savedUser);
+            }
+        } catch (e) {
+            console.error("Failed to parse user session", e);
+        }
         let cart = [];
         let selectedCustomerId = null;
         let selectedCustomerObj = null;
@@ -1860,11 +1868,13 @@ if (!defined('ABSPATH')) {
         });
 
         function initApp() {
-            if (token && user) {
+            if (token) {
                 // Verify session
                 apiFetch('/auth/me', 'GET')
                     .then(res => {
                         if (res.success) {
+                            user = res.data;
+                            localStorage.setItem('pos_user', JSON.stringify(user));
                             showShell();
                         } else {
                             logout();
@@ -1901,8 +1911,9 @@ if (!defined('ABSPATH')) {
 
             // Setup Navigation tabs
             setupTabs();
-            // Start in POS Billing
-            switchTab('pos-billing');
+            // Start in last active tab or default to POS Billing
+            const activeTab = localStorage.getItem('pos_active_tab') || 'pos-billing';
+            switchTab(activeTab);
             
             // Setup barcode scanners
             setupBarcodeScannerSimulator();
@@ -1934,6 +1945,9 @@ if (!defined('ABSPATH')) {
 
             // Set navbar title
             document.getElementById('current-tab-title').innerText = targetItem ? targetItem.innerText : 'POS Control Panel';
+
+            // Save active tab
+            localStorage.setItem('pos_active_tab', tabName);
 
             // Trigger tab specific loading
             switch(tabName) {
@@ -2054,7 +2068,7 @@ if (!defined('ABSPATH')) {
             apiFetch('/auth/login', 'POST', payload)
                 .then(res => {
                     if (res.success) {
-                        token = res.data.access_token;
+                        token = res.data.token;
                         user = res.data.user;
                         localStorage.setItem('pos_token', token);
                         localStorage.setItem('pos_user', JSON.stringify(user));
@@ -2076,6 +2090,7 @@ if (!defined('ABSPATH')) {
                 user = null;
                 localStorage.removeItem('pos_token');
                 localStorage.removeItem('pos_user');
+                localStorage.removeItem('pos_active_tab');
                 showLogin();
             });
         }
