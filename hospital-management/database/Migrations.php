@@ -256,6 +256,9 @@ class Migrations {
         ) $charset_collate;";
         dbDelta($sql_logs);
 
+        // 14.5 Self-correct patient email link for default test user
+        $wpdb->query("UPDATE {$wpdb->prefix}hospital_patients SET email = 'patient@hospital.erp' WHERE email = 'priya.nair@yahoo.com' AND deleted_at IS NULL");
+
         // 15. Register Custom Roles and Capabilities
         self::register_roles();
         self::seed_test_accounts();
@@ -449,7 +452,7 @@ class Migrations {
                 'gender' => 'Female',
                 'dob' => '1992-11-20',
                 'mobile' => '9123456782',
-                'email' => 'priya.nair@yahoo.com',
+                'email' => 'patient@hospital.erp',
                 'address' => '504, Windsor Heights, Mumbai, MH',
                 'blood_group' => 'A-',
                 'emergency_contact' => 'Rajesh Nair - 9123456783',

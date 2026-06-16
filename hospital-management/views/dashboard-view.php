@@ -2044,13 +2044,16 @@ if (!defined('ABSPATH')) {
             })
             .then(res => res.json())
             .then(body => {
-                const data = body.data;
+                if (!body.success) {
+                    throw new Error(body.message || 'Failed to retrieve medical records.');
+                }
+                const data = body.data || { prescriptions: [], lab_reports: [] };
 
                 // Load prescriptions
                 const presTbody = document.getElementById('my-prescriptions-body');
                 presTbody.innerHTML = '';
                 
-                data.prescriptions.forEach(p => {
+                (data.prescriptions || []).forEach(p => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td><strong>${p.doctor_name}</strong></td>
@@ -2064,7 +2067,7 @@ if (!defined('ABSPATH')) {
                 const labTbody = document.getElementById('my-lab-body');
                 labTbody.innerHTML = '';
 
-                data.lab_reports.forEach(r => {
+                (data.lab_reports || []).forEach(r => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td><strong>${r.test_name}</strong> (${r.test_code})</td>
@@ -2074,7 +2077,7 @@ if (!defined('ABSPATH')) {
                     labTbody.appendChild(tr);
                 });
             })
-            .catch(() => toast('Failed to retrieve medical records.', 'error'));
+            .catch(err => toast(err.message || 'Failed to retrieve medical records.', 'error'));
         }
 
         function loadApprovals() {
