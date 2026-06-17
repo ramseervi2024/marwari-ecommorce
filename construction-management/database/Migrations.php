@@ -650,7 +650,7 @@ class Migrations {
                 'end_date' => '2026-06-07',
                 'total_days_worked' => 6,
                 'regular_earnings' => 3900.00,
-                'overtime_earnings' => 487.50, -- 1.5x hourly wage overtime
+                'overtime_earnings' => 487.50, // 1.5x hourly wage overtime
                 'total_earnings' => 4387.50,
                 'payment_status' => 'Paid',
                 'payment_date' => '2026-06-08'
