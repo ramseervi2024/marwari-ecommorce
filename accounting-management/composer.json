@@ -1,0 +1,9 @@
+{
+    "name": "ramseervi2024/accounting-management",
+    "description": "GST Billing & Accounting ERP API",
+    "autoload": {
+        "psr-4": {
+            "AccountingManagementApi\\": ""
+        }
+    }
+}

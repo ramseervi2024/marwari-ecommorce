@@ -1,0 +1,520 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "GST Billing & Accounting ERP API",
+    "description": "Enterprise-grade Headless GST Billing and Accounting ERP REST API system with JWT auth and role-based permissions.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/wp-json/accounting-management/v1",
+      "description": "Local WordPress REST API Base"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Initiate User Registration",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "name": { "type": "string" },
+                  "role": { "type": "string", "enum": ["accounting_super_admin", "accounting_accountant", "accounting_sales_executive", "accounting_purchase_manager", "accounting_auditor"] }
+                },
+                "required": ["username", "email", "name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP verification code sent to email." }
+        }
+      }
+    },
+    "/auth/register/verify": {
+      "post": {
+        "summary": "Confirm Registration via OTP",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "otp": { "type": "string" }
+                },
+                "required": ["email", "otp"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Registration verified." }
+        }
+      }
+    },
+    "/auth/login/initiate": {
+      "post": {
+        "summary": "Passwordless Login Request (Sends OTP)",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username_or_email": { "type": "string" }
+                },
+                "required": ["username_or_email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login OTP verification code sent." }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Authenticate User session",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" },
+                  "otp": { "type": "string" }
+                },
+                "required": ["username"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "JWT issued successfully." }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Retrieve authenticated user details",
+        "tags": ["Authentication"],
+        "responses": {
+          "200": { "description": "Profile details returned." }
+        }
+      }
+    },
+    "/customers": {
+      "get": {
+        "summary": "List Customers",
+        "tags": ["Customers"],
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Create Customer Profile",
+        "tags": ["Customers"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "customer_name": { "type": "string" },
+                  "mobile": { "type": "string" },
+                  "email": { "type": "string" },
+                  "address": { "type": "string" },
+                  "gst_number": { "type": "string" },
+                  "state": { "type": "string" }
+                },
+                "required": ["customer_name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Customer created." }
+        }
+      }
+    },
+    "/vendors": {
+      "get": {
+        "summary": "List Vendors",
+        "tags": ["Vendors"],
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Create Vendor Profile",
+        "tags": ["Vendors"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "vendor_name": { "type": "string" },
+                  "mobile": { "type": "string" },
+                  "email": { "type": "string" },
+                  "address": { "type": "string" },
+                  "gst_number": { "type": "string" },
+                  "state": { "type": "string" }
+                },
+                "required": ["vendor_name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Vendor created." }
+        }
+      }
+    },
+    "/items": {
+      "get": {
+        "summary": "List Products & Services",
+        "tags": ["Inventory & Items"],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Create Item",
+        "tags": ["Inventory & Items"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "item_name": { "type": "string" },
+                  "item_type": { "type": "string", "enum": ["Product", "Service"] },
+                  "hsn_sac_code": { "type": "string" },
+                  "unit": { "type": "string" },
+                  "purchase_price": { "type": "number" },
+                  "selling_price": { "type": "number" },
+                  "gst_percentage": { "type": "number" }
+                },
+                "required": ["item_name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Item created." }
+        }
+      }
+    },
+    "/sales": {
+      "get": {
+        "summary": "List Sales Invoices",
+        "tags": ["Sales & Bills"],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Create Sales Invoice",
+        "tags": ["Sales & Bills"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "customer_id": { "type": "integer" },
+                  "invoice_date": { "type": "string" },
+                  "discount": { "type": "number" },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "item_id": { "type": "integer" },
+                        "quantity": { "type": "integer" },
+                        "price": { "type": "number" }
+                      },
+                      "required": ["item_id", "quantity"]
+                    }
+                  }
+                },
+                "required": ["customer_id", "items"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Sales invoice created." }
+        }
+      }
+    },
+    "/purchases": {
+      "get": {
+        "summary": "List Purchase Bills",
+        "tags": ["Sales & Bills"],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Create Purchase Bill",
+        "tags": ["Sales & Bills"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "vendor_id": { "type": "integer" },
+                  "purchase_date": { "type": "string" },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "item_id": { "type": "integer" },
+                        "quantity": { "type": "integer" },
+                        "price": { "type": "number" }
+                      },
+                      "required": ["item_id", "quantity"]
+                    }
+                  }
+                },
+                "required": ["vendor_id", "items"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Purchase bill created." }
+        }
+      }
+    },
+    "/expenses": {
+      "get": {
+        "summary": "List Expenses",
+        "tags": ["Expenses"],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Record Expense",
+        "tags": ["Expenses"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "expense_type": { "type": "string" },
+                  "amount": { "type": "number" },
+                  "expense_date": { "type": "string" },
+                  "description": { "type": "string" }
+                },
+                "required": ["expense_type", "amount"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Expense logged." }
+        }
+      }
+    },
+    "/accounts": {
+      "get": {
+        "summary": "Chart of Accounts",
+        "tags": ["Double Entry Accounting"],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Create Ledger Account",
+        "tags": ["Double Entry Accounting"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "account_code": { "type": "string" },
+                  "account_name": { "type": "string" },
+                  "account_type": { "type": "string", "enum": ["Asset", "Liability", "Equity", "Income", "Expense"] },
+                  "balance": { "type": "number" }
+                },
+                "required": ["account_code", "account_name", "account_type"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Account created." }
+        }
+      }
+    },
+    "/journals": {
+      "get": {
+        "summary": "List Journal Entries",
+        "tags": ["Double Entry Accounting"],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Post Journal Entry",
+        "tags": ["Double Entry Accounting"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "debit_account": { "type": "integer" },
+                  "credit_account": { "type": "integer" },
+                  "amount": { "type": "number" },
+                  "description": { "type": "string" },
+                  "transaction_date": { "type": "string" }
+                },
+                "required": ["debit_account", "credit_account", "amount"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Journal posted." }
+        }
+      }
+    },
+    "/gst": {
+      "get": {
+        "summary": "Get GST summary and return reports",
+        "tags": ["GST Returns"],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      }
+    },
+    "/einvoice/generate": {
+      "post": {
+        "summary": "Generate IRN / E-Invoice",
+        "tags": ["E-Invoicing & E-Way Bills"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "invoice_id": { "type": "integer" }
+                },
+                "required": ["invoice_id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "E-Invoice registered." }
+        }
+      }
+    },
+    "/ewaybill/generate": {
+      "post": {
+        "summary": "Generate E-Way Bill",
+        "tags": ["E-Invoicing & E-Way Bills"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "invoice_id": { "type": "integer" },
+                  "vehicle_number": { "type": "string" },
+                  "transporter_name": { "type": "string" },
+                  "distance": { "type": "integer" }
+                },
+                "required": ["invoice_id", "vehicle_number", "transporter_name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "E-Way Bill generated." }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "summary": "Retrieve Dashboard statistics",
+        "tags": ["Reports & Analytics"],
+        "responses": {
+          "200": { "description": "KPI metrics loaded successfully." }
+        }
+      }
+    },
+    "/reports/profit-loss": {
+      "get": {
+        "summary": "Profit & Loss statement",
+        "tags": ["Reports & Analytics"],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      }
+    }
+  }
+}
