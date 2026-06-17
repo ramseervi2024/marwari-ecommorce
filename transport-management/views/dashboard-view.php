@@ -1881,9 +1881,9 @@ if (!defined('ABSPATH')) {
                 role: 'administrator',
                 status: 'APPROVED'
             };
-            localStorage.setItem('re_is_sandbox', 'true');
-            localStorage.setItem('re_auth_token', authToken);
-            localStorage.setItem('re_current_user', JSON.stringify(currentUser));
+            localStorage.setItem('tr_is_sandbox', 'true');
+            localStorage.setItem('tr_auth_token', authToken);
+            localStorage.setItem('tr_current_user', JSON.stringify(currentUser));
 
             document.getElementById('authSection').style.display = 'none';
             document.getElementById('appSection').style.display = 'flex';
@@ -1962,9 +1962,9 @@ if (!defined('ABSPATH')) {
                     authToken = data.data.token;
                     currentUser = data.data.user;
 
-                    localStorage.setItem('re_is_sandbox', 'false');
-                    localStorage.setItem('re_auth_token', authToken);
-                    localStorage.setItem('re_current_user', JSON.stringify(currentUser));
+                    localStorage.setItem('tr_is_sandbox', 'false');
+                    localStorage.setItem('tr_auth_token', authToken);
+                    localStorage.setItem('tr_current_user', JSON.stringify(currentUser));
                     
                     document.getElementById('authSection').style.display = 'none';
                     document.getElementById('appSection').style.display = 'flex';
@@ -1990,9 +1990,9 @@ if (!defined('ABSPATH')) {
             authToken = '';
             currentUser = null;
             isSandbox = false;
-            localStorage.removeItem('re_is_sandbox');
-            localStorage.removeItem('re_auth_token');
-            localStorage.removeItem('re_current_user');
+            localStorage.removeItem('tr_is_sandbox');
+            localStorage.removeItem('tr_auth_token');
+            localStorage.removeItem('tr_current_user');
             document.getElementById('appSection').style.display = 'none';
             document.getElementById('authSection').style.display = 'flex';
             showToast('Logged out of system.', 'success');
