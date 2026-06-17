@@ -286,12 +286,34 @@ class Migrations {
         remove_role('transport_driver');
         remove_role('transport_accountant');
 
-        // Super Admin Role
-        add_role('transport_super_admin', 'Transport Super Admin', [
+        // Super Admin Role capabilities
+        $super_admin_caps = [
             'read' => true,
             'manage_transport' => true,
-            'manage_users' => true
-        ]);
+            'manage_users' => true,
+            'manage_vehicles' => true,
+            'manage_trips' => true,
+            'manage_maintenance' => true,
+            'manage_fuel' => true,
+            'manage_routes' => true,
+            'manage_deliveries' => true,
+            'view_assigned_trips' => true,
+            'update_delivery_status' => true,
+            'manage_salaries' => true,
+            'manage_expenses' => true,
+            'manage_challans' => true,
+            'manage_billing' => true
+        ];
+
+        add_role('transport_super_admin', 'Transport Super Admin', $super_admin_caps);
+
+        // Ensure WordPress Admin has permissions
+        $admin_role = get_role('administrator');
+        if ($admin_role) {
+            foreach ($super_admin_caps as $cap => $grant) {
+                $admin_role->add_cap($cap);
+            }
+        }
 
         // Fleet Manager Role
         add_role('transport_fleet_manager', 'Transport Fleet Manager', [
