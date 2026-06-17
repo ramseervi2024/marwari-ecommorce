@@ -1,0 +1,768 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Service Business ERP API",
+    "description": "Enterprise-grade Headless Service Business ERP REST API system with JWT auth and role-based permissions.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/wp-json/service-management/v1",
+      "description": "Local WordPress REST API Base"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Initiate User Registration",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "name": { "type": "string" },
+                  "role": { "type": "string", "enum": ["service_super_admin", "service_manager", "service_technician", "service_customer_care", "service_accountant"] }
+                },
+                "required": ["username", "email", "name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP verification code sent to email." }
+        }
+      }
+    },
+    "/auth/register/verify": {
+      "post": {
+        "summary": "Confirm Registration via OTP",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "otp": { "type": "string" }
+                },
+                "required": ["email", "otp"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Registration verified." }
+        }
+      }
+    },
+    "/auth/login/initiate": {
+      "post": {
+        "summary": "Passwordless Login Request (Sends OTP)",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username_or_email": { "type": "string" }
+                },
+                "required": ["username_or_email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login OTP verification code sent." }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Authenticate User session",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" },
+                  "otp": { "type": "string" }
+                },
+                "required": ["username"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "JWT issued successfully." }
+        }
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "summary": "Refresh expired token",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refresh_token": { "type": "string" }
+                },
+                "required": ["refresh_token"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Tokens refreshed." }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Retrieve authenticated user details",
+        "tags": ["Authentication"],
+        "responses": {
+          "200": { "description": "Profile details returned." }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Log out from the session",
+        "tags": ["Authentication"],
+        "responses": {
+          "200": { "description": "Successfully logged out." }
+        }
+      }
+    },
+    "/auth/smtp": {
+      "get": {
+        "summary": "Retrieve SMTP email settings",
+        "tags": ["Authentication"],
+        "responses": {
+          "200": { "description": "SMTP details returned." }
+        }
+      },
+      "post": {
+        "summary": "Save SMTP configuration",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "smtp_enabled": { "type": "string", "enum": ["yes", "no"] },
+                  "smtp_host": { "type": "string" },
+                  "smtp_port": { "type": "string" },
+                  "smtp_username": { "type": "string" },
+                  "smtp_password": { "type": "string" },
+                  "smtp_encryption": { "type": "string", "enum": ["ssl", "tls", "none"] },
+                  "smtp_from_email": { "type": "string" },
+                  "smtp_from_name": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "SMTP settings saved." }
+        }
+      }
+    },
+    "/auth/smtp/test": {
+      "post": {
+        "summary": "Send a test email using SMTP configuration",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "test_email": { "type": "string" }
+                },
+                "required": ["test_email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Test email sent." }
+        }
+      }
+    },
+    "/auth/users": {
+      "get": {
+        "summary": "List ERP users",
+        "tags": ["Authentication"],
+        "responses": {
+          "200": { "description": "Users retrieved." }
+        }
+      }
+    },
+    "/auth/users/status": {
+      "post": {
+        "summary": "Update user approval status",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": { "type": "integer" },
+                  "status": { "type": "string", "enum": ["APPROVED", "PENDING", "BLOCKED", "HOLD"] }
+                },
+                "required": ["user_id", "status"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Status updated." }
+        }
+      }
+    },
+    "/auth/users/{id}": {
+      "delete": {
+        "summary": "Delete an ERP user account",
+        "tags": ["Authentication"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "User account deleted." }
+        }
+      }
+    },
+    "/leads": {
+      "get": {
+        "summary": "List Leads",
+        "tags": ["Leads"],
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } },
+          { "name": "status", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Leads returned." }
+        }
+      },
+      "post": {
+        "summary": "Create a New Lead Profile",
+        "tags": ["Leads"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lead_name": { "type": "string" },
+                  "customer_name": { "type": "string" },
+                  "email": { "type": "string" },
+                  "phone": { "type": "string" },
+                  "status": { "type": "string", "enum": ["Pending", "Qualified", "Converted", "Lost"] },
+                  "source": { "type": "string" },
+                  "requirements": { "type": "string" }
+                },
+                "required": ["lead_name", "customer_name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Lead created." }
+        }
+      }
+    },
+    "/leads/{id}": {
+      "get": {
+        "summary": "Get lead details",
+        "tags": ["Leads"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Lead details returned." }
+        }
+      },
+      "put": {
+        "summary": "Update lead details",
+        "tags": ["Leads"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Lead updated." }
+        }
+      },
+      "delete": {
+        "summary": "Soft delete lead",
+        "tags": ["Leads"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Lead deleted." }
+        }
+      }
+    },
+    "/quotations": {
+      "get": {
+        "summary": "List Quotations",
+        "tags": ["Quotations"],
+        "parameters": [
+          { "name": "status", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Quotations list returned." }
+        }
+      },
+      "post": {
+        "summary": "Create Service Quotation",
+        "tags": ["Quotations"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "customer_name": { "type": "string" },
+                  "email": { "type": "string" },
+                  "phone": { "type": "string" },
+                  "quotation_date": { "type": "string" },
+                  "lead_id": { "type": "integer" },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "service_name": { "type": "string" },
+                        "quantity": { "type": "integer" },
+                        "price": { "type": "number" }
+                      },
+                      "required": ["service_name", "price"]
+                    }
+                  }
+                },
+                "required": ["customer_name", "items"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Quotation created." }
+        }
+      }
+    },
+    "/quotations/{id}": {
+      "get": {
+        "summary": "Get quotation details",
+        "tags": ["Quotations"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Quotation details." }
+        }
+      },
+      "put": {
+        "summary": "Update quotation status",
+        "tags": ["Quotations"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "string", "enum": ["Draft", "Sent", "Accepted", "Declined"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Quotation status updated." }
+        }
+      },
+      "delete": {
+        "summary": "Delete quotation",
+        "tags": ["Quotations"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Quotation deleted." }
+        }
+      }
+    },
+    "/jobs": {
+      "get": {
+        "summary": "List Jobs",
+        "tags": ["Jobs Scheduling"],
+        "parameters": [
+          { "name": "status", "in": "query", "schema": { "type": "string" } },
+          { "name": "technician_id", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Jobs retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Schedule a Job",
+        "tags": ["Jobs Scheduling"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "customer_name": { "type": "string" },
+                  "phone": { "type": "string" },
+                  "address": { "type": "string" },
+                  "scheduled_date": { "type": "string" },
+                  "technician_id": { "type": "integer" },
+                  "quotation_id": { "type": "integer" },
+                  "priority": { "type": "string", "enum": ["Low", "Medium", "High", "Critical"] },
+                  "description": { "type": "string" }
+                },
+                "required": ["customer_name", "phone", "address"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Job scheduled." }
+        }
+      }
+    },
+    "/jobs/{id}": {
+      "get": {
+        "summary": "Get job details",
+        "tags": ["Jobs Scheduling"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Job details." }
+        }
+      },
+      "put": {
+        "summary": "Update job details / Status notes",
+        "tags": ["Jobs Scheduling"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "string", "enum": ["Scheduled", "In Progress", "Completed", "Cancelled"] },
+                  "work_notes": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Job updated." }
+        }
+      },
+      "delete": {
+        "summary": "Soft delete job sheet",
+        "tags": ["Jobs Scheduling"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Job deleted." }
+        }
+      }
+    },
+    "/amc": {
+      "get": {
+        "summary": "List AMC contracts",
+        "tags": ["AMC Contracts"],
+        "responses": {
+          "200": { "description": "AMC contracts list." }
+        }
+      },
+      "post": {
+        "summary": "Create AMC contract",
+        "tags": ["AMC Contracts"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "customer_name": { "type": "string" },
+                  "email": { "type": "string" },
+                  "phone": { "type": "string" },
+                  "start_date": { "type": "string" },
+                  "end_date": { "type": "string" },
+                  "total_amount": { "type": "number" },
+                  "status": { "type": "string", "enum": ["Active", "Expired", "Cancelled"] }
+                },
+                "required": ["customer_name", "start_date", "end_date", "total_amount"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "AMC contract created." }
+        }
+      }
+    },
+    "/amc/{id}": {
+      "get": {
+        "summary": "Get AMC contract",
+        "tags": ["AMC Contracts"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "AMC contract details." }
+        }
+      },
+      "put": {
+        "summary": "Update AMC contract",
+        "tags": ["AMC Contracts"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "AMC updated." }
+        }
+      },
+      "delete": {
+        "summary": "Soft delete AMC contract",
+        "tags": ["AMC Contracts"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "AMC contract deleted." }
+        }
+      }
+    },
+    "/invoices": {
+      "get": {
+        "summary": "List Invoices",
+        "tags": ["Invoices & Payments"],
+        "responses": {
+          "200": { "description": "Invoices list." }
+        }
+      },
+      "post": {
+        "summary": "Generate Invoice",
+        "tags": ["Invoices & Payments"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "customer_name": { "type": "string" },
+                  "email": { "type": "string" },
+                  "phone": { "type": "string" },
+                  "invoice_date": { "type": "string" },
+                  "total_amount": { "type": "number" },
+                  "job_id": { "type": "integer" },
+                  "amc_id": { "type": "integer" }
+                },
+                "required": ["customer_name", "total_amount"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Invoice created." }
+        }
+      }
+    },
+    "/invoices/{id}": {
+      "get": {
+        "summary": "Get invoice details",
+        "tags": ["Invoices & Payments"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Invoice details." }
+        }
+      },
+      "put": {
+        "summary": "Update invoice details",
+        "tags": ["Invoices & Payments"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Invoice updated." }
+        }
+      },
+      "delete": {
+        "summary": "Soft delete invoice",
+        "tags": ["Invoices & Payments"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Invoice deleted." }
+        }
+      }
+    },
+    "/payments": {
+      "get": {
+        "summary": "List payment transaction logs",
+        "tags": ["Invoices & Payments"],
+        "parameters": [
+          { "name": "invoice_id", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Payments list." }
+        }
+      },
+      "post": {
+        "summary": "Record Payment",
+        "tags": ["Invoices & Payments"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "invoice_id": { "type": "integer" },
+                  "amount": { "type": "number" },
+                  "payment_date": { "type": "string" },
+                  "payment_method": { "type": "string", "enum": ["Cash", "Card", "Online", "Cheque"] },
+                  "transaction_reference": { "type": "string" },
+                  "remarks": { "type": "string" }
+                },
+                "required": ["invoice_id", "amount", "payment_date"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Payment logged." }
+        }
+      }
+    },
+    "/payments/{id}": {
+      "get": {
+        "summary": "Get payment details",
+        "tags": ["Invoices & Payments"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Payment details." }
+        }
+      },
+      "delete": {
+        "summary": "Delete payment transaction log",
+        "tags": ["Invoices & Payments"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Payment deleted." }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "summary": "Get service business stats and KPIs",
+        "tags": ["Reports & Analytics"],
+        "responses": {
+          "200": { "description": "Dashboard statistics returned." }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+    "name": "ramseervi2024/service-management",
+    "autoload": {
+        "psr-4": {
+            "ServiceManagementApi\\": "./"
+        }
+    }
+}
