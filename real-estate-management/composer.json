@@ -1,0 +1,11 @@
+{
+    "name": "ramseervi/real-estate-management-api",
+    "description": "Enterprise-grade Real Estate CRM + ERP API for WordPress",
+    "type": "wordpress-plugin",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "RealEstateManagementApi\\": ""
+        }
+    }
+}

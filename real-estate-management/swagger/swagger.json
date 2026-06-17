@@ -1,0 +1,389 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Real Estate CRM ERP API",
+    "description": "Enterprise-grade Headless Real Estate CRM and ERP REST API system with JWT auth and role-based permissions.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/wp-json/real-estate-management/v1",
+      "description": "Local WordPress REST API Base"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Initiate User Registration",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "name": { "type": "string" },
+                  "role": { "type": "string", "enum": ["realestate_super_admin", "realestate_sales_manager", "realestate_sales_executive", "realestate_broker", "realestate_accountant"] }
+                },
+                "required": ["username", "email", "name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP verification code sent to email." }
+        }
+      }
+    },
+    "/auth/register/verify": {
+      "post": {
+        "summary": "Confirm Registration via OTP",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "otp": { "type": "string" }
+                },
+                "required": ["email", "otp"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Registration verified." }
+        }
+      }
+    },
+    "/auth/login/initiate": {
+      "post": {
+        "summary": "Passwordless Login Request (Sends OTP)",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username_or_email": { "type": "string" }
+                },
+                "required": ["username_or_email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login OTP verification code sent." }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Authenticate User session",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" },
+                  "otp": { "type": "string" }
+                },
+                "required": ["username"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "JWT issued successfully." }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Retrieve authenticated user details",
+        "tags": ["Authentication"],
+        "responses": {
+          "200": { "description": "Profile details returned." }
+        }
+      }
+    },
+    "/projects": {
+      "get": {
+        "summary": "List Projects",
+        "tags": ["Projects"],
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Create Project",
+        "tags": ["Projects"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "project_name": { "type": "string" },
+                  "location": { "type": "string" },
+                  "builder_name": { "type": "string" }
+                },
+                "required": ["project_name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Project created." }
+        }
+      }
+    },
+    "/properties": {
+      "get": {
+        "summary": "List Property Units",
+        "tags": ["Properties"],
+        "parameters": [
+          { "name": "project_id", "in": "query", "schema": { "type": "integer" } },
+          { "name": "status", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Create Property Unit",
+        "tags": ["Properties"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "project_id": { "type": "integer" },
+                  "unit_number": { "type": "string" },
+                  "property_type": { "type": "string" },
+                  "area_sqft": { "type": "number" },
+                  "bedrooms": { "type": "integer" },
+                  "price": { "type": "number" }
+                },
+                "required": ["project_id", "unit_number"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Property unit created." }
+        }
+      }
+    },
+    "/leads": {
+      "get": {
+        "summary": "List Leads",
+        "tags": ["Leads"],
+        "parameters": [
+          { "name": "lead_status", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Create Lead",
+        "tags": ["Leads"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "mobile": { "type": "string" },
+                  "email": { "type": "string" },
+                  "budget": { "type": "number" },
+                  "property_interest": { "type": "string" }
+                },
+                "required": ["name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Lead profile created." }
+        }
+      }
+    },
+    "/site-visits": {
+      "get": {
+        "summary": "List Site Visits",
+        "tags": ["Site Visits"],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Schedule Site Visit",
+        "tags": ["Site Visits"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lead_id": { "type": "integer" },
+                  "property_id": { "type": "integer" },
+                  "visit_date": { "type": "string" },
+                  "transport_required": { "type": "string", "enum": ["Yes", "No"] }
+                },
+                "required": ["lead_id", "property_id", "visit_date"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Site visit scheduled." }
+        }
+      }
+    },
+    "/bookings": {
+      "get": {
+        "summary": "List Property Bookings",
+        "tags": ["Bookings"],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Record Booking",
+        "tags": ["Bookings"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "customer_id": { "type": "integer" },
+                  "property_id": { "type": "integer" },
+                  "agreement_value": { "type": "number" },
+                  "booking_amount": { "type": "number" },
+                  "broker_id": { "type": "integer" }
+                },
+                "required": ["customer_id", "property_id", "agreement_value"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Booking logged and details generated." }
+        }
+      }
+    },
+    "/payment-schedules": {
+      "get": {
+        "summary": "List Installments",
+        "tags": ["Installments & Payments"],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      }
+    },
+    "/brokers": {
+      "get": {
+        "summary": "List Channel Partners / Brokers",
+        "tags": ["Brokers & Commissions"],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Register Broker",
+        "tags": ["Brokers & Commissions"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "broker_name": { "type": "string" },
+                  "mobile": { "type": "string" },
+                  "commission_percentage": { "type": "number" }
+                },
+                "required": ["broker_name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Broker profile created." }
+        }
+      }
+    },
+    "/commissions": {
+      "get": {
+        "summary": "List Commission Accounts",
+        "tags": ["Brokers & Commissions"],
+        "responses": {
+          "200": { "description": "Successfully retrieved." }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "summary": "Retrieve KPI stats and Charts",
+        "tags": ["Dashboard & Reports"],
+        "responses": {
+          "200": { "description": "Metrics retrieved successfully." }
+        }
+      }
+    },
+    "/reports/profit-loss": {
+      "get": {
+        "summary": "Profit & Loss Ledger",
+        "tags": ["Dashboard & Reports"],
+        "responses": {
+          "200": { "description": "Report retrieved successfully." }
+        }
+      }
+    }
+  }
+}
