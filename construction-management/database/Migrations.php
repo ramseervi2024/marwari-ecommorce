@@ -550,7 +550,7 @@ class Migrations {
                 'material_id' => $mat1_id,
                 'quantity' => 1000.00,
                 'rate' => 410.00,
-                'gst_amount' => 73800.00, -- 18% GST
+                'gst_amount' => 73800.00, // 18% GST
                 'total_amount' => 483800.00,
                 'purchase_date' => '2026-05-10',
                 'status' => 'Approved'
@@ -706,7 +706,7 @@ class Migrations {
                 'client_name' => 'Marwari Realties Pvt Ltd',
                 'milestone_name' => 'Foundation Completion',
                 'invoice_amount' => 10000000.00,
-                'gst_amount' => 1800000.00, -- 18% GST
+                'gst_amount' => 1800000.00, // 18% GST
                 'payment_status' => 'PAID',
                 'invoice_date' => '2026-04-25'
             ]);
