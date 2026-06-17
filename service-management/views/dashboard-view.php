@@ -2128,23 +2128,28 @@
             showToast('You have been logged out.', 'info');
         }
 
+        function isTabAllowed(tabId, role) {
+            if (role === 'service_technician') {
+                return ['dashboard', 'jobs'].includes(tabId);
+            }
+            if (role === 'service_customer_care') {
+                return ['dashboard', 'leads', 'amc'].includes(tabId);
+            }
+            if (role === 'service_accountant') {
+                return ['dashboard', 'quotations', 'invoices', 'payments'].includes(tabId);
+            }
+            if (role === 'service_manager') {
+                return ['dashboard', 'leads', 'quotations', 'jobs', 'amc', 'invoices', 'payments'].includes(tabId);
+            }
+            return true; // Super Admin / administrator
+        }
+
         // Tab selection routing logic
         function switchTab(tabId) {
             // Check authorization rules on views
-            if (currentUser) {
-                const role = currentUser.role;
-                if (role === 'service_technician' && !['dashboard', 'jobs'].includes(tabId)) {
-                    showToast('Access Denied: Technicians are restricted to Jobs and Dashboard.', 'error');
-                    return;
-                }
-                if (role === 'service_customer_care' && !['dashboard', 'leads', 'amc'].includes(tabId)) {
-                    showToast('Access Denied: Customer Care has restricted views.', 'error');
-                    return;
-                }
-                if (role === 'service_accountant' && !['dashboard', 'quotations', 'invoices', 'payments'].includes(tabId)) {
-                    showToast('Access Denied: Accountant has restricted views.', 'error');
-                    return;
-                }
+            if (currentUser && !isTabAllowed(tabId, currentUser.role)) {
+                showToast(`Access Denied: Your role has restricted views.`, 'error');
+                return;
             }
 
             // Hide and show
@@ -2218,29 +2223,32 @@
             document.getElementById('user-avatar-initials').innerText = initials;
 
             // Restrict sidebar items visually based on Role privilege
-            document.querySelectorAll('.role-hide').forEach(el => el.style.display = 'block');
+            document.querySelectorAll('.menu-item').forEach(btn => {
+                const li = btn.closest('li');
+                if (li) li.style.display = 'block';
+            });
+
+            // Hide menu items where the class list contains 'role-' + user role
+            document.querySelectorAll('.role-hide').forEach(el => {
+                if (el.classList.contains('role-' + currentUser.role)) {
+                    el.style.display = 'none';
+                }
+            });
+
+            // Special UI adjustments for technician
             if (currentUser.role === 'service_technician') {
-                document.querySelectorAll('.role-hide').forEach(el => el.style.display = 'none');
                 document.getElementById('btn-add-job').style.display = 'none'; // Lock Scheduling
                 document.getElementById('job-admin-section').style.display = 'none'; // Lock tech details
-            } else if (currentUser.role === 'service_customer_care') {
-                document.querySelectorAll('.role-hide').forEach(el => {
-                    if (!el.classList.contains('role-service_customer_care')) el.style.display = 'none';
-                });
-            } else if (currentUser.role === 'service_accountant') {
-                document.querySelectorAll('.role-hide').forEach(el => {
-                    if (!el.classList.contains('role-service_accountant')) el.style.display = 'none';
-                });
-            } else if (currentUser.role === 'service_manager') {
-                document.querySelectorAll('.role-hide').forEach(el => {
-                    if (!el.classList.contains('role-service_manager')) el.style.display = 'none';
-                });
+            } else {
+                const addJobBtn = document.getElementById('btn-add-job');
+                const jobAdminSect = document.getElementById('job-admin-section');
+                if (addJobBtn) addJobBtn.style.display = 'inline-flex';
+                if (jobAdminSect) jobAdminSect.style.display = 'block';
             }
 
             // Restore active tab
             let restoredTab = localStorage.getItem('ser_active_tab') || 'dashboard';
-            // Validation of restored tab against role permissions
-            if (currentUser.role === 'service_technician' && !['dashboard', 'jobs'].includes(restoredTab)) {
+            if (!isTabAllowed(restoredTab, currentUser.role)) {
                 restoredTab = 'dashboard';
             }
             switchTab(restoredTab);
@@ -2287,19 +2295,43 @@
                     const logsBox = document.getElementById('dashboard-activity-logs');
                     logsBox.innerHTML = '';
                     
-                    // Fetch recent logs using a special endpoint or query parameter if available
-                    // For now, let's display activities from activities table if seeded
-                    const logsRes = await apiFetch('/auth/users'); // fallback or let's inspect if logs endpoint exists. 
-                    // Actually, let's dynamically list recent users/actions to display simulation
-                    logsBox.innerHTML = `
-                        <div class="log-item">
+                    // Display role-specific mock activity logs
+                    const simulatedLogs = {
+                        'service_super_admin': [
+                            { action: 'SYSTEM INITIALIZATION', detail: 'Seeded Service Business ERP mock tables and user permissions schema.', time: '10 mins ago' },
+                            { action: 'SMTP CONNECTION', detail: 'SMTP mail credentials verified successfully with host server.', time: '1 hour ago' }
+                        ],
+                        'service_manager': [
+                            { action: 'JOB DISPATCHED', detail: 'Scheduled new split AC service dispatch job JOB-2026-0001.', time: '5 mins ago' },
+                            { action: 'LEAD STATUS UPDATE', detail: 'Lead "AC Installation Inquiry" qualified by Customer Care.', time: '20 mins ago' }
+                        ],
+                        'service_customer_care': [
+                            { action: 'NEW LEAD RECORDED', detail: 'Recorded Direct lead from Mr. Sharma for split AC installation.', time: 'Just Now' },
+                            { action: 'AMC REGISTERED', detail: 'Created AMC yearly contract AMC-2026-0001 for Tech Park.', time: '30 mins ago' }
+                        ],
+                        'service_accountant': [
+                            { action: 'PAYMENT LOGGED', detail: 'Log Cash receipt PAY-2026-0001 for Invoice INV-2026-0001.', time: '15 mins ago' },
+                            { action: 'INVOICE GENERATED', detail: 'Generated billing invoice INV-2026-0001 for Apex Office Spaces.', time: '45 mins ago' }
+                        ],
+                        'service_technician': [
+                            { action: 'JOB IN PROGRESS', detail: 'Ravi Technician updated job status of JOB-2026-0001.', time: '12 mins ago' },
+                            { action: 'WORK NOTE ADDED', detail: 'Notes added: "wiring checked, split AC compressor installed successfully."', time: '12 mins ago' }
+                        ]
+                    };
+
+                    const roleLogs = simulatedLogs[currentUser.role] || simulatedLogs['service_super_admin'];
+                    roleLogs.forEach(log => {
+                        const logEl = document.createElement('div');
+                        logEl.className = 'log-item';
+                        logEl.innerHTML = `
                             <div class="log-item-header">
-                                <span>SYSTEM INITIALIZATION</span>
-                                <span>Just Now</span>
+                                <span>${log.action}</span>
+                                <span>${log.time}</span>
                             </div>
-                            <p style="font-size: 12.5px; color: var(--text-main);">Seeded Service Business ERP mock tables and user permissions schema successfully.</p>
-                        </div>
-                    `;
+                            <p style="font-size: 12.5px; color: var(--text-main);">${log.detail}</p>
+                        `;
+                        logsBox.appendChild(logEl);
+                    });
                 }
             } catch(e){}
         }
