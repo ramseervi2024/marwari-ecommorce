@@ -12,6 +12,16 @@ if (!defined('ABSPATH')) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Real Estate CRM & ERP - Dashboard</title>
+    <!-- Prevent flash of unauthenticated login screen -->
+    <script>
+        (function() {
+            var token = localStorage.getItem('re_auth_token');
+            var user = localStorage.getItem('re_current_user');
+            if (token && user) {
+                document.write('<style>#authSection { display: none !important; } #appSection { display: flex !important; }</style>');
+            }
+        })();
+    </script>
     <!-- Modern Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -1372,9 +1382,17 @@ if (!defined('ABSPATH')) {
 
     <!-- JAVASCRIPT WORKSPACE LOGIC -->
     <script>
-        let isSandbox = false;
-        let authToken = '';
+        let isSandbox = localStorage.getItem('re_is_sandbox') === 'true';
+        let authToken = localStorage.getItem('re_auth_token') || '';
         let currentUser = null;
+        try {
+            const storedUser = localStorage.getItem('re_current_user');
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+            }
+        } catch (e) {
+            console.error('Error parsing stored user:', e);
+        }
 
         // Mock Database Sandbox Fallback Data
         let mockData = {
@@ -1427,8 +1445,17 @@ if (!defined('ABSPATH')) {
                 role: 'administrator',
                 status: 'APPROVED'
             };
+            localStorage.setItem('re_is_sandbox', 'true');
+            localStorage.setItem('re_auth_token', authToken);
+            localStorage.setItem('re_current_user', JSON.stringify(currentUser));
+
             document.getElementById('authSection').style.display = 'none';
             document.getElementById('appSection').style.display = 'flex';
+            
+            document.getElementById('userName').innerText = currentUser.name;
+            document.getElementById('userRole').innerText = currentUser.role.replace('realestate_', '').replace('_', ' ');
+            document.getElementById('userAvatar').innerText = currentUser.name.charAt(0);
+
             document.getElementById('connStatus').innerText = 'Sandbox Mode (Offline)';
             document.getElementById('connStatus').parentElement.style.background = 'rgba(245, 158, 11, 0.08)';
             document.getElementById('connStatus').parentElement.style.color = 'var(--accent-yellow)';
@@ -1497,8 +1524,13 @@ if (!defined('ABSPATH')) {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
+                    isSandbox = false;
                     authToken = data.data.token;
                     currentUser = data.data.user;
+
+                    localStorage.setItem('re_is_sandbox', 'false');
+                    localStorage.setItem('re_auth_token', authToken);
+                    localStorage.setItem('re_current_user', JSON.stringify(currentUser));
                     
                     document.getElementById('authSection').style.display = 'none';
                     document.getElementById('appSection').style.display = 'flex';
@@ -1523,6 +1555,10 @@ if (!defined('ABSPATH')) {
         function logout() {
             authToken = '';
             currentUser = null;
+            isSandbox = false;
+            localStorage.removeItem('re_is_sandbox');
+            localStorage.removeItem('re_auth_token');
+            localStorage.removeItem('re_current_user');
             document.getElementById('appSection').style.display = 'none';
             document.getElementById('authSection').style.display = 'flex';
             showToast('Logged out of system.', 'success');
@@ -2393,6 +2429,39 @@ if (!defined('ABSPATH')) {
                 }
             });
         }
+
+        // Restore active session on page refresh
+        function restoreSession() {
+            if (authToken && currentUser) {
+                document.getElementById('authSection').style.display = 'none';
+                document.getElementById('appSection').style.display = 'flex';
+                
+                document.getElementById('userName').innerText = currentUser.name || '';
+                document.getElementById('userRole').innerText = (currentUser.role || '').replace('realestate_', '').replace('_', ' ');
+                document.getElementById('userAvatar').innerText = (currentUser.name || 'U').charAt(0);
+                
+                if (isSandbox) {
+                    document.getElementById('connStatus').innerText = 'Sandbox Mode (Offline)';
+                    document.getElementById('connStatus').parentElement.style.background = 'rgba(245, 158, 11, 0.08)';
+                    document.getElementById('connStatus').parentElement.style.color = 'var(--accent-yellow)';
+                    document.getElementById('connStatus').previousElementSibling.style.background = 'var(--accent-yellow)';
+                    document.getElementById('connStatus').previousElementSibling.style.boxShadow = '0 0 6px var(--accent-yellow)';
+                } else {
+                    document.getElementById('connStatus').innerText = 'Live Connection';
+                    document.getElementById('connStatus').parentElement.style.background = '';
+                    document.getElementById('connStatus').parentElement.style.color = '';
+                    document.getElementById('connStatus').previousElementSibling.style.background = '';
+                    document.getElementById('connStatus').previousElementSibling.style.boxShadow = '';
+                }
+                
+                loadAllData();
+            } else {
+                document.getElementById('authSection').style.display = 'flex';
+                document.getElementById('appSection').style.display = 'none';
+            }
+        }
+
+        restoreSession();
     </script>
 </body>
 </html>
