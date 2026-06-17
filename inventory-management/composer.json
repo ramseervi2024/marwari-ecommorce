@@ -1,0 +1,9 @@
+{
+    "name": "ramseervi2024/inventory-management",
+    "description": "Inventory Management ERP API",
+    "autoload": {
+        "psr-4": {
+            "InventoryManagementApi\\": ""
+        }
+    }
+}

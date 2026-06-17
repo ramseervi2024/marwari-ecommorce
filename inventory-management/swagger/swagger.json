@@ -1,0 +1,1118 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Inventory Management ERP API",
+    "description": "Enterprise-grade Headless Inventory Management ERP REST API system with JWT auth and role-based permissions.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/wp-json/inventory-management/v1",
+      "description": "Local WordPress REST API Base"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Initiate User Registration",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "name": { "type": "string" },
+                  "role": { "type": "string", "enum": ["inventory_super_admin", "inventory_manager", "inventory_purchase_manager", "inventory_warehouse_staff", "inventory_auditor"] }
+                },
+                "required": ["username", "email", "name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP verification code sent to email." }
+        }
+      }
+    },
+    "/auth/register/verify": {
+      "post": {
+        "summary": "Confirm Registration via OTP",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "otp": { "type": "string" }
+                },
+                "required": ["email", "otp"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Registration verified." }
+        }
+      }
+    },
+    "/auth/login/initiate": {
+      "post": {
+        "summary": "Passwordless Login Request (Sends OTP)",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username_or_email": { "type": "string" }
+                },
+                "required": ["username_or_email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login OTP verification code sent." }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Authenticate User session",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" },
+                  "otp": { "type": "string" }
+                },
+                "required": ["username"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "JWT issued successfully." }
+        }
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "summary": "Refresh expired token",
+        "tags": ["Authentication"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refresh_token": { "type": "string" }
+                },
+                "required": ["refresh_token"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Tokens refreshed." }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Retrieve authenticated user details",
+        "tags": ["Authentication"],
+        "responses": {
+          "200": { "description": "Profile details returned." }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Log out from the session",
+        "tags": ["Authentication"],
+        "responses": {
+          "200": { "description": "Successfully logged out." }
+        }
+      }
+    },
+    "/auth/smtp": {
+      "get": {
+        "summary": "Retrieve SMTP email settings",
+        "tags": ["Authentication"],
+        "responses": {
+          "200": { "description": "SMTP details returned." }
+        }
+      },
+      "post": {
+        "summary": "Save SMTP configuration",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "smtp_enabled": { "type": "string", "enum": ["yes", "no"] },
+                  "smtp_host": { "type": "string" },
+                  "smtp_port": { "type": "string" },
+                  "smtp_username": { "type": "string" },
+                  "smtp_password": { "type": "string" },
+                  "smtp_encryption": { "type": "string", "enum": ["ssl", "tls", "none"] },
+                  "smtp_from_email": { "type": "string" },
+                  "smtp_from_name": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "SMTP settings saved." }
+        }
+      }
+    },
+    "/auth/smtp/test": {
+      "post": {
+        "summary": "Send a test email using SMTP configuration",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "test_email": { "type": "string" }
+                },
+                "required": ["test_email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Test email sent." }
+        }
+      }
+    },
+    "/auth/users": {
+      "get": {
+        "summary": "List ERP users",
+        "tags": ["Authentication"],
+        "responses": {
+          "200": { "description": "Users retrieved." }
+        }
+      }
+    },
+    "/auth/users/status": {
+      "post": {
+        "summary": "Update user approval status",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": { "type": "integer" },
+                  "status": { "type": "string", "enum": ["APPROVED", "PENDING", "BLOCKED", "HOLD"] }
+                },
+                "required": ["user_id", "status"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Status updated." }
+        }
+      }
+    },
+    "/auth/users/{id}": {
+      "delete": {
+        "summary": "Delete an ERP user account",
+        "tags": ["Authentication"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "User account deleted." }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "List Product Catalog",
+        "tags": ["Products"],
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } },
+          { "name": "status", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Products returned." }
+        }
+      },
+      "post": {
+        "summary": "Create a New Product Profile",
+        "tags": ["Products"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sku": { "type": "string" },
+                  "barcode": { "type": "string" },
+                  "product_name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "category": { "type": "string" },
+                  "brand": { "type": "string" },
+                  "unit": { "type": "string" },
+                  "purchase_price": { "type": "number" },
+                  "selling_price": { "type": "number" },
+                  "minimum_stock": { "type": "integer" },
+                  "maximum_stock": { "type": "integer" },
+                  "status": { "type": "string", "enum": ["ACTIVE", "INACTIVE"] }
+                },
+                "required": ["sku", "product_name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Product profile created." }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "summary": "Get product profile details",
+        "tags": ["Products"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Product details returned." }
+        }
+      },
+      "put": {
+        "summary": "Update product profile specifications",
+        "tags": ["Products"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Product updated." }
+        }
+      },
+      "delete": {
+        "summary": "Soft delete product",
+        "tags": ["Products"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Product deleted." }
+        }
+      }
+    },
+    "/warehouses": {
+      "get": {
+        "summary": "List Warehouses",
+        "tags": ["Warehouses"],
+        "responses": {
+          "200": { "description": "Warehouses returned." }
+        }
+      },
+      "post": {
+        "summary": "Create warehouse registry",
+        "tags": ["Warehouses"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "warehouse_code": { "type": "string" },
+                  "warehouse_name": { "type": "string" },
+                  "location": { "type": "string" },
+                  "manager_name": { "type": "string" },
+                  "contact_number": { "type": "string" },
+                  "capacity": { "type": "integer" },
+                  "status": { "type": "string" }
+                },
+                "required": ["warehouse_code", "warehouse_name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Warehouse created." }
+        }
+      }
+    },
+    "/warehouses/{id}": {
+      "get": {
+        "summary": "Get warehouse details",
+        "tags": ["Warehouses"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Warehouse details returned." }
+        }
+      },
+      "put": {
+        "summary": "Update warehouse profile",
+        "tags": ["Warehouses"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Warehouse updated." }
+        }
+      },
+      "delete": {
+        "summary": "Delete warehouse from logs",
+        "tags": ["Warehouses"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Warehouse deleted." }
+        }
+      }
+    },
+    "/suppliers": {
+      "get": {
+        "summary": "List Suppliers",
+        "tags": ["Suppliers"],
+        "responses": {
+          "200": { "description": "Suppliers returned." }
+        }
+      },
+      "post": {
+        "summary": "Add Supplier profile",
+        "tags": ["Suppliers"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "supplier_name": { "type": "string" },
+                  "contact_person": { "type": "string" },
+                  "mobile": { "type": "string" },
+                  "email": { "type": "string" },
+                  "gst_number": { "type": "string" },
+                  "address": { "type": "string" },
+                  "rating": { "type": "number" },
+                  "status": { "type": "string" }
+                },
+                "required": ["supplier_name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Supplier registered." }
+        }
+      }
+    },
+    "/suppliers/{id}": {
+      "get": {
+        "summary": "Retrieve supplier details",
+        "tags": ["Suppliers"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Supplier returned." }
+        }
+      },
+      "put": {
+        "summary": "Update supplier specifications",
+        "tags": ["Suppliers"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Supplier updated." }
+        }
+      },
+      "delete": {
+        "summary": "Delete supplier log profile",
+        "tags": ["Suppliers"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Supplier deleted." }
+        }
+      }
+    },
+    "/purchase-orders": {
+      "get": {
+        "summary": "List Purchase Orders",
+        "tags": ["Purchase Orders & GRN"],
+        "responses": {
+          "200": { "description": "Purchase orders returned." }
+        }
+      },
+      "post": {
+        "summary": "Create Purchase Order",
+        "tags": ["Purchase Orders & GRN"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "supplier_id": { "type": "integer" },
+                  "order_date": { "type": "string" },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": { "type": "integer" },
+                        "quantity": { "type": "integer" },
+                        "price": { "type": "number" }
+                      },
+                      "required": ["product_id", "quantity"]
+                    }
+                  }
+                },
+                "required": ["supplier_id", "items"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Purchase order created." }
+        }
+      }
+    },
+    "/purchase-orders/{id}": {
+      "get": {
+        "summary": "Get purchase order specifications",
+        "tags": ["Purchase Orders & GRN"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "PO details returned." }
+        }
+      },
+      "put": {
+        "summary": "Update purchase order status workflow",
+        "tags": ["Purchase Orders & GRN"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "string", "enum": ["Pending", "Approved", "Rejected", "Completed", "Cancelled"] },
+                  "order_date": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "PO status updated." }
+        }
+      },
+      "delete": {
+        "summary": "Soft delete purchase order record",
+        "tags": ["Purchase Orders & GRN"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "PO deleted." }
+        }
+      }
+    },
+    "/grn": {
+      "get": {
+        "summary": "List Goods Receipt Notes (GRN)",
+        "tags": ["Purchase Orders & GRN"],
+        "responses": {
+          "200": { "description": "GRN list returned." }
+        }
+      },
+      "post": {
+        "summary": "Receive inventory items against PO (Create GRN)",
+        "tags": ["Purchase Orders & GRN"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "po_id": { "type": "integer" },
+                  "warehouse_id": { "type": "integer" },
+                  "receive_date": { "type": "string" },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": { "type": "integer" },
+                        "quantity_received": { "type": "integer" }
+                      },
+                      "required": ["product_id", "quantity_received"]
+                    }
+                  }
+                },
+                "required": ["po_id", "warehouse_id", "items"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "GRN logged and inventory stocked." }
+        }
+      }
+    },
+    "/transfers": {
+      "get": {
+        "summary": "List stock transfers",
+        "tags": ["Warehouse Transfers"],
+        "responses": {
+          "200": { "description": "Stock transfers returned." }
+        }
+      },
+      "post": {
+        "summary": "Initiate warehouse stock transfer",
+        "tags": ["Warehouse Transfers"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "from_warehouse_id": { "type": "integer" },
+                  "to_warehouse_id": { "type": "integer" },
+                  "transfer_date": { "type": "string" },
+                  "status": { "type": "string", "enum": ["Pending", "Completed"] },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": { "type": "integer" },
+                        "quantity": { "type": "integer" }
+                      },
+                      "required": ["product_id", "quantity"]
+                    }
+                  }
+                },
+                "required": ["from_warehouse_id", "to_warehouse_id", "items"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Transfer registered." }
+        }
+      }
+    },
+    "/transfers/{id}": {
+      "get": {
+        "summary": "Get transfer details",
+        "tags": ["Warehouse Transfers"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Transfer details returned." }
+        }
+      },
+      "delete": {
+        "summary": "Soft delete transfer",
+        "tags": ["Warehouse Transfers"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Transfer deleted." }
+        }
+      }
+    },
+    "/transfers/{id}/status": {
+      "put": {
+        "summary": "Update transfer status (Mark completed to shift inventory)",
+        "tags": ["Warehouse Transfers"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "string", "enum": ["Completed"] }
+                },
+                "required": ["status"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Transfer status updated." }
+        }
+      }
+    },
+    "/audits": {
+      "get": {
+        "summary": "List scheduled stock audits",
+        "tags": ["Audits & Reconciliations"],
+        "responses": {
+          "200": { "description": "Audits list returned." }
+        }
+      },
+      "post": {
+        "summary": "Schedule/Initiate warehouse audit checklist",
+        "tags": ["Audits & Reconciliations"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "warehouse_id": { "type": "integer" },
+                  "audit_date": { "type": "string" },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": { "type": "integer" },
+                        "physical_quantity": { "type": "integer" }
+                      },
+                      "required": ["product_id", "physical_quantity"]
+                    }
+                  }
+                },
+                "required": ["warehouse_id", "items"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Audit scheduled." }
+        }
+      }
+    },
+    "/audits/{id}": {
+      "put": {
+        "summary": "Finalize audit reconciliation (Adjusts stocks automatically)",
+        "tags": ["Audits & Reconciliations"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "string", "enum": ["Completed"] }
+                },
+                "required": ["status"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Audit completed and reconciled." }
+        }
+      }
+    },
+    "/damaged-stock": {
+      "get": {
+        "summary": "List damaged stock logs",
+        "tags": ["Audits & Reconciliations"],
+        "responses": {
+          "200": { "description": "Damaged stock logs returned." }
+        }
+      },
+      "post": {
+        "summary": "Report stock damage (shifts stock to damaged pool)",
+        "tags": ["Audits & Reconciliations"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product_id": { "type": "integer" },
+                  "warehouse_id": { "type": "integer" },
+                  "quantity": { "type": "integer" },
+                  "report_date": { "type": "string" },
+                  "remarks": { "type": "string" }
+                },
+                "required": ["product_id", "warehouse_id", "quantity"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Damage stock logged." }
+        }
+      }
+    },
+    "/damaged-stock/{id}": {
+      "put": {
+        "summary": "Update damaged stock disposition",
+        "tags": ["Audits & Reconciliations"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "string", "enum": ["Reported", "Scrapped", "Repaired"] }
+                },
+                "required": ["status"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Damage disposition updated." }
+        }
+      }
+    },
+    "/inventory": {
+      "get": {
+        "summary": "View general stock ledger",
+        "tags": ["Audits & Reconciliations"],
+        "parameters": [
+          { "name": "product_id", "in": "query", "schema": { "type": "integer" } },
+          { "name": "warehouse_id", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Ledger retrieved." }
+        }
+      },
+      "post": {
+        "summary": "Direct stock balance adjustment",
+        "tags": ["Audits & Reconciliations"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product_id": { "type": "integer" },
+                  "warehouse_id": { "type": "integer" },
+                  "available_stock": { "type": "integer" },
+                  "reserved_stock": { "type": "integer" },
+                  "damaged_stock": { "type": "integer" }
+                },
+                "required": ["product_id", "warehouse_id", "available_stock"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Stock levels adjusted." }
+        }
+      }
+    },
+    "/stock-inward": {
+      "get": {
+        "summary": "Get stock inward history logs",
+        "tags": ["Purchase Orders & GRN"],
+        "responses": {
+          "200": { "description": "Inward history returned." }
+        }
+      },
+      "post": {
+        "summary": "Record manual stock inward receipt",
+        "tags": ["Purchase Orders & GRN"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "inward_date": { "type": "string" },
+                  "remarks": { "type": "string" },
+                  "reference_type": { "type": "string" },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": { "type": "integer" },
+                        "warehouse_id": { "type": "integer" },
+                        "quantity": { "type": "integer" },
+                        "batch_number": { "type": "string" }
+                      },
+                      "required": ["product_id", "warehouse_id", "quantity"]
+                    }
+                  }
+                },
+                "required": ["inward_date", "items"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Inward logged." }
+        }
+      }
+    },
+    "/stock-outward": {
+      "get": {
+        "summary": "Get stock outward consumption logs",
+        "tags": ["Audits & Reconciliations"],
+        "responses": {
+          "200": { "description": "Outward history returned." }
+        }
+      },
+      "post": {
+        "summary": "Record manual stock outward issues",
+        "tags": ["Audits & Reconciliations"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "outward_date": { "type": "string" },
+                  "remarks": { "type": "string" },
+                  "reference_type": { "type": "string" },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": { "type": "integer" },
+                        "warehouse_id": { "type": "integer" },
+                        "quantity": { "type": "integer" }
+                      },
+                      "required": ["product_id", "warehouse_id", "quantity"]
+                    }
+                  }
+                },
+                "required": ["outward_date", "items"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Outward logged." }
+        }
+      }
+    },
+    "/barcode/generate": {
+      "post": {
+        "summary": "Generate mock UPC barcode label URL",
+        "tags": ["Barcodes & QR Codes"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product_id": { "type": "integer" }
+                },
+                "required": ["product_id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Barcode generation link returned." }
+        }
+      }
+    },
+    "/barcode/{code}": {
+      "get": {
+        "summary": "Lookup product using UPC barcode scanning",
+        "tags": ["Barcodes & QR Codes"],
+        "parameters": [
+          { "name": "code", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Product details returned." }
+        }
+      }
+    },
+    "/qrcode/generate": {
+      "post": {
+        "summary": "Generate QR code representation",
+        "tags": ["Barcodes & QR Codes"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product_id": { "type": "integer" }
+                },
+                "required": ["product_id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "QR Code image URL returned." }
+        }
+      }
+    },
+    "/qrcode/{code}": {
+      "get": {
+        "summary": "Lookup product using QR code scanning",
+        "tags": ["Barcodes & QR Codes"],
+        "parameters": [
+          { "name": "code", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Product details returned." }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "summary": "Retrieve Dashboard KPI counters",
+        "tags": ["Reports & Analytics"],
+        "responses": {
+          "200": { "description": "Dashboard stats loaded." }
+        }
+      }
+    },
+    "/reports/stock-valuation": {
+      "get": {
+        "summary": "Retrieve valuation reports by warehouse",
+        "tags": ["Reports & Analytics"],
+        "responses": {
+          "200": { "description": "Valuation details returned." }
+        }
+      }
+    },
+    "/reports/low-stock": {
+      "get": {
+        "summary": "Retrieve low stock items threshold warnings",
+        "tags": ["Reports & Analytics"],
+        "responses": {
+          "200": { "description": "Low stock warnings returned." }
+        }
+      }
+    },
+    "/reports/stock-movements": {
+      "get": {
+        "summary": "Stock movements ledger log",
+        "tags": ["Reports & Analytics"],
+        "responses": {
+          "200": { "description": "Movement list returned." }
+        }
+      }
+    },
+    "/reports/audit-variances": {
+      "get": {
+        "summary": "Audits variance metrics",
+        "tags": ["Reports & Analytics"],
+        "responses": {
+          "200": { "description": "Variance sheet returned." }
+        }
+      }
+    }
+  }
+}
