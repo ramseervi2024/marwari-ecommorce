@@ -1,0 +1,539 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "HR & Payroll ERP API",
+    "description": "Complete REST API for the HR & Payroll ERP WordPress plugin. Covers employee profiles, attendance, leave management, payroll (PF/ESI), payslips, documents, and dashboard analytics.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Ramesh Seervi",
+      "email": "ramesh@hr-erp.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "/wp-json/hr-management/v1",
+      "description": "WordPress REST API Base"
+    }
+  ],
+  "tags": [
+    { "name": "Auth",        "description": "Authentication & user session management" },
+    { "name": "Employees",   "description": "Employee profile CRUD" },
+    { "name": "Attendance",  "description": "Daily check-in / check-out logs" },
+    { "name": "Leaves",      "description": "Leave requests and balance management" },
+    { "name": "Payroll",     "description": "Salary structures and payslip generation" },
+    { "name": "Documents",   "description": "Employee document registry" },
+    { "name": "Dashboard",   "description": "Analytics and activity logs" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Use the token returned from POST /auth/login. Store it as `hr_auth_token` in localStorage."
+      }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "required": ["username","password"],
+        "properties": {
+          "username": { "type": "string", "example": "hsuperadmin" },
+          "password": { "type": "string", "example": "123456" }
+        }
+      },
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "token": { "type": "string" },
+              "refresh_token": { "type": "string" },
+              "user": { "$ref": "#/components/schemas/User" }
+            }
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id":           { "type": "integer" },
+          "username":     { "type": "string" },
+          "display_name": { "type": "string" },
+          "email":        { "type": "string" },
+          "role":         { "type": "string", "enum": ["hr_super_admin","hr_manager","hr_accountant","hr_employee"] },
+          "capabilities": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "Employee": {
+        "type": "object",
+        "properties": {
+          "id":              { "type": "integer" },
+          "user_id":         { "type": "integer" },
+          "name":            { "type": "string" },
+          "email":           { "type": "string" },
+          "department":      { "type": "string" },
+          "designation":     { "type": "string" },
+          "date_of_joining": { "type": "string", "format": "date" },
+          "pf_number":       { "type": "string" },
+          "esi_number":      { "type": "string" },
+          "status":          { "type": "string", "enum": ["ACTIVE","SUSPENDED"] },
+          "leave_balances":  { "$ref": "#/components/schemas/LeaveBalance" }
+        }
+      },
+      "AttendanceRecord": {
+        "type": "object",
+        "properties": {
+          "id":          { "type": "integer" },
+          "employee_id": { "type": "integer" },
+          "date":        { "type": "string", "format": "date" },
+          "check_in":    { "type": "string", "example": "09:30:00" },
+          "check_out":   { "type": "string", "example": "18:15:00" },
+          "total_hours": { "type": "number" },
+          "status":      { "type": "string", "enum": ["Present","Late","Half Day","Absent"] },
+          "notes":       { "type": "string" }
+        }
+      },
+      "LeaveRequest": {
+        "type": "object",
+        "properties": {
+          "id":          { "type": "integer" },
+          "employee_id": { "type": "integer" },
+          "leave_type":  { "type": "string", "enum": ["Casual","Medical","Earned","Unpaid"] },
+          "start_date":  { "type": "string", "format": "date" },
+          "end_date":    { "type": "string", "format": "date" },
+          "reason":      { "type": "string" },
+          "status":      { "type": "string", "enum": ["Pending","Approved","Rejected"] },
+          "approved_by": { "type": "integer" },
+          "comments":    { "type": "string" }
+        }
+      },
+      "LeaveBalance": {
+        "type": "object",
+        "properties": {
+          "casual_leaves":  { "type": "integer" },
+          "medical_leaves": { "type": "integer" },
+          "earned_leaves":  { "type": "integer" },
+          "unpaid_leaves":  { "type": "integer" }
+        }
+      },
+      "Salary": {
+        "type": "object",
+        "properties": {
+          "id":               { "type": "integer" },
+          "employee_id":      { "type": "integer" },
+          "base_salary":      { "type": "number" },
+          "allowances":       { "type": "number" },
+          "deductions":       { "type": "number" },
+          "pf_contribution":  { "type": "number" },
+          "esi_contribution": { "type": "number" },
+          "net_salary":       { "type": "number" },
+          "status":           { "type": "string" }
+        }
+      },
+      "Payslip": {
+        "type": "object",
+        "properties": {
+          "id":            { "type": "integer" },
+          "employee_id":   { "type": "integer" },
+          "month":         { "type": "string", "example": "June" },
+          "year":          { "type": "integer", "example": 2026 },
+          "base_salary":   { "type": "number" },
+          "allowances":    { "type": "number" },
+          "deductions":    { "type": "number" },
+          "pf_deduction":  { "type": "number" },
+          "esi_deduction": { "type": "number" },
+          "net_salary":    { "type": "number" },
+          "status":        { "type": "string", "enum": ["Generated","Paid"] },
+          "generated_at":  { "type": "string", "format": "date-time" }
+        }
+      },
+      "Document": {
+        "type": "object",
+        "properties": {
+          "id":            { "type": "integer" },
+          "employee_id":   { "type": "integer" },
+          "document_name": { "type": "string" },
+          "document_type": { "type": "string" },
+          "file_url":      { "type": "string" },
+          "status":        { "type": "string", "enum": ["Active","Inactive","Pending Verification","Verified"] },
+          "uploaded_at":   { "type": "string", "format": "date-time" }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": false },
+          "message": { "type": "string" },
+          "data":    { "type": "object" }
+        }
+      },
+      "PaginatedResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "total": { "type": "integer" },
+              "page":  { "type": "integer" },
+              "limit": { "type": "integer" },
+              "pages": { "type": "integer" },
+              "data":  { "type": "array", "items": {} }
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [{ "BearerAuth": [] }],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login and receive JWT token",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoginRequest" } } }
+        },
+        "responses": {
+          "200": { "description": "Login successful", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/TokenResponse" } } } },
+          "401": { "description": "Invalid credentials", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register a new HR user",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": {
+            "type": "object",
+            "required": ["username","password","email"],
+            "properties": {
+              "username": { "type": "string" },
+              "password": { "type": "string" },
+              "email":    { "type": "string" },
+              "display_name": { "type": "string" },
+              "role":     { "type": "string", "enum": ["hr_super_admin","hr_manager","hr_accountant","hr_employee"] }
+            }
+          }}}
+        },
+        "responses": { "201": { "description": "User created" }, "400": { "description": "Validation error" } }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get current authenticated user info",
+        "responses": { "200": { "description": "User profile" } }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Logout (invalidate token)",
+        "responses": { "200": { "description": "Logged out" } }
+      }
+    },
+    "/auth/change-password": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Change current user's password",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": {
+            "type": "object",
+            "required": ["current_password","new_password"],
+            "properties": {
+              "current_password": { "type": "string" },
+              "new_password":     { "type": "string" }
+            }
+          }}}
+        },
+        "responses": { "200": { "description": "Password changed" } }
+      }
+    },
+    "/employees": {
+      "get": {
+        "tags": ["Employees"],
+        "summary": "List all employees with optional filters",
+        "parameters": [
+          { "in": "query", "name": "page",       "schema": { "type": "integer" } },
+          { "in": "query", "name": "limit",      "schema": { "type": "integer" } },
+          { "in": "query", "name": "search",     "schema": { "type": "string" } },
+          { "in": "query", "name": "department", "schema": { "type": "string" } },
+          { "in": "query", "name": "status",     "schema": { "type": "string" } },
+          { "in": "query", "name": "sort",       "schema": { "type": "string" } },
+          { "in": "query", "name": "order",      "schema": { "type": "string", "enum": ["ASC","DESC"] } }
+        ],
+        "responses": { "200": { "description": "Employee list", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PaginatedResponse" } } } } }
+      }
+    },
+    "/employees/{id}": {
+      "get": {
+        "tags": ["Employees"],
+        "summary": "Get a single employee by ID",
+        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Employee data" }, "404": { "description": "Not found" } }
+      },
+      "put": {
+        "tags": ["Employees"],
+        "summary": "Update employee extended profile (Admin/Manager)",
+        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": {
+          "type": "object",
+          "properties": {
+            "department":      { "type": "string" },
+            "designation":     { "type": "string" },
+            "date_of_joining": { "type": "string", "format": "date" },
+            "pf_number":       { "type": "string" },
+            "esi_number":      { "type": "string" },
+            "status":          { "type": "string" }
+          }
+        }}}},
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "tags": ["Employees"],
+        "summary": "Soft-delete employee (Admin)",
+        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/attendance": {
+      "get": {
+        "tags": ["Attendance"],
+        "summary": "List attendance records",
+        "parameters": [
+          { "in": "query", "name": "page",        "schema": { "type": "integer" } },
+          { "in": "query", "name": "limit",       "schema": { "type": "integer" } },
+          { "in": "query", "name": "employee_id", "schema": { "type": "integer" } },
+          { "in": "query", "name": "date",        "schema": { "type": "string", "format": "date" } },
+          { "in": "query", "name": "status",      "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "Attendance list" } }
+      }
+    },
+    "/attendance/check-in": {
+      "post": {
+        "tags": ["Attendance"],
+        "summary": "Record check-in for today (auto-marks Late if after 10:00)",
+        "requestBody": { "content": { "application/json": { "schema": {
+          "type": "object",
+          "properties": { "notes": { "type": "string" } }
+        }}}},
+        "responses": { "201": { "description": "Checked in" }, "409": { "description": "Already checked in" } }
+      }
+    },
+    "/attendance/check-out": {
+      "post": {
+        "tags": ["Attendance"],
+        "summary": "Record check-out (auto-marks Half Day if < 4 hours)",
+        "requestBody": { "content": { "application/json": { "schema": {
+          "type": "object",
+          "properties": { "notes": { "type": "string" } }
+        }}}},
+        "responses": { "200": { "description": "Checked out" } }
+      }
+    },
+    "/leaves": {
+      "get": {
+        "tags": ["Leaves"],
+        "summary": "List leave requests (admin sees all; employee sees own)",
+        "parameters": [
+          { "in": "query", "name": "page",        "schema": { "type": "integer" } },
+          { "in": "query", "name": "limit",       "schema": { "type": "integer" } },
+          { "in": "query", "name": "status",      "schema": { "type": "string" } },
+          { "in": "query", "name": "leave_type",  "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "Leave list" } }
+      },
+      "post": {
+        "tags": ["Leaves"],
+        "summary": "Submit a leave request",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": {
+          "type": "object",
+          "required": ["leave_type","start_date","end_date"],
+          "properties": {
+            "leave_type": { "type": "string", "enum": ["Casual","Medical","Earned","Unpaid"] },
+            "start_date": { "type": "string", "format": "date" },
+            "end_date":   { "type": "string", "format": "date" },
+            "reason":     { "type": "string" }
+          }
+        }}}},
+        "responses": { "201": { "description": "Leave submitted" } }
+      }
+    },
+    "/leaves/{id}/approve": {
+      "post": {
+        "tags": ["Leaves"],
+        "summary": "Approve a leave request (Manager/Admin)",
+        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "content": { "application/json": { "schema": {
+          "type": "object",
+          "properties": { "comments": { "type": "string" } }
+        }}}},
+        "responses": { "200": { "description": "Approved" } }
+      }
+    },
+    "/leaves/{id}/reject": {
+      "post": {
+        "tags": ["Leaves"],
+        "summary": "Reject a leave request (Manager/Admin)",
+        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "content": { "application/json": { "schema": {
+          "type": "object",
+          "properties": { "comments": { "type": "string" } }
+        }}}},
+        "responses": { "200": { "description": "Rejected" } }
+      }
+    },
+    "/leaves/balance/{employee_id}": {
+      "get": {
+        "tags": ["Leaves"],
+        "summary": "Get leave balance for an employee",
+        "parameters": [{ "in": "path", "name": "employee_id", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Leave balance" } }
+      }
+    },
+    "/payroll/salaries": {
+      "get": {
+        "tags": ["Payroll"],
+        "summary": "List all salary structures (Admin/Accountant)",
+        "responses": { "200": { "description": "Salary list" } }
+      },
+      "post": {
+        "tags": ["Payroll"],
+        "summary": "Create or update salary for an employee",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": {
+          "type": "object",
+          "required": ["employee_id","base_salary"],
+          "properties": {
+            "employee_id":      { "type": "integer" },
+            "base_salary":      { "type": "number" },
+            "allowances":       { "type": "number" },
+            "deductions":       { "type": "number" },
+            "pf_contribution":  { "type": "number", "description": "Auto-calculated as 12% if omitted" },
+            "esi_contribution": { "type": "number", "description": "Auto-calculated as 0.75% if omitted" }
+          }
+        }}}},
+        "responses": { "200": { "description": "Salary upserted" } }
+      }
+    },
+    "/payroll/payslips/generate": {
+      "post": {
+        "tags": ["Payroll"],
+        "summary": "Generate a payslip for an employee (Admin/Accountant)",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": {
+          "type": "object",
+          "required": ["employee_id","month","year"],
+          "properties": {
+            "employee_id":   { "type": "integer" },
+            "month":         { "type": "string", "example": "June" },
+            "year":          { "type": "integer" },
+            "pf_deduction":  { "type": "number", "description": "Override monthly PF deduction" },
+            "esi_deduction": { "type": "number", "description": "Override monthly ESI deduction" }
+          }
+        }}}},
+        "responses": { "201": { "description": "Payslip generated" }, "409": { "description": "Already exists" } }
+      }
+    },
+    "/payroll/payslips/{id}/mark-paid": {
+      "put": {
+        "tags": ["Payroll"],
+        "summary": "Mark a payslip as Paid",
+        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Marked paid" } }
+      }
+    },
+    "/documents": {
+      "get": {
+        "tags": ["Documents"],
+        "summary": "List documents (admin sees all; employee sees own)",
+        "responses": { "200": { "description": "Document list" } }
+      },
+      "post": {
+        "tags": ["Documents"],
+        "summary": "Register a document",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": {
+          "type": "object",
+          "required": ["document_name"],
+          "properties": {
+            "employee_id":   { "type": "integer", "description": "Required for admin; auto-set for employee" },
+            "document_name": { "type": "string" },
+            "document_type": { "type": "string", "example": "ID Proof" },
+            "file_url":      { "type": "string" }
+          }
+        }}}},
+        "responses": { "201": { "description": "Document registered" } }
+      }
+    },
+    "/documents/{id}": {
+      "put": {
+        "tags": ["Documents"],
+        "summary": "Update document details or verification status (Manager/Admin)",
+        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": { "content": { "application/json": { "schema": {
+          "type": "object",
+          "properties": {
+            "document_name": { "type": "string" },
+            "document_type": { "type": "string" },
+            "file_url":      { "type": "string" },
+            "status":        { "type": "string", "enum": ["Active","Inactive","Pending Verification","Verified"] }
+          }
+        }}}},
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "tags": ["Documents"],
+        "summary": "Delete a document record",
+        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/dashboard/stats": {
+      "get": {
+        "tags": ["Dashboard"],
+        "summary": "Get dashboard stats (role-based view)",
+        "responses": {
+          "200": {
+            "description": "Admin: company-wide metrics. Employee: personal metrics.",
+            "content": { "application/json": { "schema": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean" },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "summary":                 { "type": "object" },
+                    "recent_checkins":         { "type": "array", "items": {} },
+                    "pending_leave_requests":  { "type": "array", "items": {} }
+                  }
+                }
+              }
+            }}}
+          }
+        }
+      }
+    },
+    "/dashboard/activity-logs": {
+      "get": {
+        "tags": ["Dashboard"],
+        "summary": "Get system activity logs (Admin only)",
+        "parameters": [
+          { "in": "query", "name": "page",  "schema": { "type": "integer" } },
+          { "in": "query", "name": "limit", "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Activity log list" } }
+      }
+    }
+  }
+}
