@@ -1,0 +1,11 @@
+{
+    "name": "ramseervi/transport-management-api",
+    "description": "Enterprise-grade Transport & Logistics ERP API for WordPress",
+    "type": "wordpress-plugin",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "TransportManagementApi\\": ""
+        }
+    }
+}

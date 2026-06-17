@@ -1,0 +1,321 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Transport & Logistics ERP API",
+    "description": "Headless enterprise-grade fleet tracking, delivery scheduling, fuel metrics, maintenance sheets, challan tracking, and billing services.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/wp-json/transport-management/v1",
+      "description": "Local WordPress REST Gateway"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Register a new transport user profile",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "name": { "type": "string" },
+                  "role": { "type": "string", "enum": ["transport_super_admin", "transport_fleet_manager", "transport_operations_manager", "transport_driver", "transport_accountant"] }
+                },
+                "required": ["username", "email", "name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP sent to email address" }
+        }
+      }
+    },
+    "/auth/register/verify": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Verify registration email OTP",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "otp": { "type": "string" }
+                },
+                "required": ["email", "otp"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Registration verified successfully" }
+        }
+      }
+    },
+    "/auth/login/initiate": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Send passwordless OTP to email",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username_or_email": { "type": "string" }
+                },
+                "required": ["username_or_email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP dispatched successfully" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Login via password or OTP code",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" },
+                  "otp": { "type": "string" }
+                },
+                "required": ["username"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Access JWT generated successfully" }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Retrieve current logged in user details",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Session payload decoded successfully" }
+        }
+      }
+    },
+    "/vehicles": {
+      "get": {
+        "tags": ["Fleet Vehicles"],
+        "summary": "Retrieve a list of vehicles",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of active vehicles" }
+        }
+      },
+      "post": {
+        "tags": ["Fleet Vehicles"],
+        "summary": "Register a new vehicle in fleet",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "vehicle_number": { "type": "string" },
+                  "vehicle_type": { "type": "string" },
+                  "vehicle_model": { "type": "string" },
+                  "registration_number": { "type": "string" }
+                },
+                "required": ["vehicle_number", "vehicle_type"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Vehicle created" }
+        }
+      }
+    },
+    "/drivers": {
+      "get": {
+        "tags": ["Fleet Drivers"],
+        "summary": "List all active drivers",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Drivers list" }
+        }
+      },
+      "post": {
+        "tags": ["Fleet Drivers"],
+        "summary": "Create a new driver record",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "mobile": { "type": "string" },
+                  "license_number": { "type": "string" }
+                },
+                "required": ["name", "mobile", "license_number"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Driver logged" }
+        }
+      }
+    },
+    "/trips": {
+      "get": {
+        "tags": ["Trips & Shipments"],
+        "summary": "List all active dispatches",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Trip logs" }
+        }
+      },
+      "post": {
+        "tags": ["Trips & Shipments"],
+        "summary": "Dispatch a new trip load",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "vehicle_id": { "type": "integer" },
+                  "driver_id": { "type": "integer" },
+                  "route_id": { "type": "integer" },
+                  "customer_name": { "type": "string" }
+                },
+                "required": ["vehicle_id", "driver_id", "route_id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Trip registered" }
+        }
+      }
+    },
+    "/deliveries": {
+      "get": {
+        "tags": ["Delivery Tracking"],
+        "summary": "Get all delivery tracking lists",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of active tracking codes" }
+        }
+      }
+    },
+    "/fuel": {
+      "get": {
+        "tags": ["Fuel Sheets"],
+        "summary": "Get fuel expense history",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Fuel purchase history" }
+        }
+      },
+      "post": {
+        "tags": ["Fuel Sheets"],
+        "summary": "Log a new fuel purchase receipt",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "vehicle_id": { "type": "integer" },
+                  "fuel_quantity": { "type": "number" },
+                  "rate_per_liter": { "type": "number" }
+                },
+                "required": ["vehicle_id", "fuel_quantity", "rate_per_liter"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Fuel logged successfully" }
+        }
+      }
+    },
+    "/driver-salary": {
+      "get": {
+        "tags": ["Payroll & Salaries"],
+        "summary": "Get salary logs",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Driver payroll records" }
+        }
+      }
+    },
+    "/challans": {
+      "get": {
+        "tags": ["Challan Tickets"],
+        "summary": "Retrieve driving challans lists",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Violations logged" }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "tags": ["Analytics & KPIs"],
+        "summary": "Retrieve operational and financial dashboard stats",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "All core KPI indicators loaded" }
+        }
+      }
+    },
+    "/reports/profit-loss": {
+      "get": {
+        "tags": ["Analytics & KPIs"],
+        "summary": "Retrieve Profit and Loss statement metrics",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Financial profit-loss report" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
