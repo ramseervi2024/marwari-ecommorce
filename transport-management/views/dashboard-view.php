@@ -1807,6 +1807,265 @@ if (!defined('ABSPATH')) {
             <div style="text-align: right;">
                 <button class="btn" onclick="closeModal('invoice-pdf')">Close</button>
                 <button class="btn btn-primary" onclick="printPdfMock()">🖨️ Print Receipt</button>
+    </div>
+
+    <!-- MAINTENANCE MODAL -->
+    <div class="modal" id="modal-maintenance">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Log Maintenance Event</h3>
+                <button class="modal-close" onclick="closeModal('maintenance')">&times;</button>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="createMaintVeh">Select Vehicle</label>
+                    <select id="createMaintVeh" class="form-select"></select>
+                </div>
+                <div class="form-group">
+                    <label for="createMaintType">Maintenance Type</label>
+                    <select id="createMaintType" class="form-select">
+                        <option value="Oil Change">Oil Change</option>
+                        <option value="Tire Replacement">Tire Replacement</option>
+                        <option value="Engine Service">Engine Service</option>
+                        <option value="Brake Service">Brake Service</option>
+                        <option value="General Service">General Service</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="createMaintCenter">Service Center</label>
+                    <input type="text" id="createMaintCenter" class="form-input" placeholder="e.g. Tata Workshop">
+                </div>
+                <div class="form-group">
+                    <label for="createMaintCost">Cost (₹)</label>
+                    <input type="number" id="createMaintCost" class="form-input" placeholder="5000">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="createMaintDate">Service Date</label>
+                    <input type="date" id="createMaintDate" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="createMaintNextDate">Next Service Date</label>
+                    <input type="date" id="createMaintNextDate" class="form-input">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="createMaintDesc">Description</label>
+                <textarea id="createMaintDesc" class="form-textarea" placeholder="Enter service description details..."></textarea>
+            </div>
+            <div style="text-align: right; margin-top: 20px;">
+                <button class="btn" onclick="closeModal('maintenance')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitCreate('maintenance')">Log Service</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SALARIES MODAL -->
+    <div class="modal" id="modal-salaries">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Run Payroll Calculation</h3>
+                <button class="modal-close" onclick="closeModal('salaries')">&times;</button>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="createSalaryDriver">Select Driver</label>
+                    <select id="createSalaryDriver" class="form-select"></select>
+                </div>
+                <div class="form-group">
+                    <label for="createSalaryMonth">Salary Month</label>
+                    <input type="month" id="createSalaryMonth" class="form-input">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="createSalaryFixed">Fixed Salary Amount (₹)</label>
+                    <input type="number" id="createSalaryFixed" class="form-input" placeholder="25000">
+                </div>
+                <div class="form-group">
+                    <label for="createSalaryBonus">Trip Bonus (₹)</label>
+                    <input type="number" id="createSalaryBonus" class="form-input" placeholder="500">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="createSalaryAllowance">Allowance (₹)</label>
+                    <input type="number" id="createSalaryAllowance" class="form-input" placeholder="1000">
+                </div>
+                <div class="form-group">
+                    <label for="createSalaryDeduction">Deduction (₹)</label>
+                    <input type="number" id="createSalaryDeduction" class="form-input" placeholder="0">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="createSalaryStatus">Payment Status</label>
+                <select id="createSalaryStatus" class="form-select">
+                    <option value="Pending">Pending</option>
+                    <option value="Paid">Paid</option>
+                </select>
+            </div>
+            <div style="text-align: right; margin-top: 20px;">
+                <button class="btn" onclick="closeModal('salaries')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitCreate('salaries')">Calculate Salary</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHALLANS MODAL -->
+    <div class="modal" id="modal-challans">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Log Fine Challan Ticket</h3>
+                <button class="modal-close" onclick="closeModal('challans')">&times;</button>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="createChallanVeh">Select Vehicle</label>
+                    <select id="createChallanVeh" class="form-select"></select>
+                </div>
+                <div class="form-group">
+                    <label for="createChallanDriver">Select Driver</label>
+                    <select id="createChallanDriver" class="form-select"></select>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="createChallanNum">Challan Number</label>
+                    <input type="text" id="createChallanNum" class="form-input" placeholder="CH-XXXX-YYYY">
+                </div>
+                <div class="form-group">
+                    <label for="createChallanType">Violation Type</label>
+                    <select id="createChallanType" class="form-select">
+                        <option value="Speeding">Speeding</option>
+                        <option value="Overloading">Overloading</option>
+                        <option value="Permit Violation">Permit Violation</option>
+                        <option value="Parking Violation">Parking Violation</option>
+                        <option value="Traffic Violation">Traffic Violation</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="createChallanAmt">Fine Amount (₹)</label>
+                    <input type="number" id="createChallanAmt" class="form-input" placeholder="2000">
+                </div>
+                <div class="form-group">
+                    <label for="createChallanDate">Ticket Date</label>
+                    <input type="date" id="createChallanDate" class="form-input">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="createChallanStatus">Payment Status</label>
+                <select id="createChallanStatus" class="form-select">
+                    <option value="Pending">Pending</option>
+                    <option value="Paid">Paid</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="createChallanRemarks">Remarks / Notes</label>
+                <textarea id="createChallanRemarks" class="form-textarea" placeholder="Enter violation check details..."></textarea>
+            </div>
+            <div style="text-align: right; margin-top: 20px;">
+                <button class="btn" onclick="closeModal('challans')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitCreate('challans')">Log Fine</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXPENSES MODAL -->
+    <div class="modal" id="modal-expenses">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Log Trip Expense</h3>
+                <button class="modal-close" onclick="closeModal('expenses')">&times;</button>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="createExpenseTrip">Select Dispatch Trip</label>
+                    <select id="createExpenseTrip" class="form-select"></select>
+                </div>
+                <div class="form-group">
+                    <label for="createExpenseType">Expense Category</label>
+                    <select id="createExpenseType" class="form-select">
+                        <option value="Fuel">Fuel</option>
+                        <option value="Toll">Toll</option>
+                        <option value="Driver Allowance">Driver Allowance</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="Parking">Parking</option>
+                        <option value="Loading Charges">Loading Charges</option>
+                        <option value="Unloading Charges">Unloading Charges</option>
+                        <option value="Miscellaneous">Miscellaneous</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="createExpenseAmt">Expense Amount (₹)</label>
+                    <input type="number" id="createExpenseAmt" class="form-input" placeholder="1000">
+                </div>
+                <div class="form-group">
+                    <label for="createExpenseDate">Expense Date</label>
+                    <input type="date" id="createExpenseDate" class="form-input">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="createExpenseDesc">Description / Justification</label>
+                <textarea id="createExpenseDesc" class="form-textarea" placeholder="Details about this purchase..."></textarea>
+            </div>
+            <div style="text-align: right; margin-top: 20px;">
+                <button class="btn" onclick="closeModal('expenses')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitCreate('expenses')">Record Expense</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOMERS MODAL -->
+    <div class="modal" id="modal-customers">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Customer Company</h3>
+                <button class="modal-close" onclick="closeModal('customers')">&times;</button>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="createCustomerCode">Customer Code</label>
+                    <input type="text" id="createCustomerCode" class="form-input" placeholder="e.g. CUST-003">
+                </div>
+                <div class="form-group">
+                    <label for="createCustomerCompany">Company Name</label>
+                    <input type="text" id="createCustomerCompany" class="form-input" placeholder="e.g. Acme Corp">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="createCustomerContact">Contact Person</label>
+                    <input type="text" id="createCustomerContact" class="form-input" placeholder="Suresh Kumar">
+                </div>
+                <div class="form-group">
+                    <label for="createCustomerMobile">Mobile Number</label>
+                    <input type="text" id="createCustomerMobile" class="form-input" placeholder="9876543210">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="createCustomerEmail">Email Address</label>
+                    <input type="email" id="createCustomerEmail" class="form-input" placeholder="billing@acme.com">
+                </div>
+                <div class="form-group">
+                    <label for="createCustomerGst">GST Number</label>
+                    <input type="text" id="createCustomerGst" class="form-input" placeholder="07AAAAA1111A1Z1">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="createCustomerAddress">Business Address</label>
+                <textarea id="createCustomerAddress" class="form-textarea" placeholder="Enter corporate head office address..."></textarea>
+            </div>
+            <div style="text-align: right; margin-top: 20px;">
+                <button class="btn" onclick="closeModal('customers')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitCreate('customers')">Save Customer</button>
             </div>
         </div>
     </div>
@@ -2006,6 +2265,21 @@ if (!defined('ABSPATH')) {
         // Core Load Router
         function loadAllData() {
             loadDataForTab('dashboard');
+            // Background load metadata for selectors
+            const tabsToLoad = ['vehicles', 'drivers', 'routes', 'customers', 'trips'];
+            tabsToLoad.forEach(tab => {
+                if (!isSandbox) {
+                    const token = authToken;
+                    let url = `/wp-json/transport-management/v1/${tab === 'salaries' ? 'driver-salary' : tab}`;
+                    fetch(url, { headers: { 'Authorization': `Bearer ${token}` } })
+                    .then(res => res.json())
+                    .then(resObj => {
+                        if (resObj.success) {
+                            mockData[tab] = resObj.data.data || resObj.data;
+                        }
+                    }).catch(err => console.error('Error preloading tab data:', tab, err));
+                }
+            });
         }
 
         function loadDataForTab(tab) {
@@ -2031,7 +2305,9 @@ if (!defined('ABSPATH')) {
                     } else if (tab === 'reports') {
                         renderReportsStats(resObj.data);
                     } else {
-                        renderLiveList(tab, resObj.data.data || resObj.data);
+                        const rows = resObj.data.data || resObj.data;
+                        mockData[tab] = rows;
+                        renderLiveList(tab, rows);
                     }
                 }
             })
@@ -2362,6 +2638,15 @@ if (!defined('ABSPATH')) {
                 } else if (tab === 'billing') {
                     populateSelector('createBillTrip', mockData.trips.filter(t => t.status === 'Delivered'), 'trip_number', 'id');
                     populateSelector('createBillClient', mockData.customers, 'company_name', 'id');
+                } else if (tab === 'maintenance') {
+                    populateSelector('createMaintVeh', mockData.vehicles, 'vehicle_number', 'id');
+                } else if (tab === 'salaries') {
+                    populateSelector('createSalaryDriver', mockData.drivers, 'name', 'id');
+                } else if (tab === 'challans') {
+                    populateSelector('createChallanVeh', mockData.vehicles, 'vehicle_number', 'id');
+                    populateSelector('createChallanDriver', mockData.drivers, 'name', 'id');
+                } else if (tab === 'expenses') {
+                    populateSelector('createExpenseTrip', [{id: '', trip_number: 'General Expense (No Trip)'}, ...mockData.trips], 'trip_number', 'id');
                 }
             }
         }
@@ -2441,6 +2726,58 @@ if (!defined('ABSPATH')) {
                     freight_amount: parseFloat(document.getElementById('createBillFreight').value || 0),
                     fuel_surcharge: parseFloat(document.getElementById('createBillSurcharge').value || 0),
                     invoice_date: new Date().toISOString().split('T')[0]
+                };
+            } else if (tab === 'maintenance') {
+                data = {
+                    vehicle_id: parseInt(document.getElementById('createMaintVeh').value),
+                    maintenance_type: document.getElementById('createMaintType').value,
+                    description: document.getElementById('createMaintDesc').value,
+                    service_center: document.getElementById('createMaintCenter').value,
+                    cost: parseFloat(document.getElementById('createMaintCost').value || 0),
+                    service_date: document.getElementById('createMaintDate').value || new Date().toISOString().split('T')[0],
+                    next_service_date: document.getElementById('createMaintNextDate').value || '',
+                    status: 'Scheduled'
+                };
+            } else if (tab === 'salaries') {
+                data = {
+                    driver_id: parseInt(document.getElementById('createSalaryDriver').value),
+                    salary_month: document.getElementById('createSalaryMonth').value || new Date().toISOString().split('T')[0].substring(0,7),
+                    fixed_salary: parseFloat(document.getElementById('createSalaryFixed').value || 0),
+                    trip_bonus: parseFloat(document.getElementById('createSalaryBonus').value || 0),
+                    allowance: parseFloat(document.getElementById('createSalaryAllowance').value || 0),
+                    deduction: parseFloat(document.getElementById('createSalaryDeduction').value || 0),
+                    payment_status: document.getElementById('createSalaryStatus').value
+                };
+                data.total_salary = data.fixed_salary + data.trip_bonus + data.allowance - data.deduction;
+            } else if (tab === 'challans') {
+                data = {
+                    vehicle_id: parseInt(document.getElementById('createChallanVeh').value),
+                    driver_id: parseInt(document.getElementById('createChallanDriver').value),
+                    challan_number: document.getElementById('createChallanNum').value,
+                    challan_type: document.getElementById('createChallanType').value,
+                    challan_amount: parseFloat(document.getElementById('createChallanAmt').value || 0),
+                    challan_date: document.getElementById('createChallanDate').value || new Date().toISOString().split('T')[0],
+                    payment_status: document.getElementById('createChallanStatus').value,
+                    remarks: document.getElementById('createChallanRemarks').value
+                };
+            } else if (tab === 'expenses') {
+                const tripVal = document.getElementById('createExpenseTrip').value;
+                data = {
+                    trip_id: tripVal ? parseInt(tripVal) : null,
+                    expense_type: document.getElementById('createExpenseType').value,
+                    amount: parseFloat(document.getElementById('createExpenseAmt').value || 0),
+                    expense_date: document.getElementById('createExpenseDate').value || new Date().toISOString().split('T')[0],
+                    description: document.getElementById('createExpenseDesc').value
+                };
+            } else if (tab === 'customers') {
+                data = {
+                    customer_code: document.getElementById('createCustomerCode').value,
+                    company_name: document.getElementById('createCustomerCompany').value,
+                    contact_person: document.getElementById('createCustomerContact').value,
+                    mobile: document.getElementById('createCustomerMobile').value,
+                    email: document.getElementById('createCustomerEmail').value,
+                    address: document.getElementById('createCustomerAddress').value,
+                    gst_number: document.getElementById('createCustomerGst').value
                 };
             }
 
