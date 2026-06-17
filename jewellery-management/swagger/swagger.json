@@ -1,0 +1,273 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Jewellery ERP API Documentation",
+    "version": "1.0.0",
+    "description": "Enterprise-grade REST API endpoints for finished ornaments, gold/silver stocks, customer loyalty points, GST invoicing, Karigar jobs, buyback exchanges, diamond specifications, store overheads, and reports."
+  },
+  "servers": [
+    {
+      "url": "/wp-json/jewellery-management/v1"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Initiate operator profile registration (OTP)",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "email", "name"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "name": { "type": "string" },
+                  "role": { "type": "string", "enum": ["jewel_super_admin", "jewel_store_manager", "jewel_sales_executive", "jewel_karigar_supervisor", "jewel_accountant"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP verification mail dispatched successfully." }
+        }
+      }
+    },
+    "/auth/register/verify": {
+      "post": {
+        "summary": "Verify OTP and active registration",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "otp"],
+                "properties": {
+                  "email": { "type": "string" },
+                  "otp": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Operator profile created in pending state." }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Authenticate user operator",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" },
+                  "otp": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "JWT Access & Refresh tokens returned." }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Get authenticated user profile",
+        "responses": {
+          "200": { "description": "Profile data returned." }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Sign out and clear session tokens",
+        "responses": {
+          "200": { "description": "Tokens deleted." }
+        }
+      }
+    },
+    "/inventory": {
+      "get": { "summary": "List finished ornaments" },
+      "post": { "summary": "Add finished ornament" }
+    },
+    "/inventory/{id}": {
+      "get": { "summary": "Get finished ornament details" },
+      "put": { "summary": "Update finished ornament" },
+      "delete": { "summary": "Delete finished ornament" }
+    },
+    "/metal-stock": {
+      "get": { "summary": "List bullion stock" },
+      "post": { "summary": "Create bullion stock item" }
+    },
+    "/metal-stock/{id}": {
+      "get": { "summary": "Get bullion stock details" },
+      "put": { "summary": "Update bullion stock item" },
+      "delete": { "summary": "Delete bullion stock item" }
+    },
+    "/customer": {
+      "get": { "summary": "List customers" },
+      "post": { "summary": "Add customer profile" }
+    },
+    "/customer/{id}": {
+      "get": { "summary": "Get customer details" },
+      "put": { "summary": "Update customer profile" },
+      "delete": { "summary": "Delete customer profile" }
+    },
+    "/billing": {
+      "get": { "summary": "List billing invoices" },
+      "post": { "summary": "Generate GST billing invoice" }
+    },
+    "/billing/{id}": {
+      "get": { "summary": "Get invoice details" },
+      "put": { "summary": "Update invoice details" },
+      "delete": { "summary": "Delete invoice details" }
+    },
+    "/karigar": {
+      "get": { "summary": "List Karigars" },
+      "post": { "summary": "Add Karigar profile" }
+    },
+    "/karigar/{id}": {
+      "get": { "summary": "Get Karigar details" },
+      "put": { "summary": "Update Karigar details" },
+      "delete": { "summary": "Delete Karigar details" }
+    },
+    "/job-work": {
+      "get": { "summary": "List Karigar jobs assignments" },
+      "post": { "summary": "Assign job to Karigar" }
+    },
+    "/job-work/{id}": {
+      "get": { "summary": "Get job assignment details" },
+      "put": { "summary": "Update job assignment" },
+      "delete": { "summary": "Delete job assignment" }
+    },
+    "/repair": {
+      "get": { "summary": "List repairs orders" },
+      "post": { "summary": "Add repair order receipt" }
+    },
+    "/repair/{id}": {
+      "get": { "summary": "Get repair order details" },
+      "put": { "summary": "Update repair order" },
+      "delete": { "summary": "Delete repair order" }
+    },
+    "/custom-order": {
+      "get": { "summary": "List custom orders bookings" },
+      "post": { "summary": "Book custom design order" }
+    },
+    "/custom-order/{id}": {
+      "get": { "summary": "Get custom order details" },
+      "put": { "summary": "Update custom order" },
+      "delete": { "summary": "Delete custom order" }
+    },
+    "/buyback": {
+      "get": { "summary": "List metal buyback exchange ledger" },
+      "post": { "summary": "Record buyback exchange payout" }
+    },
+    "/buyback/{id}": {
+      "get": { "summary": "Get buyback transaction details" },
+      "put": { "summary": "Update buyback transaction" },
+      "delete": { "summary": "Delete buyback transaction" }
+    },
+    "/diamond": {
+      "get": { "summary": "List diamond specifications index" },
+      "post": { "summary": "Create diamond item record" }
+    },
+    "/diamond/{id}": {
+      "get": { "summary": "Get diamond details" },
+      "put": { "summary": "Update diamond item" },
+      "delete": { "summary": "Delete diamond item" }
+    },
+    "/expense": {
+      "get": { "summary": "List store overheads expenses" },
+      "post": { "summary": "Log operational expense" }
+    },
+    "/expense/{id}": {
+      "get": { "summary": "Get expense details" },
+      "put": { "summary": "Update expense record" },
+      "delete": { "summary": "Delete expense record" }
+    },
+    "/loyalty": {
+      "get": { "summary": "List customer points logs" },
+      "post": { "summary": "Perform loyalty transaction" }
+    },
+    "/loyalty/{id}": {
+      "get": { "summary": "Get loyalty transaction details" },
+      "put": { "summary": "Update loyalty transaction" },
+      "delete": { "summary": "Delete loyalty transaction" }
+    },
+    "/inventory-audit": {
+      "get": { "summary": "List stock count audits" },
+      "post": { "summary": "Initiate stock variance audit" }
+    },
+    "/inventory-audit/{id}": {
+      "get": { "summary": "Get stock audit details" },
+      "put": { "summary": "Update/Adjust stock audit" },
+      "delete": { "summary": "Delete stock audit" }
+    },
+    "/barcode/scan": {
+      "get": { "summary": "Lookup finished item details by scanning barcode" }
+    },
+    "/barcode/print/{id}": {
+      "get": { "summary": "Generate barcode label printable settings" }
+    },
+    "/media/upload": {
+      "post": { "summary": "Upload design sketch attachment" }
+    },
+    "/notification/email": {
+      "post": { "summary": "Send email alert simulation notification" }
+    },
+    "/notification/sms": {
+      "post": { "summary": "Send SMS alert simulation notification" }
+    },
+    "/notification/whatsapp": {
+      "post": { "summary": "Send WhatsApp alert simulation notification" }
+    },
+    "/dashboard": {
+      "get": { "summary": "Get dashboard operational metrics counters and charts" }
+    },
+    "/reports/gst": {
+      "get": { "summary": "Get GST invoice summary reports" }
+    },
+    "/reports/karigar": {
+      "get": { "summary": "Get Karigar job work sheets reports" }
+    },
+    "/reports/sales": {
+      "get": { "summary": "Get daily sales registry logs" }
+    },
+    "/reports/stocks": {
+      "get": { "summary": "Get Gold/Silver metal stock valuation report" }
+    },
+    "/reports/profit-loss": {
+      "get": { "summary": "Get P&L monthly statement reports" }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "ramseervi2024/jewellery-management-api",
+  "description": "Jewellery Shop Management System ERP API Custom WordPress Plugin",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "JewelleryManagementApi\\": "./"
+    }
+  }
+}
