@@ -1,0 +1,11 @@
+{
+    "name": "ramseervi/construction-management-api",
+    "description": "Enterprise-grade Construction ERP API for WordPress",
+    "type": "wordpress-plugin",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "ConstructionManagementApi\\": ""
+        }
+    }
+}

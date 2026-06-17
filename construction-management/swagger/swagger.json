@@ -1,0 +1,184 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Construction ERP API",
+    "description": "Headless REST API ERP for Civil Contractors, Real Estate Developers, and Construction Management. Supports JWT authentication, custom roles, project costing reports, and inventory management.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/wp-json/construction-management/v1",
+      "description": "Local WordPress REST API endpoint"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Initiate registration OTP",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "name": { "type": "string" },
+                  "role": { "type": "string", "enum": ["construction_super_admin", "construction_project_manager", "construction_site_engineer", "construction_purchase_manager", "construction_contractor", "construction_accountant"] }
+                },
+                "required": ["username", "email", "name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Verification code dispatched successfully" }
+        }
+      }
+    },
+    "/auth/register/verify": {
+      "post": {
+        "summary": "Verify OTP and finalize user registration",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "otp": { "type": "string", "maxLength": 6 }
+                },
+                "required": ["email", "otp"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Registration successful" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Authenticate user credentials",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" },
+                  "otp": { "type": "string" }
+                },
+                "required": ["username"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Bearer token payload returned" }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Get authenticated user profile details",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Profile info returned" }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "summary": "Fetch aggregated KPI stats and charts details",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Dashboard analytics dashboard payload" }
+        }
+      }
+    },
+    "/projects": {
+      "get": {
+        "summary": "Get projects directory",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } },
+          { "name": "search", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "List of projects" }
+        }
+      },
+      "post": {
+        "summary": "Register new construction project",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "project_name": { "type": "string" },
+                  "client_name": { "type": "string" },
+                  "project_type": { "type": "string" },
+                  "location": { "type": "string" },
+                  "estimated_cost": { "type": "number" }
+                },
+                "required": ["project_name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Project registered successfully" }
+        }
+      }
+    },
+    "/reports/project-cost": {
+      "get": {
+        "summary": "Get project costing breakdown",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "project_id", "in": "query", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Project costs loaded" }
+        }
+      }
+    },
+    "/reports/profitability": {
+      "get": {
+        "summary": "Get profitability sheet for projects",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Profit sheet loaded" }
+        }
+      }
+    },
+    "/reports/budget-vs-actual": {
+      "get": {
+        "summary": "Get budget vs actual variations report",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Budget analysis report loaded" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
