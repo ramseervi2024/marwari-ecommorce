@@ -147,8 +147,10 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0
       <div class="nav-item" data-sec="plans" onclick="nav('plans')">🏷️ Plans</div>
       <div class="nav-item" data-sec="trainers" onclick="nav('trainers')">💪 Trainers</div>
       <div class="nav-item" data-sec="diet_plans" onclick="nav('diet_plans')">🥗 Diet Plans</div>
+      <div class="nav-item" data-sec="workout_plans" onclick="nav('workout_plans')">🏋️ Workout Plans</div>
       <div class="nav-item" data-sec="attendance" onclick="nav('attendance')">📅 Attendance</div>
       <div class="nav-item" data-sec="payments" onclick="nav('payments')">💰 Payments</div>
+      <div class="nav-item" data-sec="equipment" onclick="nav('equipment')">🔧 Equipment</div>
       <div class="nav-item" onclick="window.open('<?php echo esc_js($site_url); ?>/gym-management-docs','_blank')">📘 API Docs</div>
     </nav>
     <div class="user-card">
@@ -394,7 +396,7 @@ sections.memberships = async () => {
       <div class="card-header"><div class="card-title">Active Memberships</div><button class="btn btn-primary" onclick="assignMembership()">+ Assign/Renew</button></div>
       <div class="table-wrap"><table>
         <thead><tr><th>Member</th><th>Plan</th><th>Start Date</th><th>End Date</th><th>Status</th></tr></thead>
-        <tbody>${res.data.data.map(m=>`<tr><td><strong>${m.member_name}</strong><br><small>${m.member_code}</small></td><td>${m.plan_name}</td><td>${m.start_date}</td><td><span class="badge badge-primary">${m.end_date}</span></td><td><span class="badge badge-success">${m.status}</span></td></tr>`).join('')}</tbody>
+        <tbody>${res.data.map(m=>`<tr><td><strong>${m.member_name}</strong><br><small>${m.member_code}</small></td><td>${m.plan_name}</td><td>${m.start_date}</td><td><span class="badge badge-primary">${m.end_date}</span></td><td><span class="badge badge-success">${m.status}</span></td></tr>`).join('')}</tbody>
       </table></div>
     </div>
   `;
@@ -503,6 +505,214 @@ window.saveAtt = async () => {
   const r = await api('POST','/attendance', {user_type:document.getElementById('a-type').value, reference_id:document.getElementById('a-ref').value});
   alert(r.message); closeModal(); nav('attendance');
 };
+
+/* WORKOUT PLANS */
+sections.workout_plans = async () => {
+  const res = await api('GET','/workout-plans?limit=100');
+  if(!res.success) return;
+  const condBadge = (lvl) => {
+    const map = {Beginner:'badge-success',Intermediate:'badge-warning',Advanced:'badge-danger'};
+    return `<span class="badge ${map[lvl]||'badge-primary'}">${lvl}</span>`;
+  };
+  document.getElementById('content').innerHTML = `
+    <div class="card">
+      <div class="card-header"><div class="card-title">Workout Plans</div><button class="btn btn-primary" onclick="addWorkout()">+ Create Workout Plan</button></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Title</th><th>Member</th><th>Trainer</th><th>Goal</th><th>Level</th><th>Duration</th><th>Actions</th></tr></thead>
+        <tbody>${res.data.data.map(w=>`<tr>
+          <td><strong>${w.title}</strong></td>
+          <td>${w.member_name||'-'}<br><small style="color:var(--text-muted)">${w.member_code||''}</small></td>
+          <td>${w.trainer_name||'<span style="color:var(--text-muted)">—</span>'}</td>
+          <td>${w.goal}</td>
+          <td>${condBadge(w.level)}</td>
+          <td>${w.start_date||'-'} → ${w.end_date||'Ongoing'}</td>
+          <td>
+            <button class="btn btn-sm btn-secondary" onclick="viewWorkout(${w.id})">View</button>
+            <button class="btn btn-sm btn-danger" onclick="delWorkout(${w.id})">Del</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+    </div>
+  `;
+};
+
+window.addWorkout = () => {
+  const days = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+  const dayInputs = days.map(d=>`
+    <div class="form-group full">
+      <label>${d.charAt(0).toUpperCase()+d.slice(1)}</label>
+      <textarea id="wp-${d}" rows="2" placeholder="e.g. Bench Press 4x12, Incline DB Press 3x10..."></textarea>
+    </div>`).join('');
+
+  openModal('Create Workout Plan', `
+    <div class="form-grid">
+      <div class="form-group"><label>Title</label><input type="text" id="wp-title" placeholder="e.g. Chest & Back Split"></div>
+      <div class="form-group"><label>Goal</label><select id="wp-goal">
+        <option>General Fitness</option><option>Muscle Gain</option><option>Fat Loss</option><option>Strength Training</option><option>Endurance</option><option>Flexibility</option>
+      </select></div>
+      <div class="form-group"><label>Member</label><select id="wp-mem">${state.members.map(m=>`<option value="${m.id}">${m.name} (${m.member_id})</option>`).join('')}</select></div>
+      <div class="form-group"><label>Level</label><select id="wp-level">
+        <option>Beginner</option><option>Intermediate</option><option>Advanced</option>
+      </select></div>
+      <div class="form-group"><label>Trainer (Optional)</label><select id="wp-train"><option value="">None</option>${state.trainers.map(t=>`<option value="${t.id}">${t.name}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Start Date</label><input type="date" id="wp-start" value="${new Date().toISOString().split('T')[0]}"></div>
+      ${dayInputs}
+      <div class="form-group full"><label>Notes</label><textarea id="wp-notes" rows="2"></textarea></div>
+      <div class="form-group full"><button class="btn btn-primary" onclick="saveWorkout()">Save Workout Plan</button></div>
+    </div>
+  `);
+};
+
+window.saveWorkout = async () => {
+  const days = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+  const data = {
+    title: document.getElementById('wp-title').value,
+    goal: document.getElementById('wp-goal').value,
+    member_id: document.getElementById('wp-mem').value,
+    level: document.getElementById('wp-level').value,
+    trainer_id: document.getElementById('wp-train').value,
+    start_date: document.getElementById('wp-start').value,
+    notes: document.getElementById('wp-notes').value
+  };
+  days.forEach(d => data[d] = document.getElementById('wp-'+d).value);
+  const res = await api('POST','/workout-plans', data);
+  if(res.success) { closeModal(); nav('workout_plans'); } else { alert(res.message); }
+};
+
+window.viewWorkout = async (id) => {
+  const res = await api('GET','/workout-plans/'+id);
+  if(!res.success) return alert('Not found');
+  const w = res.data;
+  const days = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+  const dayRows = days.map(d => `
+    <tr>
+      <td><strong style="color:var(--primary)">${d.charAt(0).toUpperCase()+d.slice(1)}</strong></td>
+      <td style="white-space:pre-wrap;">${w[d] || '<span style="color:var(--text-muted)">Rest Day</span>'}</td>
+    </tr>
+  `).join('');
+  openModal('📋 '+w.title, `
+    <div style="margin-bottom:16px;display:flex;gap:12px;flex-wrap:wrap;">
+      <span class="badge badge-primary">${w.goal}</span>
+      <span class="badge badge-warning">${w.level}</span>
+      <span class="badge badge-success">${w.status}</span>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th style="width:120px">Day</th><th>Exercises</th></tr></thead>
+      <tbody>${dayRows}</tbody>
+    </table></div>
+    ${w.notes ? `<div style="margin-top:16px;padding:12px;background:var(--bg-hover);border-radius:8px;font-size:0.85rem;"><strong>Notes:</strong> ${w.notes}</div>` : ''}
+  `);
+};
+
+window.delWorkout = async (id) => { if(confirm('Delete this workout plan?')){ await api('DELETE','/workout-plans/'+id); nav('workout_plans'); } };
+
+/* EQUIPMENT */
+sections.equipment = async () => {
+  const [listRes, sumRes] = await Promise.all([
+    api('GET','/equipment?limit=100'),
+    api('GET','/equipment/summary')
+  ]);
+  if(!listRes.success) return;
+  const sum = sumRes.success ? sumRes.data : {total:0,good:0,needs_repair:0,out_of_order:0,maint_due:0};
+
+  const condBadge = (s) => {
+    const m = {'Good':'badge-success','Needs Repair':'badge-warning','Out of Order':'badge-danger','New':'badge-primary'};
+    return `<span class="badge ${m[s]||'badge-primary'}">${s}</span>`;
+  };
+
+  document.getElementById('content').innerHTML = `
+    <div class="grid-4" style="margin-bottom:24px;">
+      <div class="kpi-card"><div class="kpi-icon" style="background:var(--primary-light);color:var(--primary)">🔧</div><div><div class="kpi-val">${sum.total}</div><div class="kpi-label">Total Equipment</div></div></div>
+      <div class="kpi-card"><div class="kpi-icon" style="background:var(--success-light);color:var(--success)">✅</div><div><div class="kpi-val">${sum.good}</div><div class="kpi-label">Good Condition</div></div></div>
+      <div class="kpi-card"><div class="kpi-icon" style="background:var(--warning-light);color:var(--warning)">⚠️</div><div><div class="kpi-val">${sum.needs_repair}</div><div class="kpi-label">Needs Repair</div></div></div>
+      <div class="kpi-card"><div class="kpi-icon" style="background:var(--danger-light);color:var(--danger)">🛑</div><div><div class="kpi-val">${sum.maint_due}</div><div class="kpi-label">Maintenance Due</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Equipment Inventory</div><button class="btn btn-primary" onclick="addEquip()">+ Add Equipment</button></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Name</th><th>Category</th><th>Brand</th><th>Location</th><th>Condition</th><th>Next Maint.</th><th>Actions</th></tr></thead>
+        <tbody>${listRes.data.data.map(e=>`<tr>
+          <td><strong>${e.name}</strong>${e.model_number ? '<br><small style="color:var(--text-muted)">'+e.model_number+'</small>' : ''}</td>
+          <td>${e.category}</td>
+          <td>${e.brand||'-'}</td>
+          <td>${e.location||'-'}</td>
+          <td>${condBadge(e.condition_status)}</td>
+          <td>${e.next_maintenance_date ? `<span class="badge ${new Date(e.next_maintenance_date)<=new Date()?'badge-danger':'badge-primary'}">${e.next_maintenance_date}</span>` : '-'}</td>
+          <td style="white-space:nowrap">
+            <button class="btn btn-sm btn-secondary" onclick="logMaint(${e.id},'${e.name.replace(/'/g,"\\'")}')">🔧 Maint</button>
+            <button class="btn btn-sm btn-danger" onclick="delEquip(${e.id})">Del</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+    </div>
+  `;
+};
+
+window.addEquip = () => {
+  openModal('Add Equipment', `
+    <div class="form-grid">
+      <div class="form-group"><label>Equipment Name</label><input type="text" id="eq-name" placeholder="e.g. Treadmill Pro X200"></div>
+      <div class="form-group"><label>Category</label><select id="eq-cat">
+        <option>Cardio</option><option>Strength</option><option>Free Weights</option><option>Machines</option><option>Accessories</option><option>General</option>
+      </select></div>
+      <div class="form-group"><label>Brand</label><input type="text" id="eq-brand"></div>
+      <div class="form-group"><label>Model Number</label><input type="text" id="eq-model"></div>
+      <div class="form-group"><label>Serial Number</label><input type="text" id="eq-serial"></div>
+      <div class="form-group"><label>Location</label><input type="text" id="eq-loc" placeholder="e.g. Ground Floor - Zone A"></div>
+      <div class="form-group"><label>Purchase Date</label><input type="date" id="eq-pdate"></div>
+      <div class="form-group"><label>Purchase Price (₹)</label><input type="number" id="eq-price" value="0"></div>
+      <div class="form-group"><label>Warranty Expiry</label><input type="date" id="eq-warranty"></div>
+      <div class="form-group"><label>Condition</label><select id="eq-cond">
+        <option>New</option><option>Good</option><option>Needs Repair</option><option>Out of Order</option>
+      </select></div>
+      <div class="form-group"><label>Next Maintenance Date</label><input type="date" id="eq-nmaint"></div>
+      <div class="form-group full"><button class="btn btn-primary" onclick="saveEquip()">Save Equipment</button></div>
+    </div>
+  `);
+};
+
+window.saveEquip = async () => {
+  const data = {
+    name: document.getElementById('eq-name').value,
+    category: document.getElementById('eq-cat').value,
+    brand: document.getElementById('eq-brand').value,
+    model_number: document.getElementById('eq-model').value,
+    serial_number: document.getElementById('eq-serial').value,
+    location: document.getElementById('eq-loc').value,
+    purchase_date: document.getElementById('eq-pdate').value || null,
+    purchase_price: document.getElementById('eq-price').value,
+    warranty_expiry: document.getElementById('eq-warranty').value || null,
+    condition_status: document.getElementById('eq-cond').value,
+    next_maintenance_date: document.getElementById('eq-nmaint').value || null
+  };
+  const res = await api('POST','/equipment', data);
+  if(res.success) { closeModal(); nav('equipment'); } else { alert(res.message); }
+};
+
+window.logMaint = (id, name) => {
+  openModal('🔧 Log Maintenance: ' + name, `
+    <div class="form-grid">
+      <div class="form-group"><label>Condition After Service</label><select id="mt-cond">
+        <option>Good</option><option>Needs Repair</option><option>Out of Order</option>
+      </select></div>
+      <div class="form-group"><label>Next Maintenance Date</label><input type="date" id="mt-next"></div>
+      <div class="form-group full"><label>Maintenance Notes</label><textarea id="mt-notes" rows="3" placeholder="Describe work done..."></textarea></div>
+      <div class="form-group full"><button class="btn btn-primary" onclick="saveMaint(${id})">Log Maintenance</button></div>
+    </div>
+  `);
+};
+
+window.saveMaint = async (id) => {
+  const data = {
+    condition_status: document.getElementById('mt-cond').value,
+    next_maintenance_date: document.getElementById('mt-next').value || null,
+    maintenance_notes: document.getElementById('mt-notes').value
+  };
+  const res = await api('POST','/equipment/'+id+'/maintenance', data);
+  if(res.success) { closeModal(); nav('equipment'); } else { alert(res.message); }
+};
+
+window.delEquip = async (id) => { if(confirm('Delete this equipment?')){ await api('DELETE','/equipment/'+id); nav('equipment'); } };
 
 checkAuth();
 </script>

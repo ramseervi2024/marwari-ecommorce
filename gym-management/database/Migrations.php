@@ -127,6 +127,52 @@ class Migrations {
                 ip_address varchar(50),
                 created_at datetime DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY (id)
+            ) $charset_collate;",
+
+            // 9. Workout Plans
+            "CREATE TABLE {$p}gym_workout_plans (
+                id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                member_id bigint(20) unsigned NOT NULL,
+                trainer_id bigint(20) unsigned NULL,
+                title varchar(200) NOT NULL,
+                goal varchar(100) DEFAULT 'General Fitness',
+                level varchar(50) DEFAULT 'Beginner',
+                monday text,
+                tuesday text,
+                wednesday text,
+                thursday text,
+                friday text,
+                saturday text,
+                sunday text,
+                notes text,
+                start_date date,
+                end_date date,
+                status varchar(20) DEFAULT 'Active',
+                created_at datetime DEFAULT CURRENT_TIMESTAMP,
+                deleted_at datetime DEFAULT NULL,
+                PRIMARY KEY (id)
+            ) $charset_collate;",
+
+            // 10. Equipment
+            "CREATE TABLE {$p}gym_equipment (
+                id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                name varchar(150) NOT NULL,
+                category varchar(100) DEFAULT 'General',
+                brand varchar(100),
+                model_number varchar(100),
+                serial_number varchar(100),
+                purchase_date date,
+                purchase_price decimal(10,2) DEFAULT 0.00,
+                warranty_expiry date,
+                location varchar(100),
+                condition_status varchar(50) DEFAULT 'Good',
+                last_maintenance_date date,
+                next_maintenance_date date,
+                maintenance_notes text,
+                status varchar(20) DEFAULT 'Active',
+                created_at datetime DEFAULT CURRENT_TIMESTAMP,
+                deleted_at datetime DEFAULT NULL,
+                PRIMARY KEY (id)
             ) $charset_collate;"
         ];
 

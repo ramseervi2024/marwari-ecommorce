@@ -32,7 +32,7 @@ spl_autoload_register(function ($class) {
 require_once __DIR__ . '/database/Migrations.php';
 
 // 3. Route files
-$route_files = ['auth', 'dashboard', 'member', 'trainer', 'plan', 'membership', 'payment', 'diet_plan', 'attendance'];
+$route_files = ['auth', 'dashboard', 'member', 'trainer', 'plan', 'membership', 'payment', 'diet_plan', 'attendance', 'workout_plan', 'equipment'];
 foreach ($route_files as $r) {
     require_once __DIR__ . "/routes/{$r}.php";
 }
@@ -57,6 +57,8 @@ add_action('rest_api_init', function () {
     \GymErpApi\Routes\PaymentRoutes::register();
     \GymErpApi\Routes\DietPlanRoutes::register();
     \GymErpApi\Routes\AttendanceRoutes::register();
+    \GymErpApi\Routes\WorkoutPlanRoutes::register();
+    \GymErpApi\Routes\EquipmentRoutes::register();
 });
 
 // 6. CORS
