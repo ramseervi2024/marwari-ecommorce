@@ -108,3 +108,18 @@ add_action('phpmailer_init', function ($m) {
     $enc = get_option('pharmacy_smtp_encryption', 'tls');
     $m->SMTPSecure = ($enc === 'none') ? '' : $enc;
 });
+
+// 9. Admin Menu Link
+add_action('admin_menu', function () {
+    add_menu_page(
+        'Pharmacy ERP',
+        'Pharmacy ERP',
+        'read',
+        'pharmacy-erp',
+        function () {
+            echo '<script>window.location.href="' . esc_url(site_url('/pharmacy-erp')) . '";</script>';
+        },
+        'dashicons-store',
+        30
+    );
+});
