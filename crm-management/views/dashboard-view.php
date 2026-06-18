@@ -190,20 +190,72 @@ textarea{resize:vertical;min-height:78px}
 select.filter{padding:6px 10px;font-size:.76rem;min-width:110px}
 
 /* ── LOGIN ── */
-.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg-primary);padding:20px}
-.login-card{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:40px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.login-logo{text-align:center;margin-bottom:30px}
-.login-logo .icon{font-size:2.8rem}
-.login-logo h1{font-size:1.5rem;font-weight:800;margin-top:8px;background:linear-gradient(135deg,#e2e8f0,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.login-logo p{color:var(--text-muted);font-size:.8rem;margin-top:4px}
-.login-form{display:flex;flex-direction:column;gap:14px}
-.demo-creds{background:var(--bg-input);border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:14px}
-.demo-creds h4{font-size:.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
-.demo-row{display:flex;justify-content:space-between;font-size:.73rem;padding:3px 0;border-bottom:1px solid var(--border)}
+.login-page{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg-primary);padding:20px;overflow-y:auto;
+}
+.login-page .login-bg{
+  position:fixed;inset:0;pointer-events:none;overflow:hidden;
+}
+.login-page .orb{
+  position:absolute;border-radius:50%;filter:blur(80px);opacity:.3;
+  animation:orb-float 8s ease-in-out infinite;
+}
+.login-page .orb1{width:400px;height:400px;background:radial-gradient(#7c3aed,#4f46e5);top:-100px;left:-100px;animation-delay:0s}
+.login-page .orb2{width:300px;height:300px;background:radial-gradient(#06b6d4,#3b82f6);bottom:-80px;right:-80px;animation-delay:3s}
+.login-page .orb3{width:200px;height:200px;background:radial-gradient(#ec4899,#8b5cf6);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:6s}
+@keyframes orb-float{
+  0%,100%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-20px) scale(1.05)}
+}
+.login-card{
+  position:relative;z-index:1;
+  background:rgba(26,29,46,0.85);
+  border:1px solid rgba(124,58,237,.35);
+  border-radius:24px;padding:40px;
+  width:100%;max-width:440px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.05),0 24px 80px rgba(0,0,0,.6),0 0 60px rgba(124,58,237,.12);
+  backdrop-filter:blur(20px);
+}
+.login-logo{text-align:center;margin-bottom:28px}
+.login-logo-icon{
+  width:64px;height:64px;border-radius:18px;margin:0 auto 12px;
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  display:flex;align-items:center;justify-content:center;font-size:1.8rem;
+  box-shadow:0 8px 32px rgba(124,58,237,.4);
+}
+.login-logo h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,#f8fafc,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.login-logo p{color:var(--text-muted);font-size:.78rem;margin-top:4px;letter-spacing:.3px}
+.login-divider{display:flex;align-items:center;gap:10px;margin:6px 0}
+.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.login-divider span{font-size:.7rem;color:var(--text-muted);white-space:nowrap}
+.login-form{display:flex;flex-direction:column;gap:12px}
+.login-input-wrap{position:relative}
+.login-input-wrap .input-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.85rem;pointer-events:none}
+.login-input-wrap input{padding-left:36px;background:rgba(15,17,23,.7);border:1px solid var(--border)}
+.login-input-wrap input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.login-btn-main{
+  width:100%;padding:13px;justify-content:center;font-size:.9rem;
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  box-shadow:0 4px 24px rgba(124,58,237,.4);
+  border-radius:10px;
+}
+.login-btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(124,58,237,.5)}
+.demo-creds{
+  background:rgba(15,17,23,.6);border:1px solid rgba(255,255,255,.06);
+  border-radius:10px;padding:14px;margin-top:16px;
+}
+.demo-creds h4{font-size:.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;text-align:center}
+.demo-row{display:grid;grid-template-columns:1fr auto;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)}
 .demo-row:last-child{border-bottom:none}
-.demo-row .role{color:var(--text-muted)}
-.demo-row .creds{color:var(--accent-light);font-weight:600;cursor:pointer}
-.demo-row .creds:hover{text-decoration:underline}
+.demo-row .role{color:var(--text-muted);font-size:.72rem}
+.demo-row .creds{
+  color:var(--accent-light);font-weight:600;cursor:pointer;font-size:.72rem;
+  background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);
+  padding:2px 8px;border-radius:5px;transition:all var(--transition);
+}
+.demo-row .creds:hover{background:rgba(124,58,237,.25);color:#fff}
 
 /* ── CHARTS ── */
 .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px}
@@ -246,41 +298,52 @@ select.filter{padding:6px 10px;font-size:.76rem;min-width:110px}
 </style>
 </head>
 <body>
-<div id="app">
-
-  <!-- ───── LOGIN PAGE ───── -->
-  <div id="login-page" class="login-page" style="display:none">
-    <div class="login-card">
-      <div class="login-logo">
-        <div class="icon">🚀</div>
-        <h1>CRM ERP</h1>
-        <p>Enterprise Customer Relationship Management</p>
-      </div>
-      <div id="login-alert"></div>
-      <div class="login-form">
-        <div class="form-group">
-          <label>Username or Email</label>
+<!-- ───── LOGIN PAGE (fixed overlay, always on top) ───── -->
+<div id="login-page" class="login-page" style="display:none">
+  <div class="login-bg">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">🚀</div>
+      <h1>CRM ERP</h1>
+      <p>Enterprise Customer Relationship Management</p>
+    </div>
+    <div id="login-alert"></div>
+    <div class="login-form">
+      <div class="form-group">
+        <label style="font-size:.75rem;font-weight:600;color:var(--text-secondary)">Username or Email</label>
+        <div class="login-input-wrap">
+          <span class="input-icon">👤</span>
           <input type="text" id="login-username" placeholder="csuperadmin" autocomplete="username">
         </div>
-        <div class="form-group">
-          <label>Password</label>
+      </div>
+      <div class="form-group">
+        <label style="font-size:.75rem;font-weight:600;color:var(--text-secondary)">Password</label>
+        <div class="login-input-wrap">
+          <span class="input-icon">🔒</span>
           <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
         </div>
-        <button class="btn btn-primary" id="login-btn" style="width:100%;justify-content:center;padding:12px" onclick="doLogin()">Sign In</button>
       </div>
-      <div class="demo-creds">
-        <h4>Demo Credentials</h4>
-        <div class="demo-row"><span class="role">Super Admin</span><span class="creds" onclick="fillCreds('csuperadmin','123456')">csuperadmin / 123456</span></div>
-        <div class="demo-row"><span class="role">Sales Manager</span><span class="creds" onclick="fillCreds('cmanager','123456')">cmanager / 123456</span></div>
-        <div class="demo-row"><span class="role">Sales Executive</span><span class="creds" onclick="fillCreds('cexecutive','123456')">cexecutive / 123456</span></div>
-        <div class="demo-row"><span class="role">Telecaller</span><span class="creds" onclick="fillCreds('ctelecaller','123456')">ctelecaller / 123456</span></div>
-        <div class="demo-row"><span class="role">Customer</span><span class="creds" onclick="fillCreds('ccustomer','123456')">ccustomer / 123456</span></div>
-      </div>
+      <button class="btn btn-primary login-btn-main" id="login-btn" onclick="doLogin()">Sign In →</button>
+    </div>
+    <div class="demo-creds">
+      <h4>✨ Quick Login — Demo Accounts</h4>
+      <div class="demo-row"><span class="role">🔑 Super Admin</span><span class="creds" onclick="fillCreds('csuperadmin','123456')">csuperadmin / 123456</span></div>
+      <div class="demo-row"><span class="role">📊 Sales Manager</span><span class="creds" onclick="fillCreds('cmanager','123456')">cmanager / 123456</span></div>
+      <div class="demo-row"><span class="role">💼 Sales Executive</span><span class="creds" onclick="fillCreds('cexecutive','123456')">cexecutive / 123456</span></div>
+      <div class="demo-row"><span class="role">📞 Telecaller</span><span class="creds" onclick="fillCreds('ctelecaller','123456')">ctelecaller / 123456</span></div>
+      <div class="demo-row"><span class="role">🏢 Customer</span><span class="creds" onclick="fillCreds('ccustomer','123456')">ccustomer / 123456</span></div>
     </div>
   </div>
+</div>
+
+<div id="app">
 
   <!-- ───── SIDEBAR ───── -->
-  <aside class="sidebar" id="sidebar">
+  <aside class="sidebar" id="sidebar" style="display:none">
     <div class="sidebar-brand" onclick="toggleSidebar()">
       <div class="brand-icon">🚀</div>
       <div><div class="brand-text">CRM ERP</div><div class="brand-sub">Management System</div></div>
@@ -364,7 +427,7 @@ select.filter{padding:6px 10px;font-size:.76rem;min-width:110px}
       <div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>
     </div>
   </main>
-</div>
+</div><!-- #app -->
 
 <!-- ───── MODAL ───── -->
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
@@ -442,8 +505,18 @@ async function checkAuth() {
   showApp();
 }
 
-function showLogin(){ document.getElementById('login-page').style.display='flex'; document.getElementById('main-area').style.display='none'; }
-function showApp(){ document.getElementById('login-page').style.display='none'; document.getElementById('main-area').style.display='flex'; updateUserUI(); navigate('overview'); }
+function showLogin(){
+  document.getElementById('login-page').style.display='flex';
+  document.getElementById('sidebar').style.display='none';
+  document.getElementById('main-area').style.display='none';
+}
+function showApp(){
+  document.getElementById('login-page').style.display='none';
+  document.getElementById('sidebar').style.display='flex';
+  document.getElementById('main-area').style.display='flex';
+  updateUserUI();
+  navigate('overview');
+}
 
 function updateUserUI() {
   if (!currentUser) return;
