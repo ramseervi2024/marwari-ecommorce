@@ -16,7 +16,7 @@
             --accent-pink: #db2777;
             --accent-emerald: #059669;
             --text-main: #0f172a;
-            --text-muted: #64748b;
+            --text-muted: #475569;
             --glass-border: rgba(15, 23, 42, 0.08);
             --glass-shadow: rgba(15, 23, 42, 0.06);
             --border-hover: rgba(15, 23, 42, 0.16);
@@ -133,11 +133,11 @@
             color: var(--text-muted);
         }
         .form-input, .form-select, .form-textarea {
-            background: rgba(255, 255, 255, 0.04);
+            background: var(--bg-card);
             border: 1px solid var(--glass-border);
             border-radius: 10px;
             padding: 12px 16px;
-            color: #fff;
+            color: var(--text-main);
             font-size: 14px;
             outline: none;
             transition: border-color 0.2s;
@@ -147,8 +147,8 @@
             border-color: var(--accent-blue);
         }
         .form-select option {
-            background: #0d1423;
-            color: #fff;
+            background: var(--bg-secondary);
+            color: var(--text-main);
         }
         .auth-submit-btn {
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
@@ -177,7 +177,7 @@
             margin-bottom: 20px;
         }
         .demo-role-btn {
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--bg-card);
             border: 1px solid var(--glass-border);
             padding: 10px;
             border-radius: 10px;
@@ -195,7 +195,7 @@
         .demo-role-title {
             font-size: 12px;
             font-weight: 600;
-            color: #fff;
+            color: var(--text-main);
         }
         .demo-role-user {
             font-size: 10px;
@@ -363,9 +363,13 @@
             font-size: 30px;
             font-weight: 700;
             margin-bottom: 4px;
-            background: linear-gradient(to right, #ffffff, #cbd5e1);
+            background: linear-gradient(to right, #0f172a, #334155);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        body.dark-mode .title-group h1 {
+            background: linear-gradient(to right, #ffffff, #cbd5e1);
         }
 
         .title-group p {
@@ -459,7 +463,7 @@
             width: 46px;
             height: 46px;
             border-radius: 12px;
-            background: rgba(255,255,255,0.03);
+            background: var(--glass-border);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -548,7 +552,7 @@
             transform: translateX(-50%);
             font-size: 11px;
             font-weight: 600;
-            color: #fff;
+            color: var(--text-main);
         }
 
         .chart-bar-label {
@@ -565,9 +569,10 @@
 
         .notice-item {
             padding: 16px;
-            background: rgba(255, 255, 255, 0.015);
-            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
             border-left: 4px solid var(--accent-purple);
+            border-radius: 12px;
             font-size: 14px;
         }
 
@@ -623,11 +628,11 @@
         }
         .data-table td {
             padding: 14px 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--glass-border);
             color: var(--text-main);
         }
         .data-table tr:hover td {
-            background: rgba(255, 255, 255, 0.015);
+            background: var(--glass-border);
         }
         
         .badge {
@@ -688,13 +693,14 @@
             display: flex;
         }
         .modal-card {
-            background: #090e18;
+            background: var(--bg-secondary);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             width: 100%;
             max-width: 520px;
             padding: 30px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+            box-shadow: 0 15px 50px var(--glass-shadow);
             position: relative;
         }
         .modal-close {
@@ -713,9 +719,7 @@
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 20px;
-            background: linear-gradient(to right, #fff, var(--text-muted));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--text-main);
         }
 
         @media (max-width: 1024px) {

@@ -14,6 +14,7 @@
     "/auth/register": {
       "post": {
         "summary": "Initiate register",
+        "tags": ["Authentication"],
         "description": "Send a 6-digit OTP code to the requested email to complete registration.",
         "requestBody": {
           "required": true,
@@ -40,6 +41,7 @@
     "/auth/login": {
       "post": {
         "summary": "Authenticate User",
+        "tags": ["Authentication"],
         "description": "Login via password or 6-digit OTP code.",
         "requestBody": {
           "required": true,
@@ -65,6 +67,7 @@
     "/auth/me": {
       "get": {
         "summary": "Fetch logged-in profile",
+        "tags": ["Authentication"],
         "responses": {
           "200": { "description": "Success" }
         }
@@ -73,6 +76,7 @@
     "/dashboard": {
       "get": {
         "summary": "Fetch Executive Dashboard Summary",
+        "tags": ["Dashboard"],
         "responses": {
           "200": { "description": "Executive metrics and charts" }
         }
@@ -81,12 +85,14 @@
     "/crm/leads": {
       "get": {
         "summary": "Fetch CRM Leads List",
+        "tags": ["CRM"],
         "responses": {
           "200": { "description": "Paginated leads list" }
         }
       },
       "post": {
         "summary": "Create new Lead Inquiry",
+        "tags": ["CRM"],
         "requestBody": {
           "required": true,
           "content": {
@@ -112,6 +118,7 @@
     "/clients": {
       "get": {
         "summary": "Fetch Enterprise Clients Master Database",
+        "tags": ["Clients"],
         "responses": {
           "200": { "description": "Success" }
         }
@@ -120,6 +127,7 @@
     "/workspaces/buildings": {
       "get": {
         "summary": "Fetch Commercial Buildings Register",
+        "tags": ["Workspace"],
         "responses": {
           "200": { "description": "Success" }
         }
@@ -128,6 +136,7 @@
     "/visitors": {
       "get": {
         "summary": "Fetch Visitor Entry Logs",
+        "tags": ["Visitors"],
         "responses": {
           "200": { "description": "Success" }
         }
@@ -136,6 +145,7 @@
     "/facility/tickets": {
       "get": {
         "summary": "Fetch Maintenance Tickets",
+        "tags": ["Facility"],
         "responses": {
           "200": { "description": "Success" }
         }
@@ -144,8 +154,187 @@
     "/billing/invoices": {
       "get": {
         "summary": "Fetch Invoices list",
+        "tags": ["Billing"],
         "responses": {
           "200": { "description": "Success" }
+        }
+      }
+    },
+    "/mobile/dashboard": {
+      "get": {
+        "summary": "Mobile Dashboard",
+        "tags": ["Mobile App"],
+        "description": "Fetch mobile-specific overview counters (active bookings, pending visitors, outstanding invoices sum).",
+        "responses": {
+          "200": { "description": "Metrics counts" }
+        }
+      }
+    },
+    "/mobile/bookings": {
+      "get": {
+        "summary": "Mobile Bookings List",
+        "tags": ["Mobile App"],
+        "description": "Fetch meeting room reservations booked by the authenticated employee.",
+        "responses": {
+          "200": { "description": "Active bookings array" }
+        }
+      }
+    },
+    "/mobile/meeting-room-booking": {
+      "post": {
+        "summary": "Reserve a Meeting Room",
+        "tags": ["Mobile App"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "room_id": { "type": "integer" },
+                  "booking_date": { "type": "string" },
+                  "start_time": { "type": "string" },
+                  "end_time": { "type": "string" }
+                },
+                "required": ["room_id", "booking_date", "start_time", "end_time"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Booking confirmation payload" }
+        }
+      }
+    },
+    "/mobile/visitors": {
+      "get": {
+        "summary": "List Visitor Pre-approvals",
+        "tags": ["Mobile App"],
+        "responses": {
+          "200": { "description": "Visitors list" }
+        }
+      },
+      "post": {
+        "summary": "Create a Visitor Request",
+        "tags": ["Mobile App"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "visitor_name": { "type": "string" },
+                  "mobile": { "type": "string" },
+                  "company": { "type": "string" }
+                },
+                "required": ["visitor_name", "mobile"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Pre-approved visitor record" }
+        }
+      }
+    },
+    "/mobile/visitors/{id}/approve": {
+      "post": {
+        "summary": "Approve or Reject Visitor Check-in",
+        "tags": ["Mobile App"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "string", "enum": ["APPROVED", "REJECTED"] }
+                },
+                "required": ["status"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Status updated successfully" }
+        }
+      }
+    },
+    "/mobile/invoices": {
+      "get": {
+        "summary": "Fetch Client Leases Invoices",
+        "tags": ["Mobile App"],
+        "responses": {
+          "200": { "description": "Invoices array" }
+        }
+      }
+    },
+    "/mobile/service-requests": {
+      "get": {
+        "summary": "List Tenant Support Tickets",
+        "tags": ["Mobile App"],
+        "responses": {
+          "200": { "description": "Service requests array" }
+        }
+      }
+    },
+    "/mobile/service-request": {
+      "post": {
+        "summary": "Raise a Support Ticket",
+        "tags": ["Mobile App"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "request_type": { "type": "string" },
+                  "description": { "type": "string" }
+                },
+                "required": ["request_type"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Ticket raised payload" }
+        }
+      }
+    },
+    "/mobile/announcements": {
+      "get": {
+        "summary": "List Announcements",
+        "tags": ["Mobile App"],
+        "responses": {
+          "200": { "description": "Announcements list" }
+        }
+      }
+    },
+    "/mobile/events": {
+      "get": {
+        "summary": "List Community Events",
+        "tags": ["Mobile App"],
+        "responses": {
+          "200": { "description": "Events list" }
+        }
+      }
+    },
+    "/mobile/meeting-rooms": {
+      "get": {
+        "summary": "List Meeting Rooms",
+        "tags": ["Mobile App"],
+        "responses": {
+          "200": { "description": "Rooms list" }
         }
       }
     }
