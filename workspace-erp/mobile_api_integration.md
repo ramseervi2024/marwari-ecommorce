@@ -316,6 +316,8 @@ Enables tenant administrators to view contract billing details, utility adjustme
   - Status Chip: `PENDING` (Orange) or `PAID` (Green).
 
 #### API Integration:
+
+##### 1. List Invoices:
 * **Endpoint**: `GET /mobile/invoices`
 * **Success Response (200 OK)**:
   ```json
@@ -331,6 +333,24 @@ Enables tenant administrators to view contract billing details, utility adjustme
         "created_at": "2026-06-01 00:00:00"
       }
     ]
+  }
+  ```
+
+##### 2. Process simulated Razorpay Payment:
+* **Endpoint**: `POST /mobile/invoices/{id}/pay`
+* **Success Response (200 OK)**:
+  ```json
+  {
+    "success": true,
+    "message": "Payment completed and invoice status updated to PAID",
+    "data": {
+      "id": 1,
+      "invoice_no": "INV-2026-001",
+      "client_id": 1,
+      "total_amount": 250750.00,
+      "status": "PAID",
+      "updated_at": "2026-06-19 18:49:00"
+    }
   }
   ```
 

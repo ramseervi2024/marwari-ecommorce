@@ -103,6 +103,7 @@ The plugin exposes separate, fully functional mobile routes for the **Aurbis One
 * **POST `/mobile/visitors`**: Add a pre-approved visitor request.
 * **POST `/mobile/visitors/{id}/approve`**: Approve or reject check-in requests.
 * **GET `/mobile/invoices`**: Fetch invoice lease totals and utility charges.
+* **POST `/mobile/invoices/{id}/pay`**: Process simulated payment via Razorpay.
 * **GET `/mobile/service-requests`**: Fetch helpdesk support tickets.
 * **POST `/mobile/service-request`**: Raise a facility service ticket.
 * **GET `/mobile/announcements`**: Fetch community bulletins.
@@ -111,14 +112,64 @@ The plugin exposes separate, fully functional mobile routes for the **Aurbis One
 
 ---
 
-## 5. Swagger UI Documentation
+## 5. Administrative & Operations REST API Reference
+
+These endpoints support full administrative capabilities, required by designated roles (e.g. HR Manager, Facility Manager, Finance Manager, and Super Admin):
+
+### 5.1 HR & Workforce
+* **GET `/hr/employees`**: Retrieve directory list of all employee records.
+* **POST `/hr/employees`**: Create a new employee profile (employee code, department, salary, shift, status).
+* **PUT `/hr/employees/{id}`**: Update employee details, designations, and status inline.
+* **DELETE `/hr/employees/{id}`**: Soft delete an employee record.
+* **GET `/hr/attendance`**: Retrieve full attendance logs.
+* **POST `/hr/attendance`**: Create daily attendance check-in/out records.
+* **PUT `/hr/attendance/{id}`**: Edit attendance times or change presence status.
+* **DELETE `/hr/attendance/{id}`**: Delete attendance record entries.
+
+### 5.2 Assets & Inventory
+* **GET `/assets`**: Retrieve list of property assets.
+* **POST `/assets`**: Register a new equipment asset (asset code, category, current value).
+* **PUT `/assets/{id}`**: Update asset location, values, and lifecycle status.
+* **DELETE `/assets/{id}`**: Remove asset record from the system.
+* **GET `/assets/allocations`**: Retrieve logs of asset allocations.
+* **POST `/assets/allocations`**: Allocate an asset to a client company or employee.
+* **PUT `/assets/allocations/{id}`**: Edit allocation date periods and statuses.
+* **DELETE `/assets/allocations/{id}`**: Cancel or delete an asset allocation record.
+
+### 5.3 Vendor Management
+* **GET `/vendors`**: Retrieve full supplier vendor registry.
+* **POST `/vendors`**: Register a new vendor supplier profile.
+* **PUT `/vendors/{id}`**: Update vendor contact details, services, rating, and status.
+* **DELETE `/vendors/{id}`**: Soft delete vendor entries.
+* **GET `/vendors/payments`**: Retrieve all logs of vendor payments.
+* **POST `/vendors/payments`**: Add a vendor payment transaction.
+* **PUT `/vendors/payments/{id}`**: Update payment amounts or completion statuses.
+* **DELETE `/vendors/payments/{id}`**: Remove a vendor payment record.
+
+### 5.4 Smart Buildings (IoT)
+* **GET `/smartbuilding/devices`**: List all registered IoT devices.
+* **POST `/smartbuilding/devices`**: Register a new IoT device (device type, manufacturer, serial number).
+* **PUT `/smartbuilding/devices/{id}`**: Update device details or connection status.
+* **DELETE `/smartbuilding/devices/{id}`**: Delete registered device records.
+* **GET `/smartbuilding/sensors`**: Fetch recorded environment sensor logs (temperature, humidity, etc.).
+* **GET `/smartbuilding/access-logs`**: Fetch live gate access card logs.
+
+### 5.5 Reports & Analytics
+* **GET `/reports/revenue`**: Generate revenue report statistics.
+* **GET `/reports/occupancy`**: Generate property occupancy capacity calculations.
+* **GET `/reports/tickets`**: Retrieve helpdesk ticket SLA compliance levels.
+* **GET `/reports/esg`**: Fetch sustainability ESG metrics (carbon offsets, recycling rates, energy usage).
+
+---
+
+## 6. Swagger UI Documentation
 
 Access the interactive visual Swagger UI playground to execute mock requests and inspect response schemas:
 * **Playground URL**: `/workspace-erp-docs` (Redirects to swagger templates index)
 
 ---
 
-## 5. Modern Operations Dashboard Portal
+## 7. Modern Operations Dashboard Portal
 
 The plugin serves a modern, glassmorphic executive dashboard:
 * **Dashboard URL**: `/workspace-erp`
