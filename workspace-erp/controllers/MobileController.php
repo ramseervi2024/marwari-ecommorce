@@ -305,7 +305,8 @@ class MobileController extends BaseController {
                     'event_date' => date('Y-m-d', $dt),
                     'start_time' => date('H:i:s', $dt),
                     'location' => $ev['location'],
-                    'host' => $ev['organizer']
+                    'host' => $ev['organizer'],
+                    'status' => isset($ev['status']) ? $ev['status'] : 'UPCOMING'
                 ];
             }
         }
