@@ -19,5 +19,15 @@ class SustainabilityRoutes {
             'callback' => [$controller, 'createEnergy'],
             'permission_callback' => RoleMiddleware::hasCapability('manage_sustainability')
         ]);
+        register_rest_route($namespace, '/sustainability/energy/(?P<id>\d+)', [
+            'methods' => 'PUT',
+            'callback' => [$controller, 'updateEnergy'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_sustainability')
+        ]);
+        register_rest_route($namespace, '/sustainability/energy/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$controller, 'deleteEnergy'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_sustainability')
+        ]);
     }
 }

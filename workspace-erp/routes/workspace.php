@@ -65,5 +65,25 @@ class WorkspaceRoutes {
             'callback' => [$controller, 'createBooking'],
             'permission_callback' => RoleMiddleware::hasCapability('read')
         ]);
+        register_rest_route($namespace, '/workspaces/bookings/(?P<id>\d+)', [
+            'methods' => 'PUT',
+            'callback' => [$controller, 'updateBooking'],
+            'permission_callback' => RoleMiddleware::hasCapability('read')
+        ]);
+        register_rest_route($namespace, '/workspaces/bookings/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$controller, 'deleteBooking'],
+            'permission_callback' => RoleMiddleware::hasCapability('read')
+        ]);
+        register_rest_route($namespace, '/workspaces/buildings/(?P<id>\d+)', [
+            'methods' => 'PUT',
+            'callback' => [$controller, 'updateBuilding'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_workspaces')
+        ]);
+        register_rest_route($namespace, '/workspaces/buildings/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$controller, 'deleteBuilding'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_workspaces')
+        ]);
     }
 }

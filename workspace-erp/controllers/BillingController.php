@@ -100,6 +100,60 @@ class BillingController extends BaseController {
         return $this->success('Payment recorded successfully', array_merge(['id' => $payment_id], $payment_data));
     }
 
+    public function updateInvoice(WP_REST_Request $request) {
+        $id = (int)$request->get_param('id');
+        $invoice = $this->invoiceRepo->findById($id);
+        if (!$invoice) return $this->error('Invoice not found.', [], 404);
+
+        $params = $request->get_json_params();
+        $update = [];
+        $formats = [];
+        if (isset($params['client_id'])) { $update['client_id'] = intval($params['client_id']); $formats[] = '%d'; }
+        if (isset($params['billing_type'])) { $update['billing_type'] = sanitize_text_field($params['billing_type']); $formats[] = '%s'; }
+        if (isset($params['billing_month'])) { $update['billing_month'] = sanitize_text_field($params['billing_month']); $formats[] = '%s'; }
+        if (isset($params['base_amount'])) { 
+            $update['base_amount'] = floatval($params['base_amount']); 
+            $formats[] = '%f'; 
+            $gst_pct = isset($params['gst_percentage']) ? floatval($params['gst_percentage']) : floatval($invoice['gst_percentage']);
+            $update['gst_amount'] = round($update['base_amount'] * ($gst_pct / 100), 2);
+            $formats[] = '%f';
+            $update['total_amount'] = $update['base_amount'] + $update['gst_amount'];
+            $formats[] = '%f';
+        }
+        if (isset($params['gst_percentage']) && !isset($update['base_amount'])) {
+            $update['gst_percentage'] = floatval($params['gst_percentage']);
+            $formats[] = '%f';
+            $update['gst_amount'] = round(floatval($invoice['base_amount']) * ($update['gst_percentage'] / 100), 2);
+            $formats[] = '%f';
+            $update['total_amount'] = floatval($invoice['base_amount']) + $update['gst_amount'];
+            $formats[] = '%f';
+        }
+        if (isset($params['due_date'])) { $update['due_date'] = sanitize_text_field($params['due_date']); $formats[] = '%s'; }
+        if (isset($params['notes'])) { $update['notes'] = sanitize_textarea_field($params['notes']); $formats[] = '%s'; }
+        if (isset($params['status'])) { $update['status'] = sanitize_text_field($params['status']); $formats[] = '%s'; }
+
+        if (empty($update)) return $this->error('No parameters to update.');
+
+        $update['updated_at'] = current_time('mysql');
+        $formats[] = '%s';
+
+        $success = $this->invoiceRepo->update($id, $update, $formats);
+        if (!$success) return $this->error('Failed to update invoice.');
+
+        AuthService::logActivity(get_current_user_id(), 'UPDATE_INVOICE', "Updated invoice details ID: $id");
+        return $this->success('Invoice updated successfully', $this->invoiceRepo->findById($id));
+    }
+
+    public function deleteInvoice(WP_REST_Request $request) {
+        $id = (int)$request->get_param('id');
+        $invoice = $this->invoiceRepo->findById($id);
+        if (!$invoice) return $this->error('Invoice not found.', [], 404);
+
+        $this->invoiceRepo->delete($id);
+        AuthService::logActivity(get_current_user_id(), 'DELETE_INVOICE', "Soft deleted invoice ID: $id");
+        return $this->success('Invoice deleted successfully');
+    }
+
     public function indexPayments(WP_REST_Request $request) {
         return $this->success('Payments fetched successfully', $this->paymentRepo->findAll($request->get_params(), ['id', 'amount', 'status'], []));
     }

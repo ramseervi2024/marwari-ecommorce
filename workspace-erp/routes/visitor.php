@@ -24,5 +24,10 @@ class VisitorRoutes {
             'callback' => [$controller, 'update'],
             'permission_callback' => RoleMiddleware::hasCapability('manage_visitors')
         ]);
+        register_rest_route($namespace, '/visitors/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$controller, 'delete'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_visitors')
+        ]);
     }
 }

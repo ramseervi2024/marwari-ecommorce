@@ -114,4 +114,81 @@ class WorkspaceController extends BaseController {
         $id = $this->bookingRepo->create($data, ['%d', '%d', '%d', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s']);
         return $this->success('Meeting Room booked successfully', array_merge(['id' => $id], $data), 201);
     }
+
+    public function updateBuilding(WP_REST_Request $request) {
+        $id = (int)$request->get_param('id');
+        $building = $this->buildingRepo->findById($id);
+        if (!$building) return $this->error('Building not found.', [], 404);
+
+        $params = $request->get_json_params();
+        $update = [];
+        $formats = [];
+        if (isset($params['building_name'])) { $update['building_name'] = sanitize_text_field($params['building_name']); $formats[] = '%s'; }
+        if (isset($params['address'])) { $update['address'] = sanitize_textarea_field($params['address']); $formats[] = '%s'; }
+        if (isset($params['city'])) { $update['city'] = sanitize_text_field($params['city']); $formats[] = '%s'; }
+        if (isset($params['state'])) { $update['state'] = sanitize_text_field($params['state']); $formats[] = '%s'; }
+        if (isset($params['total_floors'])) { $update['total_floors'] = intval($params['total_floors']); $formats[] = '%d'; }
+        if (isset($params['total_seats'])) { $update['total_seats'] = intval($params['total_seats']); $formats[] = '%d'; }
+        if (isset($params['amenities'])) { $update['amenities'] = sanitize_text_field($params['amenities']); $formats[] = '%s'; }
+        if (isset($params['status'])) { $update['status'] = sanitize_text_field($params['status']); $formats[] = '%s'; }
+
+        if (empty($update)) return $this->error('No parameters to update.');
+
+        $update['updated_at'] = current_time('mysql');
+        $formats[] = '%s';
+
+        $success = $this->buildingRepo->update($id, $update, $formats);
+        if (!$success) return $this->error('Failed to update building.');
+
+        AuthService::logActivity(get_current_user_id(), 'UPDATE_BUILDING', "Updated building ID: $id");
+        return $this->success('Building updated successfully', $this->buildingRepo->findById($id));
+    }
+
+    public function deleteBuilding(WP_REST_Request $request) {
+        $id = (int)$request->get_param('id');
+        $building = $this->buildingRepo->findById($id);
+        if (!$building) return $this->error('Building not found.', [], 404);
+
+        $this->buildingRepo->delete($id);
+        AuthService::logActivity(get_current_user_id(), 'DELETE_BUILDING', "Soft deleted building ID: $id");
+        return $this->success('Building deleted successfully');
+    }
+
+    public function updateBooking(WP_REST_Request $request) {
+        $id = (int)$request->get_param('id');
+        $booking = $this->bookingRepo->findById($id);
+        if (!$booking) return $this->error('Booking not found.', [], 404);
+
+        $params = $request->get_json_params();
+        $update = [];
+        $formats = [];
+        if (isset($params['room_id'])) { $update['room_id'] = intval($params['room_id']); $formats[] = '%d'; }
+        if (isset($params['booking_date'])) { $update['booking_date'] = sanitize_text_field($params['booking_date']); $formats[] = '%s'; }
+        if (isset($params['start_time'])) { $update['start_time'] = sanitize_text_field($params['start_time']); $formats[] = '%s'; }
+        if (isset($params['end_time'])) { $update['end_time'] = sanitize_text_field($params['end_time']); $formats[] = '%s'; }
+        if (isset($params['purpose'])) { $update['purpose'] = sanitize_text_field($params['purpose']); $formats[] = '%s'; }
+        if (isset($params['attendees'])) { $update['attendees'] = intval($params['attendees']); $formats[] = '%d'; }
+        if (isset($params['status'])) { $update['status'] = sanitize_text_field($params['status']); $formats[] = '%s'; }
+
+        if (empty($update)) return $this->error('No parameters to update.');
+
+        $update['updated_at'] = current_time('mysql');
+        $formats[] = '%s';
+
+        $success = $this->bookingRepo->update($id, $update, $formats);
+        if (!$success) return $this->error('Failed to update booking.');
+
+        AuthService::logActivity(get_current_user_id(), 'UPDATE_BOOKING', "Updated booking ID: $id");
+        return $this->success('Booking updated successfully', $this->bookingRepo->findById($id));
+    }
+
+    public function deleteBooking(WP_REST_Request $request) {
+        $id = (int)$request->get_param('id');
+        $booking = $this->bookingRepo->findById($id);
+        if (!$booking) return $this->error('Booking not found.', [], 404);
+
+        $this->bookingRepo->delete($id);
+        AuthService::logActivity(get_current_user_id(), 'DELETE_BOOKING', "Soft deleted booking ID: $id");
+        return $this->success('Booking deleted successfully');
+    }
 }

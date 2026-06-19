@@ -59,6 +59,13 @@ class VisitorController extends BaseController {
                 $formats[] = '%s';
             }
         }
+        if (isset($params['visitor_name'])) { $update['visitor_name'] = sanitize_text_field($params['visitor_name']); $formats[] = '%s'; }
+        if (isset($params['company'])) { $update['company'] = sanitize_text_field($params['company']); $formats[] = '%s'; }
+        if (isset($params['mobile'])) { $update['mobile'] = sanitize_text_field($params['mobile']); $formats[] = '%s'; }
+        if (isset($params['email'])) { $update['email'] = sanitize_email($params['email']); $formats[] = '%s'; }
+        if (isset($params['visit_purpose'])) { $update['visit_purpose'] = sanitize_text_field($params['visit_purpose']); $formats[] = '%s'; }
+        if (isset($params['host_name'])) { $update['host_name'] = sanitize_text_field($params['host_name']); $formats[] = '%s'; }
+        if (isset($params['building_id'])) { $update['building_id'] = intval($params['building_id']); $formats[] = '%d'; }
 
         if (empty($update)) return $this->error('No fields to update.');
         $update['updated_at'] = current_time('mysql');
@@ -66,5 +73,15 @@ class VisitorController extends BaseController {
 
         $this->repository->update($id, $update, $formats);
         return $this->success('Visitor updated successfully', $this->repository->findById($id));
-    }
+     }
+
+     public function delete(WP_REST_Request $request) {
+         $id = (int)$request->get_param('id');
+         $visitor = $this->repository->findById($id);
+         if (!$visitor) return $this->error('Visitor not found.', [], 404);
+
+         $this->repository->delete($id);
+         AuthService::logActivity(get_current_user_id(), 'DELETE_VISITOR', "Soft deleted visitor ID: $id");
+         return $this->success('Visitor deleted successfully');
+     }
 }

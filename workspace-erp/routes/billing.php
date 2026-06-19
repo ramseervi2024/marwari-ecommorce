@@ -24,6 +24,16 @@ class BillingRoutes {
             'callback' => [$controller, 'recordPayment'],
             'permission_callback' => RoleMiddleware::hasCapability('manage_billing')
         ]);
+        register_rest_route($namespace, '/billing/invoices/(?P<id>\d+)', [
+            'methods' => 'PUT',
+            'callback' => [$controller, 'updateInvoice'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_billing')
+        ]);
+        register_rest_route($namespace, '/billing/invoices/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$controller, 'deleteInvoice'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_billing')
+        ]);
         register_rest_route($namespace, '/billing/payments', [
             'methods' => 'GET',
             'callback' => [$controller, 'indexPayments'],

@@ -19,6 +19,16 @@ class CommunityRoutes {
             'callback' => [$controller, 'createAnnouncement'],
             'permission_callback' => RoleMiddleware::hasCapability('manage_community')
         ]);
+        register_rest_route($namespace, '/community/announcements/(?P<id>\d+)', [
+            'methods' => 'PUT',
+            'callback' => [$controller, 'updateAnnouncement'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_community')
+        ]);
+        register_rest_route($namespace, '/community/announcements/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$controller, 'deleteAnnouncement'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_community')
+        ]);
         register_rest_route($namespace, '/community/events', [
             'methods' => 'GET',
             'callback' => [$controller, 'indexEvents'],
@@ -27,6 +37,16 @@ class CommunityRoutes {
         register_rest_route($namespace, '/community/events', [
             'methods' => 'POST',
             'callback' => [$controller, 'createEvent'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_community')
+        ]);
+        register_rest_route($namespace, '/community/events/(?P<id>\d+)', [
+            'methods' => 'PUT',
+            'callback' => [$controller, 'updateEvent'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_community')
+        ]);
+        register_rest_route($namespace, '/community/events/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$controller, 'deleteEvent'],
             'permission_callback' => RoleMiddleware::hasCapability('manage_community')
         ]);
         register_rest_route($namespace, '/community/service-requests', [

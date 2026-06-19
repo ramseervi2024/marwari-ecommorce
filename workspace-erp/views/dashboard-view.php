@@ -887,7 +887,7 @@
                 <div class="table-container">
                     <div class="table-header-row">
                         <h3>Inquiries & Leads Pipeline</h3>
-                        <button class="btn" onclick="openModal('crm')">+ New Lead Inquiry</button>
+                        <button class="btn" onclick="openLeadModal()">+ New Lead Inquiry</button>
                     </div>
                     <table class="data-table">
                         <thead>
@@ -897,6 +897,7 @@
                                 <th>Contact</th>
                                 <th>Seats Required</th>
                                 <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="crm-leads-table-body">
@@ -911,6 +912,7 @@
                 <div class="table-container">
                     <div class="table-header-row">
                         <h3>Buildings Registry</h3>
+                        <button class="btn" onclick="openBuildingModal()">+ Add Building</button>
                     </div>
                     <table class="data-table">
                         <thead>
@@ -920,6 +922,7 @@
                                 <th>Location</th>
                                 <th>Amenities</th>
                                 <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="buildings-table-body">
@@ -931,7 +934,7 @@
                 <div class="table-container" style="margin-top: 30px;">
                     <div class="table-header-row">
                         <h3>Book meeting room</h3>
-                        <button class="btn" onclick="openModal('booking')">Schedule Booking</button>
+                        <button class="btn" onclick="openBookingModal()">Schedule Booking</button>
                     </div>
                     <table class="data-table">
                         <thead>
@@ -941,6 +944,7 @@
                                 <th>Date</th>
                                 <th>Time</th>
                                 <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="bookings-table-body">
@@ -955,7 +959,7 @@
                 <div class="table-container">
                     <div class="table-header-row">
                         <h3>Active Visitor Log</h3>
-                        <button class="btn" onclick="openModal('visitor')">+ Pre-Register Visitor</button>
+                        <button class="btn" onclick="openVisitorModal()">+ Pre-Register Visitor</button>
                     </div>
                     <table class="data-table">
                         <thead>
@@ -965,7 +969,7 @@
                                 <th>Mobile</th>
                                 <th>Host Employee</th>
                                 <th>Status</th>
-                                <th>Check-in / Check-out</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="visitors-table-body">
@@ -980,7 +984,7 @@
                 <div class="table-container">
                     <div class="table-header-row">
                         <h3>Maintenance Tickets</h3>
-                        <button class="btn" onclick="openModal('ticket')">Raise Service Ticket</button>
+                        <button class="btn" onclick="openTicketModal()">Raise Service Ticket</button>
                     </div>
                     <table class="data-table">
                         <thead>
@@ -989,6 +993,7 @@
                                 <th>Title</th>
                                 <th>Priority</th>
                                 <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="tickets-table-body">
@@ -1004,7 +1009,7 @@
                     <div class="table-container">
                         <div class="table-header-row">
                             <h3>Announcements</h3>
-                            <button class="btn" onclick="openModal('announcement')">+ Publish Announcement</button>
+                            <button class="btn" onclick="openAnnouncementModal()">+ Publish Announcement</button>
                         </div>
                         <table class="data-table">
                             <thead>
@@ -1012,6 +1017,7 @@
                                     <th>Title</th>
                                     <th>Audience</th>
                                     <th>Published</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="announcements-table-body">
@@ -1023,7 +1029,7 @@
                     <div class="table-container">
                         <div class="table-header-row">
                             <h3>Community Events</h3>
-                            <button class="btn" onclick="openModal('event')">+ Schedule Event</button>
+                            <button class="btn" onclick="openEventModal()">+ Schedule Event</button>
                         </div>
                         <table class="data-table">
                             <thead>
@@ -1032,6 +1038,7 @@
                                     <th>Date</th>
                                     <th>Location</th>
                                     <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="events-table-body">
@@ -1047,7 +1054,7 @@
                 <div class="table-container">
                     <div class="table-header-row">
                         <h3>Energy & ESG Monitoring Readings</h3>
-                        <button class="btn" onclick="openModal('sustainability')">Log Energy Reading</button>
+                        <button class="btn" onclick="openSustainabilityModal()">Log Energy Reading</button>
                     </div>
                     <table class="data-table">
                         <thead>
@@ -1056,6 +1063,7 @@
                                 <th>Reading Date</th>
                                 <th>Consumption (kWh)</th>
                                 <th>Source</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="energy-table-body">
@@ -1161,8 +1169,9 @@
     <div class="modal-overlay" id="modal-crm">
         <div class="modal-card">
             <button class="modal-close" onclick="closeModal('crm')">&times;</button>
-            <h3 class="modal-title">New Lead Inquiry</h3>
+            <h3 class="modal-title" id="crm-modal-title">New Lead Inquiry</h3>
             <form id="lead-form">
+                <input type="hidden" id="lead-id">
                 <div class="form-group">
                     <label>Company Name</label>
                     <input type="text" id="lead-company" class="form-input" required>
@@ -1179,7 +1188,7 @@
                     <label>Seats Required</label>
                     <input type="number" id="lead-seats" class="form-input" value="10" required>
                 </div>
-                <button type="submit" class="btn" style="width: 100%;">Create Lead Record</button>
+                <button type="submit" class="btn" style="width: 100%;">Save Lead Record</button>
             </form>
         </div>
     </div>
@@ -1188,8 +1197,9 @@
     <div class="modal-overlay" id="modal-booking">
         <div class="modal-card">
             <button class="modal-close" onclick="closeModal('booking')">&times;</button>
-            <h3 class="modal-title">Book Meeting Room</h3>
+            <h3 class="modal-title" id="booking-modal-title">Book Meeting Room</h3>
             <form id="booking-form">
+                <input type="hidden" id="book-id">
                 <div class="form-group">
                     <label>Room ID</label>
                     <input type="number" id="book-room-id" class="form-input" value="1" required>
@@ -1215,8 +1225,9 @@
     <div class="modal-overlay" id="modal-ticket">
         <div class="modal-card">
             <button class="modal-close" onclick="closeModal('ticket')">&times;</button>
-            <h3 class="modal-title">Raise Service Ticket</h3>
+            <h3 class="modal-title" id="ticket-modal-title">Raise Service Ticket</h3>
             <form id="ticket-form">
+                <input type="hidden" id="ticket-id">
                 <div class="form-group">
                     <label>Title</label>
                     <input type="text" id="ticket-title" class="form-input" required placeholder="e.g. Leak in Cabin GF">
@@ -1242,8 +1253,9 @@
     <div class="modal-overlay" id="modal-sustainability">
         <div class="modal-card">
             <button class="modal-close" onclick="closeModal('sustainability')">&times;</button>
-            <h3 class="modal-title">Log Energy Reading</h3>
+            <h3 class="modal-title" id="sus-modal-title">Log Energy Reading</h3>
             <form id="sustainability-form">
+                <input type="hidden" id="sus-id">
                 <div class="form-group">
                     <label>Building ID</label>
                     <input type="number" id="sus-building" class="form-input" value="1" required>
@@ -1261,8 +1273,9 @@
     <div class="modal-overlay" id="modal-visitor">
         <div class="modal-card">
             <button class="modal-close" onclick="closeModal('visitor')">&times;</button>
-            <h3 class="modal-title">Pre-Register Visitor Pass</h3>
+            <h3 class="modal-title" id="visitor-modal-title">Pre-Register Visitor Pass</h3>
             <form id="visitor-form">
+                <input type="hidden" id="vis-id">
                 <div class="form-group">
                     <label>Visitor Full Name</label>
                     <input type="text" id="vis-name" class="form-input" required placeholder="e.g. John Doe">
@@ -1283,7 +1296,7 @@
                     <label>Host Employee Name</label>
                     <input type="text" id="vis-host" class="form-input" placeholder="e.g. Ramesh Seervi">
                 </div>
-                <button type="submit" class="btn" style="width: 100%;">Generate Visitor Pass</button>
+                <button type="submit" class="btn" style="width: 100%;">Save Visitor Details</button>
             </form>
         </div>
     </div>
@@ -1292,8 +1305,9 @@
     <div class="modal-overlay" id="modal-announcement">
         <div class="modal-card">
             <button class="modal-close" onclick="closeModal('announcement')">&times;</button>
-            <h3 class="modal-title">Publish New Announcement</h3>
+            <h3 class="modal-title" id="ann-modal-title">Publish New Announcement</h3>
             <form id="announcement-form">
+                <input type="hidden" id="ann-id">
                 <div class="form-group">
                     <label>Title</label>
                     <input type="text" id="ann-title" class="form-input" required placeholder="e.g. Office Closed on Sunday">
@@ -1311,8 +1325,9 @@
     <div class="modal-overlay" id="modal-event">
         <div class="modal-card">
             <button class="modal-close" onclick="closeModal('event')">&times;</button>
-            <h3 class="modal-title">Schedule Community Event</h3>
+            <h3 class="modal-title" id="evt-modal-title">Schedule Community Event</h3>
             <form id="event-form">
+                <input type="hidden" id="evt-id">
                 <div class="form-group">
                     <label>Event Title</label>
                     <input type="text" id="evt-title" class="form-input" required placeholder="e.g. Pitch Night">
@@ -1334,12 +1349,53 @@
         </div>
     </div>
 
+    <!-- 10. Building Modal -->
+    <div class="modal-overlay" id="modal-building">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal('building')">&times;</button>
+            <h3 class="modal-title" id="building-modal-title">Add New Building</h3>
+            <form id="building-form">
+                <input type="hidden" id="building-id">
+                <div class="form-group">
+                    <label>Building Name</label>
+                    <input type="text" id="build-name" class="form-input" required placeholder="e.g. Tower Gamma">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea id="build-address" class="form-textarea" rows="2" placeholder="e.g. 500 Tech Park Road"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" id="build-city" class="form-input" value="Bangalore" required>
+                </div>
+                <div class="form-group">
+                    <label>State</label>
+                    <input type="text" id="build-state" class="form-input" value="Karnataka" required>
+                </div>
+                <div class="form-group">
+                    <label>Total Floors</label>
+                    <input type="number" id="build-floors" class="form-input" value="5" required>
+                </div>
+                <div class="form-group">
+                    <label>Total Seats</label>
+                    <input type="number" id="build-seats" class="form-input" value="100" required>
+                </div>
+                <div class="form-group">
+                    <label>Amenities</label>
+                    <input type="text" id="build-amenities" class="form-input" placeholder="e.g. Parking, Cafeteria">
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Save Building Details</button>
+            </form>
+        </div>
+    </div>
+
     <!-- 8. Invoice Modal -->
     <div class="modal-overlay" id="modal-invoice">
         <div class="modal-card">
             <button class="modal-close" onclick="closeModal('invoice')">&times;</button>
-            <h3 class="modal-title">Generate Revenue Invoice</h3>
+            <h3 class="modal-title" id="invoice-modal-title">Generate Revenue Invoice</h3>
             <form id="invoice-form">
+                <input type="hidden" id="inv-id">
                 <div class="form-group">
                     <label>Select Client</label>
                     <select id="inv-client-id" class="form-select" required>
@@ -1613,6 +1669,23 @@
             return await res.json();
         }
 
+        // Helper to perform authenticated DELETE requests
+        async function apiDelete(endpoint) {
+            const token = localStorage.getItem('workspace_jwt_token');
+            const res = await fetch(`${API_URL}${endpoint}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+            if (res.status === 401) {
+                handleLogout();
+                throw new Error('Unauthorized');
+            }
+            return await res.json();
+        }
+
         // 1. Dashboard Module
         async function loadDashboardData() {
             try {
@@ -1659,13 +1732,15 @@
         }
 
         // 2. CRM Leads Module
+        let currentLeads = [];
         async function loadLeads() {
             try {
                 const res = await apiGet('/crm/leads');
                 if (res.success) {
+                    currentLeads = res.data.data;
                     const tbody = document.getElementById('crm-leads-table-body');
                     tbody.innerHTML = '';
-                    res.data.data.forEach(lead => {
+                    currentLeads.forEach(lead => {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td>${lead.lead_code}</td>
@@ -1673,6 +1748,10 @@
                             <td>${lead.contact_person}</td>
                             <td>${lead.seats_required}</td>
                             <td><span class="badge active">${lead.status}</span></td>
+                            <td>
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openLeadModal(${lead.id})">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteLead(${lead.id})">Delete</button>
+                            </td>
                         `;
                         tbody.appendChild(tr);
                     });
@@ -1682,18 +1761,59 @@
             }
         }
 
-        // Create Lead submission handler
+        function openLeadModal(leadId = null) {
+            document.getElementById('lead-form').reset();
+            if (leadId) {
+                const lead = currentLeads.find(l => l.id == leadId);
+                if (lead) {
+                    document.getElementById('crm-modal-title').innerText = 'Edit Lead Inquiry';
+                    document.getElementById('lead-id').value = lead.id;
+                    document.getElementById('lead-company').value = lead.company_name;
+                    document.getElementById('lead-contact').value = lead.contact_person;
+                    document.getElementById('lead-email').value = lead.email;
+                    document.getElementById('lead-seats').value = lead.seats_required;
+                }
+            } else {
+                document.getElementById('crm-modal-title').innerText = 'New Lead Inquiry';
+                document.getElementById('lead-id').value = '';
+            }
+            openModal('crm');
+        }
+
+        async function deleteLead(id) {
+            if (!confirm('Are you sure you want to delete this lead?')) return;
+            try {
+                const res = await apiDelete(`/crm/leads/${id}`);
+                if (res.success) {
+                    showToast('Lead deleted successfully!');
+                    loadLeads();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to delete lead.', 'error');
+            }
+        }
+
+        // Create/Update Lead submission handler
         document.getElementById('lead-form').addEventListener('submit', async function(e) {
             e.preventDefault();
+            const leadId = document.getElementById('lead-id').value;
             const company_name = document.getElementById('lead-company').value;
             const contact_person = document.getElementById('lead-contact').value;
             const email = document.getElementById('lead-email').value;
             const seats_required = parseInt(document.getElementById('lead-seats').value);
 
             try {
-                const res = await apiPost('/crm/leads', { company_name, contact_person, email, seats_required });
+                let res;
+                if (leadId) {
+                    res = await apiPut(`/crm/leads/${leadId}`, { company_name, contact_person, email, seats_required });
+                } else {
+                    res = await apiPost('/crm/leads', { company_name, contact_person, email, seats_required });
+                }
+
                 if (res.success) {
-                    showToast('Lead inquiry added successfully!');
+                    showToast(leadId ? 'Lead updated successfully!' : 'Lead inquiry added successfully!');
                     closeModal('crm');
                     loadLeads();
                 } else {
@@ -1705,13 +1825,17 @@
         });
 
         // 3. Workspace Module
+        let currentBuildings = [];
+        let currentBookings = [];
+
         async function loadWorkspaceData() {
             try {
                 const buildRes = await apiGet('/workspaces/buildings');
                 if (buildRes.success) {
+                    currentBuildings = buildRes.data.data;
                     const tbody = document.getElementById('buildings-table-body');
                     tbody.innerHTML = '';
-                    buildRes.data.data.forEach(b => {
+                    currentBuildings.forEach(b => {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td>${b.id}</td>
@@ -1719,6 +1843,10 @@
                             <td>${b.city}, ${b.state}</td>
                             <td>${b.amenities || 'N/A'}</td>
                             <td><span class="badge active">${b.status}</span></td>
+                            <td>
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openBuildingModal(${b.id})">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteBuilding(${b.id})">Delete</button>
+                            </td>
                         `;
                         tbody.appendChild(tr);
                     });
@@ -1726,9 +1854,10 @@
 
                 const bookRes = await apiGet('/workspaces/bookings');
                 if (bookRes.success) {
+                    currentBookings = bookRes.data.data;
                     const tbody = document.getElementById('bookings-table-body');
                     tbody.innerHTML = '';
-                    bookRes.data.data.forEach(bk => {
+                    currentBookings.forEach(bk => {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td>${bk.room_id}</td>
@@ -1736,6 +1865,10 @@
                             <td>${bk.booking_date}</td>
                             <td>${bk.start_time} - ${bk.end_time}</td>
                             <td><span class="badge active">${bk.status}</span></td>
+                            <td>
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openBookingModal(${bk.id})">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteBooking(${bk.id})">Cancel</button>
+                            </td>
                         `;
                         tbody.appendChild(tr);
                     });
@@ -1745,42 +1878,166 @@
             }
         }
 
-        // Room booking handler
+        // Building Modals handlers
+        function openBuildingModal(buildingId = null) {
+            document.getElementById('building-form').reset();
+            if (buildingId) {
+                const b = currentBuildings.find(item => item.id == buildingId);
+                if (b) {
+                    document.getElementById('building-modal-title').innerText = 'Edit Building';
+                    document.getElementById('building-id').value = b.id;
+                    document.getElementById('build-name').value = b.building_name;
+                    document.getElementById('build-address').value = b.address || '';
+                    document.getElementById('build-city').value = b.city || 'Bangalore';
+                    document.getElementById('build-state').value = b.state || 'Karnataka';
+                    document.getElementById('build-floors').value = b.total_floors || 1;
+                    document.getElementById('build-seats').value = b.total_seats || 0;
+                    document.getElementById('build-amenities').value = b.amenities || '';
+                }
+            } else {
+                document.getElementById('building-modal-title').innerText = 'Add New Building';
+                document.getElementById('building-id').value = '';
+            }
+            openModal('building');
+        }
+
+        async function deleteBuilding(id) {
+            if (!confirm('Are you sure you want to delete this building?')) return;
+            try {
+                const res = await apiDelete(`/workspaces/buildings/${id}`);
+                if (res.success) {
+                    showToast('Building deleted successfully!');
+                    loadWorkspaceData();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to delete building.', 'error');
+            }
+        }
+
+        document.getElementById('building-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('building-id').value;
+            const building_name = document.getElementById('build-name').value;
+            const address = document.getElementById('build-address').value;
+            const city = document.getElementById('build-city').value;
+            const state = document.getElementById('build-state').value;
+            const total_floors = parseInt(document.getElementById('build-floors').value);
+            const total_seats = parseInt(document.getElementById('build-seats').value);
+            const amenities = document.getElementById('build-amenities').value;
+
+            const payload = { building_name, address, city, state, total_floors, total_seats, amenities };
+
+            try {
+                let res;
+                if (id) {
+                    res = await apiPut(`/workspaces/buildings/${id}`, payload);
+                } else {
+                    res = await apiPost('/workspaces/buildings', payload);
+                }
+
+                if (res.success) {
+                    showToast(id ? 'Building updated successfully!' : 'Building created successfully!');
+                    closeModal('building');
+                    loadWorkspaceData();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to save building details.', 'error');
+            }
+        });
+
+        // Booking Modal handlers
+        function openBookingModal(bookingId = null) {
+            document.getElementById('booking-form').reset();
+            if (bookingId) {
+                const bk = currentBookings.find(item => item.id == bookingId);
+                if (bk) {
+                    document.getElementById('booking-modal-title').innerText = 'Edit Meeting Room Booking';
+                    document.getElementById('book-id').value = bk.id;
+                    document.getElementById('book-room-id').value = bk.room_id;
+                    document.getElementById('book-date').value = bk.booking_date;
+                    document.getElementById('book-start').value = bk.start_time;
+                    document.getElementById('book-end').value = bk.end_time;
+                }
+            } else {
+                document.getElementById('booking-modal-title').innerText = 'Book Meeting Room';
+                document.getElementById('book-id').value = '';
+                // Default to current date
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('book-date').value = today;
+            }
+            openModal('booking');
+        }
+
+        async function deleteBooking(id) {
+            if (!confirm('Are you sure you want to cancel this booking?')) return;
+            try {
+                const res = await apiDelete(`/workspaces/bookings/${id}`);
+                if (res.success) {
+                    showToast('Booking cancelled successfully!');
+                    loadWorkspaceData();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to cancel booking.', 'error');
+            }
+        }
+
         document.getElementById('booking-form').addEventListener('submit', async function(e) {
             e.preventDefault();
+            const id = document.getElementById('book-id').value;
             const room_id = parseInt(document.getElementById('book-room-id').value);
             const booking_date = document.getElementById('book-date').value;
             const start_time = document.getElementById('book-start').value;
             const end_time = document.getElementById('book-end').value;
 
+            const payload = { room_id, booking_date, start_time, end_time };
+
             try {
-                const res = await apiPost('/workspaces/bookings', { room_id, booking_date, start_time, end_time });
+                let res;
+                if (id) {
+                    res = await apiPut(`/workspaces/bookings/${id}`, payload);
+                } else {
+                    res = await apiPost('/workspaces/bookings', payload);
+                }
+
                 if (res.success) {
-                    showToast('Meeting Room booked successfully!');
+                    showToast(id ? 'Booking updated successfully!' : 'Meeting Room booked successfully!');
                     closeModal('booking');
                     loadWorkspaceData();
                 } else {
                     showToast(res.message, 'error');
                 }
             } catch (err) {
-                showToast('Booking failed.', 'error');
+                showToast('Failed to save booking.', 'error');
             }
         });
 
         // 4. Facility Module
+        let currentTickets = [];
+
         async function loadTickets() {
             try {
                 const res = await apiGet('/facility/tickets');
                 if (res.success) {
+                    currentTickets = res.data.data;
                     const tbody = document.getElementById('tickets-table-body');
                     tbody.innerHTML = '';
-                    res.data.data.forEach(t => {
+                    currentTickets.forEach(t => {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td>${t.ticket_no}</td>
                             <td>${t.title}</td>
                             <td>${t.priority}</td>
                             <td><span class="badge active">${t.status}</span></td>
+                            <td>
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openTicketModal(${t.id})">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteTicket(${t.id})">Delete</button>
+                            </td>
                         `;
                         tbody.appendChild(tr);
                     });
@@ -1790,41 +2047,87 @@
             }
         }
 
+        function openTicketModal(ticketId = null) {
+            document.getElementById('ticket-form').reset();
+            if (ticketId) {
+                const t = currentTickets.find(item => item.id == ticketId);
+                if (t) {
+                    document.getElementById('ticket-modal-title').innerText = 'Edit Service Ticket';
+                    document.getElementById('ticket-id').value = t.id;
+                    document.getElementById('ticket-title').value = t.title || '';
+                    document.getElementById('ticket-priority').value = t.priority || 'MEDIUM';
+                    document.getElementById('ticket-description').value = t.description || '';
+                }
+            } else {
+                document.getElementById('ticket-modal-title').innerText = 'Raise Service Ticket';
+                document.getElementById('ticket-id').value = '';
+            }
+            openModal('ticket');
+        }
+
+        async function deleteTicket(id) {
+            if (!confirm('Are you sure you want to delete this service ticket?')) return;
+            try {
+                const res = await apiDelete(`/facility/tickets/${id}`);
+                if (res.success) {
+                    showToast('Ticket deleted successfully!');
+                    loadTickets();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to delete ticket.', 'error');
+            }
+        }
+
         // Raise ticket handler
         document.getElementById('ticket-form').addEventListener('submit', async function(e) {
             e.preventDefault();
+            const id = document.getElementById('ticket-id').value;
             const title = document.getElementById('ticket-title').value;
             const priority = document.getElementById('ticket-priority').value;
             const description = document.getElementById('ticket-description').value;
 
             try {
-                const res = await apiPost('/facility/tickets', { title, priority, description });
+                let res;
+                if (id) {
+                    res = await apiPut(`/facility/tickets/${id}`, { title, priority, description });
+                } else {
+                    res = await apiPost('/facility/tickets', { title, priority, description });
+                }
                 if (res.success) {
-                    showToast('Service ticket submitted successfully!');
+                    showToast(id ? 'Ticket updated successfully!' : 'Service ticket submitted successfully!');
                     closeModal('ticket');
                     loadTickets();
                 } else {
                     showToast(res.message, 'error');
                 }
             } catch (err) {
-                showToast('Submission failed.', 'error');
+                showToast('Failed to save ticket details', 'error');
             }
         });
 
         // 5. Sustainability Module
+        let currentEnergyReadings = [];
+
         async function loadSustainability() {
             try {
                 const res = await apiGet('/sustainability/energy');
                 if (res.success) {
+                    currentEnergyReadings = res.data.data;
                     const tbody = document.getElementById('energy-table-body');
                     tbody.innerHTML = '';
-                    res.data.data.forEach(en => {
+                    currentEnergyReadings.forEach(en => {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td>${en.building_id}</td>
                             <td>${en.reading_date}</td>
                             <td>${en.consumption_kwh}</td>
                             <td><span class="badge active">${en.source}</span></td>
+                            <td>
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openSustainabilityModal(${en.id})">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteEnergy(${en.id})">Delete</button>
+                            </td>
                         `;
                         tbody.appendChild(tr);
                     });
@@ -1834,34 +2137,75 @@
             }
         }
 
+        function openSustainabilityModal(readingId = null) {
+            document.getElementById('sustainability-form').reset();
+            if (readingId) {
+                const en = currentEnergyReadings.find(item => item.id == readingId);
+                if (en) {
+                    document.getElementById('sus-modal-title').innerText = 'Edit Energy Reading';
+                    document.getElementById('sus-id').value = en.id;
+                    document.getElementById('sus-building').value = en.building_id || 1;
+                    document.getElementById('sus-consumption').value = en.consumption_kwh || '';
+                }
+            } else {
+                document.getElementById('sus-modal-title').innerText = 'Log Energy Reading';
+                document.getElementById('sus-id').value = '';
+            }
+            openModal('sustainability');
+        }
+
+        async function deleteEnergy(id) {
+            if (!confirm('Are you sure you want to delete this energy reading?')) return;
+            try {
+                const res = await apiDelete(`/sustainability/energy/${id}`);
+                if (res.success) {
+                    showToast('Energy reading deleted successfully!');
+                    loadSustainability();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to delete energy reading.', 'error');
+            }
+        }
+
         // Log energy handler
         document.getElementById('sustainability-form').addEventListener('submit', async function(e) {
             e.preventDefault();
+            const id = document.getElementById('sus-id').value;
             const building_id = parseInt(document.getElementById('sus-building').value);
             const consumption_kwh = parseFloat(document.getElementById('sus-consumption').value);
 
             try {
-                const res = await apiPost('/sustainability/energy', { building_id, consumption_kwh });
+                let res;
+                if (id) {
+                    res = await apiPut(`/sustainability/energy/${id}`, { building_id, consumption_kwh });
+                } else {
+                    res = await apiPost('/sustainability/energy', { building_id, consumption_kwh });
+                }
                 if (res.success) {
-                    showToast('Energy consumption reading logged!');
+                    showToast(id ? 'Energy reading updated!' : 'Energy consumption reading logged!');
                     closeModal('sustainability');
                     loadSustainability();
                 } else {
                     showToast(res.message, 'error');
                 }
             } catch (err) {
-                showToast('Logging failed.', 'error');
+                showToast('Failed to save energy reading.', 'error');
             }
         });
 
         // 6. Billing Module
+        let currentInvoices = [];
+
         async function loadBilling() {
             try {
                 const res = await apiGet('/billing/invoices');
                 if (res.success) {
+                    currentInvoices = res.data.data;
                     const tbody = document.getElementById('invoices-table-body');
                     tbody.innerHTML = '';
-                    res.data.data.forEach(inv => {
+                    currentInvoices.forEach(inv => {
                         const tr = document.createElement('tr');
                         
                         let badgeClass = 'pending';
@@ -1869,10 +2213,12 @@
 
                         let actionBtn = '';
                         if (inv.status === 'PENDING') {
-                            actionBtn = `<button class="btn" style="padding: 4px 8px; font-size: 11px;" onclick="openPaymentModal(${inv.id}, '${inv.invoice_no}', ${inv.total_amount})">Record Payment</button>`;
-                        } else {
-                            actionBtn = `<span style="font-size:12px; color:var(--text-muted);">None</span>`;
+                            actionBtn += `<button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openPaymentModal(${inv.id}, '${inv.invoice_no}', ${inv.total_amount})">Record Payment</button>`;
                         }
+                        actionBtn += `
+                            <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openInvoiceModal(${inv.id})">Edit</button>
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteInvoice(${inv.id})">Delete</button>
+                        `;
 
                         tr.innerHTML = `
                             <td>${inv.invoice_no}</td>
@@ -1913,29 +2259,11 @@
         }
 
         // Open Invoice Modal and fetch clients
-        async function openInvoiceModal() {
+        async function openInvoiceModal(invoiceId = null) {
             try {
                 // Clear and initialize form
                 document.getElementById('invoice-form').reset();
                 
-                // Pre-fill Billing Month with current YYYY-MM
-                const today = new Date();
-                const year = today.getFullYear();
-                const month = String(today.getMonth() + 1).padStart(2, '0');
-                document.getElementById('inv-billing-month').value = `${year}-${month}`;
-                
-                // Pre-fill Due Date with +10 days
-                const dueDate = new Date();
-                dueDate.setDate(today.getDate() + 10);
-                const dueYear = dueDate.getFullYear();
-                const dueMonth = String(dueDate.getMonth() + 1).padStart(2, '0');
-                const dueDateString = String(dueDate.getDate()).padStart(2, '0');
-                document.getElementById('inv-due-date').value = `${dueYear}-${dueMonth}-${dueDateString}`;
-                
-                document.getElementById('inv-gst-percentage').value = "18.00";
-                document.getElementById('inv-gst-amount').value = "0.00";
-                document.getElementById('inv-total-amount').value = "0.00";
-
                 // Populate Client dropdown
                 const clientSelect = document.getElementById('inv-client-id');
                 clientSelect.innerHTML = '<option value="">Loading clients...</option>';
@@ -1951,6 +2279,44 @@
                     });
                 } else {
                     clientSelect.innerHTML = '<option value="">No clients found</option>';
+                }
+
+                if (invoiceId) {
+                    const inv = currentInvoices.find(item => item.id == invoiceId);
+                    if (inv) {
+                        document.getElementById('invoice-modal-title').innerText = 'Edit Revenue Invoice';
+                        document.getElementById('inv-id').value = inv.id;
+                        document.getElementById('inv-client-id').value = inv.client_id;
+                        document.getElementById('inv-billing-type').value = inv.billing_type || 'LEASE';
+                        document.getElementById('inv-billing-month').value = inv.billing_month || '';
+                        document.getElementById('inv-base-amount').value = inv.base_amount || 0;
+                        document.getElementById('inv-gst-percentage').value = inv.gst_percentage || '18.00';
+                        document.getElementById('inv-gst-amount').value = inv.gst_amount || '0.00';
+                        document.getElementById('inv-total-amount').value = inv.total_amount || '0.00';
+                        document.getElementById('inv-due-date').value = inv.due_date || '';
+                        document.getElementById('inv-notes').value = inv.notes || '';
+                    }
+                } else {
+                    document.getElementById('invoice-modal-title').innerText = 'Generate Revenue Invoice';
+                    document.getElementById('inv-id').value = '';
+                    
+                    // Pre-fill Billing Month with current YYYY-MM
+                    const today = new Date();
+                    const year = today.getFullYear();
+                    const month = String(today.getMonth() + 1).padStart(2, '0');
+                    document.getElementById('inv-billing-month').value = `${year}-${month}`;
+                    
+                    // Pre-fill Due Date with +10 days
+                    const dueDate = new Date();
+                    dueDate.setDate(today.getDate() + 10);
+                    const dueYear = dueDate.getFullYear();
+                    const dueMonth = String(dueDate.getMonth() + 1).padStart(2, '0');
+                    const dueDateString = String(dueDate.getDate()).padStart(2, '0');
+                    document.getElementById('inv-due-date').value = `${dueYear}-${dueMonth}-${dueDateString}`;
+                    
+                    document.getElementById('inv-gst-percentage').value = "18.00";
+                    document.getElementById('inv-gst-amount').value = "0.00";
+                    document.getElementById('inv-total-amount').value = "0.00";
                 }
                 
                 openModal('invoice');
@@ -1977,6 +2343,7 @@
         // Submit generated invoice
         document.getElementById('invoice-form').addEventListener('submit', async function(e) {
             e.preventDefault();
+            const id = document.getElementById('inv-id').value;
             const client_id = parseInt(document.getElementById('inv-client-id').value);
             const billing_type = document.getElementById('inv-billing-type').value;
             const billing_month = document.getElementById('inv-billing-month').value;
@@ -1990,23 +2357,30 @@
                 return;
             }
 
+            const payload = {
+                client_id,
+                billing_type,
+                billing_month,
+                base_amount,
+                gst_percentage,
+                due_date,
+                notes
+            };
+
             try {
-                const res = await apiPost('/billing/invoices', {
-                    client_id,
-                    billing_type,
-                    billing_month,
-                    base_amount,
-                    gst_percentage,
-                    due_date,
-                    notes
-                });
+                let res;
+                if (id) {
+                    res = await apiPut(`/billing/invoices/${id}`, payload);
+                } else {
+                    res = await apiPost('/billing/invoices', payload);
+                }
 
                 if (res.success) {
-                    showToast('Invoice generated successfully!');
+                    showToast(id ? 'Invoice updated successfully!' : 'Invoice generated successfully!');
                     closeModal('invoice');
                     loadBilling();
                 } else {
-                    showToast(res.message || 'Failed to generate invoice.', 'error');
+                    showToast(res.message || 'Failed to save invoice.', 'error');
                 }
             } catch (err) {
                 showToast('API Connection Error.', 'error');
@@ -2066,13 +2440,16 @@
         });
 
         // 8. Visitors Module
+        let currentVisitors = [];
+
         async function loadVisitors() {
             try {
                 const res = await apiGet('/visitors');
                 if (res.success) {
+                    currentVisitors = res.data.data;
                     const tbody = document.getElementById('visitors-table-body');
                     tbody.innerHTML = '';
-                    res.data.data.forEach(v => {
+                    currentVisitors.forEach(v => {
                         const tr = document.createElement('tr');
                         
                         let badgeClass = 'pending';
@@ -2081,17 +2458,20 @@
 
                         let actionButtons = '';
                         if (v.status === 'PENDING') {
-                            actionButtons = `
+                            actionButtons += `
                                 <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="handleVisitorStatus(${v.id}, 'CHECKED_IN')">Check-In</button>
-                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="handleVisitorStatus(${v.id}, 'CANCELLED')">Cancel</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="handleVisitorStatus(${v.id}, 'CANCELLED')">Cancel</button>
                             `;
                         } else if (v.status === 'CHECKED_IN') {
-                            actionButtons = `
-                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="handleVisitorStatus(${v.id}, 'CHECKED_OUT')">Check-Out</button>
+                            actionButtons += `
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="handleVisitorStatus(${v.id}, 'CHECKED_OUT')">Check-Out</button>
                             `;
-                        } else {
-                            actionButtons = `<span style="font-size:12px; color:var(--text-muted);">No actions</span>`;
                         }
+                        
+                        actionButtons += `
+                            <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openVisitorModal(${v.id})">Edit</button>
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteVisitor(${v.id})">Delete</button>
+                        `;
 
                         tr.innerHTML = `
                             <td><strong>${v.pass_code || 'N/A'}</strong></td>
@@ -2106,6 +2486,41 @@
                 }
             } catch (err) {
                 showToast('Failed to load visitor logs', 'error');
+            }
+        }
+
+        function openVisitorModal(visitorId = null) {
+            document.getElementById('visitor-form').reset();
+            if (visitorId) {
+                const v = currentVisitors.find(item => item.id == visitorId);
+                if (v) {
+                    document.getElementById('visitor-modal-title').innerText = 'Edit Visitor Details';
+                    document.getElementById('vis-id').value = v.id;
+                    document.getElementById('vis-name').value = v.visitor_name || '';
+                    document.getElementById('vis-mobile').value = v.mobile || '';
+                    document.getElementById('vis-company').value = v.company || '';
+                    document.getElementById('vis-purpose').value = v.visit_purpose || '';
+                    document.getElementById('vis-host').value = v.host_name || '';
+                }
+            } else {
+                document.getElementById('visitor-modal-title').innerText = 'Pre-Register Visitor Pass';
+                document.getElementById('vis-id').value = '';
+            }
+            openModal('visitor');
+        }
+
+        async function deleteVisitor(id) {
+            if (!confirm('Are you sure you want to delete this visitor record?')) return;
+            try {
+                const res = await apiDelete(`/visitors/${id}`);
+                if (res.success) {
+                    showToast('Visitor record deleted successfully!');
+                    loadVisitors();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to delete visitor record.', 'error');
             }
         }
 
@@ -2125,6 +2540,7 @@
 
         document.getElementById('visitor-form').addEventListener('submit', async function(e) {
             e.preventDefault();
+            const id = document.getElementById('vis-id').value;
             const visitor_name = document.getElementById('vis-name').value;
             const mobile = document.getElementById('vis-mobile').value;
             const company = document.getElementById('vis-company').value;
@@ -2132,32 +2548,45 @@
             const host_name = document.getElementById('vis-host').value;
 
             try {
-                const res = await apiPost('/visitors', { visitor_name, mobile, company, visit_purpose, host_name });
+                let res;
+                if (id) {
+                    res = await apiPut(`/visitors/${id}`, { visitor_name, mobile, company, visit_purpose, host_name });
+                } else {
+                    res = await apiPost('/visitors', { visitor_name, mobile, company, visit_purpose, host_name });
+                }
                 if (res.success) {
-                    showToast('Visitor registered successfully!');
+                    showToast(id ? 'Visitor details updated successfully!' : 'Visitor registered successfully!');
                     closeModal('visitor');
                     loadVisitors();
                 } else {
                     showToast(res.message, 'error');
                 }
             } catch (err) {
-                showToast('Failed to pre-register visitor', 'error');
+                showToast('Failed to save visitor details', 'error');
             }
         });
 
         // 9. Community Module
+        let currentAnnouncements = [];
+        let currentEvents = [];
+
         async function loadCommunityData() {
             try {
                 const annRes = await apiGet('/community/announcements');
                 if (annRes.success) {
+                    currentAnnouncements = annRes.data.data;
                     const tbody = document.getElementById('announcements-table-body');
                     tbody.innerHTML = '';
-                    annRes.data.data.forEach(ann => {
+                    currentAnnouncements.forEach(ann => {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td><strong>${ann.title}</strong><br/><span style="font-size:12px; color:var(--text-muted);">${ann.description || ''}</span></td>
                             <td>${ann.target_audience}</td>
                             <td>${ann.created_at.substring(0, 10)}</td>
+                            <td>
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openAnnouncementModal(${ann.id})">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteAnnouncement(${ann.id})">Delete</button>
+                            </td>
                         `;
                         tbody.appendChild(tr);
                     });
@@ -2165,15 +2594,20 @@
 
                 const evRes = await apiGet('/community/events');
                 if (evRes.success) {
+                    currentEvents = evRes.data.data;
                     const tbody = document.getElementById('events-table-body');
                     tbody.innerHTML = '';
-                    evRes.data.data.forEach(ev => {
+                    currentEvents.forEach(ev => {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td><strong>${ev.title}</strong><br/><span style="font-size:12px; color:var(--text-muted);">${ev.description || ''}</span></td>
                             <td>${ev.event_date}</td>
                             <td>${ev.location}</td>
                             <td><span class="badge active">${ev.status}</span></td>
+                            <td>
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openEventModal(${ev.id})">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteEvent(${ev.id})">Delete</button>
+                            </td>
                         `;
                         tbody.appendChild(tr);
                     });
@@ -2183,43 +2617,126 @@
             }
         }
 
+        function openAnnouncementModal(annId = null) {
+            document.getElementById('announcement-form').reset();
+            if (annId) {
+                const ann = currentAnnouncements.find(item => item.id == annId);
+                if (ann) {
+                    document.getElementById('ann-modal-title').innerText = 'Edit Announcement';
+                    document.getElementById('ann-id').value = ann.id;
+                    document.getElementById('ann-title').value = ann.title || '';
+                    document.getElementById('ann-description').value = ann.description || '';
+                }
+            } else {
+                document.getElementById('ann-modal-title').innerText = 'Publish New Announcement';
+                document.getElementById('ann-id').value = '';
+            }
+            openModal('announcement');
+        }
+
+        async function deleteAnnouncement(id) {
+            if (!confirm('Are you sure you want to delete this announcement?')) return;
+            try {
+                const res = await apiDelete(`/community/announcements/${id}`);
+                if (res.success) {
+                    showToast('Announcement deleted successfully!');
+                    loadCommunityData();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to delete announcement.', 'error');
+            }
+        }
+
+        function openEventModal(evtId = null) {
+            document.getElementById('event-form').reset();
+            if (evtId) {
+                const ev = currentEvents.find(item => item.id == evtId);
+                if (ev) {
+                    document.getElementById('evt-modal-title').innerText = 'Edit Event';
+                    document.getElementById('evt-id').value = ev.id;
+                    document.getElementById('evt-title').value = ev.title || '';
+                    document.getElementById('evt-description').value = ev.description || '';
+                    
+                    let dt = ev.event_date;
+                    if (dt && dt.includes(' ')) {
+                        dt = dt.replace(' ', 'T').substring(0, 16);
+                    }
+                    document.getElementById('evt-date').value = dt || '';
+                    document.getElementById('evt-location').value = ev.location || '';
+                }
+            } else {
+                document.getElementById('evt-modal-title').innerText = 'Schedule Community Event';
+                document.getElementById('evt-id').value = '';
+            }
+            openModal('event');
+        }
+
+        async function deleteEvent(id) {
+            if (!confirm('Are you sure you want to delete this event?')) return;
+            try {
+                const res = await apiDelete(`/community/events/${id}`);
+                if (res.success) {
+                    showToast('Event deleted successfully!');
+                    loadCommunityData();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to delete event.', 'error');
+            }
+        }
+
         document.getElementById('announcement-form').addEventListener('submit', async function(e) {
             e.preventDefault();
+            const id = document.getElementById('ann-id').value;
             const title = document.getElementById('ann-title').value;
             const description = document.getElementById('ann-description').value;
 
             try {
-                const res = await apiPost('/community/announcements', { title, description });
+                let res;
+                if (id) {
+                    res = await apiPut(`/community/announcements/${id}`, { title, description });
+                } else {
+                    res = await apiPost('/community/announcements', { title, description });
+                }
                 if (res.success) {
-                    showToast('Announcement published successfully!');
+                    showToast(id ? 'Announcement updated successfully!' : 'Announcement published successfully!');
                     closeModal('announcement');
                     loadCommunityData();
                 } else {
                     showToast(res.message, 'error');
                 }
             } catch (err) {
-                showToast('Failed to publish announcement', 'error');
+                showToast('Failed to save announcement', 'error');
             }
         });
 
         document.getElementById('event-form').addEventListener('submit', async function(e) {
             e.preventDefault();
+            const id = document.getElementById('evt-id').value;
             const title = document.getElementById('evt-title').value;
             const description = document.getElementById('evt-description').value;
             const event_date = document.getElementById('evt-date').value;
             const location = document.getElementById('evt-location').value;
 
             try {
-                const res = await apiPost('/community/events', { title, description, event_date, location });
+                let res;
+                if (id) {
+                    res = await apiPut(`/community/events/${id}`, { title, description, event_date, location });
+                } else {
+                    res = await apiPost('/community/events', { title, description, event_date, location });
+                }
                 if (res.success) {
-                    showToast('Event scheduled successfully!');
+                    showToast(id ? 'Event updated successfully!' : 'Event scheduled successfully!');
                     closeModal('event');
                     loadCommunityData();
                 } else {
                     showToast(res.message, 'error');
                 }
             } catch (err) {
-                showToast('Failed to schedule event', 'error');
+                showToast('Failed to save event', 'error');
             }
         });
 

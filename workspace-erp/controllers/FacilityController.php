@@ -61,6 +61,10 @@ class FacilityController extends BaseController {
             }
         }
         if (isset($params['assigned_to'])) { $update['assigned_to'] = intval($params['assigned_to']); $formats[] = '%d'; }
+        if (isset($params['title'])) { $update['title'] = sanitize_text_field($params['title']); $formats[] = '%s'; }
+        if (isset($params['description'])) { $update['description'] = sanitize_textarea_field($params['description']); $formats[] = '%s'; }
+        if (isset($params['category'])) { $update['category'] = sanitize_text_field($params['category']); $formats[] = '%s'; }
+        if (isset($params['priority'])) { $update['priority'] = sanitize_text_field($params['priority']); $formats[] = '%s'; }
 
         if (empty($update)) return $this->error('No fields to update.');
         $update['updated_at'] = current_time('mysql');
@@ -68,6 +72,16 @@ class FacilityController extends BaseController {
 
         $this->ticketRepo->update($id, $update, $formats);
         return $this->success('Ticket updated successfully', $this->ticketRepo->findById($id));
+    }
+
+    public function deleteTicket(WP_REST_Request $request) {
+        $id = (int)$request->get_param('id');
+        $ticket = $this->ticketRepo->findById($id);
+        if (!$ticket) return $this->error('Ticket not found.', [], 404);
+
+        $this->ticketRepo->delete($id);
+        AuthService::logActivity(get_current_user_id(), 'DELETE_TICKET', "Soft deleted ticket ID: $id");
+        return $this->success('Ticket deleted successfully');
     }
 
     public function indexWorkOrders(WP_REST_Request $request) {

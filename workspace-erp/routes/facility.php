@@ -24,6 +24,11 @@ class FacilityRoutes {
             'callback' => [$controller, 'updateTicket'],
             'permission_callback' => RoleMiddleware::hasCapability('manage_facilities')
         ]);
+        register_rest_route($namespace, '/facility/tickets/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$controller, 'deleteTicket'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_facilities')
+        ]);
 
         register_rest_route($namespace, '/facility/work-orders', [
             'methods' => 'GET',
