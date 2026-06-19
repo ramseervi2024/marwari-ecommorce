@@ -1,0 +1,153 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Aurbis Workspace Management ERP API",
+    "description": "REST API endpoints for managed office spaces, coworking environments, smart buildings, billing engine, facility operations, and mobile app integration.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/wp-json/workspace-erp/v1"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Initiate register",
+        "description": "Send a 6-digit OTP code to the requested email to complete registration.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "name": { "type": "string" },
+                  "role": { "type": "string" }
+                },
+                "required": ["username", "email", "name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP sent successfully." }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Authenticate User",
+        "description": "Login via password or 6-digit OTP code.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" },
+                  "otp": { "type": "string" }
+                },
+                "required": ["username"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "JWT authentication token returned." }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "summary": "Fetch logged-in profile",
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "summary": "Fetch Executive Dashboard Summary",
+        "responses": {
+          "200": { "description": "Executive metrics and charts" }
+        }
+      }
+    },
+    "/crm/leads": {
+      "get": {
+        "summary": "Fetch CRM Leads List",
+        "responses": {
+          "200": { "description": "Paginated leads list" }
+        }
+      },
+      "post": {
+        "summary": "Create new Lead Inquiry",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "company_name": { "type": "string" },
+                  "contact_person": { "type": "string" },
+                  "email": { "type": "string" },
+                  "seats_required": { "type": "integer" }
+                },
+                "required": ["company_name", "contact_person"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Lead registered successfully." }
+        }
+      }
+    },
+    "/clients": {
+      "get": {
+        "summary": "Fetch Enterprise Clients Master Database",
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      }
+    },
+    "/workspaces/buildings": {
+      "get": {
+        "summary": "Fetch Commercial Buildings Register",
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      }
+    },
+    "/visitors": {
+      "get": {
+        "summary": "Fetch Visitor Entry Logs",
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      }
+    },
+    "/facility/tickets": {
+      "get": {
+        "summary": "Fetch Maintenance Tickets",
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      }
+    },
+    "/billing/invoices": {
+      "get": {
+        "summary": "Fetch Invoices list",
+        "responses": {
+          "200": { "description": "Success" }
+        }
+      }
+    }
+  }
+}

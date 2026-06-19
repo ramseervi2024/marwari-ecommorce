@@ -1,0 +1,11 @@
+{
+    "name": "ramseervi/workspace-erp-api",
+    "description": "Aurbis Workspace Management ERP Platform API for WordPress",
+    "type": "wordpress-plugin",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "WorkspaceErpApi\\": ""
+        }
+    }
+}
