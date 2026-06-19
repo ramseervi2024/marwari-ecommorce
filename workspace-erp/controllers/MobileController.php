@@ -4,7 +4,7 @@ namespace WorkspaceErpApi\Controllers;
 use WorkspaceErpApi\Repositories\RoomBookingRepository;
 use WorkspaceErpApi\Repositories\VisitorRepository;
 use WorkspaceErpApi\Repositories\InvoiceRepository;
-use WorkspaceErpApi\Repositories\ServiceRequestRepository;
+use WorkspaceErpApi\Repositories\TicketRepository;
 use WorkspaceErpApi\Repositories\AnnouncementRepository;
 use WorkspaceErpApi\Repositories\EventRepository;
 use WorkspaceErpApi\Repositories\MeetingRoomRepository;
@@ -66,7 +66,16 @@ class MobileController extends BaseController {
             $extra['booked_by'] = $user_id;
         }
 
-        return $this->success('Bookings fetched', $repo->findAll($params, ['id', 'booking_date'], [], $extra));
+        $res = $repo->findAll($params, ['id', 'booking_date'], [], $extra);
+        if (!empty($res['data'])) {
+            $roomRepo = new MeetingRoomRepository();
+            foreach ($res['data'] as &$booking) {
+                $room = $roomRepo->findById(intval($booking['room_id']));
+                $booking['room_name'] = $room ? $room['room_name'] : ('Meeting Room #' . $booking['room_id']);
+            }
+        }
+
+        return $this->success('Bookings fetched', $res['data']);
     }
 
     public function getVisitors(WP_REST_Request $request) {
@@ -80,7 +89,8 @@ class MobileController extends BaseController {
             $extra['host_client_id'] = $client_id;
         }
 
-        return $this->success('Visitors fetched', $repo->findAll($params, ['id', 'visitor_name', 'status'], ['visitor_name'], $extra));
+        $res = $repo->findAll($params, ['id', 'visitor_name', 'status'], ['visitor_name'], $extra);
+        return $this->success('Visitors fetched', $res['data']);
     }
 
     public function createVisitor(WP_REST_Request $request) {
@@ -144,11 +154,44 @@ class MobileController extends BaseController {
             $extra['client_id'] = $client_id;
         }
 
-        return $this->success('Invoices fetched', $repo->findAll($params, ['id', 'invoice_no', 'status'], ['invoice_no'], $extra));
+        $res = $repo->findAll($params, ['id', 'invoice_no', 'status'], ['invoice_no'], $extra);
+        return $this->success('Invoices fetched', $res['data']);
+    }
+
+    public function payInvoice(WP_REST_Request $request) {
+        $repo = new InvoiceRepository();
+        $id = intval($request->get_param('id'));
+        $invoice = $repo->findById($id);
+        if (!$invoice) return $this->error('Invoice not found.', [], 404);
+
+        $update = [
+            'status' => 'PAID',
+            'updated_at' => current_time('mysql')
+        ];
+        $formats = ['%s', '%s'];
+
+        $repo->update($id, $update, $formats);
+
+        $payRepo = new \WorkspaceErpApi\Repositories\PaymentRepository();
+        $payData = [
+            'invoice_id' => $id,
+            'client_id' => $invoice['client_id'],
+            'amount' => $invoice['total_amount'],
+            'payment_date' => current_time('mysql'),
+            'payment_method' => 'RAZORPAY_SIMULATED',
+            'transaction_id' => 'TXN-' . strtoupper(substr(md5(time() . rand()), 0, 12)),
+            'gateway' => 'Razorpay',
+            'status' => 'COMPLETED',
+            'created_at' => current_time('mysql'),
+            'updated_at' => current_time('mysql')
+        ];
+        $payRepo->create($payData, ['%d', '%d', '%f', '%s', '%s', '%s', '%s', '%s', '%s', '%s']);
+
+        return $this->success('Payment completed and invoice status updated to PAID', $repo->findById($id));
     }
 
     public function getServiceRequests(WP_REST_Request $request) {
-        $repo = new ServiceRequestRepository();
+        $repo = new TicketRepository();
         $params = $request->get_params();
         $user_id = get_current_user_id();
 
@@ -158,30 +201,51 @@ class MobileController extends BaseController {
             $extra['raised_by'] = $user_id;
         }
 
-        return $this->success('Service requests fetched', $repo->findAll($params, ['id', 'request_no', 'status'], ['request_no', 'description'], $extra));
+        $res = $repo->findAll($params, ['id', 'ticket_no', 'status'], ['ticket_no', 'description'], $extra);
+        if (!empty($res['data'])) {
+            foreach ($res['data'] as &$item) {
+                $item['request_no'] = $item['ticket_no'];
+                $item['request_type'] = $item['category'];
+            }
+        }
+        return $this->success('Service requests fetched', $res['data']);
     }
 
     public function createServiceRequest(WP_REST_Request $request) {
-        $repo = new ServiceRequestRepository();
+        $repo = new TicketRepository();
         $params = $request->get_json_params();
         if (empty($params['request_type'])) return $this->error('request_type is required.');
 
         $client_id = $this->getClientFilter();
-        $no = 'REQ-' . rand(1000, 9999);
+        $no = 'TKT-' . rand(1000, 9999);
+        $desc = isset($params['description']) ? sanitize_textarea_field($params['description']) : '';
         $data = [
-            'request_no' => $no,
-            'client_id' => $client_id,
-            'request_type' => sanitize_text_field($params['request_type']),
-            'description' => isset($params['description']) ? sanitize_textarea_field($params['description']) : '',
+            'ticket_no' => $no,
+            'title' => sanitize_text_field($params['request_type']) . ': ' . wp_html_excerpt($desc, 30),
+            'description' => $desc,
+            'category' => sanitize_text_field($params['request_type']),
+            'priority' => 'MEDIUM',
             'raised_by' => get_current_user_id(),
             'status' => 'OPEN',
             'created_at' => current_time('mysql'),
             'updated_at' => current_time('mysql')
         ];
-        $id = $repo->create($data, ['%s', '%d', '%s', '%s', '%d', '%s', '%s', '%s']);
+        $id = $repo->create($data, ['%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s']);
         if (!$id) return $this->error('Failed to create service request.');
 
-        return $this->success('Service request raised via mobile', array_merge(['id' => $id], $data), 201);
+        // Format return to match mobile expectation
+        $returnData = [
+            'id' => $id,
+            'request_no' => $no,
+            'client_id' => $client_id,
+            'request_type' => $params['request_type'],
+            'description' => $desc,
+            'raised_by' => get_current_user_id(),
+            'status' => 'OPEN',
+            'created_at' => $data['created_at'],
+            'updated_at' => $data['updated_at']
+        ];
+        return $this->success('Service request raised via mobile', $returnData, 201);
     }
 
     public function createMeetingRoomBooking(WP_REST_Request $request) {
@@ -213,16 +277,44 @@ class MobileController extends BaseController {
 
     public function getAnnouncements(WP_REST_Request $request) {
         $repo = new AnnouncementRepository();
-        return $this->success('Announcements fetched', $repo->findAll($request->get_params(), ['id', 'title'], ['title']));
+        $res = $repo->findAll($request->get_params(), ['id', 'title'], ['title']);
+        $mapped = [];
+        if (!empty($res['data'])) {
+            foreach ($res['data'] as $ann) {
+                $mapped[] = [
+                    'id' => intval($ann['id']),
+                    'title' => $ann['title'],
+                    'content' => $ann['description'],
+                    'date' => date('Y-m-d', strtotime($ann['created_at']))
+                ];
+            }
+        }
+        return $this->success('Announcements fetched', $mapped);
     }
 
     public function getEvents(WP_REST_Request $request) {
         $repo = new EventRepository();
-        return $this->success('Events fetched', $repo->findAll($request->get_params(), ['id', 'title'], ['title']));
+        $res = $repo->findAll($request->get_params(), ['id', 'title'], ['title']);
+        $mapped = [];
+        if (!empty($res['data'])) {
+            foreach ($res['data'] as $ev) {
+                $dt = strtotime($ev['event_date']);
+                $mapped[] = [
+                    'id' => intval($ev['id']),
+                    'title' => $ev['title'],
+                    'event_date' => date('Y-m-d', $dt),
+                    'start_time' => date('H:i:s', $dt),
+                    'location' => $ev['location'],
+                    'host' => $ev['organizer']
+                ];
+            }
+        }
+        return $this->success('Events fetched', $mapped);
     }
 
     public function getMeetingRooms(WP_REST_Request $request) {
         $repo = new MeetingRoomRepository();
-        return $this->success('Meeting rooms fetched', $repo->findAll($request->get_params(), ['id', 'room_name'], ['room_name']));
+        $res = $repo->findAll($request->get_params(), ['id', 'room_name'], ['room_name']);
+        return $this->success('Meeting rooms fetched', $res['data']);
     }
 }

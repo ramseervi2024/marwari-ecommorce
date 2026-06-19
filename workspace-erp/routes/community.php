@@ -24,6 +24,11 @@ class CommunityRoutes {
             'callback' => [$controller, 'indexEvents'],
             'permission_callback' => RoleMiddleware::hasCapability('read')
         ]);
+        register_rest_route($namespace, '/community/events', [
+            'methods' => 'POST',
+            'callback' => [$controller, 'createEvent'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_community')
+        ]);
         register_rest_route($namespace, '/community/service-requests', [
             'methods' => 'GET',
             'callback' => [$controller, 'indexServiceRequests'],

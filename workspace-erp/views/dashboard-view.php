@@ -791,7 +791,9 @@
                     <li><button class="menu-item active" onclick="switchTab('dashboard')">Dashboard</button></li>
                     <li><button class="menu-item" onclick="switchTab('crm')">CRM & Leads</button></li>
                     <li><button class="menu-item" onclick="switchTab('workspaces')">Inventory / Workspace</button></li>
+                    <li><button class="menu-item" onclick="switchTab('visitors')">Visitors & Passes</button></li>
                     <li><button class="menu-item" onclick="switchTab('tickets')">Facility & Support</button></li>
+                    <li><button class="menu-item" onclick="switchTab('community')">Community & Events</button></li>
                     <li><button class="menu-item" onclick="switchTab('sustainability')">Sustainability (ESG)</button></li>
                     <li><button class="menu-item" onclick="switchTab('billing')">Invoices & Billing</button></li>
                     <li><button class="menu-item" onclick="switchTab('smtp')">Email Settings</button></li>
@@ -948,6 +950,31 @@
                 </div>
             </section>
 
+            <!-- Visitors Tab -->
+            <section id="tab-visitors" class="tab-panel">
+                <div class="table-container">
+                    <div class="table-header-row">
+                        <h3>Active Visitor Log</h3>
+                        <button class="btn" onclick="openModal('visitor')">+ Pre-Register Visitor</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Pass Code</th>
+                                <th>Visitor Name</th>
+                                <th>Mobile</th>
+                                <th>Host Employee</th>
+                                <th>Status</th>
+                                <th>Check-in / Check-out</th>
+                            </tr>
+                        </thead>
+                        <tbody id="visitors-table-body">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
             <!-- Tickets / Support Tab -->
             <section id="tab-tickets" class="tab-panel">
                 <div class="table-container">
@@ -968,6 +995,50 @@
                             <!-- Loaded dynamically -->
                         </tbody>
                     </table>
+                </div>
+            </section>
+
+            <!-- Community & Events Tab -->
+            <section id="tab-community" class="tab-panel">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <div class="table-container">
+                        <div class="table-header-row">
+                            <h3>Announcements</h3>
+                            <button class="btn" onclick="openModal('announcement')">+ Publish Announcement</button>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Audience</th>
+                                    <th>Published</th>
+                                </tr>
+                            </thead>
+                            <tbody id="announcements-table-body">
+                                <!-- Loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-container">
+                        <div class="table-header-row">
+                            <h3>Community Events</h3>
+                            <button class="btn" onclick="openModal('event')">+ Schedule Event</button>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Event Title</th>
+                                    <th>Date</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="events-table-body">
+                                <!-- Loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
@@ -1161,6 +1232,83 @@
         </div>
     </div>
 
+    <!-- 5. Visitor Registration Modal -->
+    <div class="modal-overlay" id="modal-visitor">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal('visitor')">&times;</button>
+            <h3 class="modal-title">Pre-Register Visitor Pass</h3>
+            <form id="visitor-form">
+                <div class="form-group">
+                    <label>Visitor Full Name</label>
+                    <input type="text" id="vis-name" class="form-input" required placeholder="e.g. John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <input type="text" id="vis-mobile" class="form-input" required placeholder="e.g. +91 9999988888">
+                </div>
+                <div class="form-group">
+                    <label>Company / Organization</label>
+                    <input type="text" id="vis-company" class="form-input" placeholder="e.g. Google">
+                </div>
+                <div class="form-group">
+                    <label>Purpose of Visit</label>
+                    <input type="text" id="vis-purpose" class="form-input" placeholder="e.g. Client Meeting">
+                </div>
+                <div class="form-group">
+                    <label>Host Employee Name</label>
+                    <input type="text" id="vis-host" class="form-input" placeholder="e.g. Ramesh Seervi">
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Generate Visitor Pass</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 6. Announcement Modal -->
+    <div class="modal-overlay" id="modal-announcement">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal('announcement')">&times;</button>
+            <h3 class="modal-title">Publish New Announcement</h3>
+            <form id="announcement-form">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="ann-title" class="form-input" required placeholder="e.g. Office Closed on Sunday">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="ann-description" class="form-textarea" rows="4" placeholder="Announcement details..."></textarea>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Publish Announcement</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 7. Event Modal -->
+    <div class="modal-overlay" id="modal-event">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal('event')">&times;</button>
+            <h3 class="modal-title">Schedule Community Event</h3>
+            <form id="event-form">
+                <div class="form-group">
+                    <label>Event Title</label>
+                    <input type="text" id="evt-title" class="form-input" required placeholder="e.g. Pitch Night">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="evt-description" class="form-textarea" rows="3" placeholder="Event description..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Event Date & Time</label>
+                    <input type="datetime-local" id="evt-date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" id="evt-location" class="form-input" required placeholder="e.g. Rooftop Lounge">
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Schedule Event</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Javascript Portal Scripts -->
     <script>
         const API_URL = window.location.origin + '/wp-json/workspace-erp/v1';
@@ -1220,10 +1368,18 @@
                 titleGroup.innerText = 'Workspace & Properties';
                 subtitleGroup.innerText = 'Inventories, seat allocations, and meeting rooms';
                 loadWorkspaceData();
+            } else if (tabName === 'visitors') {
+                titleGroup.innerText = 'Visitors & Guest Passes';
+                subtitleGroup.innerText = 'Track guest check-ins, pre-approvals, and generate day passes';
+                loadVisitors();
             } else if (tabName === 'tickets') {
                 titleGroup.innerText = 'Facility Management & Tickets';
                 subtitleGroup.innerText = 'Service logs & preventive scheduling';
                 loadTickets();
+            } else if (tabName === 'community') {
+                titleGroup.innerText = 'Community, News & Events';
+                subtitleGroup.innerText = 'Broadcast announcements and organize community social gatherings';
+                loadCommunityData();
             } else if (tabName === 'sustainability') {
                 titleGroup.innerText = 'Sustainability Monitoring';
                 subtitleGroup.innerText = 'Energy logs, water footprints & ESG reporting';
@@ -1304,6 +1460,24 @@
             const token = localStorage.getItem('workspace_jwt_token');
             const res = await fetch(`${API_URL}${endpoint}`, {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify(body)
+            });
+            if (res.status === 401) {
+                handleLogout();
+                throw new Error('Unauthorized');
+            }
+            return await res.json();
+        }
+
+        // Helper to perform authenticated PUT requests
+        async function apiPut(endpoint, body) {
+            const token = localStorage.getItem('workspace_jwt_token');
+            const res = await fetch(`${API_URL}${endpoint}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + token
@@ -1582,6 +1756,164 @@
                 showToast('Failed to load invoices', 'error');
             }
         }
+
+        // 8. Visitors Module
+        async function loadVisitors() {
+            try {
+                const res = await apiGet('/visitors');
+                if (res.success) {
+                    const tbody = document.getElementById('visitors-table-body');
+                    tbody.innerHTML = '';
+                    res.data.data.forEach(v => {
+                        const tr = document.createElement('tr');
+                        
+                        let badgeClass = 'pending';
+                        if (v.status === 'APPROVED' || v.status === 'CHECKED_IN') badgeClass = 'active';
+                        if (v.status === 'CHECKED_OUT' || v.status === 'CANCELLED') badgeClass = 'closed';
+
+                        let actionButtons = '';
+                        if (v.status === 'PENDING') {
+                            actionButtons = `
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="handleVisitorStatus(${v.id}, 'CHECKED_IN')">Check-In</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="handleVisitorStatus(${v.id}, 'CANCELLED')">Cancel</button>
+                            `;
+                        } else if (v.status === 'CHECKED_IN') {
+                            actionButtons = `
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="handleVisitorStatus(${v.id}, 'CHECKED_OUT')">Check-Out</button>
+                            `;
+                        } else {
+                            actionButtons = `<span style="font-size:12px; color:var(--text-muted);">No actions</span>`;
+                        }
+
+                        tr.innerHTML = `
+                            <td><strong>${v.pass_code || 'N/A'}</strong></td>
+                            <td>${v.visitor_name}</td>
+                            <td>${v.mobile}</td>
+                            <td>${v.host_name || 'N/A'} / <span style="font-size:12px; color:var(--text-muted);">${v.company || 'Personal'}</span></td>
+                            <td><span class="badge ${badgeClass}">${v.status}</span></td>
+                            <td>${actionButtons}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (err) {
+                showToast('Failed to load visitor logs', 'error');
+            }
+        }
+
+        async function handleVisitorStatus(id, status) {
+            try {
+                const res = await apiPut(`/visitors/${id}`, { status });
+                if (res.success) {
+                    showToast(`Visitor status updated to ${status}!`);
+                    loadVisitors();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to update visitor status', 'error');
+            }
+        }
+
+        document.getElementById('visitor-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const visitor_name = document.getElementById('vis-name').value;
+            const mobile = document.getElementById('vis-mobile').value;
+            const company = document.getElementById('vis-company').value;
+            const visit_purpose = document.getElementById('vis-purpose').value;
+            const host_name = document.getElementById('vis-host').value;
+
+            try {
+                const res = await apiPost('/visitors', { visitor_name, mobile, company, visit_purpose, host_name });
+                if (res.success) {
+                    showToast('Visitor registered successfully!');
+                    closeModal('visitor');
+                    loadVisitors();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to pre-register visitor', 'error');
+            }
+        });
+
+        // 9. Community Module
+        async function loadCommunityData() {
+            try {
+                const annRes = await apiGet('/community/announcements');
+                if (annRes.success) {
+                    const tbody = document.getElementById('announcements-table-body');
+                    tbody.innerHTML = '';
+                    annRes.data.data.forEach(ann => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${ann.title}</strong><br/><span style="font-size:12px; color:var(--text-muted);">${ann.description || ''}</span></td>
+                            <td>${ann.target_audience}</td>
+                            <td>${ann.created_at.substring(0, 10)}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+
+                const evRes = await apiGet('/community/events');
+                if (evRes.success) {
+                    const tbody = document.getElementById('events-table-body');
+                    tbody.innerHTML = '';
+                    evRes.data.data.forEach(ev => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${ev.title}</strong><br/><span style="font-size:12px; color:var(--text-muted);">${ev.description || ''}</span></td>
+                            <td>${ev.event_date}</td>
+                            <td>${ev.location}</td>
+                            <td><span class="badge active">${ev.status}</span></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (err) {
+                showToast('Failed to load community feed', 'error');
+            }
+        }
+
+        document.getElementById('announcement-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const title = document.getElementById('ann-title').value;
+            const description = document.getElementById('ann-description').value;
+
+            try {
+                const res = await apiPost('/community/announcements', { title, description });
+                if (res.success) {
+                    showToast('Announcement published successfully!');
+                    closeModal('announcement');
+                    loadCommunityData();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to publish announcement', 'error');
+            }
+        });
+
+        document.getElementById('event-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const title = document.getElementById('evt-title').value;
+            const description = document.getElementById('evt-description').value;
+            const event_date = document.getElementById('evt-date').value;
+            const location = document.getElementById('evt-location').value;
+
+            try {
+                const res = await apiPost('/community/events', { title, description, event_date, location });
+                if (res.success) {
+                    showToast('Event scheduled successfully!');
+                    closeModal('event');
+                    loadCommunityData();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to schedule event', 'error');
+            }
+        });
 
         // 7. SMTP Configuration
         async function loadSmtp() {

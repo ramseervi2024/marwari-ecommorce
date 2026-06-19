@@ -29,6 +29,11 @@ class MobileRoutes {
             'callback' => [$controller, 'getInvoices'],
             'permission_callback' => RoleMiddleware::hasCapability('read')
         ]);
+        register_rest_route($namespace, '/mobile/invoices/(?P<id>\d+)/pay', [
+            'methods' => 'POST',
+            'callback' => [$controller, 'payInvoice'],
+            'permission_callback' => RoleMiddleware::hasCapability('read')
+        ]);
         register_rest_route($namespace, '/mobile/service-request', [
             'methods' => 'POST',
             'callback' => [$controller, 'createServiceRequest'],
