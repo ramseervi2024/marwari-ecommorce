@@ -14,6 +14,21 @@ class SmartBuildingRoutes {
             'callback' => [$controller, 'indexDevices'],
             'permission_callback' => RoleMiddleware::hasCapability('manage_smartbuilding')
         ]);
+        register_rest_route($namespace, '/smartbuilding/devices', [
+            'methods' => 'POST',
+            'callback' => [$controller, 'createDevice'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_smartbuilding')
+        ]);
+        register_rest_route($namespace, '/smartbuilding/devices/(?P<id>\d+)', [
+            'methods' => 'PUT',
+            'callback' => [$controller, 'updateDevice'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_smartbuilding')
+        ]);
+        register_rest_route($namespace, '/smartbuilding/devices/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$controller, 'deleteDevice'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_smartbuilding')
+        ]);
         register_rest_route($namespace, '/smartbuilding/sensors', [
             'methods' => 'GET',
             'callback' => [$controller, 'indexSensors'],

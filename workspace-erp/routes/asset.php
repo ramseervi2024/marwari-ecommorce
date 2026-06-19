@@ -19,5 +19,35 @@ class AssetRoutes {
             'callback' => [$controller, 'create'],
             'permission_callback' => RoleMiddleware::hasCapability('manage_assets')
         ]);
+        register_rest_route($namespace, '/assets/(?P<id>\d+)', [
+            'methods' => 'PUT',
+            'callback' => [$controller, 'update'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_assets')
+        ]);
+        register_rest_route($namespace, '/assets/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$controller, 'delete'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_assets')
+        ]);
+        register_rest_route($namespace, '/assets/allocations', [
+            'methods' => 'GET',
+            'callback' => [$controller, 'indexAllocations'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_assets')
+        ]);
+        register_rest_route($namespace, '/assets/allocations', [
+            'methods' => 'POST',
+            'callback' => [$controller, 'createAllocation'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_assets')
+        ]);
+        register_rest_route($namespace, '/assets/allocations/(?P<id>\d+)', [
+            'methods' => 'PUT',
+            'callback' => [$controller, 'updateAllocation'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_assets')
+        ]);
+        register_rest_route($namespace, '/assets/allocations/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$controller, 'deleteAllocation'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_assets')
+        ]);
     }
 }

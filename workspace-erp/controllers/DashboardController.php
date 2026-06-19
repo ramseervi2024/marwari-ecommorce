@@ -18,9 +18,11 @@ class DashboardController extends BaseController {
         $table_tickets = $wpdb->prefix . 'workspace_tickets';
         $table_energy = $wpdb->prefix . 'workspace_energy_usage';
         $table_leads = $wpdb->prefix . 'workspace_leads';
+        $table_visitors = $wpdb->prefix . 'workspace_visitors';
+        $table_announcements = $wpdb->prefix . 'workspace_announcements';
 
         // 1. Dashboard Card Counts
-        $total_buildings = (int)$wpdb->get_var("SELECT COUNT(*) FROM $table_buildings WHERE deleted_at IS NULL") ?: 2;
+        $total_buildings = (int)$wpdb->get_var("SELECT COUNT(*) FROM $table_buildings WHERE deleted_at IS NULL") ?: 3;
         $total_tenants = (int)$wpdb->get_var("SELECT COUNT(*) FROM $table_clients WHERE deleted_at IS NULL") ?: 2;
         
         $occupied_seats = (int)$wpdb->get_var("SELECT COUNT(*) FROM $table_seats WHERE status = 'OCCUPIED' AND deleted_at IS NULL") ?: 4;
@@ -36,9 +38,11 @@ class DashboardController extends BaseController {
         ", $current_month)) ?: 250750.00;
 
         $open_tickets = (int)$wpdb->get_var("SELECT COUNT(*) FROM $table_tickets WHERE status != 'CLOSED' AND deleted_at IS NULL") ?: 1;
+        $total_visitors = (int)$wpdb->get_var("SELECT COUNT(*) FROM $table_visitors WHERE deleted_at IS NULL") ?: 0;
+        $total_announcements = (int)$wpdb->get_var("SELECT COUNT(*) FROM $table_announcements WHERE deleted_at IS NULL") ?: 0;
 
         // ESG Score (simulated score based on energy usage)
-        $esg_score = 85; 
+        $esg_score = 85;  
 
         // 2. Revenue Trends (last 6 months)
         $revenue_trends = $wpdb->get_results("
@@ -109,6 +113,8 @@ class DashboardController extends BaseController {
                 'occupancy_rate' => $occupancy_rate ?: 66.7,
                 'monthly_revenue' => $monthly_revenue,
                 'open_tickets' => $open_tickets,
+                'total_visitors' => $total_visitors,
+                'total_announcements' => $total_announcements,
                 'esg_score' => $esg_score
             ],
             'charts' => [

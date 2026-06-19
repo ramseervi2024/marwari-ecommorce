@@ -19,5 +19,35 @@ class VendorRoutes {
             'callback' => [$controller, 'create'],
             'permission_callback' => RoleMiddleware::hasCapability('manage_vendors')
         ]);
+        register_rest_route($namespace, '/vendors/(?P<id>\d+)', [
+            'methods' => 'PUT',
+            'callback' => [$controller, 'update'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_vendors')
+        ]);
+        register_rest_route($namespace, '/vendors/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$controller, 'delete'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_vendors')
+        ]);
+        register_rest_route($namespace, '/vendors/payments', [
+            'methods' => 'GET',
+            'callback' => [$controller, 'indexPayments'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_vendors')
+        ]);
+        register_rest_route($namespace, '/vendors/payments', [
+            'methods' => 'POST',
+            'callback' => [$controller, 'createPayment'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_vendors')
+        ]);
+        register_rest_route($namespace, '/vendors/payments/(?P<id>\d+)', [
+            'methods' => 'PUT',
+            'callback' => [$controller, 'updatePayment'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_vendors')
+        ]);
+        register_rest_route($namespace, '/vendors/payments/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$controller, 'deletePayment'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_vendors')
+        ]);
     }
 }

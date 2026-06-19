@@ -815,6 +815,11 @@
                     <li><button class="menu-item" onclick="switchTab('community')">Community & Events</button></li>
                     <li><button class="menu-item" onclick="switchTab('sustainability')">Sustainability (ESG)</button></li>
                     <li><button class="menu-item" onclick="switchTab('billing')">Invoices & Billing</button></li>
+                    <li><button class="menu-item" onclick="switchTab('hr')">HR & Workforce</button></li>
+                    <li><button class="menu-item" onclick="switchTab('assets')">Assets & Inventory</button></li>
+                    <li><button class="menu-item" onclick="switchTab('vendors')">Vendor Management</button></li>
+                    <li><button class="menu-item" onclick="switchTab('smartbuilding')">Smart Buildings</button></li>
+                    <li><button class="menu-item" onclick="switchTab('reports')">Reports & Analytics</button></li>
                     <li><button class="menu-item" onclick="switchTab('smtp')">Email Settings</button></li>
                 </ul>
             </div>
@@ -849,26 +854,62 @@
 
             <!-- Dashboard Tab -->
             <section id="tab-dashboard" class="tab-panel active">
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                    <span style="align-self: center; font-size: 12px; color: var(--text-muted); font-weight: 600; margin-right: 10px;">Quick Access Modules:</span>
+                    <button class="btn" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));" onclick="switchTab('crm')">CRM & Leads</button>
+                    <button class="btn" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));" onclick="switchTab('workspaces')">Workspace Registry</button>
+                    <button class="btn" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));" onclick="switchTab('visitors')">Visitors Log</button>
+                    <button class="btn" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));" onclick="switchTab('tickets')">Facility Support</button>
+                    <button class="btn" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));" onclick="switchTab('community')">Community Feed</button>
+                    <button class="btn" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));" onclick="switchTab('sustainability')">Sustainability ESG</button>
+                    <button class="btn" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));" onclick="switchTab('billing')">Revenue Invoices</button>
+                    <button class="btn" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));" onclick="switchTab('hr')">HR & Workforce</button>
+                    <button class="btn" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));" onclick="switchTab('assets')">Assets Registry</button>
+                    <button class="btn" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));" onclick="switchTab('vendors')">Vendor Management</button>
+                    <button class="btn" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));" onclick="switchTab('smartbuilding')">Smart Buildings</button>
+                    <button class="btn" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));" onclick="switchTab('reports')">Reports & Analytics</button>
+                    <button class="btn" style="padding: 6px 12px; font-size: 12px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));" onclick="switchTab('smtp')">Mail Delivery</button>
+                </div>
                 <div class="cards-grid">
-                    <div class="stat-card">
+                    <div class="stat-card" onclick="switchTab('workspaces')" style="cursor: pointer;">
                         <div class="card-icon">🏛️</div>
                         <span class="card-label">Total Buildings</span>
                         <div class="card-value" id="card-buildings">0</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card" onclick="switchTab('crm')" style="cursor: pointer;">
                         <div class="card-icon">👥</div>
                         <span class="card-label">Total Tenants</span>
                         <div class="card-value" id="card-tenants">0</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card" onclick="switchTab('workspaces')" style="cursor: pointer;">
                         <div class="card-icon">🪑</div>
                         <span class="card-label">Occupancy Rate</span>
                         <div class="card-value" id="card-occupancy">0%</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card" onclick="switchTab('billing')" style="cursor: pointer;">
                         <div class="card-icon">💳</div>
                         <span class="card-label">Monthly Revenue</span>
                         <div class="card-value" id="card-revenue">₹0</div>
+                    </div>
+                    <div class="stat-card" onclick="switchTab('tickets')" style="cursor: pointer;">
+                        <div class="card-icon">🛠️</div>
+                        <span class="card-label">Open Tickets</span>
+                        <div class="card-value" id="card-tickets">0</div>
+                    </div>
+                    <div class="stat-card" onclick="switchTab('visitors')" style="cursor: pointer;">
+                        <div class="card-icon">📋</div>
+                        <span class="card-label">Total Visitors Log</span>
+                        <div class="card-value" id="card-visitors">0</div>
+                    </div>
+                    <div class="stat-card" onclick="switchTab('community')" style="cursor: pointer;">
+                        <div class="card-icon">📢</div>
+                        <span class="card-label">Announcements</span>
+                        <div class="card-value" id="card-announcements">0</div>
+                    </div>
+                    <div class="stat-card" onclick="switchTab('sustainability')" style="cursor: pointer;">
+                        <div class="card-icon">🌱</div>
+                        <span class="card-label">ESG carbon metrics</span>
+                        <div class="card-value" id="card-esg">0</div>
                     </div>
                 </div>
 
@@ -1142,6 +1183,298 @@
                             <!-- Loaded dynamically -->
                         </tbody>
                     </table>
+                </div>
+            </section>
+
+            <!-- HR & Workforce Tab -->
+            <section id="tab-hr" class="tab-panel">
+                <div class="table-container" style="margin-bottom: 30px;">
+                    <div class="table-header-row">
+                        <h3>Employee Directory</h3>
+                        <button class="btn" onclick="openEmployeeModal()">+ Add Employee</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Designation</th>
+                                <th>Mobile</th>
+                                <th>Shift</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employees-table-body">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header-row">
+                        <h3>Attendance Log</h3>
+                        <button class="btn" onclick="openAttendanceModal()">+ Log Attendance</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Date</th>
+                                <th>Check In</th>
+                                <th>Check Out</th>
+                                <th>Status</th>
+                                <th>Remarks</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-table-body">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Assets & Inventory Tab -->
+            <section id="tab-assets" class="tab-panel">
+                <div class="table-container" style="margin-bottom: 30px;">
+                    <div class="table-header-row">
+                        <h3>Asset Registry</h3>
+                        <button class="btn" onclick="openAssetModal()">+ Register Asset</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Asset Name</th>
+                                <th>Category</th>
+                                <th>Location (Building)</th>
+                                <th>Purchase Cost</th>
+                                <th>Current Value</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assets-table-body">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header-row">
+                        <h3>Asset Allocations</h3>
+                        <button class="btn" onclick="openAllocationModal()">+ Allocate Asset</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Asset</th>
+                                <th>Allocated To</th>
+                                <th>Client Company</th>
+                                <th>Allocated Date</th>
+                                <th>Return Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allocations-table-body">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Vendor Management Tab -->
+            <section id="tab-vendors" class="tab-panel">
+                <div class="table-container" style="margin-bottom: 30px;">
+                    <div class="table-header-row">
+                        <h3>Vendor Registry</h3>
+                        <button class="btn" onclick="openVendorModal()">+ Register Vendor</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Vendor Name</th>
+                                <th>Company Name</th>
+                                <th>Service Type</th>
+                                <th>Contact Person</th>
+                                <th>Mobile</th>
+                                <th>Rating</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vendors-table-body">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header-row">
+                        <h3>Vendor Payments Log</h3>
+                        <button class="btn" onclick="openVendorPaymentModal()">+ Log Payment</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Vendor</th>
+                                <th>Amount (₹)</th>
+                                <th>Payment Date</th>
+                                <th>Method</th>
+                                <th>Reference</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vendor-payments-table-body">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Smart Buildings Tab -->
+            <section id="tab-smartbuilding" class="tab-panel">
+                <div class="table-container" style="margin-bottom: 30px;">
+                    <div class="table-header-row">
+                        <h3>IoT Devices</h3>
+                        <button class="btn" onclick="openDeviceModal()">+ Register IoT Device</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Device Name</th>
+                                <th>Type</th>
+                                <th>Building</th>
+                                <th>Floor</th>
+                                <th>Serial Number</th>
+                                <th>Manufacturer</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="devices-table-body">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="charts-row">
+                    <div class="table-container" style="margin-bottom: 0;">
+                        <div class="table-header-row">
+                            <h3>Live Sensor Data</h3>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Device ID/Name</th>
+                                    <th>Sensor Type</th>
+                                    <th>Value</th>
+                                    <th>Unit</th>
+                                    <th>Recorded At</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sensors-table-body">
+                                <!-- Loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-container" style="margin-bottom: 0;">
+                        <div class="table-header-row">
+                            <h3>Access Gate Logs</h3>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Person Name</th>
+                                    <th>Type</th>
+                                    <th>Access Point</th>
+                                    <th>Access Type</th>
+                                    <th>Recorded At</th>
+                                </tr>
+                            </thead>
+                            <tbody id="access-logs-table-body">
+                                <!-- Loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports & Analytics Tab -->
+            <section id="tab-reports" class="tab-panel">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px;">
+                    <div class="stat-card" style="padding: 30px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+                            <div>
+                                <h4 style="font-size: 20px; font-weight: 600;">Monthly Revenue Report</h4>
+                                <span style="font-size: 13px; color: var(--text-muted);">Lease invoice revenue, utility allocations, & outstanding collections</span>
+                            </div>
+                            <span class="card-icon">💳</span>
+                        </div>
+                        <div style="margin-bottom: 25px; line-height: 1.8;">
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Total Invoiced Revenue:</span> <strong id="report-total-revenue">₹0.00</strong></p>
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Total Payments Received:</span> <strong id="report-payments-received" style="color: var(--accent-emerald);">₹0.00</strong></p>
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Outstanding Balance:</span> <strong id="report-outstanding-balance" style="color: var(--accent-pink);">₹0.00</strong></p>
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Active Leases Count:</span> <strong id="report-active-leases">0</strong></p>
+                        </div>
+                        <button class="btn" onclick="printReport('revenue')">Print Full Revenue Report</button>
+                    </div>
+
+                    <div class="stat-card" style="padding: 30px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+                            <div>
+                                <h4 style="font-size: 20px; font-weight: 600;">Workspace Occupancy & Capacity</h4>
+                                <span style="font-size: 13px; color: var(--text-muted);">Occupancy rate indicators and space utilization metrics</span>
+                            </div>
+                            <span class="card-icon">🏛️</span>
+                        </div>
+                        <div style="margin-bottom: 25px; line-height: 1.8;">
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Total Desk Capacity:</span> <strong id="report-total-capacity">0</strong></p>
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Allocated Seats:</span> <strong id="report-allocated-seats">0</strong></p>
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Occupancy Percentage:</span> <strong id="report-occupancy-rate" style="color: var(--accent-blue);">0%</strong></p>
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Average Hot Desk Turnover:</span> <strong>1.8x / day</strong></p>
+                        </div>
+                        <button class="btn" onclick="printReport('occupancy')">Print Occupancy Summary</button>
+                    </div>
+
+                    <div class="stat-card" style="padding: 30px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+                            <div>
+                                <h4 style="font-size: 20px; font-weight: 600;">Facility SLA & Tickets Report</h4>
+                                <span style="font-size: 13px; color: var(--text-muted);">Resolution metrics, ticket volume, & SLA compliance</span>
+                            </div>
+                            <span class="card-icon">🛠️</span>
+                        </div>
+                        <div style="margin-bottom: 25px; line-height: 1.8;">
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Total Tickets Opened:</span> <strong id="report-total-tickets">0</strong></p>
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Tickets Resolved:</span> <strong id="report-resolved-tickets" style="color: var(--accent-emerald);">0</strong></p>
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">SLA Compliance Rate:</span> <strong id="report-sla-compliance" style="color: var(--accent-emerald);">0%</strong></p>
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Avg Resolution Time:</span> <strong>3.5 hours</strong></p>
+                        </div>
+                        <button class="btn" onclick="printReport('tickets')">Print Support SLA Log</button>
+                    </div>
+
+                    <div class="stat-card" style="padding: 30px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+                            <div>
+                                <h4 style="font-size: 20px; font-weight: 600;">ESG Sustainability Metrics</h4>
+                                <span style="font-size: 13px; color: var(--text-muted);">Environmental logs, water footprints & ESG reporting</span>
+                            </div>
+                            <span class="card-icon">🌱</span>
+                        </div>
+                        <div style="margin-bottom: 25px; line-height: 1.8;">
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">CO2 Offset (Estimated):</span> <strong id="report-carbon-reduction">0 kg</strong></p>
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Average Energy Efficiency:</span> <strong id="report-energy-efficiency" style="color: var(--accent-purple);">0%</strong></p>
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Waste Recycling Rate:</span> <strong id="report-recycling-rate" style="color: var(--accent-emerald);">0%</strong></p>
+                            <p style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Renewable Energy Source:</span> <strong>Grid + Solar</strong></p>
+                        </div>
+                        <button class="btn" onclick="printReport('esg')">Print ESG Report</button>
+                    </div>
                 </div>
             </section>
 
@@ -1659,6 +1992,381 @@
         </div>
     </div>
 
+    <!-- 12. Employee Profile Modal -->
+    <div class="modal-overlay" id="modal-employee">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal('employee')">&times;</button>
+            <h3 class="modal-title" id="employee-modal-title">New Employee Profile</h3>
+            <form id="employee-form">
+                <input type="hidden" id="employee-id">
+                <div class="form-group">
+                    <label>Employee Code</label>
+                    <input type="text" id="employee-code" class="form-input" placeholder="e.g. EMP-003" required>
+                </div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="employee-name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Department</label>
+                    <select id="employee-department" class="form-select">
+                        <option value="Facilities">Facilities</option>
+                        <option value="Security">Security</option>
+                        <option value="IT Support">IT Support</option>
+                        <option value="HR & Admin">HR & Admin</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Sales">Sales</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Designation</label>
+                    <input type="text" id="employee-designation" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <input type="text" id="employee-mobile" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="employee-email" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Joining Date</label>
+                    <input type="date" id="employee-joining" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Monthly Salary (₹)</label>
+                    <input type="number" id="employee-salary" class="form-input" value="0">
+                </div>
+                <div class="form-group">
+                    <label>Work Shift</label>
+                    <select id="employee-shift" class="form-select">
+                        <option value="DAY">Day Shift</option>
+                        <option value="NIGHT">Night Shift</option>
+                        <option value="SHIFT_A">Shift A</option>
+                        <option value="SHIFT_B">Shift B</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Assigned Building</label>
+                    <select id="employee-building" class="form-select employee-building-select">
+                        <option value="">No Building Assigned</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn" style="margin-top: 10px;">Save Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 13. Attendance Log Modal -->
+    <div class="modal-overlay" id="modal-attendance">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal('attendance')">&times;</button>
+            <h3 class="modal-title" id="attendance-modal-title">Log Attendance Record</h3>
+            <form id="attendance-form">
+                <input type="hidden" id="attendance-id">
+                <div class="form-group">
+                    <label>Employee</label>
+                    <select id="attendance-employee" class="form-select" required>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="attendance-date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Check In Time</label>
+                    <input type="text" id="attendance-checkin" class="form-input" placeholder="e.g. 09:00:00">
+                </div>
+                <div class="form-group">
+                    <label>Check Out Time</label>
+                    <input type="text" id="attendance-checkout" class="form-input" placeholder="e.g. 18:00:00">
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="attendance-status" class="form-select">
+                        <option value="PRESENT">Present</option>
+                        <option value="ABSENT">Absent</option>
+                        <option value="LATE">Late</option>
+                        <option value="LEAVE">On Leave</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Remarks / Notes</label>
+                    <textarea id="attendance-remarks" class="form-textarea" rows="2"></textarea>
+                </div>
+                <button type="submit" class="btn" style="margin-top: 10px;">Log Attendance</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 14. Asset Registration Modal -->
+    <div class="modal-overlay" id="modal-asset">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal('asset')">&times;</button>
+            <h3 class="modal-title" id="asset-modal-title">Register Enterprise Asset</h3>
+            <form id="asset-form">
+                <input type="hidden" id="asset-id">
+                <div class="form-group">
+                    <label>Asset Code</label>
+                    <input type="text" id="asset-code" class="form-input" placeholder="e.g. AST-003">
+                </div>
+                <div class="form-group">
+                    <label>Asset Name</label>
+                    <input type="text" id="asset-name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="asset-category" class="form-select">
+                        <option value="IT Equipment">IT Equipment</option>
+                        <option value="Furniture">Furniture</option>
+                        <option value="HVAC">HVAC System</option>
+                        <option value="Safety & Security">Safety & Security</option>
+                        <option value="Pantry Appliances">Pantry Appliances</option>
+                        <option value="General">General</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Building</label>
+                    <select id="asset-building" class="form-select asset-building-select" required>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Floor</label>
+                    <select id="asset-floor" class="form-select asset-floor-select">
+                        <option value="">Select Floor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Purchase Date</label>
+                    <input type="date" id="asset-purchase-date" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Purchase Cost (₹)</label>
+                    <input type="number" id="asset-purchase-cost" class="form-input" value="0">
+                </div>
+                <div class="form-group">
+                    <label>Current Net Value (₹)</label>
+                    <input type="number" id="asset-current-value" class="form-input" value="0">
+                </div>
+                <div class="form-group">
+                    <label>Warranty Expiry</label>
+                    <input type="date" id="asset-warranty" class="form-input">
+                </div>
+                <button type="submit" class="btn" style="margin-top: 10px;">Register Asset</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 15. Asset Allocation Modal -->
+    <div class="modal-overlay" id="modal-allocation">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal('allocation')">&times;</button>
+            <h3 class="modal-title" id="allocation-modal-title">Log Asset Allocation</h3>
+            <form id="allocation-form">
+                <input type="hidden" id="allocation-id">
+                <div class="form-group">
+                    <label>Asset</label>
+                    <select id="allocation-asset" class="form-select" required>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Allocated To Name (Individual)</label>
+                    <input type="text" id="allocation-to" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Allocated Client (Company)</label>
+                    <select id="allocation-client" class="form-select">
+                        <option value="">No Client (Internal Allocation)</option>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Allocation Location (Building)</label>
+                    <select id="allocation-building" class="form-select allocation-building-select">
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Floor</label>
+                    <select id="allocation-floor" class="form-select allocation-floor-select">
+                        <option value="">Select Floor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Allocation Date</label>
+                    <input type="date" id="allocation-date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Expected Return Date</label>
+                    <input type="date" id="allocation-return" class="form-input">
+                </div>
+                <button type="submit" class="btn" style="margin-top: 10px;">Allocate Asset</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 16. Vendor Registration Modal -->
+    <div class="modal-overlay" id="modal-vendor">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal('vendor')">&times;</button>
+            <h3 class="modal-title" id="vendor-modal-title">Register Service Vendor</h3>
+            <form id="vendor-form">
+                <input type="hidden" id="vendor-id">
+                <div class="form-group">
+                    <label>Vendor Representative Name</label>
+                    <input type="text" id="vendor-name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Company / Corporate Name</label>
+                    <input type="text" id="vendor-company" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Service Type</label>
+                    <select id="vendor-service" class="form-select">
+                        <option value="Housekeeping">Housekeeping</option>
+                        <option value="Security">Security Guard Services</option>
+                        <option value="HVAC Maintenance">HVAC & ACMV Maintenance</option>
+                        <option value="Pest Control">Pest Control</option>
+                        <option value="Catering & Pantry">Catering & Pantry Operations</option>
+                        <option value="IT & Networking">IT Infrastructure & Networking</option>
+                        <option value="General Support">General Maintenance Support</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Contact Person Mobile</label>
+                    <input type="text" id="vendor-mobile" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="vendor-email" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>GST Number</label>
+                    <input type="text" id="vendor-gst" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea id="vendor-address" class="form-textarea" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Contract Start Date</label>
+                    <input type="date" id="vendor-start" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Contract End Date</label>
+                    <input type="date" id="vendor-end" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>SLA Terms Summary</label>
+                    <textarea id="vendor-sla" class="form-textarea" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Quality Rating (1.0 to 5.0)</label>
+                    <input type="number" id="vendor-rating" class="form-input" min="1" max="5" step="0.1" value="5.0">
+                </div>
+                <button type="submit" class="btn" style="margin-top: 10px;">Register Vendor</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 17. Vendor Payment Modal -->
+    <div class="modal-overlay" id="modal-vendor-payment">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal('vendor-payment')">&times;</button>
+            <h3 class="modal-title" id="vendor-payment-modal-title">Log Vendor Outflow Payment</h3>
+            <form id="vendor-payment-form">
+                <input type="hidden" id="vendor-payment-id">
+                <div class="form-group">
+                    <label>Vendor Representative / Company</label>
+                    <select id="vendor-payment-vendor" class="form-select" required>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Payment Amount (₹)</label>
+                    <input type="number" id="vendor-payment-amount" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Payment Date</label>
+                    <input type="date" id="vendor-payment-date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="vendor-payment-method" class="form-select">
+                        <option value="UPI">UPI / Digital Wallets</option>
+                        <option value="BANK_TRANSFER">Bank Transfer (NEFT/RTGS)</option>
+                        <option value="CHEQUE">Cheque Clearance</option>
+                        <option value="CASH">Cash Disbursements</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Transaction / Reference Code</label>
+                    <input type="text" id="vendor-payment-reference" class="form-input" placeholder="e.g. TXN982736412">
+                </div>
+                <div class="form-group">
+                    <label>Payment Description</label>
+                    <textarea id="vendor-payment-description" class="form-textarea" rows="2"></textarea>
+                </div>
+                <button type="submit" class="btn" style="margin-top: 10px;">Log Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 18. IoT Device Registration Modal -->
+    <div class="modal-overlay" id="modal-device">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal('device')">&times;</button>
+            <h3 class="modal-title" id="device-modal-title">Register IoT Sensor / Gate Device</h3>
+            <form id="device-form">
+                <input type="hidden" id="device-id">
+                <div class="form-group">
+                    <label>Device Name / Tag</label>
+                    <input type="text" id="device-name" class="form-input" placeholder="e.g. Temp Sensor - Floor 2" required>
+                </div>
+                <div class="form-group">
+                    <label>Device Type</label>
+                    <select id="device-type" class="form-select">
+                        <option value="TEMPERATURE_SENSOR">Temperature Sensor</option>
+                        <option value="AIR_QUALITY">Air Quality (PM2.5 / CO2)</option>
+                        <option value="OCCUPANCY_SENSOR">Occupancy Counter Sensor</option>
+                        <option value="ACCESS_CONTROL">Access Gate Gatekeeper</option>
+                        <option value="SMART_LIGHTING">Smart Lighting Module</option>
+                        <option value="THERMOSTAT">Smart Thermostat Controller</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Installed Building</label>
+                    <select id="device-building" class="form-select device-building-select" required>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Installed Floor</label>
+                    <select id="device-floor" class="form-select device-floor-select">
+                        <option value="">Select Floor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Hardware Serial Number</label>
+                    <input type="text" id="device-serial" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Manufacturer</label>
+                    <input type="text" id="device-manufacturer" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Installed Date</label>
+                    <input type="date" id="device-installed" class="form-input">
+                </div>
+                <button type="submit" class="btn" style="margin-top: 10px;">Register Device</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Javascript Portal Scripts -->
     <script>
         const API_URL = window.location.origin + '/wp-json/workspace-erp/v1';
@@ -1738,6 +2446,26 @@
                 titleGroup.innerText = 'Revenue Invoices';
                 subtitleGroup.innerText = 'Client leases, payments & utility invoice schedules';
                 loadBilling();
+            } else if (tabName === 'hr') {
+                titleGroup.innerText = 'HR & Workforce';
+                subtitleGroup.innerText = 'Manage employee records, shifts, and log daily attendance logs';
+                loadHr();
+            } else if (tabName === 'assets') {
+                titleGroup.innerText = 'Assets & Inventory';
+                subtitleGroup.innerText = 'Register workplace hardware assets and log allocations';
+                loadAssets();
+            } else if (tabName === 'vendors') {
+                titleGroup.innerText = 'Vendor Management';
+                subtitleGroup.innerText = 'Track external utility service vendors and payout schedules';
+                loadVendors();
+            } else if (tabName === 'smartbuilding') {
+                titleGroup.innerText = 'Smart Buildings';
+                subtitleGroup.innerText = 'IoT devices monitoring, gate access pass, and sensor telemetry';
+                loadSmartBuilding();
+            } else if (tabName === 'reports') {
+                titleGroup.innerText = 'Reports & Analytics';
+                subtitleGroup.innerText = 'Analytical summary reports of billing revenue, space, support, and ESG';
+                loadReports();
             } else if (tabName === 'smtp') {
                 titleGroup.innerText = 'Email Delivery Configurations';
                 subtitleGroup.innerText = 'Global email templates & verification codes settings';
@@ -1867,7 +2595,11 @@
                     document.getElementById('card-buildings').innerText = cards.total_buildings;
                     document.getElementById('card-tenants').innerText = cards.total_tenants;
                     document.getElementById('card-occupancy').innerText = `${cards.occupancy_rate}%`;
-                    document.getElementById('card-revenue').innerText = `₹${parseFloat(cards.monthly_revenue).toLocaleString()}`;
+                    document.getElementById('card-revenue').innerText = `₹${parseFloat(cards.monthly_revenue).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                    document.getElementById('card-tickets').innerText = cards.open_tickets;
+                    document.getElementById('card-visitors').innerText = cards.total_visitors;
+                    document.getElementById('card-announcements').innerText = cards.total_announcements;
+                    document.getElementById('card-esg').innerText = cards.esg_score;
 
                     // Render Revenue Trends SVG Chart
                     const chartCanvas = document.getElementById('revenue-chart');
@@ -3485,6 +4217,1298 @@
                 showToast('Saving failed.', 'error');
             }
         });
+
+        // ==========================================
+        // 10. HR & Workforce Module
+        // ==========================================
+        let currentEmployees = [];
+        let currentAttendance = [];
+
+        async function loadHr() {
+            try {
+                // Ensure buildings are loaded
+                if (currentBuildings.length === 0) {
+                    const buildRes = await apiGet('/workspaces/buildings?limit=100');
+                    if (buildRes.success) {
+                        currentBuildings = buildRes.data.data;
+                    }
+                }
+
+                // Load Employees
+                const empRes = await apiGet('/hr/employees?limit=100');
+                if (empRes.success) {
+                    currentEmployees = empRes.data.data;
+                    const tbody = document.getElementById('employees-table-body');
+                    tbody.innerHTML = '';
+                    currentEmployees.forEach(emp => {
+                        const building = currentBuildings.find(b => b.id == emp.building_id);
+                        const buildingName = building ? building.building_name : 'No Building Assigned';
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${emp.employee_code}</strong></td>
+                            <td>${emp.name}<br/><span style="font-size:12px; color:var(--text-muted);">${emp.designation || ''}</span></td>
+                            <td>${emp.department || 'General'}</td>
+                            <td>${emp.designation || 'Staff'}</td>
+                            <td>${emp.mobile || 'N/A'}</td>
+                            <td>${emp.shift || 'DAY'}</td>
+                            <td>
+                                <select class="status-select-inline" onchange="confirmEmployeeStatusChange(${emp.id}, this, '${emp.status}')">
+                                    <option value="ACTIVE" ${emp.status === 'ACTIVE' ? 'selected' : ''}>Active</option>
+                                    <option value="INACTIVE" ${emp.status === 'INACTIVE' ? 'selected' : ''}>Inactive</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openEmployeeModal(${emp.id})">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteEmployee(${emp.id})">Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+
+                // Load Attendance
+                const attRes = await apiGet('/hr/attendance?limit=100');
+                if (attRes.success) {
+                    currentAttendance = attRes.data.data;
+                    const tbody = document.getElementById('attendance-table-body');
+                    tbody.innerHTML = '';
+                    currentAttendance.forEach(att => {
+                        const emp = currentEmployees.find(e => e.id == att.employee_id);
+                        const empName = emp ? emp.name : `Employee ID: ${att.employee_id}`;
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${empName}</strong></td>
+                            <td>${att.attendance_date}</td>
+                            <td>${att.check_in || 'N/A'}</td>
+                            <td>${att.check_out || 'N/A'}</td>
+                            <td>
+                                <select class="status-select-inline" onchange="confirmAttendanceStatusChange(${att.id}, this, '${att.status}')">
+                                    <option value="PRESENT" ${att.status === 'PRESENT' ? 'selected' : ''}>Present</option>
+                                    <option value="ABSENT" ${att.status === 'ABSENT' ? 'selected' : ''}>Absent</option>
+                                    <option value="LATE" ${att.status === 'LATE' ? 'selected' : ''}>Late</option>
+                                    <option value="LEAVE" ${att.status === 'LEAVE' ? 'selected' : ''}>Leave</option>
+                                </select>
+                            </td>
+                            <td>${att.remarks || ''}</td>
+                            <td>
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openAttendanceModal(${att.id})">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteAttendance(${att.id})">Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (err) {
+                showToast('Failed to load HR and employee records', 'error');
+            }
+        }
+
+        async function confirmEmployeeStatusChange(id, selectElement, oldStatus) {
+            const newStatus = selectElement.value;
+            if (newStatus === oldStatus) return;
+            if (!confirm(`Are you sure you want to change the employee status from "${oldStatus}" to "${newStatus}"?`)) {
+                selectElement.value = oldStatus;
+                return;
+            }
+            try {
+                const res = await apiPut(`/hr/employees/${id}`, { status: newStatus });
+                if (res.success) {
+                    showToast('Employee status updated successfully!');
+                    loadHr();
+                } else {
+                    showToast(res.message, 'error');
+                    selectElement.value = oldStatus;
+                }
+            } catch (err) {
+                showToast('Failed to update employee status.', 'error');
+                selectElement.value = oldStatus;
+            }
+        }
+
+        async function confirmAttendanceStatusChange(id, selectElement, oldStatus) {
+            const newStatus = selectElement.value;
+            if (newStatus === oldStatus) return;
+            if (!confirm(`Are you sure you want to change the attendance status from "${oldStatus}" to "${newStatus}"?`)) {
+                selectElement.value = oldStatus;
+                return;
+            }
+            try {
+                const res = await apiPut(`/hr/attendance/${id}`, { status: newStatus });
+                if (res.success) {
+                    showToast('Attendance status updated successfully!');
+                    loadHr();
+                } else {
+                    showToast(res.message, 'error');
+                    selectElement.value = oldStatus;
+                }
+            } catch (err) {
+                showToast('Failed to update attendance status.', 'error');
+                selectElement.value = oldStatus;
+            }
+        }
+
+        async function openEmployeeModal(empId = null) {
+            document.getElementById('employee-form').reset();
+            
+            // Pop building dropdown
+            const bSelect = document.getElementById('employee-building');
+            bSelect.innerHTML = '<option value="">No Building Assigned</option>';
+            if (currentBuildings.length === 0) {
+                const buildRes = await apiGet('/workspaces/buildings?limit=100');
+                if (buildRes.success) currentBuildings = buildRes.data.data;
+            }
+            currentBuildings.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b.id;
+                opt.innerText = b.building_name;
+                bSelect.appendChild(opt);
+            });
+
+            if (empId) {
+                const emp = currentEmployees.find(e => e.id == empId);
+                if (emp) {
+                    document.getElementById('employee-modal-title').innerText = 'Edit Employee Profile';
+                    document.getElementById('employee-id').value = emp.id;
+                    document.getElementById('employee-code').value = emp.employee_code || '';
+                    document.getElementById('employee-name').value = emp.name || '';
+                    document.getElementById('employee-department').value = emp.department || 'Facilities';
+                    document.getElementById('employee-designation').value = emp.designation || '';
+                    document.getElementById('employee-mobile').value = emp.mobile || '';
+                    document.getElementById('employee-email').value = emp.email || '';
+                    document.getElementById('employee-joining').value = emp.joining_date || '';
+                    document.getElementById('employee-salary').value = emp.salary || 0;
+                    document.getElementById('employee-shift').value = emp.shift || 'DAY';
+                    document.getElementById('employee-building').value = emp.building_id || '';
+                }
+            } else {
+                document.getElementById('employee-modal-title').innerText = 'New Employee Profile';
+                document.getElementById('employee-id').value = '';
+                document.getElementById('employee-code').value = 'EMP-' + Math.floor(100 + Math.random() * 900);
+            }
+            openModal('employee');
+        }
+
+        document.getElementById('employee-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('employee-id').value;
+            const employee_code = document.getElementById('employee-code').value;
+            const name = document.getElementById('employee-name').value;
+            const department = document.getElementById('employee-department').value;
+            const designation = document.getElementById('employee-designation').value;
+            const mobile = document.getElementById('employee-mobile').value;
+            const email = document.getElementById('employee-email').value;
+            const joining_date = document.getElementById('employee-joining').value;
+            const salary = document.getElementById('employee-salary').value;
+            const shift = document.getElementById('employee-shift').value;
+            const building_id = document.getElementById('employee-building').value;
+
+            try {
+                let res;
+                const payload = { employee_code, name, department, designation, mobile, email, joining_date, salary, shift, building_id };
+                if (id) {
+                    res = await apiPut(`/hr/employees/${id}`, payload);
+                } else {
+                    res = await apiPost('/hr/employees', payload);
+                }
+                if (res.success) {
+                    showToast(id ? 'Employee profile updated!' : 'Employee registered successfully!');
+                    closeModal('employee');
+                    loadHr();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to save employee profile', 'error');
+            }
+        });
+
+        async function deleteEmployee(id) {
+            if (!confirm('Are you sure you want to delete this employee profile?')) return;
+            try {
+                const res = await apiDelete(`/hr/employees/${id}`);
+                if (res.success) {
+                    showToast('Employee profile deleted successfully');
+                    loadHr();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Error deleting employee.', 'error');
+            }
+        }
+
+        async function openAttendanceModal(attId = null) {
+            document.getElementById('attendance-form').reset();
+            
+            // Pop employees dropdown
+            const empSelect = document.getElementById('attendance-employee');
+            empSelect.innerHTML = '<option value="">Select Employee</option>';
+            if (currentEmployees.length === 0) {
+                const empRes = await apiGet('/hr/employees?limit=100');
+                if (empRes.success) currentEmployees = empRes.data.data;
+            }
+            currentEmployees.forEach(e => {
+                const opt = document.createElement('option');
+                opt.value = e.id;
+                opt.innerText = `${e.name} (${e.employee_code})`;
+                empSelect.appendChild(opt);
+            });
+
+            document.getElementById('attendance-date').value = new Date().toISOString().substring(0, 10);
+
+            if (attId) {
+                const att = currentAttendance.find(a => a.id == attId);
+                if (att) {
+                    document.getElementById('attendance-modal-title').innerText = 'Edit Attendance Record';
+                    document.getElementById('attendance-id').value = att.id;
+                    document.getElementById('attendance-employee').value = att.employee_id;
+                    document.getElementById('attendance-date').value = att.attendance_date;
+                    document.getElementById('attendance-checkin').value = att.check_in || '';
+                    document.getElementById('attendance-checkout').value = att.check_out || '';
+                    document.getElementById('attendance-status').value = att.status || 'PRESENT';
+                    document.getElementById('attendance-remarks').value = att.remarks || '';
+                }
+            } else {
+                document.getElementById('attendance-modal-title').innerText = 'Log Attendance Record';
+                document.getElementById('attendance-id').value = '';
+            }
+            openModal('attendance');
+        }
+
+        document.getElementById('attendance-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('attendance-id').value;
+            const employee_id = document.getElementById('attendance-employee').value;
+            const attendance_date = document.getElementById('attendance-date').value;
+            const check_in = document.getElementById('attendance-checkin').value;
+            const check_out = document.getElementById('attendance-checkout').value;
+            const status = document.getElementById('attendance-status').value;
+            const remarks = document.getElementById('attendance-remarks').value;
+
+            try {
+                let res;
+                const payload = { employee_id, attendance_date, check_in, check_out, status, remarks };
+                if (id) {
+                    res = await apiPut(`/hr/attendance/${id}`, payload);
+                } else {
+                    res = await apiPost('/hr/attendance', payload);
+                }
+                if (res.success) {
+                    showToast('Attendance record logged successfully!');
+                    closeModal('attendance');
+                    loadHr();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to log attendance', 'error');
+            }
+        });
+
+        async function deleteAttendance(id) {
+            if (!confirm('Are you sure you want to delete this attendance record?')) return;
+            try {
+                const res = await apiDelete(`/hr/attendance/${id}`);
+                if (res.success) {
+                    showToast('Attendance record deleted.');
+                    loadHr();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Error deleting attendance.', 'error');
+            }
+        }
+
+        // ==========================================
+        // 11. Assets & Inventory Module
+        // ==========================================
+        let currentAssets = [];
+        let currentAllocations = [];
+
+        async function loadAssets() {
+            try {
+                if (currentBuildings.length === 0) {
+                    const buildRes = await apiGet('/workspaces/buildings?limit=100');
+                    if (buildRes.success) currentBuildings = buildRes.data.data;
+                }
+
+                // Load Assets
+                const assetRes = await apiGet('/assets?limit=100');
+                if (assetRes.success) {
+                    currentAssets = assetRes.data.data;
+                    const tbody = document.getElementById('assets-table-body');
+                    tbody.innerHTML = '';
+                    currentAssets.forEach(ast => {
+                        const building = currentBuildings.find(b => b.id == ast.building_id);
+                        const buildingName = building ? building.building_name : 'N/A';
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${ast.asset_code}</strong></td>
+                            <td>${ast.asset_name}</td>
+                            <td>${ast.category || 'General'}</td>
+                            <td>${buildingName}</td>
+                            <td>₹${parseFloat(ast.purchase_cost || 0).toLocaleString()}</td>
+                            <td>₹${parseFloat(ast.current_value || 0).toLocaleString()}</td>
+                            <td>
+                                <select class="status-select-inline" onchange="confirmAssetStatusChange(${ast.id}, this, '${ast.status}')">
+                                    <option value="ACTIVE" ${ast.status === 'ACTIVE' ? 'selected' : ''}>Active</option>
+                                    <option value="MAINTENANCE" ${ast.status === 'MAINTENANCE' ? 'selected' : ''}>Maintenance</option>
+                                    <option value="RETIRED" ${ast.status === 'RETIRED' ? 'selected' : ''}>Retired</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openAssetModal(${ast.id})">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteAsset(${ast.id})">Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+
+                // Load Allocations
+                const allocRes = await apiGet('/assets/allocations?limit=100');
+                if (allocRes.success) {
+                    currentAllocations = allocRes.data.data;
+                    const tbody = document.getElementById('allocations-table-body');
+                    tbody.innerHTML = '';
+                    currentAllocations.forEach(alc => {
+                        const asset = currentAssets.find(a => a.id == alc.asset_id);
+                        const assetName = asset ? asset.asset_name : `Asset ID: ${alc.asset_id}`;
+                        const client = currentClients.find(c => c.id == alc.client_id);
+                        const clientName = client ? client.company_name : 'Internal (Aurbis)';
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${assetName}</strong></td>
+                            <td>${alc.allocated_to || 'N/A'}</td>
+                            <td>${clientName}</td>
+                            <td>${alc.allocated_date}</td>
+                            <td>${alc.return_date || 'Ongoing'}</td>
+                            <td>
+                                <select class="status-select-inline" onchange="confirmAllocationStatusChange(${alc.id}, this, '${alc.status}')">
+                                    <option value="ALLOCATED" ${alc.status === 'ALLOCATED' ? 'selected' : ''}>Allocated</option>
+                                    <option value="RETURNED" ${alc.status === 'RETURNED' ? 'selected' : ''}>Returned</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openAllocationModal(${alc.id})">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteAllocation(${alc.id})">Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (err) {
+                showToast('Failed to load assets data.', 'error');
+            }
+        }
+
+        async function confirmAssetStatusChange(id, selectElement, oldStatus) {
+            const newStatus = selectElement.value;
+            if (newStatus === oldStatus) return;
+            if (!confirm(`Are you sure you want to change the asset status from "${oldStatus}" to "${newStatus}"?`)) {
+                selectElement.value = oldStatus;
+                return;
+            }
+            try {
+                const res = await apiPut(`/assets/${id}`, { status: newStatus });
+                if (res.success) {
+                    showToast('Asset status updated successfully!');
+                    loadAssets();
+                } else {
+                    showToast(res.message, 'error');
+                    selectElement.value = oldStatus;
+                }
+            } catch (err) {
+                showToast('Failed to update asset status.', 'error');
+                selectElement.value = oldStatus;
+            }
+        }
+
+        async function confirmAllocationStatusChange(id, selectElement, oldStatus) {
+            const newStatus = selectElement.value;
+            if (newStatus === oldStatus) return;
+            if (!confirm(`Are you sure you want to change the asset allocation status from "${oldStatus}" to "${newStatus}"?`)) {
+                selectElement.value = oldStatus;
+                return;
+            }
+            try {
+                const res = await apiPut(`/assets/allocations/${id}`, { status: newStatus });
+                if (res.success) {
+                    showToast('Asset allocation status updated!');
+                    loadAssets();
+                } else {
+                    showToast(res.message, 'error');
+                    selectElement.value = oldStatus;
+                }
+            } catch (err) {
+                showToast('Failed to update allocation status.', 'error');
+                selectElement.value = oldStatus;
+            }
+        }
+
+        async function openAssetModal(astId = null) {
+            document.getElementById('asset-form').reset();
+            
+            // Pop building dropdown
+            const bSelect = document.getElementById('asset-building');
+            bSelect.innerHTML = '<option value="">Select Building</option>';
+            currentBuildings.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b.id;
+                opt.innerText = b.building_name;
+                bSelect.appendChild(opt);
+            });
+
+            // Bind dynamic floor loading
+            const fSelect = document.getElementById('asset-floor');
+            fSelect.innerHTML = '<option value="">Select Floor</option>';
+
+            if (astId) {
+                const ast = currentAssets.find(a => a.id == astId);
+                if (ast) {
+                    document.getElementById('asset-modal-title').innerText = 'Edit Enterprise Asset';
+                    document.getElementById('asset-id').value = ast.id;
+                    document.getElementById('asset-code').value = ast.asset_code || '';
+                    document.getElementById('asset-name').value = ast.asset_name || '';
+                    document.getElementById('asset-category').value = ast.category || 'General';
+                    document.getElementById('asset-building').value = ast.building_id || '';
+                    document.getElementById('asset-purchase-date').value = ast.purchase_date || '';
+                    document.getElementById('asset-purchase-cost').value = ast.purchase_cost || 0;
+                    document.getElementById('asset-current-value').value = ast.current_value || 0;
+                    document.getElementById('asset-warranty').value = ast.warranty_expiry || '';
+
+                    // Load matching floors
+                    if (ast.building_id) {
+                        const res = await apiGet(`/workspaces/floors?limit=100`);
+                        if (res.success) {
+                            const filtered = res.data.data.filter(f => f.building_id == ast.building_id);
+                            filtered.forEach(f => {
+                                const opt = document.createElement('option');
+                                opt.value = f.id;
+                                opt.innerText = f.floor_name;
+                                if (f.id == ast.floor_id) opt.selected = true;
+                                fSelect.appendChild(opt);
+                            });
+                        }
+                    }
+                }
+            } else {
+                document.getElementById('asset-modal-title').innerText = 'Register Enterprise Asset';
+                document.getElementById('asset-id').value = '';
+                document.getElementById('asset-code').value = 'AST-' + Math.floor(1000 + Math.random() * 9000);
+            }
+
+            // Bind triggers
+            document.getElementById('asset-building').addEventListener('change', async () => {
+                const bid = document.getElementById('asset-building').value;
+                fSelect.innerHTML = '<option value="">Select Floor</option>';
+                if (!bid) return;
+                const res = await apiGet(`/workspaces/floors?limit=100`);
+                if (res.success) {
+                    res.data.data.filter(f => f.building_id == bid).forEach(f => {
+                        const opt = document.createElement('option');
+                        opt.value = f.id;
+                        opt.innerText = f.floor_name;
+                        fSelect.appendChild(opt);
+                    });
+                }
+            });
+
+            openModal('asset');
+        }
+
+        document.getElementById('asset-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('asset-id').value;
+            const asset_code = document.getElementById('asset-code').value;
+            const asset_name = document.getElementById('asset-name').value;
+            const category = document.getElementById('asset-category').value;
+            const building_id = document.getElementById('asset-building').value;
+            const floor_id = document.getElementById('asset-floor').value;
+            const purchase_date = document.getElementById('asset-purchase-date').value;
+            const purchase_cost = document.getElementById('asset-purchase-cost').value;
+            const current_value = document.getElementById('asset-current-value').value;
+            const warranty_expiry = document.getElementById('asset-warranty').value;
+
+            try {
+                let res;
+                const payload = { asset_code, asset_name, category, building_id, floor_id, purchase_date, purchase_cost, current_value, warranty_expiry };
+                if (id) {
+                    res = await apiPut(`/assets/${id}`, payload);
+                } else {
+                    res = await apiPost('/assets', payload);
+                }
+                if (res.success) {
+                    showToast(id ? 'Asset details updated!' : 'Asset registered successfully!');
+                    closeModal('asset');
+                    loadAssets();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to save asset', 'error');
+            }
+        });
+
+        async function deleteAsset(id) {
+            if (!confirm('Are you sure you want to delete this asset?')) return;
+            try {
+                const res = await apiDelete(`/assets/${id}`);
+                if (res.success) {
+                    showToast('Asset record deleted');
+                    loadAssets();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Error deleting asset.', 'error');
+            }
+        }
+
+        async function openAllocationModal(alcId = null) {
+            document.getElementById('allocation-form').reset();
+            
+            // Pop Asset, Client, Building selects
+            const aSelect = document.getElementById('allocation-asset');
+            aSelect.innerHTML = '<option value="">Select Asset</option>';
+            currentAssets.forEach(a => {
+                const opt = document.createElement('option');
+                opt.value = a.id;
+                opt.innerText = `${a.asset_name} (${a.asset_code})`;
+                aSelect.appendChild(opt);
+            });
+
+            const cSelect = document.getElementById('allocation-client');
+            cSelect.innerHTML = '<option value="">No Client (Internal Allocation)</option>';
+            currentClients.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.innerText = c.company_name;
+                cSelect.appendChild(opt);
+            });
+
+            const bSelect = document.getElementById('allocation-building');
+            bSelect.innerHTML = '<option value="">Select Building</option>';
+            currentBuildings.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b.id;
+                opt.innerText = b.building_name;
+                bSelect.appendChild(opt);
+            });
+
+            const fSelect = document.getElementById('allocation-floor');
+            fSelect.innerHTML = '<option value="">Select Floor</option>';
+
+            document.getElementById('allocation-date').value = new Date().toISOString().substring(0, 10);
+
+            if (alcId) {
+                const alc = currentAllocations.find(a => a.id == alcId);
+                if (alc) {
+                    document.getElementById('allocation-modal-title').innerText = 'Edit Asset Allocation';
+                    document.getElementById('allocation-id').value = alc.id;
+                    document.getElementById('allocation-asset').value = alc.asset_id;
+                    document.getElementById('allocation-to').value = alc.allocated_to || '';
+                    document.getElementById('allocation-client').value = alc.client_id || '';
+                    document.getElementById('allocation-building').value = alc.building_id || '';
+                    document.getElementById('allocation-date').value = alc.allocated_date || '';
+                    document.getElementById('allocation-return').value = alc.return_date || '';
+
+                    if (alc.building_id) {
+                        const res = await apiGet(`/workspaces/floors?limit=100`);
+                        if (res.success) {
+                            res.data.data.filter(f => f.building_id == alc.building_id).forEach(f => {
+                                const opt = document.createElement('option');
+                                opt.value = f.id;
+                                opt.innerText = f.floor_name;
+                                if (f.id == alc.floor_id) opt.selected = true;
+                                fSelect.appendChild(opt);
+                            });
+                        }
+                    }
+                }
+            } else {
+                document.getElementById('allocation-modal-title').innerText = 'Log Asset Allocation';
+                document.getElementById('allocation-id').value = '';
+            }
+
+            document.getElementById('allocation-building').addEventListener('change', async () => {
+                const bid = document.getElementById('allocation-building').value;
+                fSelect.innerHTML = '<option value="">Select Floor</option>';
+                if (!bid) return;
+                const res = await apiGet(`/workspaces/floors?limit=100`);
+                if (res.success) {
+                    res.data.data.filter(f => f.building_id == bid).forEach(f => {
+                        const opt = document.createElement('option');
+                        opt.value = f.id;
+                        opt.innerText = f.floor_name;
+                        fSelect.appendChild(opt);
+                    });
+                }
+            });
+
+            openModal('allocation');
+        }
+
+        document.getElementById('allocation-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('allocation-id').value;
+            const asset_id = document.getElementById('allocation-asset').value;
+            const allocated_to = document.getElementById('allocation-to').value;
+            const client_id = document.getElementById('allocation-client').value;
+            const building_id = document.getElementById('allocation-building').value;
+            const floor_id = document.getElementById('allocation-floor').value;
+            const allocated_date = document.getElementById('allocation-date').value;
+            const return_date = document.getElementById('allocation-return').value;
+
+            try {
+                let res;
+                const payload = { asset_id, allocated_to, client_id, building_id, floor_id, allocated_date, return_date };
+                if (id) {
+                    res = await apiPut(`/assets/allocations/${id}`, payload);
+                } else {
+                    res = await apiPost('/assets/allocations', payload);
+                }
+                if (res.success) {
+                    showToast('Asset allocation details logged!');
+                    closeModal('allocation');
+                    loadAssets();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to log allocation', 'error');
+            }
+        });
+
+        async function deleteAllocation(id) {
+            if (!confirm('Are you sure you want to delete this allocation record?')) return;
+            try {
+                const res = await apiDelete(`/assets/allocations/${id}`);
+                if (res.success) {
+                    showToast('Allocation record deleted');
+                    loadAssets();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Error deleting allocation.', 'error');
+            }
+        }
+
+        // ==========================================
+        // 12. Vendor Management Module
+        // ==========================================
+        let currentVendors = [];
+        let currentVendorPayments = [];
+
+        async function loadVendors() {
+            try {
+                const vendorRes = await apiGet('/vendors?limit=100');
+                if (vendorRes.success) {
+                    currentVendors = vendorRes.data.data;
+                    const tbody = document.getElementById('vendors-table-body');
+                    tbody.innerHTML = '';
+                    currentVendors.forEach(vend => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${vend.vendor_name}</strong></td>
+                            <td>${vend.company_name || 'N/A'}</td>
+                            <td>${vend.service_type || 'General'}</td>
+                            <td>${vend.contact_person || 'N/A'}<br/><span style="font-size:12px; color:var(--text-muted);">${vend.mobile || ''}</span></td>
+                            <td>${vend.mobile || 'N/A'}</td>
+                            <td>⭐ ${vend.rating || '5.0'}</td>
+                            <td>
+                                <select class="status-select-inline" onchange="confirmVendorStatusChange(${vend.id}, this, '${vend.status}')">
+                                    <option value="ACTIVE" ${vend.status === 'ACTIVE' ? 'selected' : ''}>Active</option>
+                                    <option value="INACTIVE" ${vend.status === 'INACTIVE' ? 'selected' : ''}>Inactive</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openVendorModal(${vend.id})">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteVendor(${vend.id})">Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+
+                const payRes = await apiGet('/vendors/payments?limit=100');
+                if (payRes.success) {
+                    currentVendorPayments = payRes.data.data;
+                    const tbody = document.getElementById('vendor-payments-table-body');
+                    tbody.innerHTML = '';
+                    currentVendorPayments.forEach(pay => {
+                        const vendor = currentVendors.find(v => v.id == pay.vendor_id);
+                        const vendorName = vendor ? vendor.vendor_name : `Vendor ID: ${pay.vendor_id}`;
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${vendorName}</strong></td>
+                            <td>₹${parseFloat(pay.amount).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                            <td>${pay.payment_date}</td>
+                            <td>${pay.payment_method}</td>
+                            <td>${pay.reference_no || 'N/A'}</td>
+                            <td><span class="badge active">${pay.status || 'PAID'}</span></td>
+                            <td>
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openVendorPaymentModal(${pay.id})">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteVendorPayment(${pay.id})">Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (err) {
+                showToast('Failed to load vendors data.', 'error');
+            }
+        }
+
+        async function confirmVendorStatusChange(id, selectElement, oldStatus) {
+            const newStatus = selectElement.value;
+            if (newStatus === oldStatus) return;
+            if (!confirm(`Are you sure you want to change the vendor status from "${oldStatus}" to "${newStatus}"?`)) {
+                selectElement.value = oldStatus;
+                return;
+            }
+            try {
+                const res = await apiPut(`/vendors/${id}`, { status: newStatus });
+                if (res.success) {
+                    showToast('Vendor status updated successfully!');
+                    loadVendors();
+                } else {
+                    showToast(res.message, 'error');
+                    selectElement.value = oldStatus;
+                }
+            } catch (err) {
+                showToast('Failed to update vendor status.', 'error');
+                selectElement.value = oldStatus;
+            }
+        }
+
+        function openVendorModal(vendId = null) {
+            document.getElementById('vendor-form').reset();
+            if (vendId) {
+                const v = currentVendors.find(item => item.id == vendId);
+                if (v) {
+                    document.getElementById('vendor-modal-title').innerText = 'Edit Service Vendor';
+                    document.getElementById('vendor-id').value = v.id;
+                    document.getElementById('vendor-name').value = v.vendor_name || '';
+                    document.getElementById('vendor-company').value = v.company_name || '';
+                    document.getElementById('vendor-service').value = v.service_type || 'Housekeeping';
+                    document.getElementById('vendor-mobile').value = v.mobile || '';
+                    document.getElementById('vendor-email').value = v.email || '';
+                    document.getElementById('vendor-gst').value = v.gst_number || '';
+                    document.getElementById('vendor-address').value = v.address || '';
+                    document.getElementById('vendor-start').value = v.contract_start || '';
+                    document.getElementById('vendor-end').value = v.contract_end || '';
+                    document.getElementById('vendor-sla').value = v.sla_terms || '';
+                    document.getElementById('vendor-rating').value = v.rating || 5.0;
+                }
+            } else {
+                document.getElementById('vendor-modal-title').innerText = 'Register Service Vendor';
+                document.getElementById('vendor-id').value = '';
+            }
+            openModal('vendor');
+        }
+
+        document.getElementById('vendor-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('vendor-id').value;
+            const vendor_name = document.getElementById('vendor-name').value;
+            const company_name = document.getElementById('vendor-company').value;
+            const service_type = document.getElementById('vendor-service').value;
+            const mobile = document.getElementById('vendor-mobile').value;
+            const email = document.getElementById('vendor-email').value;
+            const gst_number = document.getElementById('vendor-gst').value;
+            const address = document.getElementById('vendor-address').value;
+            const contract_start = document.getElementById('vendor-start').value;
+            const contract_end = document.getElementById('vendor-end').value;
+            const sla_terms = document.getElementById('vendor-sla').value;
+            const rating = document.getElementById('vendor-rating').value;
+
+            try {
+                let res;
+                const payload = { vendor_name, company_name, service_type, mobile, email, gst_number, address, contract_start, contract_end, sla_terms, rating };
+                if (id) {
+                    res = await apiPut(`/vendors/${id}`, payload);
+                } else {
+                    res = await apiPost('/vendors', payload);
+                }
+                if (res.success) {
+                    showToast(id ? 'Vendor details updated!' : 'Vendor registered successfully!');
+                    closeModal('vendor');
+                    loadVendors();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to save vendor details', 'error');
+            }
+        });
+
+        async function deleteVendor(id) {
+            if (!confirm('Are you sure you want to delete this vendor registry?')) return;
+            try {
+                const res = await apiDelete(`/vendors/${id}`);
+                if (res.success) {
+                    showToast('Vendor record deleted successfully');
+                    loadVendors();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Error deleting vendor.', 'error');
+            }
+        }
+
+        async function openVendorPaymentModal(payId = null) {
+            document.getElementById('vendor-payment-form').reset();
+            
+            // Pop vendors list
+            const vSelect = document.getElementById('vendor-payment-vendor');
+            vSelect.innerHTML = '<option value="">Select Vendor</option>';
+            if (currentVendors.length === 0) {
+                const vendorRes = await apiGet('/vendors?limit=100');
+                if (vendorRes.success) currentVendors = vendorRes.data.data;
+            }
+            currentVendors.forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v.id;
+                opt.innerText = `${v.vendor_name} (${v.company_name || 'Individual'})`;
+                vSelect.appendChild(opt);
+            });
+
+            document.getElementById('vendor-payment-date').value = new Date().toISOString().substring(0, 10);
+
+            if (payId) {
+                const pay = currentVendorPayments.find(p => p.id == payId);
+                if (pay) {
+                    document.getElementById('vendor-payment-modal-title').innerText = 'Edit Vendor Payment Log';
+                    document.getElementById('vendor-payment-id').value = pay.id;
+                    document.getElementById('vendor-payment-vendor').value = pay.vendor_id;
+                    document.getElementById('vendor-payment-amount').value = pay.amount;
+                    document.getElementById('vendor-payment-date').value = pay.payment_date;
+                    document.getElementById('vendor-payment-method').value = pay.payment_method || 'UPI';
+                    document.getElementById('vendor-payment-reference').value = pay.reference_no || '';
+                    document.getElementById('vendor-payment-description').value = pay.description || '';
+                }
+            } else {
+                document.getElementById('vendor-payment-modal-title').innerText = 'Log Vendor Outflow Payment';
+                document.getElementById('vendor-payment-id').value = '';
+            }
+            openModal('vendor-payment');
+        }
+
+        document.getElementById('vendor-payment-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('vendor-payment-id').value;
+            const vendor_id = document.getElementById('vendor-payment-vendor').value;
+            const amount = document.getElementById('vendor-payment-amount').value;
+            const payment_date = document.getElementById('vendor-payment-date').value;
+            const payment_method = document.getElementById('vendor-payment-method').value;
+            const reference_no = document.getElementById('vendor-payment-reference').value;
+            const description = document.getElementById('vendor-payment-description').value;
+
+            try {
+                let res;
+                const payload = { vendor_id, amount, payment_date, payment_method, reference_no, description };
+                if (id) {
+                    res = await apiPut(`/vendors/payments/${id}`, payload);
+                } else {
+                    res = await apiPost('/vendors/payments', payload);
+                }
+                if (res.success) {
+                    showToast('Vendor outflow payment saved!');
+                    closeModal('vendor-payment');
+                    loadVendors();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to save vendor payment log', 'error');
+            }
+        });
+
+        async function deleteVendorPayment(id) {
+            if (!confirm('Are you sure you want to delete this payment record?')) return;
+            try {
+                const res = await apiDelete(`/vendors/payments/${id}`);
+                if (res.success) {
+                    showToast('Payment record deleted successfully');
+                    loadVendors();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Error deleting payment.', 'error');
+            }
+        }
+
+        // ==========================================
+        // 13. Smart Buildings Module (IoT)
+        // ==========================================
+        let currentDevices = [];
+        let currentSensors = [];
+        let currentAccessLogs = [];
+
+        async function loadSmartBuilding() {
+            try {
+                if (currentBuildings.length === 0) {
+                    const buildRes = await apiGet('/workspaces/buildings?limit=100');
+                    if (buildRes.success) currentBuildings = buildRes.data.data;
+                }
+
+                // Load IoT Devices
+                const devRes = await apiGet('/smartbuilding/devices?limit=100');
+                if (devRes.success) {
+                    currentDevices = devRes.data.data;
+                    const tbody = document.getElementById('devices-table-body');
+                    tbody.innerHTML = '';
+                    currentDevices.forEach(d => {
+                        const building = currentBuildings.find(b => b.id == d.building_id);
+                        const buildingName = building ? building.building_name : 'Global';
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${d.device_name}</strong></td>
+                            <td>${d.device_type}</td>
+                            <td>${buildingName}</td>
+                            <td>Floor ${d.floor_id || '0'}</td>
+                            <td>${d.serial_number || 'N/A'}</td>
+                            <td>${d.manufacturer || 'N/A'}</td>
+                            <td>
+                                <select class="status-select-inline" onchange="confirmDeviceStatusChange(${d.id}, this, '${d.status}')">
+                                    <option value="ACTIVE" ${d.status === 'ACTIVE' ? 'selected' : ''}>Active</option>
+                                    <option value="INACTIVE" ${d.status === 'INACTIVE' ? 'selected' : ''}>Inactive</option>
+                                    <option value="OFFLINE" ${d.status === 'OFFLINE' ? 'selected' : ''}>Offline</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openDeviceModal(${d.id})">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteDevice(${d.id})">Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+
+                // Load Live Sensor Readings
+                const sensRes = await apiGet('/smartbuilding/sensors?limit=10');
+                if (sensRes.success) {
+                    currentSensors = sensRes.data.data;
+                    const tbody = document.getElementById('sensors-table-body');
+                    tbody.innerHTML = '';
+                    currentSensors.forEach(s => {
+                        const dev = currentDevices.find(d => d.id == s.device_id);
+                        const devName = dev ? dev.device_name : `Device ${s.device_id}`;
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${devName}</strong></td>
+                            <td>${s.sensor_type}</td>
+                            <td style="font-weight: 600; color: var(--accent-emerald);">${s.value}</td>
+                            <td>${s.unit || ''}</td>
+                            <td>${s.recorded_at}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+
+                // Load Gate Access Logs
+                const logRes = await apiGet('/smartbuilding/access-logs?limit=15');
+                if (logRes.success) {
+                    currentAccessLogs = logRes.data.data;
+                    const tbody = document.getElementById('access-logs-table-body');
+                    tbody.innerHTML = '';
+                    currentAccessLogs.forEach(l => {
+                        const badgeColor = l.access_type === 'ENTRY' ? 'var(--accent-emerald)' : 'var(--accent-pink)';
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${l.person_name}</strong></td>
+                            <td>${l.person_type}</td>
+                            <td>${l.access_point}</td>
+                            <td><span style="font-weight:700; color:${badgeColor};">${l.access_type}</span> <span style="font-size:12px; color:var(--text-muted);">(${l.method})</span></td>
+                            <td>${l.recorded_at}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (err) {
+                showToast('Failed to load smart building logs.', 'error');
+            }
+        }
+
+        async function confirmDeviceStatusChange(id, selectElement, oldStatus) {
+            const newStatus = selectElement.value;
+            if (newStatus === oldStatus) return;
+            if (!confirm(`Are you sure you want to change the device status from "${oldStatus}" to "${newStatus}"?`)) {
+                selectElement.value = oldStatus;
+                return;
+            }
+            try {
+                const res = await apiPut(`/smartbuilding/devices/${id}`, { status: newStatus });
+                if (res.success) {
+                    showToast('IoT device status saved!');
+                    loadSmartBuilding();
+                } else {
+                    showToast(res.message, 'error');
+                    selectElement.value = oldStatus;
+                }
+            } catch (err) {
+                showToast('Failed to update device status.', 'error');
+                selectElement.value = oldStatus;
+            }
+        }
+
+        async function openDeviceModal(devId = null) {
+            document.getElementById('device-form').reset();
+            
+            // Pop building dropdown
+            const bSelect = document.getElementById('device-building');
+            bSelect.innerHTML = '<option value="">Select Building</option>';
+            currentBuildings.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b.id;
+                opt.innerText = b.building_name;
+                bSelect.appendChild(opt);
+            });
+
+            const fSelect = document.getElementById('device-floor');
+            fSelect.innerHTML = '<option value="">Select Floor</option>';
+
+            if (devId) {
+                const d = currentDevices.find(item => item.id == devId);
+                if (d) {
+                    document.getElementById('device-modal-title').innerText = 'Edit IoT Sensor';
+                    document.getElementById('device-id').value = d.id;
+                    document.getElementById('device-name').value = d.device_name || '';
+                    document.getElementById('device-type').value = d.device_type || 'TEMPERATURE_SENSOR';
+                    document.getElementById('device-building').value = d.building_id || '';
+                    document.getElementById('device-serial').value = d.serial_number || '';
+                    document.getElementById('device-manufacturer').value = d.manufacturer || '';
+                    document.getElementById('device-installed').value = d.installed_date || '';
+
+                    if (d.building_id) {
+                        const res = await apiGet(`/workspaces/floors?limit=100`);
+                        if (res.success) {
+                            res.data.data.filter(f => f.building_id == d.building_id).forEach(f => {
+                                const opt = document.createElement('option');
+                                opt.value = f.id;
+                                opt.innerText = f.floor_name;
+                                if (f.id == d.floor_id) opt.selected = true;
+                                fSelect.appendChild(opt);
+                            });
+                        }
+                    }
+                }
+            } else {
+                document.getElementById('device-modal-title').innerText = 'Register IoT Sensor Device';
+                document.getElementById('device-id').value = '';
+            }
+
+            document.getElementById('device-building').addEventListener('change', async () => {
+                const bid = document.getElementById('device-building').value;
+                fSelect.innerHTML = '<option value="">Select Floor</option>';
+                if (!bid) return;
+                const res = await apiGet(`/workspaces/floors?limit=100`);
+                if (res.success) {
+                    res.data.data.filter(f => f.building_id == bid).forEach(f => {
+                        const opt = document.createElement('option');
+                        opt.value = f.id;
+                        opt.innerText = f.floor_name;
+                        fSelect.appendChild(opt);
+                    });
+                }
+            });
+
+            openModal('device');
+        }
+
+        document.getElementById('device-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('device-id').value;
+            const device_name = document.getElementById('device-name').value;
+            const device_type = document.getElementById('device-type').value;
+            const building_id = document.getElementById('device-building').value;
+            const floor_id = document.getElementById('device-floor').value;
+            const serial_number = document.getElementById('device-serial').value;
+            const manufacturer = document.getElementById('device-manufacturer').value;
+            const installed_date = document.getElementById('device-installed').value;
+
+            try {
+                let res;
+                const payload = { device_name, device_type, building_id, floor_id, serial_number, manufacturer, installed_date };
+                if (id) {
+                    res = await apiPut(`/smartbuilding/devices/${id}`, payload);
+                } else {
+                    res = await apiPost('/smartbuilding/devices', payload);
+                }
+                if (res.success) {
+                    showToast(id ? 'IoT device updated!' : 'IoT device registered!');
+                    closeModal('device');
+                    loadSmartBuilding();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Failed to save device information', 'error');
+            }
+        });
+
+        async function deleteDevice(id) {
+            if (!confirm('Are you sure you want to delete this IoT device?')) return;
+            try {
+                const res = await apiDelete(`/smartbuilding/devices/${id}`);
+                if (res.success) {
+                    showToast('IoT device deleted');
+                    loadSmartBuilding();
+                } else {
+                    showToast(res.message, 'error');
+                }
+            } catch (err) {
+                showToast('Error deleting device.', 'error');
+            }
+        }
+
+        // ==========================================
+        // 14. Reports & Analytics Module
+        // ==========================================
+        let reportsData = {};
+
+        async function loadReports() {
+            try {
+                // 1. Revenue
+                const revRes = await apiGet('/reports/revenue');
+                if (revRes.success) {
+                    reportsData.revenue = revRes.data;
+                    document.getElementById('report-total-revenue').innerText = `₹${parseFloat(revRes.data.total_revenue).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+                    document.getElementById('report-payments-received').innerText = `₹${parseFloat(revRes.data.payments_completed).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+                    document.getElementById('report-outstanding-balance').innerText = `₹${parseFloat(revRes.data.outstanding).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+                    document.getElementById('report-active-leases').innerText = '2 Leases';
+                }
+
+                // 2. Occupancy
+                const occRes = await apiGet('/reports/occupancy');
+                if (occRes.success) {
+                    reportsData.occupancy = occRes.data;
+                    document.getElementById('report-total-capacity').innerText = occRes.data.total_capacity + ' Desks';
+                    document.getElementById('report-allocated-seats').innerText = occRes.data.allocated_seats + ' Seats';
+                    document.getElementById('report-occupancy-rate').innerText = occRes.data.occupancy_percentage + '%';
+                }
+
+                // 3. Support Tickets
+                const tktRes = await apiGet('/reports/tickets');
+                if (tktRes.success) {
+                    reportsData.tickets = tktRes.data;
+                    document.getElementById('report-total-tickets').innerText = tktRes.data.total_tickets + ' Tickets';
+                    document.getElementById('report-resolved-tickets').innerText = tktRes.data.resolved_tickets;
+                    document.getElementById('report-sla-compliance').innerText = tktRes.data.sla_compliance_percentage + '%';
+                }
+
+                // 4. Sustainability & ESG
+                const esgRes = await apiGet('/reports/esg');
+                if (esgRes.success) {
+                    reportsData.esg = esgRes.data;
+                    document.getElementById('report-carbon-reduction').innerText = esgRes.data.carbon_footprint_reduction_kg + ' kg CO2';
+                    document.getElementById('report-energy-efficiency').innerText = esgRes.data.energy_efficiency_percent + '%';
+                    document.getElementById('report-recycling-rate').innerText = esgRes.data.recycling_rate_percent + '%';
+                }
+            } catch (err) {
+                showToast('Failed to load report analytical logs.', 'error');
+            }
+        }
+
+        function printReport(type) {
+            let title = '';
+            let htmlContent = '';
+
+            if (type === 'revenue') {
+                title = 'Aurbis ERP - Corporate Revenue Report';
+                htmlContent = `
+                    <div style="font-family:'Outfit',sans-serif; padding:40px; color:#1e293b;">
+                        <h1 style="color:#0f172a; margin-bottom:5px;">Aurbis Space Management</h1>
+                        <p style="color:#64748b; margin-top:0; font-size:14px;">Monthly Financial Operations & Revenue Log Summary</p>
+                        <hr style="border:none; border-top:1px solid #e2e8f0; margin:20px 0;"/>
+                        
+                        <h2 style="font-size:18px; color:#2563eb;">Revenue Parameters Breakdown</h2>
+                        <table style="width:100%; border-collapse:collapse; margin-top:15px; font-size:14px;">
+                            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:12px 0; color:#64748b;">Target Month</td><td style="text-align:right; font-weight:700;">${reportsData.revenue?.billing_month || 'Current Month'}</td></tr>
+                            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:12px 0; color:#64748b;">Total Billed / Revenue</td><td style="text-align:right; font-weight:700;">₹${parseFloat(reportsData.revenue?.total_revenue || 0).toLocaleString()}</td></tr>
+                            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:12px 0; color:#64748b;">Completed Client Settlements</td><td style="text-align:right; color:#16a34a; font-weight:700;">₹${parseFloat(reportsData.revenue?.payments_completed || 0).toLocaleString()}</td></tr>
+                            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:12px 0; color:#64748b;">Pending Outstanding Balance</td><td style="text-align:right; color:#dc2626; font-weight:700;">₹${parseFloat(reportsData.revenue?.outstanding || 0).toLocaleString()}</td></tr>
+                        </table>
+                    </div>
+                `;
+            } else if (type === 'occupancy') {
+                title = 'Aurbis ERP - Workspace Occupancy Summary';
+                htmlContent = `
+                    <div style="font-family:'Outfit',sans-serif; padding:40px; color:#1e293b;">
+                        <h1 style="color:#0f172a; margin-bottom:5px;">Aurbis Space Management</h1>
+                        <p style="color:#64748b; margin-top:0; font-size:14px;">Workspace Capacity & Allocation Log Summary</p>
+                        <hr style="border:none; border-top:1px solid #e2e8f0; margin:20px 0;"/>
+                        
+                        <h2 style="font-size:18px; color:#2563eb;">Space Utilization Analytics</h2>
+                        <table style="width:100%; border-collapse:collapse; margin-top:15px; font-size:14px;">
+                            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:12px 0; color:#64748b;">Total Desks Capacity</td><td style="text-align:right; font-weight:700;">${reportsData.occupancy?.total_capacity || 0} Desks</td></tr>
+                            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:12px 0; color:#64748b;">Allocated Corporate Seats</td><td style="text-align:right; font-weight:700;">${reportsData.occupancy?.allocated_seats || 0} Seats</td></tr>
+                            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:12px 0; color:#64748b;">Net Capacity Utilization Rate</td><td style="text-align:right; color:#2563eb; font-weight:700;">${reportsData.occupancy?.occupancy_percentage || 0}%</td></tr>
+                        </table>
+                    </div>
+                `;
+            } else if (type === 'tickets') {
+                title = 'Aurbis ERP - Support Tickets SLA Resolution Log';
+                htmlContent = `
+                    <div style="font-family:'Outfit',sans-serif; padding:40px; color:#1e293b;">
+                        <h1 style="color:#0f172a; margin-bottom:5px;">Aurbis Space Management</h1>
+                        <p style="color:#64748b; margin-top:0; font-size:14px;">Facility Support SLA Compliance Log Summary</p>
+                        <hr style="border:none; border-top:1px solid #e2e8f0; margin:20px 0;"/>
+                        
+                        <h2 style="font-size:18px; color:#2563eb;">SLA Resolution Performance Parameters</h2>
+                        <table style="width:100%; border-collapse:collapse; margin-top:15px; font-size:14px;">
+                            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:12px 0; color:#64748b;">Total Tickets Raised</td><td style="text-align:right; font-weight:700;">${reportsData.tickets?.total_tickets || 0} Tickets</td></tr>
+                            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:12px 0; color:#64748b;">Tickets Resolved</td><td style="text-align:right; font-weight:700;">${reportsData.tickets?.resolved_tickets || 0}</td></tr>
+                            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:12px 0; color:#64748b;">SLA Deadlines Compliance</td><td style="text-align:right; color:#16a34a; font-weight:700;">${reportsData.tickets?.sla_compliance_percentage || 0}%</td></tr>
+                        </table>
+                    </div>
+                `;
+            } else if (type === 'esg') {
+                title = 'Aurbis ERP - ESG & Sustainability Operations Report';
+                htmlContent = `
+                    <div style="font-family:'Outfit',sans-serif; padding:40px; color:#1e293b;">
+                        <h1 style="color:#0f172a; margin-bottom:5px;">Aurbis Space Management</h1>
+                        <p style="color:#64748b; margin-top:0; font-size:14px;">ESG Footprints & Environmental Conservation Summary</p>
+                        <hr style="border:none; border-top:1px solid #e2e8f0; margin:20px 0;"/>
+                        
+                        <h2 style="font-size:18px; color:#2563eb;">Sustainability Metrics</h2>
+                        <table style="width:100%; border-collapse:collapse; margin-top:15px; font-size:14px;">
+                            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:12px 0; color:#64748b;">Estimated CO2 Emissions Avoided</td><td style="text-align:right; font-weight:700;">${reportsData.esg?.carbon_footprint_reduction_kg || 0} kg CO2</td></tr>
+                            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:12px 0; color:#64748b;">Average Energy Efficiency Rate</td><td style="text-align:right; color:#7c3aed; font-weight:700;">${reportsData.esg?.energy_efficiency_percent || 0}%</td></tr>
+                            <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:12px 0; color:#64748b;">Waste Recycling Percentage</td><td style="text-align:right; color:#16a34a; font-weight:700;">${reportsData.esg?.recycling_rate_percent || 0}%</td></tr>
+                        </table>
+                    </div>
+                `;
+            }
+
+            const win = window.open('', '_blank', 'width=800,height=600');
+            win.document.write(`
+                <html>
+                <head>
+                    <title>${title}</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+                    <style>
+                        body { margin:0; font-family:'Outfit',sans-serif; }
+                        @media print {
+                            .no-print { display:none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="no-print" style="background:#f1f5f9; padding:15px; border-bottom:1px solid #cbd5e1; text-align:right;">
+                        <button onclick="window.print()" style="background:#2563eb; color:#fff; border:none; padding:10px 20px; font-size:14px; font-weight:600; border-radius:6px; cursor:pointer;">Print / Save PDF</button>
+                    </div>
+                    \${htmlContent}
+                </body>
+                </html>
+            `);
+            win.document.close();
+        }
 
         // Theme Toggle Function
         function toggleTheme() {
