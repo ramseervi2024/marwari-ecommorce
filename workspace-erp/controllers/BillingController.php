@@ -44,7 +44,10 @@ class BillingController extends BaseController {
             'created_at' => current_time('mysql'),
             'updated_at' => current_time('mysql')
         ];
-        $id = $this->invoiceRepo->create($data, ['%s', '%d', '%s', '%s', '%f', '%f', '%f', '%f', '%s', '%s', '%s', '%s', '%s']);
+        $id = $this->invoiceRepo->create($data, ['%s', '%d', '%s', '%s', '%f', '%f', '%f', '%f', '%s', '%s', '%s', '%s']);
+        if (!$id) {
+            return $this->error('Failed to generate invoice in database.');
+        }
         return $this->success('Invoice generated successfully', array_merge(['id' => $id], $data), 201);
     }
 

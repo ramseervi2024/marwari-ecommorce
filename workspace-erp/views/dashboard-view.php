@@ -647,6 +647,25 @@
         .badge.pending { background: rgba(217, 119, 6, 0.15); color: #d97706; }
         .badge.closed { background: rgba(148, 163, 184, 0.15); color: var(--text-muted); }
 
+        .status-select-inline {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 4px 8px;
+            border-radius: 6px;
+            outline: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .status-select-inline option {
+            background-color: #1e1b4b;
+            color: #fff;
+        }
+        .dark-mode .status-select-inline option {
+            background-color: #0f172a;
+        }
+
         .btn {
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
             color: #fff;
@@ -1201,8 +1220,10 @@
             <form id="booking-form">
                 <input type="hidden" id="book-id">
                 <div class="form-group">
-                    <label>Room ID</label>
-                    <input type="number" id="book-room-id" class="form-input" value="1" required>
+                    <label>Select Meeting Room</label>
+                    <select id="book-room-id" class="form-select" required>
+                        <!-- Loaded dynamically -->
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Booking Date</label>
@@ -1257,8 +1278,10 @@
             <form id="sustainability-form">
                 <input type="hidden" id="sus-id">
                 <div class="form-group">
-                    <label>Building ID</label>
-                    <input type="number" id="sus-building" class="form-input" value="1" required>
+                    <label>Select Building</label>
+                    <select id="sus-building" class="form-select" required>
+                        <!-- Loaded dynamically -->
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Consumption (kWh)</label>
@@ -1731,7 +1754,6 @@
             }
         }
 
-        // 2. CRM Leads Module
         let currentLeads = [];
         async function loadLeads() {
             try {
@@ -1747,7 +1769,15 @@
                             <td>${lead.company_name}</td>
                             <td>${lead.contact_person}</td>
                             <td>${lead.seats_required}</td>
-                            <td><span class="badge active">${lead.status}</span></td>
+                            <td>
+                                <select class="status-select-inline" onchange="confirmLeadStatusChange(${lead.id}, this, '${lead.status}')">
+                                    <option value="NEW" ${lead.status === 'NEW' ? 'selected' : ''}>New</option>
+                                    <option value="CONTACTED" ${lead.status === 'CONTACTED' ? 'selected' : ''}>Contacted</option>
+                                    <option value="QUALIFIED" ${lead.status === 'QUALIFIED' ? 'selected' : ''}>Qualified</option>
+                                    <option value="LOST" ${lead.status === 'LOST' ? 'selected' : ''}>Lost</option>
+                                    <option value="WON" ${lead.status === 'WON' ? 'selected' : ''}>Won</option>
+                                </select>
+                            </td>
                             <td>
                                 <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openLeadModal(${lead.id})">Edit</button>
                                 <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteLead(${lead.id})">Delete</button>
@@ -1758,6 +1788,28 @@
                 }
             } catch (err) {
                 showToast('Failed to load leads', 'error');
+            }
+        }
+
+        async function confirmLeadStatusChange(id, selectElement, oldStatus) {
+            const newStatus = selectElement.value;
+            if (newStatus === oldStatus) return;
+            if (!confirm(`Are you sure you want to change the lead status from "${oldStatus}" to "${newStatus}"?`)) {
+                selectElement.value = oldStatus;
+                return;
+            }
+            try {
+                const res = await apiPut(`/crm/leads/${id}`, { status: newStatus });
+                if (res.success) {
+                    showToast('Lead status updated successfully!');
+                    loadLeads();
+                } else {
+                    showToast(res.message, 'error');
+                    selectElement.value = oldStatus;
+                }
+            } catch (err) {
+                showToast('Failed to update lead status.', 'error');
+                selectElement.value = oldStatus;
             }
         }
 
@@ -1827,9 +1879,16 @@
         // 3. Workspace Module
         let currentBuildings = [];
         let currentBookings = [];
+        let currentMeetingRooms = [];
 
         async function loadWorkspaceData() {
             try {
+                // Pre-load meeting rooms first to map names
+                const roomRes = await apiGet('/workspaces/meeting-rooms');
+                if (roomRes.success) {
+                    currentMeetingRooms = roomRes.data.data;
+                }
+
                 const buildRes = await apiGet('/workspaces/buildings');
                 if (buildRes.success) {
                     currentBuildings = buildRes.data.data;
@@ -1842,7 +1901,13 @@
                             <td>${b.building_name}</td>
                             <td>${b.city}, ${b.state}</td>
                             <td>${b.amenities || 'N/A'}</td>
-                            <td><span class="badge active">${b.status}</span></td>
+                            <td>
+                                <select class="status-select-inline" onchange="confirmBuildingStatusChange(${b.id}, this, '${b.status}')">
+                                    <option value="ACTIVE" ${b.status === 'ACTIVE' ? 'selected' : ''}>Active</option>
+                                    <option value="INACTIVE" ${b.status === 'INACTIVE' ? 'selected' : ''}>Inactive</option>
+                                    <option value="MAINTENANCE" ${b.status === 'MAINTENANCE' ? 'selected' : ''}>Maintenance</option>
+                                </select>
+                            </td>
                             <td>
                                 <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openBuildingModal(${b.id})">Edit</button>
                                 <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteBuilding(${b.id})">Delete</button>
@@ -1858,13 +1923,21 @@
                     const tbody = document.getElementById('bookings-table-body');
                     tbody.innerHTML = '';
                     currentBookings.forEach(bk => {
+                        const room = currentMeetingRooms.find(r => r.id == bk.room_id);
+                        const roomName = room ? room.room_name : `Room #${bk.room_id}`;
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                            <td>${bk.room_id}</td>
+                            <td>${roomName}</td>
                             <td>${bk.client_id || 'Self'}</td>
                             <td>${bk.booking_date}</td>
                             <td>${bk.start_time} - ${bk.end_time}</td>
-                            <td><span class="badge active">${bk.status}</span></td>
+                            <td>
+                                <select class="status-select-inline" onchange="confirmBookingStatusChange(${bk.id}, this, '${bk.status}')">
+                                    <option value="CONFIRMED" ${bk.status === 'CONFIRMED' ? 'selected' : ''}>Confirmed</option>
+                                    <option value="PENDING" ${bk.status === 'PENDING' ? 'selected' : ''}>Pending</option>
+                                    <option value="CANCELLED" ${bk.status === 'CANCELLED' ? 'selected' : ''}>Cancelled</option>
+                                </select>
+                            </td>
                             <td>
                                 <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openBookingModal(${bk.id})">Edit</button>
                                 <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteBooking(${bk.id})">Cancel</button>
@@ -1875,6 +1948,50 @@
                 }
             } catch (err) {
                 showToast('Failed to load workspace inventory', 'error');
+            }
+        }
+
+        async function confirmBuildingStatusChange(id, selectElement, oldStatus) {
+            const newStatus = selectElement.value;
+            if (newStatus === oldStatus) return;
+            if (!confirm(`Are you sure you want to change the building status from "${oldStatus}" to "${newStatus}"?`)) {
+                selectElement.value = oldStatus;
+                return;
+            }
+            try {
+                const res = await apiPut(`/workspaces/buildings/${id}`, { status: newStatus });
+                if (res.success) {
+                    showToast('Building status updated successfully!');
+                    loadWorkspaceData();
+                } else {
+                    showToast(res.message, 'error');
+                    selectElement.value = oldStatus;
+                }
+            } catch (err) {
+                showToast('Failed to update building status.', 'error');
+                selectElement.value = oldStatus;
+            }
+        }
+
+        async function confirmBookingStatusChange(id, selectElement, oldStatus) {
+            const newStatus = selectElement.value;
+            if (newStatus === oldStatus) return;
+            if (!confirm(`Are you sure you want to change the meeting room booking status from "${oldStatus}" to "${newStatus}"?`)) {
+                selectElement.value = oldStatus;
+                return;
+            }
+            try {
+                const res = await apiPut(`/workspaces/bookings/${id}`, { status: newStatus });
+                if (res.success) {
+                    showToast('Booking status updated successfully!');
+                    loadWorkspaceData();
+                } else {
+                    showToast(res.message, 'error');
+                    selectElement.value = oldStatus;
+                }
+            } catch (err) {
+                showToast('Failed to update booking status.', 'error');
+                selectElement.value = oldStatus;
             }
         }
 
@@ -1950,26 +2067,47 @@
         });
 
         // Booking Modal handlers
-        function openBookingModal(bookingId = null) {
-            document.getElementById('booking-form').reset();
-            if (bookingId) {
-                const bk = currentBookings.find(item => item.id == bookingId);
-                if (bk) {
-                    document.getElementById('booking-modal-title').innerText = 'Edit Meeting Room Booking';
-                    document.getElementById('book-id').value = bk.id;
-                    document.getElementById('book-room-id').value = bk.room_id;
-                    document.getElementById('book-date').value = bk.booking_date;
-                    document.getElementById('book-start').value = bk.start_time;
-                    document.getElementById('book-end').value = bk.end_time;
+        async function openBookingModal(bookingId = null) {
+            try {
+                document.getElementById('booking-form').reset();
+                const roomSelect = document.getElementById('book-room-id');
+                roomSelect.innerHTML = '<option value="">Loading rooms...</option>';
+
+                const roomRes = await apiGet('/workspaces/meeting-rooms');
+                if (roomRes.success && roomRes.data && roomRes.data.data) {
+                    currentMeetingRooms = roomRes.data.data;
+                    roomSelect.innerHTML = '<option value="" disabled selected>-- Select Meeting Room --</option>';
+                    currentMeetingRooms.forEach(r => {
+                        const option = document.createElement('option');
+                        option.value = r.id;
+                        option.text = `${r.room_name} (Floor ${r.floor_id || 1})`;
+                        roomSelect.appendChild(option);
+                    });
+                } else {
+                    roomSelect.innerHTML = '<option value="">No rooms found</option>';
                 }
-            } else {
-                document.getElementById('booking-modal-title').innerText = 'Book Meeting Room';
-                document.getElementById('book-id').value = '';
-                // Default to current date
-                const today = new Date().toISOString().split('T')[0];
-                document.getElementById('book-date').value = today;
+
+                if (bookingId) {
+                    const bk = currentBookings.find(item => item.id == bookingId);
+                    if (bk) {
+                        document.getElementById('booking-modal-title').innerText = 'Edit Meeting Room Booking';
+                        document.getElementById('book-id').value = bk.id;
+                        document.getElementById('book-room-id').value = bk.room_id;
+                        document.getElementById('book-date').value = bk.booking_date;
+                        document.getElementById('book-start').value = bk.start_time;
+                        document.getElementById('book-end').value = bk.end_time;
+                    }
+                } else {
+                    document.getElementById('booking-modal-title').innerText = 'Book Meeting Room';
+                    document.getElementById('book-id').value = '';
+                    // Default to current date
+                    const today = new Date().toISOString().split('T')[0];
+                    document.getElementById('book-date').value = today;
+                }
+                openModal('booking');
+            } catch (err) {
+                showToast('Failed to retrieve meeting rooms list.', 'error');
             }
-            openModal('booking');
         }
 
         async function deleteBooking(id) {
@@ -2033,7 +2171,14 @@
                             <td>${t.ticket_no}</td>
                             <td>${t.title}</td>
                             <td>${t.priority}</td>
-                            <td><span class="badge active">${t.status}</span></td>
+                            <td>
+                                <select class="status-select-inline" onchange="confirmTicketStatusChange(${t.id}, this, '${t.status}')">
+                                    <option value="OPEN" ${t.status === 'OPEN' ? 'selected' : ''}>Open</option>
+                                    <option value="IN_PROGRESS" ${t.status === 'IN_PROGRESS' ? 'selected' : ''}>In Progress</option>
+                                    <option value="RESOLVED" ${t.status === 'RESOLVED' ? 'selected' : ''}>Resolved</option>
+                                    <option value="CLOSED" ${t.status === 'CLOSED' ? 'selected' : ''}>Closed</option>
+                                </select>
+                            </td>
                             <td>
                                 <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openTicketModal(${t.id})">Edit</button>
                                 <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteTicket(${t.id})">Delete</button>
@@ -2044,6 +2189,28 @@
                 }
             } catch (err) {
                 showToast('Failed to load tickets', 'error');
+            }
+        }
+
+        async function confirmTicketStatusChange(id, selectElement, oldStatus) {
+            const newStatus = selectElement.value;
+            if (newStatus === oldStatus) return;
+            if (!confirm(`Are you sure you want to change the ticket status from "${oldStatus}" to "${newStatus}"?`)) {
+                selectElement.value = oldStatus;
+                return;
+            }
+            try {
+                const res = await apiPut(`/facility/tickets/${id}`, { status: newStatus });
+                if (res.success) {
+                    showToast('Ticket status updated successfully!');
+                    loadTickets();
+                } else {
+                    showToast(res.message, 'error');
+                    selectElement.value = oldStatus;
+                }
+            } catch (err) {
+                showToast('Failed to update ticket status.', 'error');
+                selectElement.value = oldStatus;
             }
         }
 
@@ -2112,18 +2279,35 @@
 
         async function loadSustainability() {
             try {
+                // Ensure buildings are loaded
+                if (currentBuildings.length === 0) {
+                    const buildRes = await apiGet('/workspaces/buildings');
+                    if (buildRes.success) {
+                        currentBuildings = buildRes.data.data;
+                    }
+                }
+
                 const res = await apiGet('/sustainability/energy');
                 if (res.success) {
                     currentEnergyReadings = res.data.data;
                     const tbody = document.getElementById('energy-table-body');
                     tbody.innerHTML = '';
                     currentEnergyReadings.forEach(en => {
+                        const b = currentBuildings.find(item => item.id == en.building_id);
+                        const buildingName = b ? b.building_name : `Building #${en.building_id}`;
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                            <td>${en.building_id}</td>
+                            <td>${buildingName}</td>
                             <td>${en.reading_date}</td>
                             <td>${en.consumption_kwh}</td>
-                            <td><span class="badge active">${en.source}</span></td>
+                            <td>
+                                <select class="status-select-inline" onchange="confirmEnergySourceChange(${en.id}, this, '${en.source}')">
+                                    <option value="GRID" ${en.source === 'GRID' ? 'selected' : ''}>Grid</option>
+                                    <option value="SOLAR" ${en.source === 'SOLAR' ? 'selected' : ''}>Solar</option>
+                                    <option value="WIND" ${en.source === 'WIND' ? 'selected' : ''}>Wind</option>
+                                    <option value="GENERATOR" ${en.source === 'GENERATOR' ? 'selected' : ''}>Generator</option>
+                                </select>
+                            </td>
                             <td>
                                 <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openSustainabilityModal(${en.id})">Edit</button>
                                 <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteEnergy(${en.id})">Delete</button>
@@ -2137,21 +2321,66 @@
             }
         }
 
-        function openSustainabilityModal(readingId = null) {
-            document.getElementById('sustainability-form').reset();
-            if (readingId) {
-                const en = currentEnergyReadings.find(item => item.id == readingId);
-                if (en) {
-                    document.getElementById('sus-modal-title').innerText = 'Edit Energy Reading';
-                    document.getElementById('sus-id').value = en.id;
-                    document.getElementById('sus-building').value = en.building_id || 1;
-                    document.getElementById('sus-consumption').value = en.consumption_kwh || '';
-                }
-            } else {
-                document.getElementById('sus-modal-title').innerText = 'Log Energy Reading';
-                document.getElementById('sus-id').value = '';
+        async function confirmEnergySourceChange(id, selectElement, oldSource) {
+            const newSource = selectElement.value;
+            if (newSource === oldSource) return;
+            if (!confirm(`Are you sure you want to change the energy source from "${oldSource}" to "${newSource}"?`)) {
+                selectElement.value = oldSource;
+                return;
             }
-            openModal('sustainability');
+            try {
+                const res = await apiPut(`/sustainability/energy/${id}`, { source: newSource });
+                if (res.success) {
+                    showToast('Energy source updated successfully!');
+                    loadSustainability();
+                } else {
+                    showToast(res.message, 'error');
+                    selectElement.value = oldSource;
+                }
+            } catch (err) {
+                showToast('Failed to update energy source.', 'error');
+                selectElement.value = oldSource;
+            }
+        }
+
+        async function openSustainabilityModal(readingId = null) {
+            try {
+                document.getElementById('sustainability-form').reset();
+                const buildSelect = document.getElementById('sus-building');
+                buildSelect.innerHTML = '<option value="">Loading buildings...</option>';
+
+                // Fetch buildings if not loaded
+                if (currentBuildings.length === 0) {
+                    const buildRes = await apiGet('/workspaces/buildings');
+                    if (buildRes.success) {
+                        currentBuildings = buildRes.data.data;
+                    }
+                }
+
+                buildSelect.innerHTML = '<option value="" disabled selected>-- Select Building --</option>';
+                currentBuildings.forEach(b => {
+                    const option = document.createElement('option');
+                    option.value = b.id;
+                    option.text = b.building_name;
+                    buildSelect.appendChild(option);
+                });
+
+                if (readingId) {
+                    const en = currentEnergyReadings.find(item => item.id == readingId);
+                    if (en) {
+                        document.getElementById('sus-modal-title').innerText = 'Edit Energy Reading';
+                        document.getElementById('sus-id').value = en.id;
+                        document.getElementById('sus-building').value = en.building_id;
+                        document.getElementById('sus-consumption').value = en.consumption_kwh || '';
+                    }
+                } else {
+                    document.getElementById('sus-modal-title').innerText = 'Log Energy Reading';
+                    document.getElementById('sus-id').value = '';
+                }
+                openModal('sustainability');
+            } catch (err) {
+                showToast('Failed to retrieve buildings list.', 'error');
+            }
         }
 
         async function deleteEnergy(id) {
@@ -2456,36 +2685,51 @@
                         if (v.status === 'APPROVED' || v.status === 'CHECKED_IN') badgeClass = 'active';
                         if (v.status === 'CHECKED_OUT' || v.status === 'CANCELLED') badgeClass = 'closed';
 
-                        let actionButtons = '';
-                        if (v.status === 'PENDING') {
-                            actionButtons += `
-                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="handleVisitorStatus(${v.id}, 'CHECKED_IN')">Check-In</button>
-                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="handleVisitorStatus(${v.id}, 'CANCELLED')">Cancel</button>
-                            `;
-                        } else if (v.status === 'CHECKED_IN') {
-                            actionButtons += `
-                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="handleVisitorStatus(${v.id}, 'CHECKED_OUT')">Check-Out</button>
-                            `;
-                        }
-                        
-                        actionButtons += `
-                            <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openVisitorModal(${v.id})">Edit</button>
-                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteVisitor(${v.id})">Delete</button>
-                        `;
-
                         tr.innerHTML = `
                             <td><strong>${v.pass_code || 'N/A'}</strong></td>
                             <td>${v.visitor_name}</td>
                             <td>${v.mobile}</td>
                             <td>${v.host_name || 'N/A'} / <span style="font-size:12px; color:var(--text-muted);">${v.company || 'Personal'}</span></td>
-                            <td><span class="badge ${badgeClass}">${v.status}</span></td>
-                            <td>${actionButtons}</td>
+                            <td>
+                                <select class="status-select-inline" onchange="confirmVisitorStatusChange(${v.id}, this, '${v.status}')">
+                                    <option value="PENDING" ${v.status === 'PENDING' ? 'selected' : ''}>Pending</option>
+                                    <option value="CHECKED_IN" ${v.status === 'CHECKED_IN' ? 'selected' : ''}>Checked In</option>
+                                    <option value="CHECKED_OUT" ${v.status === 'CHECKED_OUT' ? 'selected' : ''}>Checked Out</option>
+                                    <option value="CANCELLED" ${v.status === 'CANCELLED' ? 'selected' : ''}>Cancelled</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openVisitorModal(${v.id})">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteVisitor(${v.id})">Delete</button>
+                            </td>
                         `;
                         tbody.appendChild(tr);
                     });
                 }
             } catch (err) {
                 showToast('Failed to load visitor logs', 'error');
+            }
+        }
+
+        async function confirmVisitorStatusChange(id, selectElement, oldStatus) {
+            const newStatus = selectElement.value;
+            if (newStatus === oldStatus) return;
+            if (!confirm(`Are you sure you want to change the visitor status from "${oldStatus}" to "${newStatus}"?`)) {
+                selectElement.value = oldStatus;
+                return;
+            }
+            try {
+                const res = await apiPut(`/visitors/${id}`, { status: newStatus });
+                if (res.success) {
+                    showToast('Visitor status updated successfully!');
+                    loadVisitors();
+                } else {
+                    showToast(res.message, 'error');
+                    selectElement.value = oldStatus;
+                }
+            } catch (err) {
+                showToast('Failed to update visitor status.', 'error');
+                selectElement.value = oldStatus;
             }
         }
 

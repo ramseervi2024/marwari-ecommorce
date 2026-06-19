@@ -30,7 +30,10 @@ class SustainabilityController extends BaseController {
             'created_at' => current_time('mysql'),
             'updated_at' => current_time('mysql')
         ];
-        $id = $this->energyRepo->create($data, ['%d', '%s', '%f', '%f', '%s', '%s', '%s', '%s']);
+        $id = $this->energyRepo->create($data, ['%d', '%s', '%f', '%f', '%s', '%s', '%s']);
+        if (!$id) {
+            return $this->error('Failed to log energy reading in database.');
+        }
         return $this->success('Energy reading logged successfully', array_merge(['id' => $id], $data), 201);
     }
 

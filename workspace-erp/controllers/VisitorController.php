@@ -37,6 +37,9 @@ class VisitorController extends BaseController {
         ];
 
         $id = $this->repository->create($data, ['%s', '%s', '%s', '%s', '%s', '%d', '%s', '%d', '%s', '%s', '%s', '%s']);
+        if (!$id) {
+            return $this->error('Failed to register visitor pass in database.');
+        }
         return $this->success('Visitor registered successfully', array_merge(['id' => $id], $data), 201);
     }
 
