@@ -1070,6 +1070,7 @@
                 <div class="table-container">
                     <div class="table-header-row">
                         <h3>Invoices Database</h3>
+                        <button class="btn" onclick="openInvoiceModal()">+ Generate Invoice</button>
                     </div>
                     <table class="data-table">
                         <thead>
@@ -1080,9 +1081,33 @@
                                 <th>Total Amount</th>
                                 <th>Due Date</th>
                                 <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="invoices-table-body">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-container" style="margin-top: 30px;">
+                    <div class="table-header-row">
+                        <h3>Payments Log</h3>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Payment ID</th>
+                                <th>Invoice ID</th>
+                                <th>Client ID</th>
+                                <th>Amount</th>
+                                <th>Payment Date</th>
+                                <th>Method</th>
+                                <th>Transaction ID</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payments-table-body">
                             <!-- Loaded dynamically -->
                         </tbody>
                     </table>
@@ -1305,6 +1330,103 @@
                     <input type="text" id="evt-location" class="form-input" required placeholder="e.g. Rooftop Lounge">
                 </div>
                 <button type="submit" class="btn" style="width: 100%;">Schedule Event</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 8. Invoice Modal -->
+    <div class="modal-overlay" id="modal-invoice">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal('invoice')">&times;</button>
+            <h3 class="modal-title">Generate Revenue Invoice</h3>
+            <form id="invoice-form">
+                <div class="form-group">
+                    <label>Select Client</label>
+                    <select id="inv-client-id" class="form-select" required>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Billing Type</label>
+                    <select id="inv-billing-type" class="form-select" required>
+                        <option value="LEASE" selected>Lease / Rent</option>
+                        <option value="SEAT">Seat-Based</option>
+                        <option value="UTILITY">Utility Charges</option>
+                        <option value="MAINTENANCE">Maintenance Charges</option>
+                        <option value="SERVICES">Additional Service Charges</option>
+                        <option value="PARKING">Parking Charges</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Billing Month (YYYY-MM)</label>
+                    <input type="month" id="inv-billing-month" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Base Amount (₹)</label>
+                    <input type="number" step="0.01" id="inv-base-amount" class="form-input" placeholder="e.g. 100000" required>
+                </div>
+                <div class="form-group">
+                    <label>GST Percentage (%)</label>
+                    <input type="number" step="0.01" id="inv-gst-percentage" class="form-input" value="18.00" required>
+                </div>
+                <div class="form-group">
+                    <label>GST Amount (₹)</label>
+                    <input type="number" step="0.01" id="inv-gst-amount" class="form-input" disabled value="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Total Amount (₹)</label>
+                    <input type="number" step="0.01" id="inv-total-amount" class="form-input" disabled value="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Due Date</label>
+                    <input type="date" id="inv-due-date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Notes / Remarks</label>
+                    <textarea id="inv-notes" class="form-textarea" rows="2" placeholder="Internal or client notes..."></textarea>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Generate Invoice</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 9. Record Payment Modal -->
+    <div class="modal-overlay" id="modal-payment">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal('payment')">&times;</button>
+            <h3 class="modal-title">Record Payment</h3>
+            <form id="payment-form">
+                <input type="hidden" id="pay-invoice-id">
+                <div class="form-group">
+                    <label>Invoice Number</label>
+                    <input type="text" id="pay-invoice-no" class="form-input" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Total Outstanding Amount (₹)</label>
+                    <input type="text" id="pay-invoice-amount" class="form-input" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Amount Paid (₹)</label>
+                    <input type="number" step="0.01" id="pay-amount" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Payment Date</label>
+                    <input type="date" id="pay-date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="pay-method" class="form-select" required>
+                        <option value="BANK_TRANSFER" selected>Bank Transfer (IMPS/NEFT/RTGS)</option>
+                        <option value="CASH">Cash Payment</option>
+                        <option value="CARD">Debit / Credit Card</option>
+                        <option value="ONLINE">UPI / Net Banking</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Transaction ID / Reference Number</label>
+                    <input type="text" id="pay-txn-id" class="form-input" placeholder="e.g. TXN1234567890" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Record Payment</button>
             </form>
         </div>
     </div>
@@ -1741,21 +1863,207 @@
                     tbody.innerHTML = '';
                     res.data.data.forEach(inv => {
                         const tr = document.createElement('tr');
+                        
+                        let badgeClass = 'pending';
+                        if (inv.status === 'PAID') badgeClass = 'active';
+
+                        let actionBtn = '';
+                        if (inv.status === 'PENDING') {
+                            actionBtn = `<button class="btn" style="padding: 4px 8px; font-size: 11px;" onclick="openPaymentModal(${inv.id}, '${inv.invoice_no}', ${inv.total_amount})">Record Payment</button>`;
+                        } else {
+                            actionBtn = `<span style="font-size:12px; color:var(--text-muted);">None</span>`;
+                        }
+
                         tr.innerHTML = `
                             <td>${inv.invoice_no}</td>
                             <td>${inv.billing_type}</td>
                             <td>${inv.billing_month}</td>
                             <td>₹${parseFloat(inv.total_amount).toLocaleString()}</td>
                             <td>${inv.due_date}</td>
-                            <td><span class="badge pending">${inv.status}</span></td>
+                            <td><span class="badge ${badgeClass}">${inv.status}</span></td>
+                            <td>${actionBtn}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+
+                // Load payments log
+                const payRes = await apiGet('/billing/payments');
+                if (payRes.success) {
+                    const tbody = document.getElementById('payments-table-body');
+                    tbody.innerHTML = '';
+                    payRes.data.data.forEach(pay => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${pay.id}</td>
+                            <td>Invoice #${pay.invoice_id}</td>
+                            <td>Client #${pay.client_id}</td>
+                            <td>₹${parseFloat(pay.amount).toLocaleString()}</td>
+                            <td>${pay.payment_date}</td>
+                            <td>${pay.payment_method}</td>
+                            <td><strong>${pay.transaction_id}</strong></td>
+                            <td><span class="badge active">${pay.status}</span></td>
                         `;
                         tbody.appendChild(tr);
                     });
                 }
             } catch (err) {
-                showToast('Failed to load invoices', 'error');
+                showToast('Failed to load invoices or payments', 'error');
             }
         }
+
+        // Open Invoice Modal and fetch clients
+        async function openInvoiceModal() {
+            try {
+                // Clear and initialize form
+                document.getElementById('invoice-form').reset();
+                
+                // Pre-fill Billing Month with current YYYY-MM
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                document.getElementById('inv-billing-month').value = `${year}-${month}`;
+                
+                // Pre-fill Due Date with +10 days
+                const dueDate = new Date();
+                dueDate.setDate(today.getDate() + 10);
+                const dueYear = dueDate.getFullYear();
+                const dueMonth = String(dueDate.getMonth() + 1).padStart(2, '0');
+                const dueDateString = String(dueDate.getDate()).padStart(2, '0');
+                document.getElementById('inv-due-date').value = `${dueYear}-${dueMonth}-${dueDateString}`;
+                
+                document.getElementById('inv-gst-percentage').value = "18.00";
+                document.getElementById('inv-gst-amount').value = "0.00";
+                document.getElementById('inv-total-amount').value = "0.00";
+
+                // Populate Client dropdown
+                const clientSelect = document.getElementById('inv-client-id');
+                clientSelect.innerHTML = '<option value="">Loading clients...</option>';
+                
+                const clientRes = await apiGet('/clients');
+                if (clientRes.success && clientRes.data && clientRes.data.data) {
+                    clientSelect.innerHTML = '<option value="" disabled selected>-- Select Client --</option>';
+                    clientRes.data.data.forEach(c => {
+                        const option = document.createElement('option');
+                        option.value = c.id;
+                        option.text = `${c.company_name} (${c.client_code})`;
+                        clientSelect.appendChild(option);
+                    });
+                } else {
+                    clientSelect.innerHTML = '<option value="">No clients found</option>';
+                }
+                
+                openModal('invoice');
+            } catch (err) {
+                showToast('Failed to fetch clients list.', 'error');
+            }
+        }
+
+        // Auto calculation logic for GST & Total Amount
+        function calculateInvoiceAmounts() {
+            const baseAmount = parseFloat(document.getElementById('inv-base-amount').value) || 0;
+            const gstPercentage = parseFloat(document.getElementById('inv-gst-percentage').value) || 0;
+            
+            const gstAmount = (baseAmount * gstPercentage) / 100;
+            const totalAmount = baseAmount + gstAmount;
+            
+            document.getElementById('inv-gst-amount').value = gstAmount.toFixed(2);
+            document.getElementById('inv-total-amount').value = totalAmount.toFixed(2);
+        }
+
+        document.getElementById('inv-base-amount').addEventListener('input', calculateInvoiceAmounts);
+        document.getElementById('inv-gst-percentage').addEventListener('input', calculateInvoiceAmounts);
+
+        // Submit generated invoice
+        document.getElementById('invoice-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const client_id = parseInt(document.getElementById('inv-client-id').value);
+            const billing_type = document.getElementById('inv-billing-type').value;
+            const billing_month = document.getElementById('inv-billing-month').value;
+            const base_amount = parseFloat(document.getElementById('inv-base-amount').value);
+            const gst_percentage = parseFloat(document.getElementById('inv-gst-percentage').value);
+            const due_date = document.getElementById('inv-due-date').value;
+            const notes = document.getElementById('inv-notes').value;
+
+            if (!client_id) {
+                showToast('Please select a client.', 'error');
+                return;
+            }
+
+            try {
+                const res = await apiPost('/billing/invoices', {
+                    client_id,
+                    billing_type,
+                    billing_month,
+                    base_amount,
+                    gst_percentage,
+                    due_date,
+                    notes
+                });
+
+                if (res.success) {
+                    showToast('Invoice generated successfully!');
+                    closeModal('invoice');
+                    loadBilling();
+                } else {
+                    showToast(res.message || 'Failed to generate invoice.', 'error');
+                }
+            } catch (err) {
+                showToast('API Connection Error.', 'error');
+            }
+        });
+
+        // Open Payment Modal
+        function openPaymentModal(invoiceId, invoiceNo, totalAmount) {
+            document.getElementById('payment-form').reset();
+            document.getElementById('pay-invoice-id').value = invoiceId;
+            document.getElementById('pay-invoice-no').value = invoiceNo;
+            document.getElementById('pay-invoice-amount').value = `₹${parseFloat(totalAmount).toLocaleString()}`;
+            document.getElementById('pay-amount').value = totalAmount;
+
+            // Pre-fill Payment Date with today's date
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const date = String(today.getDate()).padStart(2, '0');
+            document.getElementById('pay-date').value = `${year}-${month}-${date}`;
+
+            // Auto-generate transaction ID suggestion
+            document.getElementById('pay-txn-id').value = 'TXN-MAN-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+
+            openModal('payment');
+        }
+
+        // Submit recorded payment
+        document.getElementById('payment-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const invoiceId = document.getElementById('pay-invoice-id').value;
+            const amount = parseFloat(document.getElementById('pay-amount').value);
+            const payment_date = document.getElementById('pay-date').value;
+            const payment_method = document.getElementById('pay-method').value;
+            const transaction_id = document.getElementById('pay-txn-id').value;
+
+            try {
+                const res = await apiPost(`/billing/invoices/${invoiceId}/pay`, {
+                    amount,
+                    payment_date,
+                    payment_method,
+                    transaction_id
+                });
+
+                if (res.success) {
+                    showToast('Payment recorded successfully!');
+                    closeModal('payment');
+                    loadBilling();
+                    // Also refresh dashboard stats if visible
+                    loadDashboardData();
+                } else {
+                    showToast(res.message || 'Failed to record payment.', 'error');
+                }
+            } catch (err) {
+                showToast('API Connection Error.', 'error');
+            }
+        });
 
         // 8. Visitors Module
         async function loadVisitors() {

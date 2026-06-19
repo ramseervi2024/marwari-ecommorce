@@ -19,6 +19,11 @@ class BillingRoutes {
             'callback' => [$controller, 'createInvoice'],
             'permission_callback' => RoleMiddleware::hasCapability('manage_billing')
         ]);
+        register_rest_route($namespace, '/billing/invoices/(?P<id>\d+)/pay', [
+            'methods' => 'POST',
+            'callback' => [$controller, 'recordPayment'],
+            'permission_callback' => RoleMiddleware::hasCapability('manage_billing')
+        ]);
         register_rest_route($namespace, '/billing/payments', [
             'methods' => 'GET',
             'callback' => [$controller, 'indexPayments'],
