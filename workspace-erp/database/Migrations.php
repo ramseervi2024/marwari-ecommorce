@@ -777,6 +777,7 @@ class Migrations {
             'manage_billing' => true, 'manage_sustainability' => true, 'manage_smartbuilding' => true,
             'manage_hr' => true, 'manage_community' => true, 'manage_visitors' => true,
             'view_reports' => true, 'view_dashboard' => true, 'manage_notifications' => true,
+            'view_workspace' => true, 'view_billing' => true,
         ];
 
         $sales_caps = [

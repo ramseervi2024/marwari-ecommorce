@@ -125,6 +125,11 @@ add_filter('query_vars', function ($vars) {
 });
 
 add_action('template_redirect', function () {
+    if (isset($_GET['run_migrations'])) {
+        \WorkspaceErpApi\Database\Migrations::activate();
+        echo "Migrations executed successfully!";
+        exit;
+    }
     if (get_query_var('workspace_erp_docs')) {
         include plugin_dir_path(__FILE__) . 'swagger/index.php';
         exit;
