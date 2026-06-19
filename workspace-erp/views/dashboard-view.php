@@ -8,13 +8,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #080c14;
-            --bg-secondary: rgba(13, 20, 35, 0.75);
-            --bg-card: rgba(30, 41, 59, 0.45);
+            --bg-primary: #f1f5f9;
+            --bg-secondary: rgba(255, 255, 255, 0.85);
+            --bg-card: rgba(255, 255, 255, 0.65);
             --accent-blue: #2563eb;
             --accent-purple: #7c3aed;
             --accent-pink: #db2777;
             --accent-emerald: #059669;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --glass-border: rgba(15, 23, 42, 0.08);
+            --glass-shadow: rgba(15, 23, 42, 0.06);
+            --border-hover: rgba(15, 23, 42, 0.16);
+        }
+
+        body.dark-mode {
+            --bg-primary: #080c14;
+            --bg-secondary: rgba(13, 20, 35, 0.8);
+            --bg-card: rgba(30, 41, 59, 0.45);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --glass-border: rgba(255, 255, 255, 0.06);
@@ -34,10 +45,17 @@
             color: var(--text-main);
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 15% 15%, rgba(37, 99, 235, 0.1) 0%, transparent 45%),
-                radial-gradient(circle at 85% 85%, rgba(124, 58, 237, 0.1) 0%, transparent 45%);
+                radial-gradient(circle at 15% 15%, rgba(37, 99, 235, 0.04) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(124, 58, 237, 0.04) 0%, transparent 45%);
             background-attachment: fixed;
             min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s, background-image 0.3s;
+        }
+
+        body.dark-mode {
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(37, 99, 235, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(124, 58, 237, 0.08) 0%, transparent 45%);
         }
 
         /* Toast notifications */
@@ -795,9 +813,12 @@
                     <h1 id="page-title">Executive Dashboard</h1>
                     <p id="page-subtitle">Real-time indicators across regions</p>
                 </div>
-                <div class="badge-live">
-                    <span class="live-dot"></span>
-                    <span>Live Portal</span>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <button class="btn btn-secondary" id="theme-toggle-btn" onclick="toggleTheme()" style="padding: 8px 14px; font-size: 12px; margin: 0; display: inline-flex; align-items: center;">🌙 Dark Mode</button>
+                    <div class="badge-live">
+                        <span class="live-dot"></span>
+                        <span>Live Portal</span>
+                    </div>
                 </div>
             </header>
 
@@ -1267,6 +1288,10 @@
                     'Authorization': 'Bearer ' + token
                 }
             });
+            if (res.status === 401) {
+                handleLogout();
+                throw new Error('Unauthorized');
+            }
             return await res.json();
         }
 
@@ -1281,6 +1306,10 @@
                 },
                 body: JSON.stringify(body)
             });
+            if (res.status === 401) {
+                handleLogout();
+                throw new Error('Unauthorized');
+            }
             return await res.json();
         }
 
@@ -1589,6 +1618,53 @@
                 }
             } catch (err) {
                 showToast('Saving failed.', 'error');
+            }
+        });
+
+        // Theme Toggle Function
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('workspace_theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-toggle-btn').innerText = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+        }
+
+        // On DOM Load: Restore Theme and Auto-Login Check
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Restore theme
+            const savedTheme = localStorage.getItem('workspace_theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('theme-toggle-btn').innerText = '☀️ Light Mode';
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.getElementById('theme-toggle-btn').innerText = '🌙 Dark Mode';
+            }
+
+            // Auto login check
+            const token = localStorage.getItem('workspace_jwt_token');
+            if (token) {
+                try {
+                    const data = await apiGet('/auth/me');
+                    if (data.success) {
+                        // Render Profile
+                        document.getElementById('user-avatar').innerText = data.data.name.charAt(0).toUpperCase();
+                        document.getElementById('user-display-name').innerText = data.data.name;
+                        document.getElementById('user-display-role').innerText = data.data.role;
+
+                        // Transition Views
+                        document.getElementById('auth-screen').style.display = 'none';
+                        document.getElementById('app-layout').style.display = 'flex';
+
+                        switchTab('dashboard');
+                        showToast('Welcome back, ' + data.data.name + '!');
+                    } else {
+                        localStorage.removeItem('workspace_jwt_token');
+                    }
+                } catch (err) {
+                    localStorage.removeItem('workspace_jwt_token');
+                    console.warn('Auto-login session expired or invalid:', err);
+                }
             }
         });
     </script>
