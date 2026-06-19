@@ -163,6 +163,7 @@ class WorkspaceController extends BaseController {
         $update = [];
         $formats = [];
         if (isset($params['room_id'])) { $update['room_id'] = intval($params['room_id']); $formats[] = '%d'; }
+        if (isset($params['client_id'])) { $update['client_id'] = $params['client_id'] ? intval($params['client_id']) : null; $formats[] = '%d'; }
         if (isset($params['booking_date'])) { $update['booking_date'] = sanitize_text_field($params['booking_date']); $formats[] = '%s'; }
         if (isset($params['start_time'])) { $update['start_time'] = sanitize_text_field($params['start_time']); $formats[] = '%s'; }
         if (isset($params['end_time'])) { $update['end_time'] = sanitize_text_field($params['end_time']); $formats[] = '%s'; }

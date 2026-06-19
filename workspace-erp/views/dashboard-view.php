@@ -958,10 +958,11 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Room ID</th>
-                                <th>Client ID</th>
+                                <th>Meeting Room</th>
+                                <th>Booked For</th>
                                 <th>Date</th>
                                 <th>Time</th>
+                                <th>Purpose / Attendees</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -1024,7 +1025,7 @@
 
             <!-- Community & Events Tab -->
             <section id="tab-community" class="tab-panel">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <div style="display: flex; flex-direction: column; gap: 30px;">
                     <div class="table-container">
                         <div class="table-header-row">
                             <h3>Announcements</h3>
@@ -1036,6 +1037,7 @@
                                     <th>Title</th>
                                     <th>Audience</th>
                                     <th>Published</th>
+                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -1078,10 +1080,11 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Building ID</th>
+                                <th>Building</th>
                                 <th>Reading Date</th>
                                 <th>Consumption (kWh)</th>
-                                <th>Source</th>
+                                <th>Estimated Cost (₹)</th>
+                                <th>Energy Source</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -1103,6 +1106,7 @@
                         <thead>
                             <tr>
                                 <th>Invoice No</th>
+                                <th>Client</th>
                                 <th>Billing Type</th>
                                 <th>Billing Month</th>
                                 <th>Total Amount</th>
@@ -1226,6 +1230,20 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label>Booked For (Client)</label>
+                    <select id="book-client-id" class="form-select">
+                        <option value="">-- Internal / Self (No Client) --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Purpose</label>
+                    <input type="text" id="book-purpose" class="form-input" placeholder="e.g. Client Pitch">
+                </div>
+                <div class="form-group">
+                    <label>Attendees</label>
+                    <input type="number" id="book-attendees" class="form-input" value="2" min="1">
+                </div>
+                <div class="form-group">
                     <label>Booking Date</label>
                     <input type="date" id="book-date" class="form-input" required>
                 </div>
@@ -1284,10 +1302,27 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label>Reading Date</label>
+                    <input type="date" id="sus-date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Energy Source</label>
+                    <select id="sus-source" class="form-select" required>
+                        <option value="GRID">Grid</option>
+                        <option value="SOLAR">Solar</option>
+                        <option value="WIND">Wind</option>
+                        <option value="GENERATOR">Generator</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>Consumption (kWh)</label>
                     <input type="number" step="0.01" id="sus-consumption" class="form-input" required>
                 </div>
-                <button type="submit" class="btn" style="width: 100%;">Log Energy reading</button>
+                <div class="form-group">
+                    <label>Estimated Cost (₹)</label>
+                    <input type="number" step="0.01" id="sus-cost" class="form-input" placeholder="e.g. 1500.00">
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Log Energy Reading</button>
             </form>
         </div>
     </div>
@@ -1507,6 +1542,120 @@
                 </div>
                 <button type="submit" class="btn" style="width: 100%;">Record Payment</button>
             </form>
+        </div>
+    </div>
+
+    <!-- 11. Invoice Details & History Modal -->
+    <div class="modal-overlay" id="modal-invoice-detail">
+        <div class="modal-card" style="max-width: 800px; width: 95%; background: #0f172a; color: #fff;">
+            <button class="modal-close" style="color: #fff;" onclick="closeModal('invoice-detail')">&times;</button>
+            
+            <div id="invoice-print-container" style="background: #1e293b; padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px;">
+                <!-- Header -->
+                <div style="display: flex; justify-content: space-between; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 25px;">
+                    <div>
+                        <h2 style="margin: 0; color: #fff; font-size: 24px;">Aurbis Space Management</h2>
+                        <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 13px;">Premium Workspace & Facility Solutions</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <h2 style="margin: 0; color: #818cf8; font-size: 24px; font-weight: 700;">INVOICE</h2>
+                        <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 13px; font-weight: bold;" id="det-inv-no">INV-XXXX-XXXX</p>
+                    </div>
+                </div>
+
+                <!-- Info Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                    <div>
+                        <h4 style="margin: 0 0 10px 0; color: #38bdf8; text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">Billed From</h4>
+                        <p style="margin: 0; font-size: 13px; font-weight: 600; color: #fff;">Aurbis Space Management Pvt Ltd</p>
+                        <p style="margin: 4px 0 0 0; font-size: 12px; color: #94a3b8; line-height: 1.5;">
+                            500 Tech Park Road, Outer Ring Road,<br/>
+                            Bangalore, Karnataka - 560103<br/>
+                            GSTIN: 29AAFCA8832R1ZX
+                        </p>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0 0 10px 0; color: #38bdf8; text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">Billed To</h4>
+                        <p style="margin: 0; font-size: 13px; font-weight: 600; color: #fff;" id="det-client-name">Client Name</p>
+                        <p style="margin: 4px 0 0 0; font-size: 12px; color: #94a3b8; line-height: 1.5;" id="det-client-details">
+                            Loading details...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Invoice Meta Details -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 30px;">
+                    <div>
+                        <span style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 5px;">Billing Month</span>
+                        <strong style="font-size: 13px; color: #fff;" id="det-billing-month">-</strong>
+                    </div>
+                    <div>
+                        <span style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 5px;">Billing Type</span>
+                        <strong style="font-size: 13px; color: #fff;" id="det-billing-type">-</strong>
+                    </div>
+                    <div>
+                        <span style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 5px;">Due Date</span>
+                        <strong style="font-size: 13px; color: #fff;" id="det-due-date">-</strong>
+                    </div>
+                    <div>
+                        <span style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 5px;">Payment Status</span>
+                        <span id="det-status-badge" class="badge pending" style="display: inline-block;">PENDING</span>
+                    </div>
+                </div>
+
+                <!-- Pricing Table -->
+                <h4 style="margin: 0 0 10px 0; color: #38bdf8; text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">Amount Breakdown</h4>
+                <table class="data-table" style="margin-bottom: 25px; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="color: #fff; background: #334155;">Description</th>
+                            <th style="text-align: right; color: #fff; background: #334155;">Base Amount</th>
+                            <th style="text-align: right; color: #fff; background: #334155;">GST Rate</th>
+                            <th style="text-align: right; color: #fff; background: #334155;">GST Amount</th>
+                            <th style="text-align: right; color: #fff; background: #334155;">Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="det-description" style="font-weight: 500; background: transparent; border-bottom: 1px solid rgba(255,255,255,0.05); color: #fff;">Workspace Lease / Services</td>
+                            <td id="det-base-amount" style="text-align: right; background: transparent; border-bottom: 1px solid rgba(255,255,255,0.05); color: #fff;">₹0.00</td>
+                            <td id="det-gst-pct" style="text-align: right; background: transparent; border-bottom: 1px solid rgba(255,255,255,0.05); color: #fff;">18%</td>
+                            <td id="det-gst-amount" style="text-align: right; background: transparent; border-bottom: 1px solid rgba(255,255,255,0.05); color: #fff;">₹0.00</td>
+                            <td id="det-total-amount" style="text-align: right; font-weight: 700; color: #818cf8; background: transparent; border-bottom: 1px solid rgba(255,255,255,0.05);">₹0.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Notes -->
+                <div style="margin-bottom: 30px;" id="det-notes-wrapper">
+                    <h4 style="margin: 0 0 5px 0; color: #fff; font-size: 12px; font-weight: 600;">Remarks / Notes:</h4>
+                    <p style="margin: 0; font-size: 12px; color: #94a3b8; line-height: 1.5; font-style: italic;" id="det-notes">-</p>
+                </div>
+
+                <!-- Payment History log -->
+                <h4 style="margin: 0 0 10px 0; color: #38bdf8; text-transform: uppercase; font-size: 11px; letter-spacing: 1px;">Invoice Payments History</h4>
+                <table class="data-table" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="color: #fff; background: #334155;">Payment ID</th>
+                            <th style="color: #fff; background: #334155;">Payment Date</th>
+                            <th style="color: #fff; background: #334155;">Method</th>
+                            <th style="color: #fff; background: #334155;">Transaction ID</th>
+                            <th style="text-align: right; color: #fff; background: #334155;">Amount Paid</th>
+                            <th style="color: #fff; background: #334155;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="det-payment-history-body">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Print Actions -->
+            <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 25px;">
+                <button class="btn btn-secondary" onclick="closeModal('invoice-detail')">Close</button>
+                <button class="btn" style="background: linear-gradient(135deg, #06b6d4, #3b82f6);" onclick="printInvoicePDF()">Download PDF / Print</button>
+            </div>
         </div>
     </div>
 
@@ -1880,9 +2029,22 @@
         let currentBuildings = [];
         let currentBookings = [];
         let currentMeetingRooms = [];
+        let currentClients = [];
+
+        function getClientName(clientId) {
+            if (!clientId) return 'Internal / Self';
+            const client = currentClients.find(c => c.id == clientId);
+            return client ? `${client.company_name} (${client.client_code})` : `Client #${clientId}`;
+        }
 
         async function loadWorkspaceData() {
             try {
+                // Pre-load clients
+                const clientRes = await apiGet('/clients');
+                if (clientRes.success && clientRes.data && clientRes.data.data) {
+                    currentClients = clientRes.data.data;
+                }
+
                 // Pre-load meeting rooms first to map names
                 const roomRes = await apiGet('/workspaces/meeting-rooms');
                 if (roomRes.success) {
@@ -1925,12 +2087,15 @@
                     currentBookings.forEach(bk => {
                         const room = currentMeetingRooms.find(r => r.id == bk.room_id);
                         const roomName = room ? room.room_name : `Room #${bk.room_id}`;
+                        const clientName = getClientName(bk.client_id);
+                        const purposeText = bk.purpose ? `${bk.purpose} (${bk.attendees || 2} pax)` : `${bk.attendees || 2} pax`;
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td>${roomName}</td>
-                            <td>${bk.client_id || 'Self'}</td>
+                            <td>${clientName}</td>
                             <td>${bk.booking_date}</td>
                             <td>${bk.start_time} - ${bk.end_time}</td>
+                            <td>${purposeText}</td>
                             <td>
                                 <select class="status-select-inline" onchange="confirmBookingStatusChange(${bk.id}, this, '${bk.status}')">
                                     <option value="CONFIRMED" ${bk.status === 'CONFIRMED' ? 'selected' : ''}>Confirmed</option>
@@ -2072,6 +2237,8 @@
                 document.getElementById('booking-form').reset();
                 const roomSelect = document.getElementById('book-room-id');
                 roomSelect.innerHTML = '<option value="">Loading rooms...</option>';
+                const clientSelect = document.getElementById('book-client-id');
+                clientSelect.innerHTML = '<option value="">Loading clients...</option>';
 
                 const roomRes = await apiGet('/workspaces/meeting-rooms');
                 if (roomRes.success && roomRes.data && roomRes.data.data) {
@@ -2087,12 +2254,29 @@
                     roomSelect.innerHTML = '<option value="">No rooms found</option>';
                 }
 
+                if (currentClients.length === 0) {
+                    const clientRes = await apiGet('/clients');
+                    if (clientRes.success && clientRes.data && clientRes.data.data) {
+                        currentClients = clientRes.data.data;
+                    }
+                }
+                clientSelect.innerHTML = '<option value="">-- Internal / Self (No Client) --</option>';
+                currentClients.forEach(c => {
+                    const option = document.createElement('option');
+                    option.value = c.id;
+                    option.text = `${c.company_name} (${c.client_code})`;
+                    clientSelect.appendChild(option);
+                });
+
                 if (bookingId) {
                     const bk = currentBookings.find(item => item.id == bookingId);
                     if (bk) {
                         document.getElementById('booking-modal-title').innerText = 'Edit Meeting Room Booking';
                         document.getElementById('book-id').value = bk.id;
                         document.getElementById('book-room-id').value = bk.room_id;
+                        document.getElementById('book-client-id').value = bk.client_id || '';
+                        document.getElementById('book-purpose').value = bk.purpose || '';
+                        document.getElementById('book-attendees').value = bk.attendees || 2;
                         document.getElementById('book-date').value = bk.booking_date;
                         document.getElementById('book-start').value = bk.start_time;
                         document.getElementById('book-end').value = bk.end_time;
@@ -2106,7 +2290,7 @@
                 }
                 openModal('booking');
             } catch (err) {
-                showToast('Failed to retrieve meeting rooms list.', 'error');
+                showToast('Failed to retrieve booking options.', 'error');
             }
         }
 
@@ -2129,11 +2313,14 @@
             e.preventDefault();
             const id = document.getElementById('book-id').value;
             const room_id = parseInt(document.getElementById('book-room-id').value);
+            const client_id = document.getElementById('book-client-id').value ? parseInt(document.getElementById('book-client-id').value) : null;
+            const purpose = document.getElementById('book-purpose').value;
+            const attendees = parseInt(document.getElementById('book-attendees').value) || 2;
             const booking_date = document.getElementById('book-date').value;
             const start_time = document.getElementById('book-start').value;
             const end_time = document.getElementById('book-end').value;
 
-            const payload = { room_id, booking_date, start_time, end_time };
+            const payload = { room_id, client_id, booking_date, start_time, end_time, purpose, attendees };
 
             try {
                 let res;
@@ -2299,7 +2486,8 @@
                         tr.innerHTML = `
                             <td>${buildingName}</td>
                             <td>${en.reading_date}</td>
-                            <td>${en.consumption_kwh}</td>
+                            <td>${parseFloat(en.consumption_kwh).toLocaleString()} kWh</td>
+                            <td>₹${parseFloat(en.cost || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                             <td>
                                 <select class="status-select-inline" onchange="confirmEnergySourceChange(${en.id}, this, '${en.source}')">
                                     <option value="GRID" ${en.source === 'GRID' ? 'selected' : ''}>Grid</option>
@@ -2371,11 +2559,18 @@
                         document.getElementById('sus-modal-title').innerText = 'Edit Energy Reading';
                         document.getElementById('sus-id').value = en.id;
                         document.getElementById('sus-building').value = en.building_id;
+                        document.getElementById('sus-date').value = en.reading_date || '';
+                        document.getElementById('sus-source').value = en.source || 'GRID';
                         document.getElementById('sus-consumption').value = en.consumption_kwh || '';
+                        document.getElementById('sus-cost').value = en.cost || '';
                     }
                 } else {
                     document.getElementById('sus-modal-title').innerText = 'Log Energy Reading';
                     document.getElementById('sus-id').value = '';
+                    const today = new Date().toISOString().split('T')[0];
+                    document.getElementById('sus-date').value = today;
+                    document.getElementById('sus-source').value = 'GRID';
+                    document.getElementById('sus-cost').value = '';
                 }
                 openModal('sustainability');
             } catch (err) {
@@ -2403,14 +2598,19 @@
             e.preventDefault();
             const id = document.getElementById('sus-id').value;
             const building_id = parseInt(document.getElementById('sus-building').value);
+            const reading_date = document.getElementById('sus-date').value;
+            const source = document.getElementById('sus-source').value;
             const consumption_kwh = parseFloat(document.getElementById('sus-consumption').value);
+            const cost = document.getElementById('sus-cost').value ? parseFloat(document.getElementById('sus-cost').value) : 0.00;
+
+            const payload = { building_id, reading_date, source, consumption_kwh, cost };
 
             try {
                 let res;
                 if (id) {
-                    res = await apiPut(`/sustainability/energy/${id}`, { building_id, consumption_kwh });
+                    res = await apiPut(`/sustainability/energy/${id}`, payload);
                 } else {
-                    res = await apiPost('/sustainability/energy', { building_id, consumption_kwh });
+                    res = await apiPost('/sustainability/energy', payload);
                 }
                 if (res.success) {
                     showToast(id ? 'Energy reading updated!' : 'Energy consumption reading logged!');
@@ -2426,9 +2626,18 @@
 
         // 6. Billing Module
         let currentInvoices = [];
+        let currentPayments = [];
 
         async function loadBilling() {
             try {
+                // Pre-load clients
+                if (currentClients.length === 0) {
+                    const clientRes = await apiGet('/clients');
+                    if (clientRes.success && clientRes.data && clientRes.data.data) {
+                        currentClients = clientRes.data.data;
+                    }
+                }
+
                 const res = await apiGet('/billing/invoices');
                 if (res.success) {
                     currentInvoices = res.data.data;
@@ -2440,7 +2649,10 @@
                         let badgeClass = 'pending';
                         if (inv.status === 'PAID') badgeClass = 'active';
 
+                        const clientName = getClientName(inv.client_id);
+
                         let actionBtn = '';
+                        actionBtn += `<button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openInvoiceDetailModal(${inv.id})">View Details</button>`;
                         if (inv.status === 'PENDING') {
                             actionBtn += `<button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openPaymentModal(${inv.id}, '${inv.invoice_no}', ${inv.total_amount})">Record Payment</button>`;
                         }
@@ -2450,12 +2662,19 @@
                         `;
 
                         tr.innerHTML = `
-                            <td>${inv.invoice_no}</td>
+                            <td><strong>${inv.invoice_no}</strong></td>
+                            <td>${clientName}</td>
                             <td>${inv.billing_type}</td>
                             <td>${inv.billing_month}</td>
-                            <td>₹${parseFloat(inv.total_amount).toLocaleString()}</td>
+                            <td>₹${parseFloat(inv.total_amount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                             <td>${inv.due_date}</td>
-                            <td><span class="badge ${badgeClass}">${inv.status}</span></td>
+                            <td>
+                                <select class="status-select-inline" onchange="confirmInvoiceStatusChange(${inv.id}, this, '${inv.status}')">
+                                    <option value="PENDING" ${inv.status === 'PENDING' ? 'selected' : ''}>Pending</option>
+                                    <option value="PAID" ${inv.status === 'PAID' ? 'selected' : ''}>Paid</option>
+                                    <option value="CANCELLED" ${inv.status === 'CANCELLED' ? 'selected' : ''}>Cancelled</option>
+                                </select>
+                            </td>
                             <td>${actionBtn}</td>
                         `;
                         tbody.appendChild(tr);
@@ -2465,15 +2684,19 @@
                 // Load payments log
                 const payRes = await apiGet('/billing/payments');
                 if (payRes.success) {
+                    currentPayments = payRes.data.data;
                     const tbody = document.getElementById('payments-table-body');
                     tbody.innerHTML = '';
-                    payRes.data.data.forEach(pay => {
+                    currentPayments.forEach(pay => {
+                        const targetInv = currentInvoices.find(i => i.id == pay.invoice_id);
+                        const invNo = targetInv ? targetInv.invoice_no : `Invoice #${pay.invoice_id}`;
+                        const clientName = getClientName(pay.client_id);
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td>${pay.id}</td>
-                            <td>Invoice #${pay.invoice_id}</td>
-                            <td>Client #${pay.client_id}</td>
-                            <td>₹${parseFloat(pay.amount).toLocaleString()}</td>
+                            <td><strong>${invNo}</strong></td>
+                            <td>${clientName}</td>
+                            <td>₹${parseFloat(pay.amount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
                             <td>${pay.payment_date}</td>
                             <td>${pay.payment_method}</td>
                             <td><strong>${pay.transaction_id}</strong></td>
@@ -2485,6 +2708,186 @@
             } catch (err) {
                 showToast('Failed to load invoices or payments', 'error');
             }
+        }
+
+        async function confirmInvoiceStatusChange(id, selectElement, oldStatus) {
+            const newStatus = selectElement.value;
+            if (newStatus === oldStatus) return;
+            if (!confirm(`Are you sure you want to change the invoice status from "${oldStatus}" to "${newStatus}"?`)) {
+                selectElement.value = oldStatus;
+                return;
+            }
+            try {
+                const res = await apiPut(`/billing/invoices/${id}`, { status: newStatus });
+                if (res.success) {
+                    showToast('Invoice status updated successfully!');
+                    loadBilling();
+                } else {
+                    showToast(res.message, 'error');
+                    selectElement.value = oldStatus;
+                }
+            } catch (err) {
+                showToast('Failed to update invoice status.', 'error');
+                selectElement.value = oldStatus;
+            }
+        }
+
+        async function openInvoiceDetailModal(invoiceId) {
+            try {
+                // Ensure clients are loaded
+                if (currentClients.length === 0) {
+                    const clientRes = await apiGet('/clients');
+                    if (clientRes.success) {
+                        currentClients = clientRes.data.data;
+                    }
+                }
+
+                // Find the invoice in state
+                const inv = currentInvoices.find(i => i.id == invoiceId);
+                if (!inv) {
+                    showToast('Invoice not found', 'error');
+                    return;
+                }
+
+                // Set metadata values
+                document.getElementById('det-inv-no').innerText = inv.invoice_no;
+                document.getElementById('det-billing-month').innerText = inv.billing_month || 'N/A';
+                document.getElementById('det-billing-type').innerText = inv.billing_type || 'N/A';
+                document.getElementById('det-due-date').innerText = inv.due_date || 'N/A';
+
+                // Status Badge styling
+                const badge = document.getElementById('det-status-badge');
+                badge.innerText = inv.status;
+                badge.className = 'badge ' + (inv.status === 'PAID' ? 'active' : 'pending');
+
+                // Client Details
+                const client = currentClients.find(c => c.id == inv.client_id);
+                if (client) {
+                    document.getElementById('det-client-name').innerText = client.company_name;
+                    document.getElementById('det-client-details').innerHTML = `
+                        Code: ${client.client_code}<br/>
+                        Contact Person: ${client.contact_person}<br/>
+                        Email: ${client.email || 'N/A'}<br/>
+                        Phone: ${client.mobile || 'N/A'}
+                    `;
+                } else {
+                    document.getElementById('det-client-name').innerText = `Client #${inv.client_id}`;
+                    document.getElementById('det-client-details').innerText = 'Client information not available';
+                }
+
+                // Description
+                document.getElementById('det-description').innerText = `${inv.billing_type} Services - Month: ${inv.billing_month}`;
+                document.getElementById('det-base-amount').innerText = '₹' + parseFloat(inv.base_amount || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('det-gst-pct').innerText = (inv.gst_percentage || 18) + '%';
+                document.getElementById('det-gst-amount').innerText = '₹' + parseFloat(inv.gst_amount || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('det-total-amount').innerText = '₹' + parseFloat(inv.total_amount || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+                // Notes
+                if (inv.notes && inv.notes.trim() !== '') {
+                    document.getElementById('det-notes-wrapper').style.display = 'block';
+                    document.getElementById('det-notes').innerText = inv.notes;
+                } else {
+                    document.getElementById('det-notes-wrapper').style.display = 'none';
+                }
+
+                // Populate Payment History
+                const payBody = document.getElementById('det-payment-history-body');
+                payBody.innerHTML = '';
+                
+                const matchedPayments = currentPayments.filter(p => p.invoice_id == invoiceId);
+                if (matchedPayments.length > 0) {
+                    matchedPayments.forEach(p => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td style="background: transparent; border-bottom: 1px solid rgba(255,255,255,0.05); color: #fff;">${p.id}</td>
+                            <td style="background: transparent; border-bottom: 1px solid rgba(255,255,255,0.05); color: #fff;">${p.payment_date}</td>
+                            <td style="background: transparent; border-bottom: 1px solid rgba(255,255,255,0.05); color: #fff;">${p.payment_method}</td>
+                            <td style="background: transparent; border-bottom: 1px solid rgba(255,255,255,0.05); color: #fff;"><strong>${p.transaction_id}</strong></td>
+                            <td style="text-align: right; background: transparent; border-bottom: 1px solid rgba(255,255,255,0.05); color: #fff;">₹${parseFloat(p.amount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            <td style="background: transparent; border-bottom: 1px solid rgba(255,255,255,0.05); color: #fff;"><span class="badge active">${p.status}</span></td>
+                        `;
+                        payBody.appendChild(tr);
+                    });
+                } else {
+                    payBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: #94a3b8; font-style: italic; background: transparent;">No payment records found for this invoice.</td>
+                        </tr>
+                    `;
+                }
+
+                openModal('invoice-detail');
+            } catch (err) {
+                showToast('Failed to load invoice details modal', 'error');
+            }
+        }
+
+        function printInvoicePDF() {
+            const printContent = document.getElementById('invoice-print-container').innerHTML;
+            const printWindow = window.open('', '_blank', 'width=900,height=800');
+            
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Invoice Summary - Aurbis ERP</title>
+                    <style>
+                        body {
+                            font-family: 'Inter', system-ui, sans-serif;
+                            background: #ffffff;
+                            color: #1e293b;
+                            padding: 40px;
+                            font-size: 14px;
+                            line-height: 1.5;
+                        }
+                        h2, h4 { color: #0f172a; margin: 0; }
+                        p { margin: 5px 0; color: #475569; }
+                        strong { color: #0f172a; }
+                        .badge {
+                            display: inline-block;
+                            padding: 4px 8px;
+                            font-size: 11px;
+                            font-weight: 700;
+                            border-radius: 6px;
+                            text-transform: uppercase;
+                        }
+                        .badge.active { background: #dcfce7; color: #15803d; }
+                        .badge.pending { background: #fef3c7; color: #b45309; }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-top: 15px;
+                            font-size: 13px;
+                        }
+                        th {
+                            background: #f1f5f9;
+                            color: #475569;
+                            font-weight: 600;
+                            text-align: left;
+                            padding: 10px;
+                            border-bottom: 2px solid #e2e8f0;
+                        }
+                        td {
+                            padding: 10px;
+                            border-bottom: 1px solid #e2e8f0;
+                            color: #334155;
+                        }
+                        @media print {
+                            body { padding: 0; }
+                            button { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${printContent}
+                    <script>
+                        window.onload = function() {
+                            window.print();
+                        }
+                    <\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
         }
 
         // Open Invoice Modal and fetch clients
@@ -2828,6 +3231,12 @@
                             <td>${ann.target_audience}</td>
                             <td>${ann.created_at.substring(0, 10)}</td>
                             <td>
+                                <select class="status-select-inline" onchange="confirmAnnouncementStatusChange(${ann.id}, this, '${ann.status}')">
+                                    <option value="ACTIVE" ${ann.status === 'ACTIVE' ? 'selected' : ''}>Active</option>
+                                    <option value="ARCHIVED" ${ann.status === 'ARCHIVED' ? 'selected' : ''}>Archived</option>
+                                </select>
+                            </td>
+                            <td>
                                 <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openAnnouncementModal(${ann.id})">Edit</button>
                                 <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteAnnouncement(${ann.id})">Delete</button>
                             </td>
@@ -2847,7 +3256,14 @@
                             <td><strong>${ev.title}</strong><br/><span style="font-size:12px; color:var(--text-muted);">${ev.description || ''}</span></td>
                             <td>${ev.event_date}</td>
                             <td>${ev.location}</td>
-                            <td><span class="badge active">${ev.status}</span></td>
+                            <td>
+                                <select class="status-select-inline" onchange="confirmEventStatusChange(${ev.id}, this, '${ev.status}')">
+                                    <option value="UPCOMING" ${ev.status === 'UPCOMING' ? 'selected' : ''}>Upcoming</option>
+                                    <option value="ONGOING" ${ev.status === 'ONGOING' ? 'selected' : ''}>Ongoing</option>
+                                    <option value="COMPLETED" ${ev.status === 'COMPLETED' ? 'selected' : ''}>Completed</option>
+                                    <option value="CANCELLED" ${ev.status === 'CANCELLED' ? 'selected' : ''}>Cancelled</option>
+                                </select>
+                            </td>
                             <td>
                                 <button class="btn" style="padding: 4px 8px; font-size: 11px; margin-right: 5px;" onclick="openEventModal(${ev.id})">Edit</button>
                                 <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="deleteEvent(${ev.id})">Delete</button>
@@ -2858,6 +3274,50 @@
                 }
             } catch (err) {
                 showToast('Failed to load community feed', 'error');
+            }
+        }
+
+        async function confirmAnnouncementStatusChange(id, selectElement, oldStatus) {
+            const newStatus = selectElement.value;
+            if (newStatus === oldStatus) return;
+            if (!confirm(`Are you sure you want to change the announcement status from "${oldStatus}" to "${newStatus}"?`)) {
+                selectElement.value = oldStatus;
+                return;
+            }
+            try {
+                const res = await apiPut(`/community/announcements/${id}`, { status: newStatus });
+                if (res.success) {
+                    showToast('Announcement status updated successfully!');
+                    loadCommunityData();
+                } else {
+                    showToast(res.message, 'error');
+                    selectElement.value = oldStatus;
+                }
+            } catch (err) {
+                showToast('Failed to update announcement status.', 'error');
+                selectElement.value = oldStatus;
+            }
+        }
+
+        async function confirmEventStatusChange(id, selectElement, oldStatus) {
+            const newStatus = selectElement.value;
+            if (newStatus === oldStatus) return;
+            if (!confirm(`Are you sure you want to change the event status from "${oldStatus}" to "${newStatus}"?`)) {
+                selectElement.value = oldStatus;
+                return;
+            }
+            try {
+                const res = await apiPut(`/community/events/${id}`, { status: newStatus });
+                if (res.success) {
+                    showToast('Event status updated successfully!');
+                    loadCommunityData();
+                } else {
+                    showToast(res.message, 'error');
+                    selectElement.value = oldStatus;
+                }
+            } catch (err) {
+                showToast('Failed to update event status.', 'error');
+                selectElement.value = oldStatus;
             }
         }
 
