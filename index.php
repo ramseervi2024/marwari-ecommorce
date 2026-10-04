@@ -1,11 +1,12 @@
 <?php
 /**
  * RPS Digital World - Production Router & WordPress Bridge
- * Handles Homepage, Plugins Hub, 404 Routing, and WordPress API / Admin seamlessly.
+ * Handles Homepage, Plugins Hub, ERP Modules, E-Commerce, 404 Routing, and WordPress API / Admin seamlessly.
  */
 
 $request_uri = $_SERVER['REQUEST_URI'] ?? '/';
 $path = parse_url($request_uri, PHP_URL_PATH);
+$clean_path = trim($path, '/');
 
 // Helper function to render the custom branded 404 page
 function rps_render_404() {
@@ -558,7 +559,41 @@ function rps_render_404() {
     exit;
 }
 
-// 1. Route for ERP Plugins Hub Page (Light Theme with Online Testing URLs)
+// -------------------------------------------------------------
+// 1. ROUTE FOR STATIC ASSETS FALLBACK (CSS, JS, IMAGES)
+// -------------------------------------------------------------
+if ( preg_match('/\.(css|js|png|jpg|jpeg|gif|svg|woff|woff2|ttf|json|webp)$/i', $path) ) {
+    $asset_candidates = [
+        __DIR__ . $path,
+        __DIR__ . '/main' . $path,
+    ];
+    foreach ($asset_candidates as $cand) {
+        if ( file_exists($cand) ) {
+            $ext = strtolower(pathinfo($cand, PATHINFO_EXTENSION));
+            $mimes = [
+                'css' => 'text/css',
+                'js' => 'application/javascript',
+                'png' => 'image/png',
+                'jpg' => 'image/jpeg',
+                'jpeg' => 'image/jpeg',
+                'gif' => 'image/gif',
+                'svg' => 'image/svg+xml',
+                'woff' => 'font/woff',
+                'woff2' => 'font/woff2',
+                'ttf' => 'font/ttf',
+                'json' => 'application/json',
+                'webp' => 'image/webp'
+            ];
+            header('Content-Type: ' . ($mimes[$ext] ?? 'text/plain'));
+            readfile($cand);
+            exit;
+        }
+    }
+}
+
+// -------------------------------------------------------------
+// 2. ROUTE FOR ERP PLUGINS HUB PAGE (LIGHT THEME)
+// -------------------------------------------------------------
 if ( $path === '/plugins' || $path === '/plugins.html' || $path === '/main/plugins.html' ) {
     if ( file_exists(__DIR__ . '/main/plugins.html') ) {
         include __DIR__ . '/main/plugins.html';
@@ -1174,7 +1209,7 @@ if ( $path === '/plugins' || $path === '/plugins.html' || $path === '/main/plugi
             text-decoration: none;
             font-size: 0.82rem;
             font-weight: 600;
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 6px;
             transition: all 0.2s ease;
         }
@@ -1187,6 +1222,7 @@ if ( $path === '/plugins' || $path === '/plugins.html' || $path === '/main/plugi
 
         .pill-dash:hover {
             background: #ddd6fe;
+            transform: translateY(-1px);
         }
 
         .pill-docs {
@@ -1197,6 +1233,7 @@ if ( $path === '/plugins' || $path === '/plugins.html' || $path === '/main/plugi
 
         .pill-docs:hover {
             background: #bae6fd;
+            transform: translateY(-1px);
         }
 
         .pill-api {
@@ -1207,6 +1244,7 @@ if ( $path === '/plugins' || $path === '/plugins.html' || $path === '/main/plugi
 
         .pill-api:hover {
             background: #a7f3d0;
+            transform: translateY(-1px);
         }
 
         .url-row {
@@ -1709,7 +1747,7 @@ if ( $path === '/plugins' || $path === '/plugins.html' || $path === '/main/plugi
 
     <!-- Interactive Logic -->
     <script>
-        const pluginsData = [{"slug": "accounting-management", "name": "GST Billing Accounting ERP API", "desc": "Custom REST API GST Billing and Accounting ERP Management System. Includes sales, purchases, expenses tracking, double-entry accounts, journals, GST returns, e-invoicing, e-way bills, Swagger playground, and a glassmorphic dashboard view.", "version": "1.0.0", "has_zip": true, "zip_file": "accounting-management.zip", "category": "Finance & Accounts", "icon": "fas fa-file-invoice-dollar", "features": ["GST Returns", "E-Way Bill", "Ledger", "E-Invoice", "Double-Entry", "Swagger UI"], "dash_var": "accounting_management", "docs_var": "accounting_management_api_docs", "test_dash_url": "/?accounting_management=1", "test_docs_url": "/?accounting_management_api_docs=1", "test_api_url": "/wp-json/accounting-management/v1"}, {"slug": "agriculture-management", "name": "Agriculture Management", "desc": "Complete enterprise solution for agriculture management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Agriculture & Dairy", "icon": "fas fa-seedling", "features": ["Crop Yield", "Mandi Rates", "Fertilizer Stock", "Farmer Invoicing"], "dash_var": "", "docs_var": "", "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/agriculture-management/v1"}, {"slug": "coaching-management", "name": "Coaching Management", "desc": "Complete enterprise solution for coaching management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Education", "icon": "fas fa-chalkboard-teacher", "features": ["Batches", "Student Attendance", "Test Series", "Installment Fees"], "dash_var": "", "docs_var": "", "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/coaching-management/v1"}, {"slug": "construction-management", "name": "Construction ERP API", "desc": "Custom REST API ERP and Construction Management System (CMS) for construction companies, developers, and contractors. Includes database migrations, JWT auth, custom user roles, and Swagger OpenAPI docs.", "version": "1.0.0", "has_zip": true, "zip_file": "construction-management.zip", "category": "Real Estate & Infra", "icon": "fas fa-hard-hat", "features": ["Project Sites", "Material Purchase", "Labour Attendance", "Contractors"], "dash_var": "construction_management", "docs_var": "construction_management_api_docs", "test_dash_url": "/?construction_management=1", "test_docs_url": "/?construction_management_api_docs=1", "test_api_url": "/wp-json/construction-management/v1"}, {"slug": "courier-management", "name": "Courier Management", "desc": "Complete enterprise solution for courier management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Logistics & Fleet", "icon": "fas fa-shipping-fast", "features": ["Parcel Booking", "AWB Barcodes", "Delivery Runsheet", "COD Settlement"], "dash_var": "", "docs_var": "", "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/courier-management/v1"}, {"slug": "crm-management", "name": "CRM ERP API", "desc": "Decoupled custom REST API CRM ERP System. Manages Leads, Follow-ups, Quotations, Sales Pipelines (Kanban), WhatsApp reminders, Invoices, Payments, and custom capabilities. Exposes interactive Swagger UI and client dashboard.", "version": "1.0.0", "has_zip": true, "zip_file": "crm-management.zip", "category": "CRM & Sales", "icon": "fas fa-funnel-dollar", "features": ["Leads Kanban", "Quotations", "WhatsApp Alerts", "Invoices", "Sales Pipeline"], "dash_var": "crm_management", "docs_var": "crm_management_api_docs", "test_dash_url": "/?crm_management=1", "test_docs_url": "/?crm_management_api_docs=1", "test_api_url": "/wp-json/crm-management/v1"}, {"slug": "customer-manager", "name": "Customer Manager API", "desc": "Custom REST API for managing customers and providing statistics.", "version": "1.0.3", "has_zip": true, "zip_file": "customer-manager.zip", "category": "CRM & Sales", "icon": "fas fa-users-cog", "features": ["Customer CRM", "Analytics", "REST API", "Activity Logs"], "dash_var": "customer_management", "docs_var": "customer_api_docs", "test_dash_url": "/?customer_management=1", "test_docs_url": "/?customer_api_docs=1", "test_api_url": "/wp-json/customer-manager/v1"}, {"slug": "dairy-management", "name": "Dairy Management", "desc": "Complete enterprise solution for dairy management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Agriculture & Dairy", "icon": "fas fa-wine-bottle", "features": ["Milk Collection", "Fat/SNF Rates", "Route Distribution", "Payment Cycles"], "dash_var": "", "docs_var": "", "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/dairy-management/v1"}, {"slug": "ecommerce-management", "name": "Ecommerce Management", "desc": "Complete enterprise solution for ecommerce management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Retail & Commerce", "icon": "fas fa-shopping-cart", "features": ["Product Catalog", "Shopping Cart", "Payment Gateways", "Order Tracking"], "dash_var": "", "docs_var": "", "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/ecommerce-management/v1"}, {"slug": "fleet-track", "name": "FleetTrack Pro API", "desc": "Custom REST API for Fleet Management (vehicles, drivers, routes, trips, expenses, fuel, documents, dashboard, reports).", "version": "1.0.1", "has_zip": true, "zip_file": "fleet-track.zip", "category": "Logistics & Fleet", "icon": "fas fa-route", "features": ["GPS Trips", "Vehicle Documents", "Maintenance Logs", "Driver Expenses"], "dash_var": "fleet_track", "docs_var": "fleettrack_api_docs", "test_dash_url": "/?fleet_track=1", "test_docs_url": "/?fleettrack_api_docs=1", "test_api_url": "/wp-json/fleet-track/v1"}, {"slug": "garage-management", "name": "Garage Management", "desc": "Complete enterprise solution for garage management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Automotive", "icon": "fas fa-wrench", "features": ["Job Cards", "Vehicle History", "Spare Parts Billing", "Mechanic Payroll"], "dash_var": "", "docs_var": "", "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/garage-management/v1"}, {"slug": "garment-management", "name": "Garment Textile ERP API", "desc": "Custom REST API Garment and Textile Management System. Sales orders, fabric stock, cutting, stitching, finishing, worker attendance/payroll, quality control, wastage, dispatches, and diagnostics.", "version": "1.0.0", "has_zip": true, "zip_file": "garment-management.zip", "category": "Manufacturing", "icon": "fas fa-tshirt", "features": ["Fabric Stock", "Cutting & Stitching", "Worker Payroll", "Wastage", "Dispatch"], "dash_var": "garment_management", "docs_var": "garment_management_api_docs", "test_dash_url": "/?garment_management=1", "test_docs_url": "/?garment_management_api_docs=1", "test_api_url": "/wp-json/garment-management/v1"}, {"slug": "gym-management", "name": "Gym & Fitness ERP API", "desc": "Complete Gym Management System \u2014 Memberships, Renewals, Trainers, Diet Plans, Attendance, and Payments. REST API with JWT auth and light-theme SPA dashboard.", "version": "1.0.0", "has_zip": true, "zip_file": "gym-management.zip", "category": "Fitness & Wellness", "icon": "fas fa-dumbbell", "features": ["Member Passes", "Renewals", "Trainers", "Diet Plans", "Attendance"], "dash_var": "gym_erp", "docs_var": "gym_erp_docs", "test_dash_url": "/?gym_erp=1", "test_docs_url": "/?gym_erp_docs=1", "test_api_url": "/wp-json/gym-management/v1"}, {"slug": "hospital-management", "name": "Hospital ERP API", "desc": "Custom REST API ERP and Hospital Management System (HMS) for clinics, hospitals, and medical centers. Includes database migrations, JWT auth, custom user roles, and Swagger OpenAPI docs.", "version": "1.0.0", "has_zip": true, "zip_file": "hospital-management.zip", "category": "Healthcare", "icon": "fas fa-hospital-user", "features": ["OPD / IPD", "Doctor Schedules", "Pharmacy", "Lab Reports", "Billing"], "dash_var": "hospital_management", "docs_var": "hospital_management_api_docs", "test_dash_url": "/?hospital_management=1", "test_docs_url": "/?hospital_management_api_docs=1", "test_api_url": "/wp-json/hospital-management/v1"}, {"slug": "hotel-management", "name": "Hotel Management", "desc": "Complete enterprise solution for hotel management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Food & Hospitality", "icon": "fas fa-hotel", "features": ["Room Booking", "Check-In/Out", "Housekeeping", "Food Billing", "Folio"], "dash_var": "", "docs_var": "", "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/hotel-management/v1"}, {"slug": "hr-management", "name": "HR & Payroll ERP API", "desc": "Custom REST API HR & Payroll ERP System. Includes employee profiles, attendance check-in/out, leave requests, salary settings, PF/ESI deductions, payslip generators, Swagger UI, and a premium glassmorphic dashboard interface.", "version": "1.0.0", "has_zip": true, "zip_file": "hr-management.zip", "category": "HR & Enterprise", "icon": "fas fa-user-tie", "features": ["Attendance Clock", "Leave Requests", "PF/ESI Deductions", "Salary Slips"], "dash_var": "hr_management", "docs_var": "hr_management_api_docs", "test_dash_url": "/?hr_management=1", "test_docs_url": "/?hr_management_api_docs=1", "test_api_url": "/wp-json/hr-management/v1"}, {"slug": "inventory-management", "name": "Inventory Management ERP API", "desc": "Custom REST API Inventory Management ERP System. Includes stock, warehouses, purchase orders, low-stock alerts, supplier files, Swagger documentation, and a glassmorphic dashboard interface.", "version": "1.0.0", "has_zip": true, "zip_file": "inventory-management.zip", "category": "Logistics & Fleet", "icon": "fas fa-boxes-stacked", "features": ["Multi-Warehouse", "Low-Stock Alerts", "Purchase Orders", "Suppliers"], "dash_var": "inventory_management", "docs_var": "inventory_management_api_docs", "test_dash_url": "/?inventory_management=1", "test_docs_url": "/?inventory_management_api_docs=1", "test_api_url": "/wp-json/inventory-management/v1"}, {"slug": "jewellery-management", "name": "Jewellery ERP API", "desc": "Custom REST API Jewellery Management System. Gold/Silver bullion stock tracking, finished ornaments barcode scan, Karigar job details, buyback exchange rate calculator, billing invoices, repairs, and diagnostics.", "version": "1.0.0", "has_zip": true, "zip_file": "jewellery-management.zip", "category": "Retail & Luxury", "icon": "fas fa-gem", "features": ["Bullion Rates", "Karigar Job Cards", "Purity Barcode", "Old Gold Buyback"], "dash_var": "jewellery_management", "docs_var": "jewellery_management_api_docs", "test_dash_url": "/?jewellery_management=1", "test_docs_url": "/?jewellery_management_api_docs=1", "test_api_url": "/wp-json/jewellery-management/v1"}, {"slug": "manufacturing-management", "name": "Manufacturing ERP API", "desc": "Custom REST API Manufacturing Management System. Raw material tracking, Bill of Materials (BOM), work orders, job work, inventory, quality inspections, dispatch logistics, and machine utilization analytics.", "version": "1.0.0", "has_zip": true, "zip_file": "manufacturing-management.zip", "category": "Manufacturing", "icon": "fas fa-industry", "features": ["BOM Bill of Materials", "Work Orders", "Job Work", "QC Inspection", "Logistics"], "dash_var": "manufacturing_management", "docs_var": "manufacturing_management_api_docs", "test_dash_url": "/?manufacturing_management=1", "test_docs_url": "/?manufacturing_management_api_docs=1", "test_api_url": "/wp-json/manufacturing-management/v1"}, {"slug": "marwari-ecommorce", "name": "Marwari Ecommorce", "desc": "Complete enterprise solution for marwari ecommorce. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Retail & Commerce", "icon": "fas fa-store", "features": ["Regional Products", "Multi-Vendor", "Shipping Rates", "Customer Portal"], "dash_var": "", "docs_var": "", "test_dash_url": "/marwari-ecommorce/index.html", "test_docs_url": "", "test_api_url": "/wp-json/marwari-ecommorce/v1"}, {"slug": "multi-branch-management", "name": "Multi Branch Management", "desc": "Complete enterprise solution for multi branch management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "HR & Enterprise", "icon": "fas fa-network-wired", "features": ["Central HQ Dashboard", "Inter-Branch Transfers", "Consolidated P&L"], "dash_var": "", "docs_var": "", "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/multi-branch-management/v1"}, {"slug": "ngo-management", "name": "Ngo Management", "desc": "Complete enterprise solution for ngo management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Non-Profit", "icon": "fas fa-hands-helping", "features": ["Donation Receipts", "80G Certificates", "Donor Database", "Campaign Funds"], "dash_var": "", "docs_var": "", "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/ngo-management/v1"}, {"slug": "pathology-management", "name": "Pathology Management", "desc": "Complete enterprise solution for pathology management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Healthcare", "icon": "fas fa-microscope", "features": ["Lab Tests", "Sample Tracking", "Diagnostic Reports", "Doctor Referrals"], "dash_var": "", "docs_var": "", "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/pathology-management/v1"}, {"slug": "pharmacy-management", "name": "Pharmacy ERP API", "desc": "Complete Pharmacy Management System \u2014 Medicine Stock, Batch Tracking, Expiry Alerts, Billing with GST, Purchase Management, Supplier Management. REST API with JWT auth and light-theme SPA dashboard.", "version": "1.0.0", "has_zip": true, "zip_file": "pharmacy-management.zip", "category": "Healthcare", "icon": "fas fa-pills", "features": ["Batch Tracking", "Expiry Alerts", "GST Billing", "Suppliers", "Stock Alerts"], "dash_var": "pharmacy_erp", "docs_var": "pharmacy_erp_docs", "test_dash_url": "/?pharmacy_erp=1", "test_docs_url": "/?pharmacy_erp_docs=1", "test_api_url": "/wp-json/pharmacy-management/v1"}, {"slug": "real-estate-management", "name": "Real Estate CRM ERP API", "desc": "Custom REST API Real Estate CRM and ERP Management System for developers, builders, consultants, and brokers. Includes database migrations, JWT auth, custom user roles, and Swagger OpenAPI docs.", "version": "1.0.0", "has_zip": true, "zip_file": "real-estate-management.zip", "category": "Real Estate & Infra", "icon": "fas fa-building", "features": ["Property Listings", "Site Visits", "Booking Schedule", "Broker Commission"], "dash_var": "real_estate_management", "docs_var": "real_estate_management_api_docs", "test_dash_url": "/?real_estate_management=1", "test_docs_url": "/?real_estate_management_api_docs=1", "test_api_url": "/wp-json/real-estate-management/v1"}, {"slug": "restaurant-management", "name": "Restaurant ERP API", "desc": "Custom REST API Restaurant Management POS ERP. Dine-in table orders, Kitchen Display System (KDS), invoicing, recipes inventory deduction, takeaway deliveries, staff shifts, and analytics.", "version": "1.0.0", "has_zip": true, "zip_file": "restaurant-management.zip", "category": "Food & Hospitality", "icon": "fas fa-utensils", "features": ["Table Orders", "Kitchen Display KDS", "Recipes", "Billing", "Takeaway"], "dash_var": "restaurant_management", "docs_var": "restaurant_management_api_docs", "test_dash_url": "/?restaurant_management=1", "test_docs_url": "/?restaurant_management_api_docs=1", "test_api_url": "/wp-json/restaurant-management/v1"}, {"slug": "retail-pos", "name": "Retail POS ERP API", "desc": "Custom REST API ERP and Point of Sale (POS) system for retail stores, supermarkets, and multi-branch chains. Includes database migrations, JWT auth, custom user roles, barcode search, and Swagger OpenAPI docs.", "version": "1.0.0", "has_zip": true, "zip_file": "retail-pos.zip", "category": "Retail & Commerce", "icon": "fas fa-cash-register", "features": ["Barcode Scanner", "GST Invoicing", "Multi-Branch", "Suppliers", "Inventory"], "dash_var": "retail_pos", "docs_var": "retail_pos_api_docs", "test_dash_url": "/?retail_pos=1", "test_docs_url": "/?retail_pos_api_docs=1", "test_api_url": "/wp-json/retail-pos/v1"}, {"slug": "salon-management", "name": "Salon Management", "desc": "Complete enterprise solution for salon management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Fitness & Wellness", "icon": "fas fa-spa", "features": ["Appointment Booking", "Stylist Scheduling", "Billing", "Package Offers"], "dash_var": "", "docs_var": "", "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/salon-management/v1"}, {"slug": "school-managements", "name": "School Management API", "desc": "Custom REST API ERP and School Management System for schools, colleges, and coaching centers. Includes database migrations, JWT auth, custom user roles, and Swagger OpenAPI docs.", "version": "1.0.0", "has_zip": true, "zip_file": "school-managements.zip", "category": "Education", "icon": "fas fa-graduation-cap", "features": ["Student Admissions", "Fee Collection", "Exam Results", "Staff Payroll"], "dash_var": "school_management", "docs_var": "school_management_api_docs", "test_dash_url": "/?school_management=1", "test_docs_url": "/?school_management_api_docs=1", "test_api_url": "/wp-json/school-managements/v1"}, {"slug": "service-management", "name": "Service Business ERP API", "desc": "Custom REST API Service Business ERP System. Includes leads, quotations, jobs scheduling, technician workflows, AMC contracts, invoicing, payments, Swagger, and a premium glassmorphic client interface.", "version": "1.0.0", "has_zip": true, "zip_file": "service-management.zip", "category": "Services", "icon": "fas fa-tools", "features": ["Service Tickets", "Technician Dispatch", "AMC Contracts", "Invoicing"], "dash_var": "service_management", "docs_var": "service_management_api_docs", "test_dash_url": "/?service_management=1", "test_docs_url": "/?service_management_api_docs=1", "test_api_url": "/wp-json/service-management/v1"}, {"slug": "transport-management", "name": "Transport Logistics ERP API", "desc": "Custom REST API Transport and Logistics ERP Management System. Includes vehicles, trips, fuel tracking, maintenance logs, challans, driver salaries, deliveries, Swagger documentation, and a glassmorphic user dashboard.", "version": "1.0.0", "has_zip": true, "zip_file": "transport-management.zip", "category": "Logistics & Fleet", "icon": "fas fa-truck-moving", "features": ["Fleet Tracking", "Fuel Expenses", "Trip Challans", "Driver Payroll"], "dash_var": "transport_management", "docs_var": "transport_management_api_docs", "test_dash_url": "/?transport_management=1", "test_docs_url": "/?transport_management_api_docs=1", "test_api_url": "/wp-json/transport-management/v1"}, {"slug": "warehouse-management", "name": "Warehouse Management", "desc": "Complete enterprise solution for warehouse management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Logistics & Fleet", "icon": "fas fa-warehouse", "features": ["Pallet Locations", "Bin Storage", "Stock In/Out", "Dispatch"], "dash_var": "", "docs_var": "", "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/warehouse-management/v1"}, {"slug": "wholesale-management", "name": "Wholesale Management", "desc": "Complete enterprise solution for wholesale management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Retail & Commerce", "icon": "fas fa-boxes", "features": ["Bulk Pricing", "Credit Limits", "Purchase Orders", "Dispatch Invoices"], "dash_var": "", "docs_var": "", "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/wholesale-management/v1"}, {"slug": "workspace-erp", "name": "Workspace ERP API", "desc": "Aurbis Workspace Management ERP - Complete REST API backend for managed office spaces, coworking, enterprise workspaces, facility operations, billing, sustainability, and mobile app integration.", "version": "1.0.0", "has_zip": true, "zip_file": "workspace-erp.zip", "category": "Real Estate & Infra", "icon": "fas fa-briefcase", "features": ["Coworking Desks", "Meeting Rooms", "Facility Management", "Billing & App"], "dash_var": "workspace_erp", "docs_var": "workspace_erp_docs", "test_dash_url": "/?workspace_erp=1", "test_docs_url": "/?workspace_erp_docs=1", "test_api_url": "/wp-json/workspace-erp/v1"}];
+        const pluginsData = [{"slug": "accounting-management", "name": "GST Billing Accounting ERP API", "desc": "Custom REST API GST Billing and Accounting ERP Management System. Includes sales, purchases, expenses tracking, double-entry accounts, journals, GST returns, e-invoicing, e-way bills, Swagger playground, and a glassmorphic dashboard view.", "version": "1.0.0", "has_zip": true, "zip_file": "accounting-management.zip", "category": "Finance & Accounts", "icon": "fas fa-file-invoice-dollar", "features": ["GST Returns", "E-Way Bill", "Ledger", "E-Invoice", "Double-Entry", "Swagger UI"], "test_dash_url": "/accounting-management", "test_docs_url": "/accounting-management-api-docs", "test_api_url": "/wp-json/accounting-management/v1"}, {"slug": "agriculture-management", "name": "Agriculture Management", "desc": "Complete enterprise solution for agriculture management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Agriculture & Dairy", "icon": "fas fa-seedling", "features": ["Crop Yield", "Mandi Rates", "Fertilizer Stock", "Farmer Invoicing"], "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/agriculture-management/v1"}, {"slug": "coaching-management", "name": "Coaching Management", "desc": "Complete enterprise solution for coaching management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Education", "icon": "fas fa-chalkboard-teacher", "features": ["Batches", "Student Attendance", "Test Series", "Installment Fees"], "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/coaching-management/v1"}, {"slug": "construction-management", "name": "Construction ERP API", "desc": "Custom REST API ERP and Construction Management System (CMS) for construction companies, developers, and contractors. Includes database migrations, JWT auth, custom user roles, and Swagger OpenAPI docs.", "version": "1.0.0", "has_zip": true, "zip_file": "construction-management.zip", "category": "Real Estate & Infra", "icon": "fas fa-hard-hat", "features": ["Project Sites", "Material Purchase", "Labour Attendance", "Contractors"], "test_dash_url": "/construction-management", "test_docs_url": "/construction-management-api-docs", "test_api_url": "/wp-json/construction-management/v1"}, {"slug": "courier-management", "name": "Courier Management", "desc": "Complete enterprise solution for courier management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Logistics & Fleet", "icon": "fas fa-shipping-fast", "features": ["Parcel Booking", "AWB Barcodes", "Delivery Runsheet", "COD Settlement"], "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/courier-management/v1"}, {"slug": "crm-management", "name": "CRM ERP API", "desc": "Decoupled custom REST API CRM ERP System. Manages Leads, Follow-ups, Quotations, Sales Pipelines (Kanban), WhatsApp reminders, Invoices, Payments, and custom capabilities. Exposes interactive Swagger UI and client dashboard.", "version": "1.0.0", "has_zip": true, "zip_file": "crm-management.zip", "category": "CRM & Sales", "icon": "fas fa-funnel-dollar", "features": ["Leads Kanban", "Quotations", "WhatsApp Alerts", "Invoices", "Sales Pipeline"], "test_dash_url": "/crm-management", "test_docs_url": "/crm-management-api-docs", "test_api_url": "/wp-json/crm/v1"}, {"slug": "customer-manager", "name": "Customer Manager API", "desc": "Custom REST API for managing customers and providing statistics.", "version": "1.0.3", "has_zip": true, "zip_file": "customer-manager.zip", "category": "CRM & Sales", "icon": "fas fa-users-cog", "features": ["Customer CRM", "Analytics", "REST API", "Activity Logs"], "test_dash_url": "/customer-management", "test_docs_url": "/customer-api-docs", "test_api_url": "/wp-json/customer-manager/v1"}, {"slug": "dairy-management", "name": "Dairy Management", "desc": "Complete enterprise solution for dairy management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Agriculture & Dairy", "icon": "fas fa-wine-bottle", "features": ["Milk Collection", "Fat/SNF Rates", "Route Distribution", "Payment Cycles"], "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/dairy-management/v1"}, {"slug": "ecommerce-management", "name": "Ecommerce Management", "desc": "Complete enterprise solution for ecommerce management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Retail & Commerce", "icon": "fas fa-shopping-cart", "features": ["Product Catalog", "Shopping Cart", "Payment Gateways", "Order Tracking"], "test_dash_url": "/main/ShopVibe/index.html", "test_docs_url": "/main/Luxury-Ecommerce/index.html", "test_api_url": "/main/Digital-Store/index.html"}, {"slug": "fleet-track", "name": "FleetTrack Pro API", "desc": "Custom REST API for Fleet Management (vehicles, drivers, routes, trips, expenses, fuel, documents, dashboard, reports).", "version": "1.0.1", "has_zip": true, "zip_file": "fleet-track.zip", "category": "Logistics & Fleet", "icon": "fas fa-route", "features": ["GPS Trips", "Vehicle Documents", "Maintenance Logs", "Driver Expenses"], "test_dash_url": "/fleet-track", "test_docs_url": "/fleettrack-api-docs", "test_api_url": "/wp-json/fleet-track/v1"}, {"slug": "garage-management", "name": "Garage Management", "desc": "Complete enterprise solution for garage management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Automotive", "icon": "fas fa-wrench", "features": ["Job Cards", "Vehicle History", "Spare Parts Billing", "Mechanic Payroll"], "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/garage-management/v1"}, {"slug": "garment-management", "name": "Garment Textile ERP API", "desc": "Custom REST API Garment and Textile Management System. Sales orders, fabric stock, cutting, stitching, finishing, worker attendance/payroll, quality control, wastage, dispatches, and diagnostics.", "version": "1.0.0", "has_zip": true, "zip_file": "garment-management.zip", "category": "Manufacturing", "icon": "fas fa-tshirt", "features": ["Fabric Stock", "Cutting & Stitching", "Worker Payroll", "Wastage", "Dispatch"], "test_dash_url": "/garment-management", "test_docs_url": "/garment-management-api-docs", "test_api_url": "/wp-json/garment-management/v1"}, {"slug": "gym-management", "name": "Gym & Fitness ERP API", "desc": "Complete Gym Management System \u2014 Memberships, Renewals, Trainers, Diet Plans, Attendance, and Payments. REST API with JWT auth and light-theme SPA dashboard.", "version": "1.0.0", "has_zip": true, "zip_file": "gym-management.zip", "category": "Fitness & Wellness", "icon": "fas fa-dumbbell", "features": ["Member Passes", "Renewals", "Trainers", "Diet Plans", "Attendance"], "test_dash_url": "/gym-management", "test_docs_url": "/gym-management-docs", "test_api_url": "/wp-json/gym/v1"}, {"slug": "hospital-management", "name": "Hospital ERP API", "desc": "Custom REST API ERP and Hospital Management System (HMS) for clinics, hospitals, and medical centers. Includes database migrations, JWT auth, custom user roles, and Swagger OpenAPI docs.", "version": "1.0.0", "has_zip": true, "zip_file": "hospital-management.zip", "category": "Healthcare", "icon": "fas fa-hospital-user", "features": ["OPD / IPD", "Doctor Schedules", "Pharmacy", "Lab Reports", "Billing"], "test_dash_url": "/hospital-management", "test_docs_url": "/hospital-management-api-docs", "test_api_url": "/wp-json/hospital-management/v1"}, {"slug": "hotel-management", "name": "Hotel Management", "desc": "Complete enterprise solution for hotel management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Food & Hospitality", "icon": "fas fa-hotel", "features": ["Room Booking", "Check-In/Out", "Housekeeping", "Food Billing", "Folio"], "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/hotel-management/v1"}, {"slug": "hr-management", "name": "HR & Payroll ERP API", "desc": "Custom REST API HR & Payroll ERP System. Includes employee profiles, attendance check-in/out, leave requests, salary settings, PF/ESI deductions, payslip generators, Swagger UI, and a premium glassmorphic dashboard interface.", "version": "1.0.0", "has_zip": true, "zip_file": "hr-management.zip", "category": "HR & Enterprise", "icon": "fas fa-user-tie", "features": ["Attendance Clock", "Leave Requests", "PF/ESI Deductions", "Salary Slips"], "test_dash_url": "/hr-management", "test_docs_url": "/hr-management-api-docs", "test_api_url": "/wp-json/hr-management/v1"}, {"slug": "inventory-management", "name": "Inventory Management ERP API", "desc": "Custom REST API Inventory Management ERP System. Includes stock, warehouses, purchase orders, low-stock alerts, supplier files, Swagger documentation, and a glassmorphic dashboard interface.", "version": "1.0.0", "has_zip": true, "zip_file": "inventory-management.zip", "category": "Logistics & Fleet", "icon": "fas fa-boxes-stacked", "features": ["Multi-Warehouse", "Low-Stock Alerts", "Purchase Orders", "Suppliers"], "test_dash_url": "/inventory-management", "test_docs_url": "/inventory-management-api-docs", "test_api_url": "/wp-json/inventory-management/v1"}, {"slug": "jewellery-management", "name": "Jewellery ERP API", "desc": "Custom REST API Jewellery Management System. Gold/Silver bullion stock tracking, finished ornaments barcode scan, Karigar job details, buyback exchange rate calculator, billing invoices, repairs, and diagnostics.", "version": "1.0.0", "has_zip": true, "zip_file": "jewellery-management.zip", "category": "Retail & Luxury", "icon": "fas fa-gem", "features": ["Bullion Rates", "Karigar Job Cards", "Purity Barcode", "Old Gold Buyback"], "test_dash_url": "/jewellery-management", "test_docs_url": "/jewellery-management-api-docs", "test_api_url": "/wp-json/jewellery-management/v1"}, {"slug": "manufacturing-management", "name": "Manufacturing ERP API", "desc": "Custom REST API Manufacturing Management System. Raw material tracking, Bill of Materials (BOM), work orders, job work, inventory, quality inspections, dispatch logistics, and machine utilization analytics.", "version": "1.0.0", "has_zip": true, "zip_file": "manufacturing-management.zip", "category": "Manufacturing", "icon": "fas fa-industry", "features": ["BOM Bill of Materials", "Work Orders", "Job Work", "QC Inspection", "Logistics"], "test_dash_url": "/manufacturing-management", "test_docs_url": "/manufacturing-management-api-docs", "test_api_url": "/wp-json/manufacturing-management/v1"}, {"slug": "marwari-ecommorce", "name": "Marwari Ecommorce", "desc": "Complete enterprise solution for marwari ecommorce. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": true, "zip_file": "marwari-ecommorce.zip", "category": "Retail & Commerce", "icon": "fas fa-store", "features": ["Regional Products", "Multi-Vendor", "Shipping Rates", "Customer Portal"], "test_dash_url": "/main/ShopVibe/index.html", "test_docs_url": "/main/Luxury-Ecommerce/index.html", "test_api_url": "/main/Digital-Store/index.html"}, {"slug": "multi-branch-management", "name": "Multi Branch Management", "desc": "Complete enterprise solution for multi branch management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "HR & Enterprise", "icon": "fas fa-network-wired", "features": ["Central HQ Dashboard", "Inter-Branch Transfers", "Consolidated P&L"], "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/multi-branch-management/v1"}, {"slug": "ngo-management", "name": "Ngo Management", "desc": "Complete enterprise solution for ngo management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Non-Profit", "icon": "fas fa-hands-helping", "features": ["Donation Receipts", "80G Certificates", "Donor Database", "Campaign Funds"], "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/ngo-management/v1"}, {"slug": "pathology-management", "name": "Pathology Management", "desc": "Complete enterprise solution for pathology management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Healthcare", "icon": "fas fa-microscope", "features": ["Lab Tests", "Sample Tracking", "Diagnostic Reports", "Doctor Referrals"], "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/pathology-management/v1"}, {"slug": "pharmacy-management", "name": "Pharmacy ERP API", "desc": "Complete Pharmacy Management System \u2014 Medicine Stock, Batch Tracking, Expiry Alerts, Billing with GST, Purchase Management, Supplier Management. REST API with JWT auth and light-theme SPA dashboard.", "version": "1.0.0", "has_zip": true, "zip_file": "pharmacy-management.zip", "category": "Healthcare", "icon": "fas fa-pills", "features": ["Batch Tracking", "Expiry Alerts", "GST Billing", "Suppliers", "Stock Alerts"], "test_dash_url": "/pharmacy-erp", "test_docs_url": "/pharmacy-erp-docs", "test_api_url": "/wp-json/pharmacy/v1"}, {"slug": "real-estate-management", "name": "Real Estate CRM ERP API", "desc": "Custom REST API Real Estate CRM and ERP Management System for developers, builders, consultants, and brokers. Includes database migrations, JWT auth, custom user roles, and Swagger OpenAPI docs.", "version": "1.0.0", "has_zip": true, "zip_file": "real-estate-management.zip", "category": "Real Estate & Infra", "icon": "fas fa-building", "features": ["Property Listings", "Site Visits", "Booking Schedule", "Broker Commission"], "test_dash_url": "/real-estate-management", "test_docs_url": "/real-estate-management-api-docs", "test_api_url": "/wp-json/real-estate-management/v1"}, {"slug": "restaurant-management", "name": "Restaurant ERP API", "desc": "Custom REST API Restaurant Management POS ERP. Dine-in table orders, Kitchen Display System (KDS), invoicing, recipes inventory deduction, takeaway deliveries, staff shifts, and analytics.", "version": "1.0.0", "has_zip": true, "zip_file": "restaurant-management.zip", "category": "Food & Hospitality", "icon": "fas fa-utensils", "features": ["Table Orders", "Kitchen Display KDS", "Recipes", "Billing", "Takeaway"], "test_dash_url": "/restaurant-management", "test_docs_url": "/restaurant-management-api-docs", "test_api_url": "/wp-json/restaurant-management/v1"}, {"slug": "retail-pos", "name": "Retail POS ERP API", "desc": "Custom REST API ERP and Point of Sale (POS) system for retail stores, supermarkets, and multi-branch chains. Includes database migrations, JWT auth, custom user roles, barcode search, and Swagger OpenAPI docs.", "version": "1.0.0", "has_zip": true, "zip_file": "retail-pos.zip", "category": "Retail & Commerce", "icon": "fas fa-cash-register", "features": ["Barcode Scanner", "GST Invoicing", "Multi-Branch", "Suppliers", "Inventory"], "test_dash_url": "/retail-pos", "test_docs_url": "/retail-pos-api-docs", "test_api_url": "/wp-json/retail-pos/v1"}, {"slug": "salon-management", "name": "Salon Management", "desc": "Complete enterprise solution for salon management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Fitness & Wellness", "icon": "fas fa-spa", "features": ["Appointment Booking", "Stylist Scheduling", "Billing", "Package Offers"], "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/salon-management/v1"}, {"slug": "school-managements", "name": "School Management API", "desc": "Custom REST API ERP and School Management System for schools, colleges, and coaching centers. Includes database migrations, JWT auth, custom user roles, and Swagger OpenAPI docs.", "version": "1.0.0", "has_zip": true, "zip_file": "school-managements.zip", "category": "Education", "icon": "fas fa-graduation-cap", "features": ["Student Admissions", "Fee Collection", "Exam Results", "Staff Payroll"], "test_dash_url": "/school-management", "test_docs_url": "/school-management-api-docs", "test_api_url": "/wp-json/school-managements/v1"}, {"slug": "service-management", "name": "Service Business ERP API", "desc": "Custom REST API Service Business ERP System. Includes leads, quotations, jobs scheduling, technician workflows, AMC contracts, invoicing, payments, Swagger, and a premium glassmorphic client interface.", "version": "1.0.0", "has_zip": true, "zip_file": "service-management.zip", "category": "Services", "icon": "fas fa-tools", "features": ["Service Tickets", "Technician Dispatch", "AMC Contracts", "Invoicing"], "test_dash_url": "/service-management", "test_docs_url": "/service-management-api-docs", "test_api_url": "/wp-json/service-management/v1"}, {"slug": "transport-management", "name": "Transport Logistics ERP API", "desc": "Custom REST API Transport and Logistics ERP Management System. Includes vehicles, trips, fuel tracking, maintenance logs, challans, driver salaries, deliveries, Swagger documentation, and a glassmorphic user dashboard.", "version": "1.0.0", "has_zip": true, "zip_file": "transport-management.zip", "category": "Logistics & Fleet", "icon": "fas fa-truck-moving", "features": ["Fleet Tracking", "Fuel Expenses", "Trip Challans", "Driver Payroll"], "test_dash_url": "/transport-management", "test_docs_url": "/transport-management-api-docs", "test_api_url": "/wp-json/transport-management/v1"}, {"slug": "warehouse-management", "name": "Warehouse Management", "desc": "Complete enterprise solution for warehouse management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Logistics & Fleet", "icon": "fas fa-warehouse", "features": ["Pallet Locations", "Bin Storage", "Stock In/Out", "Dispatch"], "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/warehouse-management/v1"}, {"slug": "wholesale-management", "name": "Wholesale Management", "desc": "Complete enterprise solution for wholesale management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Retail & Commerce", "icon": "fas fa-boxes", "features": ["Bulk Pricing", "Credit Limits", "Purchase Orders", "Dispatch Invoices"], "test_dash_url": "", "test_docs_url": "", "test_api_url": "/wp-json/wholesale-management/v1"}, {"slug": "workspace-erp", "name": "Workspace ERP API", "desc": "Aurbis Workspace Management ERP - Complete REST API backend for managed office spaces, coworking, enterprise workspaces, facility operations, billing, sustainability, and mobile app integration.", "version": "1.0.0", "has_zip": true, "zip_file": "workspace-erp.zip", "category": "Real Estate & Infra", "icon": "fas fa-briefcase", "features": ["Coworking Desks", "Meeting Rooms", "Facility Management", "Billing & App"], "test_dash_url": "/workspace-erp", "test_docs_url": "/workspace-erp-docs", "test_api_url": "/wp-json/workspace-erp/v1"}];
 
         let currentCategory = 'ALL';
         let searchQuery = '';
@@ -1769,12 +1807,12 @@ if ( $path === '/plugins' || $path === '/plugins.html' || $path === '/main/plugi
                 // Online Test URLs pills
                 let testUrlsHtml = '';
                 if (p.test_dash_url) {
-                    testUrlsHtml += `<a href="${p.test_dash_url}" target="_blank" class="live-link-pill pill-dash" title="Open live dashboard in new tab"><i class="fas fa-external-link-alt"></i> Dashboard</a>`;
+                    testUrlsHtml += `<a href="${p.test_dash_url}" target="_blank" class="live-link-pill pill-dash" title="Open live dashboard in new tab"><i class="fas fa-external-link-alt"></i> Live Demo</a>`;
                 }
                 if (p.test_docs_url) {
-                    testUrlsHtml += `<a href="${p.test_docs_url}" target="_blank" class="live-link-pill pill-docs" title="Open Swagger API documentation in new tab"><i class="fas fa-book-open"></i> Swagger Docs</a>`;
+                    testUrlsHtml += `<a href="${p.test_docs_url}" target="_blank" class="live-link-pill pill-docs" title="Open Swagger API documentation in new tab"><i class="fas fa-book-open"></i> Docs</a>`;
                 }
-                testUrlsHtml += `<a href="${p.test_api_url}" target="_blank" class="live-link-pill pill-api" title="Test raw JSON REST API"><i class="fas fa-bolt"></i> REST API</a>`;
+                testUrlsHtml += `<a href="${p.test_api_url}" target="_blank" class="live-link-pill pill-api" title="Test raw JSON REST API"><i class="fas fa-bolt"></i> API</a>`;
 
                 const zipBtn = p.has_zip 
                     ? `<a href="/${p.zip_file}" class="btn-card btn-zip" download title="Download official plugin zip package"><i class="fas fa-download"></i> .ZIP</a>`
@@ -1801,7 +1839,7 @@ if ( $path === '/plugins' || $path === '/plugins.html' || $path === '/main/plugi
                         <div class="online-urls-box">
                             <div class="url-box-header">
                                 <span><i class="fas fa-link" style="color: #6366f1; margin-right: 4px;"></i> Online Test Links</span>
-                                <span style="font-size: 0.7rem; color: #10b981;"><i class="fas fa-circle" style="font-size: 0.5rem;"></i> Ready</span>
+                                <span style="font-size: 0.7rem; color: #10b981;"><i class="fas fa-circle" style="font-size: 0.5rem;"></i> Active</span>
                             </div>
                             <div class="url-row">
                                 ${testUrlsHtml}
@@ -1985,7 +2023,221 @@ if ( $path === '/plugins' || $path === '/plugins.html' || $path === '/main/plugi
     exit;
 }
 
-// 2. Check if the request is trying to access the root domain (the home page)
+// -------------------------------------------------------------
+// 3. ROUTE FOR E-COMMERCE & SHOWCASE PLATFORMS
+// -------------------------------------------------------------
+$ecom_stores = [
+    'marwari-ecommorce' => ['marwari-ecommorce/index.html', 'main/marwari-ecommorce/index.html', 'main/ShopVibe/index.html'],
+    'ecommerce' => ['main/ShopVibe/index.html', 'main/Luxury-Ecommerce/index.html'],
+    'ecommerce-management' => ['main/ShopVibe/index.html'],
+    'ShopVibe' => ['main/ShopVibe/index.html'],
+    'shopvibe' => ['main/ShopVibe/index.html'],
+    'Luxury-Ecommerce' => ['main/Luxury-Ecommerce/index.html'],
+    'luxury-ecommerce' => ['main/Luxury-Ecommerce/index.html'],
+    'Digital-Store' => ['main/Digital-Store/index.html'],
+    'digital-store' => ['main/Digital-Store/index.html'],
+    'Smart-Kirana-Store' => ['main/Smart-Kirana-Store/index.html'],
+    'smart-kirana-store' => ['main/Smart-Kirana-Store/index.html'],
+    'fashion-clothing-store' => ['main/fashion-clothing-store/index.html'],
+    'jewelry-accessories-store' => ['main/jewelry-accessories-store/index.html'],
+    'Footwear' => ['main/Footwear/index.html'],
+    'footwear' => ['main/Footwear/index.html'],
+    'ARIA-Fashion' => ['main/ARIA-Fashion/index.html'],
+    'aria-fashion' => ['main/ARIA-Fashion/index.html'],
+    'Jewelry-website' => ['main/Jewelry-website/index.html'],
+    'jewelry-website' => ['main/Jewelry-website/index.html'],
+    'Marwari-Food' => ['main/Marwari-Food/index.html'],
+    'marwari-food' => ['main/Marwari-Food/index.html']
+];
+
+$matched_ecom = null;
+if ( isset($ecom_stores[$clean_path]) ) {
+    $matched_ecom = $ecom_stores[$clean_path];
+} elseif ( isset($ecom_stores[strtolower($clean_path)]) ) {
+    $matched_ecom = $ecom_stores[strtolower($clean_path)];
+}
+
+if ( $matched_ecom ) {
+    foreach ($matched_ecom as $rel_file) {
+        $full_file = __DIR__ . '/' . $rel_file;
+        if ( file_exists($full_file) ) {
+            // When serving from main/ subfolder, redirect to /main/... so that relative CSS, JS, and images load correctly
+            if ( strpos($rel_file, 'main/') === 0 ) {
+                header('Location: /' . $rel_file, true, 302);
+                exit;
+            }
+            include $full_file;
+            exit;
+        }
+    }
+    // Fallback to ShopVibe showcase if specific file missing
+    if ( file_exists(__DIR__ . '/main/ShopVibe/index.html') ) {
+        header('Location: /main/ShopVibe/index.html', true, 302);
+        exit;
+    }
+}
+
+// -------------------------------------------------------------
+// 4. ROUTE FOR DIRECT ERP PLUGIN DASHBOARDS & SWAGGER DOCS
+// -------------------------------------------------------------
+$erp_modules = [
+    // Dashboards
+    'crm-management' => ['name' => 'CRM ERP API', 'dir' => 'crm-management', 'file' => 'views/dashboard-view.php', 'var' => 'crm_management'],
+    'hospital-management' => ['name' => 'Hospital ERP API', 'dir' => 'hospital-management', 'file' => 'views/dashboard-view.php', 'var' => 'hospital_management'],
+    'accounting-management' => ['name' => 'Accounting ERP API', 'dir' => 'accounting-management', 'file' => 'views/dashboard-view.php', 'var' => 'accounting_management'],
+    'retail-pos' => ['name' => 'Retail POS ERP API', 'dir' => 'retail-pos', 'file' => 'views/dashboard-view.php', 'var' => 'retail_pos'],
+    'restaurant-management' => ['name' => 'Restaurant ERP API', 'dir' => 'restaurant-management', 'file' => 'views/dashboard-view.php', 'var' => 'restaurant_management'],
+    'inventory-management' => ['name' => 'Inventory ERP API', 'dir' => 'inventory-management', 'file' => 'views/dashboard-view.php', 'var' => 'inventory_management'],
+    'hr-management' => ['name' => 'HR & Payroll ERP API', 'dir' => 'hr-management', 'file' => 'views/dashboard-view.php', 'var' => 'hr_management'],
+    'garment-management' => ['name' => 'Garment Textile ERP API', 'dir' => 'garment-management', 'file' => 'views/dashboard-view.php', 'var' => 'garment_management'],
+    'jewellery-management' => ['name' => 'Jewellery ERP API', 'dir' => 'jewellery-management', 'file' => 'views/dashboard-view.php', 'var' => 'jewellery_management'],
+    'manufacturing-management' => ['name' => 'Manufacturing ERP API', 'dir' => 'manufacturing-management', 'file' => 'views/dashboard-view.php', 'var' => 'manufacturing_management'],
+    'pharmacy-management' => ['name' => 'Pharmacy ERP API', 'dir' => 'pharmacy-management', 'file' => 'views/dashboard-view.php', 'var' => 'pharmacy_erp'],
+    'pharmacy-erp' => ['name' => 'Pharmacy ERP API', 'dir' => 'pharmacy-management', 'file' => 'views/dashboard-view.php', 'var' => 'pharmacy_erp'],
+    'gym-management' => ['name' => 'Gym Fitness ERP API', 'dir' => 'gym-management', 'file' => 'views/dashboard-view.php', 'var' => 'gym_erp'],
+    'real-estate-management' => ['name' => 'Real Estate ERP API', 'dir' => 'real-estate-management', 'file' => 'views/dashboard-view.php', 'var' => 'real_estate_management'],
+    'school-managements' => ['name' => 'School ERP API', 'dir' => 'school-managements', 'file' => 'views/dashboard-view.php', 'var' => 'school_management'],
+    'school-management' => ['name' => 'School ERP API', 'dir' => 'school-managements', 'file' => 'views/dashboard-view.php', 'var' => 'school_management'],
+    'service-management' => ['name' => 'Service Business ERP API', 'dir' => 'service-management', 'file' => 'views/dashboard-view.php', 'var' => 'service_management'],
+    'transport-management' => ['name' => 'Transport Logistics ERP API', 'dir' => 'transport-management', 'file' => 'views/dashboard-view.php', 'var' => 'transport_management'],
+    'workspace-erp' => ['name' => 'Workspace ERP API', 'dir' => 'workspace-erp', 'file' => 'views/dashboard-view.php', 'var' => 'workspace_erp'],
+    'customer-manager' => ['name' => 'Customer Manager API', 'dir' => 'customer-manager', 'file' => 'views/customer-management.php', 'var' => 'customer_management'],
+    'customer-management' => ['name' => 'Customer Manager API', 'dir' => 'customer-manager', 'file' => 'views/customer-management.php', 'var' => 'customer_management'],
+    'fleet-track' => ['name' => 'FleetTrack Pro API', 'dir' => 'fleet-track', 'file' => 'views/fleet-dashboard.php', 'var' => 'fleet_track'],
+    'construction-management' => ['name' => 'Construction ERP API', 'dir' => 'construction-management', 'file' => 'views/dashboard-view.php', 'var' => 'construction_management'],
+
+    // Swagger API Docs
+    'crm-management-api-docs' => ['name' => 'CRM ERP API Docs', 'dir' => 'crm-management', 'file' => 'swagger/index.php'],
+    'hospital-management-api-docs' => ['name' => 'Hospital ERP API Docs', 'dir' => 'hospital-management', 'file' => 'swagger/index.php'],
+    'accounting-management-api-docs' => ['name' => 'Accounting ERP API Docs', 'dir' => 'accounting-management', 'file' => 'swagger/index.php'],
+    'retail-pos-api-docs' => ['name' => 'Retail POS API Docs', 'dir' => 'retail-pos', 'file' => 'swagger/index.php'],
+    'restaurant-management-api-docs' => ['name' => 'Restaurant ERP API Docs', 'dir' => 'restaurant-management', 'file' => 'swagger/index.php'],
+    'inventory-management-api-docs' => ['name' => 'Inventory ERP API Docs', 'dir' => 'inventory-management', 'file' => 'swagger/index.php'],
+    'hr-management-api-docs' => ['name' => 'HR ERP API Docs', 'dir' => 'hr-management', 'file' => 'swagger/index.php'],
+    'garment-management-api-docs' => ['name' => 'Garment ERP API Docs', 'dir' => 'garment-management', 'file' => 'swagger/index.php'],
+    'jewellery-management-api-docs' => ['name' => 'Jewellery ERP API Docs', 'dir' => 'jewellery-management', 'file' => 'swagger/index.php'],
+    'manufacturing-management-api-docs' => ['name' => 'Manufacturing ERP API Docs', 'dir' => 'manufacturing-management', 'file' => 'swagger/index.php'],
+    'pharmacy-erp-docs' => ['name' => 'Pharmacy ERP API Docs', 'dir' => 'pharmacy-management', 'file' => 'swagger/index.php'],
+    'pharmacy-management-docs' => ['name' => 'Pharmacy ERP API Docs', 'dir' => 'pharmacy-management', 'file' => 'swagger/index.php'],
+    'gym-management-docs' => ['name' => 'Gym ERP API Docs', 'dir' => 'gym-management', 'file' => 'swagger/index.php'],
+    'real-estate-management-api-docs' => ['name' => 'Real Estate ERP API Docs', 'dir' => 'real-estate-management', 'file' => 'swagger/index.php'],
+    'school-management-api-docs' => ['name' => 'School ERP API Docs', 'dir' => 'school-managements', 'file' => 'swagger/index.php'],
+    'service-management-api-docs' => ['name' => 'Service ERP API Docs', 'dir' => 'service-management', 'file' => 'swagger/index.php'],
+    'transport-management-api-docs' => ['name' => 'Transport ERP API Docs', 'dir' => 'transport-management', 'file' => 'swagger/index.php'],
+    'workspace-erp-docs' => ['name' => 'Workspace ERP API Docs', 'dir' => 'workspace-erp', 'file' => 'swagger/index.php'],
+    'customer-api-docs' => ['name' => 'Customer API Docs', 'dir' => 'customer-manager', 'file' => 'swagger/index.php'],
+    'fleettrack-api-docs' => ['name' => 'FleetTrack API Docs', 'dir' => 'fleet-track', 'file' => 'swagger/index.php'],
+    'construction-management-api-docs' => ['name' => 'Construction ERP API Docs', 'dir' => 'construction-management', 'file' => 'swagger/index.php']
+];
+
+// Check direct query var requests like ?crm_management=1
+$matched_erp = null;
+if ( isset($erp_modules[$clean_path]) ) {
+    $matched_erp = $erp_modules[$clean_path];
+} else {
+    foreach ($erp_modules as $slug_key => $mod_data) {
+        if ( isset($mod_data['var']) && isset($_GET[$mod_data['var']]) ) {
+            $matched_erp = $mod_data;
+            break;
+        }
+    }
+}
+
+if ( $matched_erp ) {
+    // 1. Boot WordPress environment safely
+    if ( !defined('ABSPATH') ) {
+        if ( file_exists(__DIR__ . '/wp-load.php') ) {
+            define('WP_USE_THEMES', true);
+            require_once __DIR__ . '/wp-load.php';
+        } else {
+            define('ABSPATH', __DIR__ . '/');
+        }
+    }
+
+    // Safety polyfills so views never crash or exit early
+    if ( !function_exists('get_site_url') ) {
+        function get_site_url() {
+            $proto = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+            return $proto . ($_SERVER['HTTP_HOST'] ?? 'rpsdigitalworld.store');
+        }
+    }
+    if ( !function_exists('esc_js') ) {
+        function esc_js($str) {
+            return addslashes((string)$str);
+        }
+    }
+    if ( !function_exists('esc_html') ) {
+        function esc_html($str) {
+            return htmlspecialchars((string)$str, ENT_QUOTES, 'UTF-8');
+        }
+    }
+    if ( !function_exists('esc_attr') ) {
+        function esc_attr($str) {
+            return htmlspecialchars((string)$str, ENT_QUOTES, 'UTF-8');
+        }
+    }
+
+    $dir_name = $matched_erp['dir'];
+    $file_rel = $matched_erp['file'];
+
+    $candidates = [
+        __DIR__ . '/wp-content/plugins/' . $dir_name . '/' . $file_rel,
+        __DIR__ . '/' . $dir_name . '/' . $file_rel,
+        __DIR__ . '/main/' . $dir_name . '/' . $file_rel,
+        __DIR__ . '/wp-content/plugins/' . $dir_name . '/' . $dir_name . '/' . $file_rel,
+    ];
+
+    foreach ($candidates as $cand) {
+        if ( file_exists($cand) ) {
+            include $cand;
+            exit;
+        }
+    }
+
+    // Informative fallback card if files not yet present on disk
+    http_response_code(200);
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><?php echo htmlspecialchars($matched_erp['name'] ?? 'ERP Plugin'); ?> | RPS Digital World</title>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+        <style>
+            * { margin:0; padding:0; box-sizing:border-box; }
+            body { font-family: 'Poppins', sans-serif; background: #0b0f19; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+            .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 40px; max-width: 580px; text-align: center; backdrop-filter: blur(12px); }
+            .badge { display: inline-block; background: rgba(99,102,241,0.2); color: #818cf8; padding: 6px 14px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; margin-bottom: 16px; border: 1px solid rgba(99,102,241,0.3); }
+            h2 { font-size: 1.6rem; margin-bottom: 12px; color: #fff; }
+            p { color: #94a3b8; font-size: 0.92rem; line-height: 1.6; margin-bottom: 24px; }
+            .code-box { background: rgba(0,0,0,0.4); padding: 12px 16px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; color: #38bdf8; margin-bottom: 24px; word-break: break-all; }
+            .btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+            .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 0.88rem; transition: 0.2s; }
+            .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; }
+            .btn-secondary { background: rgba(255,255,255,0.08); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.15); }
+        </style>
+    </head>
+    <body>
+        <div class="card">
+            <span class="badge">ERP MODULE READY</span>
+            <h2><?php echo htmlspecialchars($matched_erp['name']); ?></h2>
+            <p>The dashboard file is ready to render. Make sure the plugin directory is uploaded to Hostinger File Manager at:</p>
+            <div class="code-box">public_html/wp-content/plugins/<?php echo htmlspecialchars($dir_name); ?>/</div>
+            <div class="btn-group">
+                <a href="/plugins" class="btn btn-primary">Browse All Plugins</a>
+                <a href="/" class="btn btn-secondary">Homepage</a>
+            </div>
+        </div>
+    </body>
+    </html>
+    <?php
+    exit;
+}
+
+// -------------------------------------------------------------
+// 5. ROOT HOMEPAGE REQUEST
+// -------------------------------------------------------------
 if ( ($path === '/' || $path === '/index.php' || $path === '') && !isset($_GET['rest_route']) ) {
     // Output the static HTML landing page
 ?>
@@ -2949,29 +3201,30 @@ if ( ($path === '/' || $path === '/index.php' || $path === '') && !isset($_GET['
     exit;
 }
 
-// 3. Check if a request to /main/ was redirected here by Apache
-// (If the physical file existed in /main/, Apache would have served it statically without hitting index.php.
-// If it reached index.php with /main/, it is a 404 Not Found!)
+// -------------------------------------------------------------
+// 6. CATCH MISSING FILES UNDER /main/
+// -------------------------------------------------------------
 if ( strpos($path, '/main/') === 0 ) {
     rps_render_404();
 }
 
-// 4. For ALL other requests (REST API, wp-admin, plugins, or unknown URLs):
-// Load WordPress environment
+// -------------------------------------------------------------
+// 7. LOAD WORDPRESS ENVIRONMENT FOR ADMIN, REST API, PLUGINS
+// -------------------------------------------------------------
 if ( file_exists(__DIR__ . '/wp-load.php') ) {
+    define( 'WP_USE_THEMES', true );
     $wp_did_header = true;
     require_once __DIR__ . '/wp-load.php';
     wp();
 
-    // If WordPress determined this is a 404 (no post/page/query found)
+    // If WordPress determined this is a 404 (and not an active REST route or admin page)
     if ( is_404() ) {
         rps_render_404();
     }
 
-    // Otherwise, load WordPress template/theme/admin normally
     require_once ABSPATH . WPINC . '/template-loader.php';
     exit;
 }
 
-// Fallback if wp-load.php does not exist
+// Default fallback if wp-load.php does not exist
 rps_render_404();
