@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Primary SEO Metadata -->
+    <title>RPS Digital World | Software Development, Mobile Apps & SEO Agency Rajasthan</title>
+    <meta name="description"
+        content="RPS Digital World is a premium software development and IT consultation company based in Surayata, Rajasthan. We build high-performance custom websites, mobile apps, SaaS platforms, API integrations, and offer result-driven SEO & digital marketing services for local and global businesses.">
+    <meta name="keywords"
+        content="RPS Digital World, software development company Rajasthan, web development Surayata, mobile app developer India, local SEO agency Rajasthan, custom SaaS developer, IT consultation Surayata, software store, software solutions, React developer Rajasthan, Flutter app development">
+    <meta name="author" content="RPS Digital World">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://rpsdigitalworld.store/">
+    <!-- Open Graph / Facebook / LinkedIn (Social SEO) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://rpsdigitalworld.store/">
+    <meta property="og:title" content="RPS Digital World | Software Development & IT Solutions">
+    <meta property="og:description"
+        content="Custom web solutions, mobile apps, and SaaS platforms built with cutting-edge tech stacks. Serving local Rajasthan businesses & global startups.">
+    <meta property="og:image" content="https://rpsdigitalworld.store/logo.png">
+    <meta property="og:site_name" content="RPS Digital World">
+    <!-- Twitter Cards (Social SEO) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://rpsdigitalworld.store/">
+    <meta name="twitter:title" content="RPS Digital World | Software Development, Mobile Apps & SEO">
+    <meta name="twitter:description"
+        content="Transforming ideas into digital reality. Custom frontend, backend, native mobile applications, and SEO optimization.">
+    <meta name="twitter:image" content="https://rpsdigitalworld.store/logo.png">
+
+    <!-- JSON-LD Local Business & Professional Service Schema (Local SEO) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "RPS Digital World",
+      "alternateName": ["RPS Digital Store", "RPS Techno"],
+      "image": "https://rpsdigitalworld.store/logo.png",
+      "@id": "https://rpsdigitalworld.store/#organization",
+      "url": "https://rpsdigitalworld.store/",
+      "email": "info@rpstechno.com",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Ramdevara Dimadi",
+        "addressLocality": "Surayata",
+        "addressRegion": "Rajasthan",
+        "postalCode": "306104",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 25.922854,
+        "longitude": 73.5212909
+      },
+      "hasMap": "https://maps.app.goo.gl/7seGTDU8u9GLHP1w5",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+          ],
+          "opens": "10:00",
+          "closes": "18:00"
+        }
+      ],
+      "sameAs": [
+        "https://www.linkedin.com/company/rps-digital-world/?viewAsMember=true",
+        "https://www.instagram.com/rpsdigitalworld.store/",
+        "https://maps.app.goo.gl/7seGTDU8u9GLHP1w5"
+      ],
+      "areaServed": [
+        {
+          "@type": "AdministrativeArea",
+          "name": "Rajasthan"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "India"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Global"
+        }
+      ]
+    }
+    </script>
+
+    <!-- Stylesheets and Google Fonts -->
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>RPS DIGITAL <span>WORLD</span></h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#services" class="nav-link">Services</a></li>
+                <li class="dropdown">
+                    <a href="./portpolio.html" class="nav-link">Portfolio <i class="fas fa-chevron-down"
+                            style="font-size: 0.8rem; margin-left: 3px;"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="./portpolio.html?category=E-commerce">E-Commerce Sites</a></li>
+                        <li><a href="./portpolio.html?category=Medical">Medical & Clinics</a></li>
+                        <li><a href="./portpolio.html?category=Cafe">Cafe & Food</a></li>
+                        <li><a href="./portpolio.html?category=Fitness">Fitness & Gyms</a></li>
+                        <li><a href="./portpolio.html">All Projects</a></li>
+                    </ul>
+                </li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">Empowering Innovation</span>
+                        <br>Software Solutions & IT Consultation
+                    </h1>
+                    <p class="hero-description">
+                        Transforming complex ideas into robust digital reality. We specialize in custom software
+                        development, frontend, backend architectures, mobile apps, SaaS deployment, and high-ROI digital
+                        marketing for local businesses in Rajasthan and global clients worldwide.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#contact" class="btn btn-primary">Get Started</a>
+                        <button onclick="window.open('./portpolio.html', '_blank')" class="btn btn-secondary">
+                            Our Portfolio
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <iframe src="./3dname.html"
+                        style="width: 100%; height: 100%; border: none; overflow: hidden; background: transparent;"
+                        scrolling="no" allowtransparency="true"></iframe>
+                </div>
+            </div>
+        </div>
+        <div class="hero-bg-animation"></div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our <span class="gradient-text">Services</span></h2>
+                <p class="section-description">Comprehensive software solutions with cutting-edge technologies tailored
+                    to your business needs</p>
+            </div>
+
+            <!-- Service Filter -->
+            <div class="service-filter">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All Services</button>
+                    <button class="filter-btn" data-filter="development">Development</button>
+                    <button class="filter-btn" data-filter="marketing">Marketing</button>
+                    <button class="filter-btn" data-filter="cloud">Cloud & DevOps</button>
+                </div>
+            </div>
+
+            <!-- Main Services Grid -->
+            <div class="services-grid">
+                <!-- Web Development -->
+                <div class="service-card featured-service" data-category="development">
+                    <div class="service-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Web Development</h3>
+                    <p>Modern, responsive web applications using the latest frameworks and technologies</p>
+                    <div class="tech-stack-mini">
+                        <span class="tech-tag">React.js</span>
+                        <span class="tech-tag">Angular</span>
+                        <span class="tech-tag">Vue.js</span>
+                        <span class="tech-tag">Next.js</span>
+                        <span class="tech-tag">TypeScript</span>
+                        <span class="tech-tag">Tailwind CSS</span>
+                    </div>
+                    <div class="service-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Single Page Applications (SPA)</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Progressive Web Apps (PWA)</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Server-Side Rendering (SSR)</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Responsive Design</span>
+                        </div>
+                    </div>
+                    <div class="service-overlay"></div>
+                </div>
+
+                <!-- Mobile App Development -->
+                <div class="service-card featured-service" data-category="development">
+                    <div class="service-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile App Development</h3>
+                    <p>Native and cross-platform mobile applications for iOS and Android platforms</p>
+                    <div class="tech-stack-mini">
+                        <span class="tech-tag">React Native</span>
+                        <span class="tech-tag">Flutter</span>
+                        <span class="tech-tag">Native Android</span>
+                        <span class="tech-tag">Native iOS</span>
+                        <span class="tech-tag">Kotlin</span>
+                        <span class="tech-tag">Swift</span>
+                    </div>
+                    <div class="service-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Cross-Platform Development</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Native Performance</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>App Store Optimization</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Push Notifications</span>
+                        </div>
+                    </div>
+                    <div class="service-overlay"></div>
+                </div>
+
+                <!-- Backend Development -->
+                <div class="service-card featured-service" data-category="development">
+                    <div class="service-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3>Backend Development</h3>
+                    <p>Robust server-side solutions with scalable architecture and secure APIs</p>
+                    <div class="tech-stack-mini">
+                        <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">Express.js</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Flask</span>
+                        <span class="tech-tag">PHP</span>
+                        <span class="tech-tag">MongoDB</span>
+                    </div>
+                    <div class="service-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>RESTful API Development</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>GraphQL Implementation</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Database Design & Optimization</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Microservices Architecture</span>
+                        </div>
+                    </div>
+                    <div class="service-overlay"></div>
+                </div>
+
+                <!-- Full Dynamic Applications -->
+                <div class="service-card" data-category="development">
+                    <div class="service-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Full Dynamic Applications</h3>
+                    <p>Complete end-to-end dynamic web applications with real-time features</p>
+                    <div class="service-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Real-time Data Processing</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>User Authentication & Authorization</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Payment Gateway Integration</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Admin Dashboard & Analytics</span>
+                        </div>
+                    </div>
+                    <div class="service-overlay"></div>
+                </div>
+
+                <!-- SEO Services -->
+                <div class="service-card" data-category="marketing">
+                    <div class="service-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>SEO Services</h3>
+                    <p>Comprehensive search engine optimization to boost your online visibility</p>
+                    <div class="service-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Technical SEO Audit</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Keyword Research & Strategy</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Content Optimization</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Local SEO & Google My Business</span>
+                        </div>
+                    </div>
+                    <div class="service-overlay"></div>
+                </div>
+
+                <!-- Digital Marketing -->
+                <div class="service-card" data-category="marketing">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Digital Marketing</h3>
+                    <p>Strategic digital marketing campaigns to boost your online presence and ROI</p>
+                    <div class="service-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Social Media Marketing</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Google Ads & PPC</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Email Marketing Campaigns</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Content Marketing Strategy</span>
+                        </div>
+                    </div>
+                    <div class="service-overlay"></div>
+                </div>
+
+                <!-- WordPress Development -->
+                <div class="service-card" data-category="development">
+                    <div class="service-icon">
+                        <i class="fab fa-wordpress"></i>
+                    </div>
+                    <h3>WordPress Development</h3>
+                    <p>Custom WordPress solutions from simple blogs to complex enterprise websites</p>
+                    <div class="service-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Custom Theme Development</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Plugin Development</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>E-commerce Solutions</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Performance Optimization</span>
+                        </div>
+                    </div>
+                    <div class="service-overlay"></div>
+                </div>
+
+                <!-- Cloud Solutions -->
+                <div class="service-card" data-category="cloud">
+                    <div class="service-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h3>Cloud Solutions</h3>
+                    <p>Scalable cloud infrastructure and deployment solutions for modern applications</p>
+                    <div class="service-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>AWS & Azure Deployment</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>DevOps & CI/CD</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Container Orchestration</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>Auto-scaling & Load Balancing</span>
+                        </div>
+                    </div>
+                    <div class="service-overlay"></div>
+                </div>
+            </div>
+
+            <!-- Technology Showcase -->
+            <div class="tech-showcase">
+                <h3 class="tech-showcase-title">Technologies We <span class="gradient-text">Master</span></h3>
+                <div class="tech-categories">
+                    <div class="tech-category">
+                        <h4>Frontend</h4>
+                        <div class="tech-icons">
+                            <div class="tech-icon" data-tech="React.js">
+                                <i class="fab fa-react"></i>
+                                <span>React.js</span>
+                            </div>
+                            <div class="tech-icon" data-tech="Angular">
+                                <i class="fab fa-angular"></i>
+                                <span>Angular</span>
+                            </div>
+                            <div class="tech-icon" data-tech="Vue.js">
+                                <i class="fab fa-vuejs"></i>
+                                <span>Vue.js</span>
+                            </div>
+                            <div class="tech-icon" data-tech="Next.js">
+                                <i class="fas fa-code"></i>
+                                <span>Next.js</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tech-category">
+                        <h4>Backend</h4>
+                        <div class="tech-icons">
+                            <div class="tech-icon" data-tech="Node.js">
+                                <i class="fab fa-node-js"></i>
+                                <span>Node.js</span>
+                            </div>
+                            <div class="tech-icon" data-tech="Python">
+                                <i class="fab fa-python"></i>
+                                <span>Python</span>
+                            </div>
+                            <div class="tech-icon" data-tech="PHP">
+                                <i class="fab fa-php"></i>
+                                <span>PHP</span>
+                            </div>
+                            <div class="tech-icon" data-tech="Express.js">
+                                <i class="fas fa-server"></i>
+                                <span>Express.js</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tech-category">
+                        <h4>Mobile</h4>
+                        <div class="tech-icons">
+                            <div class="tech-icon" data-tech="React Native">
+                                <i class="fab fa-react"></i>
+                                <span>React Native</span>
+                            </div>
+                            <div class="tech-icon" data-tech="Flutter">
+                                <i class="fas fa-mobile"></i>
+                                <span>Flutter</span>
+                            </div>
+                            <div class="tech-icon" data-tech="Android">
+                                <i class="fab fa-android"></i>
+                                <span>Android</span>
+                            </div>
+                            <div class="tech-icon" data-tech="iOS">
+                                <i class="fab fa-apple"></i>
+                                <span>iOS</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tech-category">
+                        <h4>Database</h4>
+                        <div class="tech-icons">
+                            <div class="tech-icon" data-tech="MongoDB">
+                                <i class="fas fa-database"></i>
+                                <span>MongoDB</span>
+                            </div>
+                            <div class="tech-icon" data-tech="MySQL">
+                                <i class="fas fa-database"></i>
+                                <span>MySQL</span>
+                            </div>
+                            <div class="tech-icon" data-tech="PostgreSQL">
+                                <i class="fas fa-database"></i>
+                                <span>SQL Server</span>
+                            </div>
+                            <div class="tech-icon" data-tech="Firebase">
+                                <i class="fas fa-fire"></i>
+                                <span>Firebase</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- CMS & Platforms -->
+                    <div class="tech-category">
+                        <h4>CMS & Platforms</h4>
+                        <div class="tech-icons">
+                            <div class="tech-icon" data-tech="WordPress">
+                                <i class="fab fa-wordpress"></i>
+                                <span>WordPress</span>
+                            </div>
+                            <div class="tech-icon" data-tech="Shopify">
+                                <i class="fab fa-shopify"></i>
+                                <span>Shopify</span>
+                            </div>
+                            <div class="tech-icon" data-tech="Magento">
+                                <i class="fas fa-store"></i>
+                                <span>Magento</span>
+                            </div>
+                            <div class="tech-icon" data-tech="Strapi">
+                                <i class="fas fa-cogs"></i>
+                                <span>Strapi</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Cloud & DevOps -->
+                    <div class="tech-category">
+                        <h4>Cloud & DevOps</h4>
+                        <div class="tech-icons">
+                            <div class="tech-icon" data-tech="AWS">
+                                <i class="fab fa-aws"></i>
+                                <span>AWS</span>
+                            </div>
+                            <div class="tech-icon" data-tech="Azure">
+                                <i class="fas fa-cloud"></i>
+                                <span>Azure</span>
+                            </div>
+                            <div class="tech-icon" data-tech="Docker">
+                                <i class="fab fa-docker"></i>
+                                <span>Docker</span>
+                            </div>
+                            <div class="tech-icon" data-tech="Kubernetes">
+                                <i class="fas fa-network-wired"></i>
+                                <span>Kubernetes</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Service Statistics -->
+            <div class="service-stats">
+                <div class="container">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <div class="stat-number" data-target="200">0</div>
+                            <div class="stat-label">Projects Delivered</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="stat-number" data-target="50">0</div>
+                            <div class="stat-label">Technologies Mastered</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-smile"></i>
+                            </div>
+                            <div class="stat-number" data-target="100">0</div>
+                            <div class="stat-label">Happy Clients</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-number" data-target="24">0</div>
+                            <div class="stat-label">Support Hours</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed SEO Content Section -->
+    <section class="seo-details-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Rajasthan's Trusted <span class="gradient-text">Web & Mobile
+                        Development</span> Company</h2>
+                <p class="section-description">
+                    Empowering local brands in Rajasthan and global businesses with scalable, fast, and feature-rich IT
+                    applications.                    We are your go-to software engineering partner for custom websites, complex SaaS platforms, and
+                    high-performance mobile apps.
+                </p>
+            </div>
+            <div class="seo-grid">
+                <!-- Column 1: Web Development Suite -->
+                <div class="seo-card">
+                    <div class="seo-card-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3>Custom Web Development Suite</h3>
+                    <p>
+                        We build custom, high-speed websites and portals designed to scale with your business growth.                        As a leading web development company in Rajasthan, we combine advanced backend technologies with
+                        stunning modern frontends.
+                    </p>
+                    <ul class="seo-list">
+                        <li>
+                            <strong>Enterprise SaaS & Web Apps:</strong>                            We develop robust Software-as-a-Service platforms featuring secure multi-tenant
+                            architectures, dynamic user roles,                            automated subscriptions, and custom operational dashboards using React, Next.js, and
+                            Node.js.
+                        </li>
+                        <li>
+                            <strong>E-commerce Website Engineering:</strong>                            High-converting, mobile-friendly online stores with smooth product discovery, fast shopping
+                            carts,                            and seamless local/global payment integrations (Razorpay, Stripe, Paytm).
+                        </li>
+                        <li>
+                            <strong>Corporate Branding Websites:</strong>                            Beautifully designed business landing pages optimized for fast page speed, clean DOM
+                            structures,                            and SEO friendliness to capture organic search leads directly from Google Chrome.
+                        </li>
+                        <li>
+                            <strong>API Architectures & Backends:</strong>                            Highly secure RESTful and GraphQL APIs developed with Python, Flask, and Express.js,                            connected to robust MongoDB and SQL databases.
+                        </li>
+                    </ul>
+                </div>
+                <!-- Column 2: Mobile App Development Suite -->
+                <div class="seo-card">
+                    <div class="seo-card-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile Application Engineering</h3>
+                    <p>
+                        Transform your ideas into high-performance, user-friendly mobile applications.                        Our mobile app development agency designs custom native and cross-platform apps for iOS and
+                        Android.
+                    </p>
+                    <ul class="seo-list">
+                        <li>
+                            <strong>Cross-Platform Hybrid Apps:</strong>                            Cost-effective hybrid app development using Google Flutter and React Native,                            sharing a single codebase to deliver native performance and seamless fluid motions.
+                        </li>
+                        <li>
+                            <strong>Native Android App Development:</strong>                            Dedicated high-speed Android applications built with Kotlin and Java, fully optimized                            for all device models, screen sizes, and Google Play Store parameters.
+                        </li>
+                        <li>
+                            <strong>Native iOS App Development:</strong>                            Premium Swift-built applications for iPhone and iPad, designed to conform                            strictly to Apple's Human Interface Guidelines for premium UX.
+                        </li>
+                        <li>
+                            <strong>App Store Optimization & Support:</strong>                            End-to-end publishing, metadata refinement, keyword planning, and optimization                            to rank higher in app store searches and boost downloads.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="seo-bottom-banner">
+                <h3>Connecting Rajasthan's Legacy with Global Tech Standards</h3>
+                <p>
+                    Based in <strong>Surayata, Rajasthan (Zip: 306104)</strong>, we serve local businesses in Sojat,
+                    Pali, Jodhpur,                    and Jaipur, helping them digitize operations, launch online delivery systems, and manage local
+                    customer relations.                    Simultaneously, we run an agile global execution framework supporting startups and established
+                    enterprises in the USA, UK, UAE, and Europe.
+                </p>
+                <div class="seo-badges">
+                    <span class="seo-badge"><i class="fas fa-check-circle"></i> 100% Mobile Responsive</span>
+                    <span class="seo-badge"><i class="fas fa-bolt"></i> Google Core Web Vitals Ready</span>
+                    <span class="seo-badge"><i class="fas fa-shield-alt"></i> Secure SSL & Encryption</span>
+                    <span class="seo-badge"><i class="fas fa-search-plus"></i> Schema Structured Metadata</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title">About <span class="gradient-text">RPS Digital World</span></h2>
+                    <p>Based in Surayata, Rajasthan, RPS Digital World is a premier software development agency
+                        delivering innovative technology solutions to startups, enterprises, and local businesses alike.
+                        With a strong commitment to quality and engineering excellence, we transform your digital vision
+                        into custom software realities.</p>
+                    <p>Our global and local expertise spans across modern web technologies, hybrid and native mobile app
+                        development, scalable backend architecture, cloud solutions, and result-oriented digital
+                        marketing strategies. We pride ourselves on delivering high-performance, robust solutions that
+                        drive commercial and local business growth.</p>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <h3 class="stat-number" data-target="150">0</h3>
+                            <p>Projects Completed</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3 class="stat-number" data-target="50">0</h3>
+                            <p>Happy Clients</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3 class="stat-number" data-target="5">0</h3>
+                            <p>Years Experience</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visual">
+                    <div class="tech-stack">
+                        <div class="tech-item">React</div>
+                        <div class="tech-item">Node.js</div>
+                        <div class="tech-item">Python</div>
+                        <div class="tech-item">MongoDB</div>
+                        <div class="tech-item">AWS</div>
+                        <div class="tech-item">Flutter</div>
+                        <div class="tech-item">React Native</div>
+                        <div class="tech-item">MySQL</div>
+                        <div class="tech-item">WordPress</div>
+                        <div class="tech-item">Android</div>
+                        <div class="tech-item">iOS</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get In <span class="gradient-text">Touch</span></h2>
+                <p class="section-description">Ready to start your next project? Let's discuss your requirements</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4>Email</h4>
+                            <p>info@rpstechno.com</p>
+                        </div>
+                    </div>
+                    <!-- <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h4>Phone</h4>
+                            <p>+1 (555) 123-4567</p>
+                        </div>
+                    </div> -->
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h4>Location</h4>
+                            <p><a href="https://maps.app.goo.gl/7seGTDU8u9GLHP1w5" target="_blank"
+                                    rel="noopener noreferrer" style="color: inherit; text-decoration: none;">Ramdevara
+                                    Dimadi, Surayata, Rajasthan 306104</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-linkedin"></i>
+                        </div>
+                        <div>
+                            <h4>LinkedIn</h4>
+                            <p><a href="https://www.linkedin.com/company/rps-digital-world/?viewAsMember=true"
+                                    target="_blank" rel="noopener noreferrer"
+                                    style="color: inherit; text-decoration: none;">RPS Digital World</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div>
+                            <h4>Instagram</h4>
+                            <p><a href="https://www.instagram.com/rpsdigitalworld.store/" target="_blank"
+                                    rel="noopener noreferrer"
+                                    style="color: inherit; text-decoration: none;">@rpsdigitalworld.store</a></p>
+                        </div>
+                    </div>
+                </div>
+                <form class="contact-form" data-contact-form>
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Your Name" autocomplete="name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Your Email" autocomplete="email" required>
+                    </div>
+                    <div class="form-group">
+                        <select name="service" required>
+                            <option value="">Select Service</option>
+                            <option value="web-development">Web Development</option>
+                            <option value="mobile-development">Mobile App Development</option>
+                            <option value="backend">Backend Development</option>
+                            <option value="full-stack">Full Dynamic Applications</option>
+                            <option value="seo">SEO Services</option>
+                            <option value="digital-marketing">Digital Marketing</option>
+                            <option value="wordpress">WordPress Development</option>
+                            <option value="cloud">Cloud Solutions</option>
+                            <option value="consultation">Technical Consultation</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>RPS <span>Digital World</span></h3>
+                    <p>Transforming ideas into digital reality with innovative software solutions for local and global
+                        clients.</p>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/company/rps-digital-world/?viewAsMember=true" target="_blank"
+                            rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://www.instagram.com/rpsdigitalworld.store/" target="_blank"
+                            rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#">Web Development</a></li>
+                        <li><a href="#">Mobile App Development</a></li>
+                        <li><a href="#">Backend Development</a></li>
+                        <li><a href="#">Digital Marketing</a></li>
+                        <li><a href="#">SEO Services</a></li>
+                        <li><a href="#">WordPress Development</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Technologies</h4>
+                    <ul>
+                        <li><a href="#">React.js & Next.js</a></li>
+                        <li><a href="#">Angular & Vue.js</a></li>
+                        <li><a href="#">Node.js & Express.js</a></li>
+                        <li><a href="#">Python & Flask</a></li>
+                        <li><a href="#">React Native & Flutter</a></li>
+                        <li><a href="#">Cloud & DevOps</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-envelope"></i> <a href="mailto:info@rpstechno.com"
+                            style="color: inherit;">info@rpstechno.com</a></p>
+                    <!-- <p><i class="fas fa-phone"></i> +91 99944 76566</p> -->
+                    <p><i class="fas fa-map-marker-alt"></i> <a href="https://maps.app.goo.gl/7seGTDU8u9GLHP1w5"
+                            target="_blank" rel="noopener noreferrer"
+                            style="color: inherit; text-decoration: none;">Ramdevara Dimadi, Surayata, Rajasthan
+                            306104</a></p>
+                    <p><i class="fas fa-clock"></i> Mon - Sat: 10:00 AM - 6:00 PM IST</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 RPS Digital World. All rights reserved. | Crafted with ❤️ for local & global innovation |
+                    <a href="./privacy-policy.html">Privacy Policy</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
