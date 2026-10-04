@@ -1,13 +1,13 @@
 <?php
 /**
  * RPS Digital World - Production Router & WordPress Bridge
- * Handles Homepage, 404 Routing, and WordPress API / Admin seamlessly.
+ * Handles Homepage, Plugins Hub, 404 Routing, and WordPress API / Admin seamlessly.
  */
 
 $request_uri = $_SERVER['REQUEST_URI'] ?? '/';
 $path = parse_url($request_uri, PHP_URL_PATH);
 
-// Function to render the custom branded 404 page
+// Helper function to render the custom branded 404 page
 function rps_render_404() {
     http_response_code(404);
     if ( file_exists(__DIR__ . '/main/404.html') ) {
@@ -447,6 +447,7 @@ function rps_render_404() {
                 <li><a href="/" class="nav-link">Home</a></li>
                 <li><a href="/#services" class="nav-link">Services</a></li>
                 <li><a href="/main/portpolio.html" class="nav-link">Portfolio</a></li>
+                <li><a href="/plugins" class="nav-link">ERP Plugins</a></li>
                 <li><a href="/#about" class="nav-link">About</a></li>
                 <li><a href="/#contact" class="nav-link">Contact</a></li>
             </ul>
@@ -557,7 +558,18 @@ function rps_render_404() {
     exit;
 }
 
-// 1. Check if the request is trying to access the root domain (the home page)
+// 1. Route for ERP Plugins Hub Page
+if ( $path === '/plugins' || $path === '/plugins.html' || $path === '/main/plugins.html' ) {
+    if ( file_exists(__DIR__ . '/main/plugins.html') ) {
+        include __DIR__ . '/main/plugins.html';
+        exit;
+    } elseif ( file_exists(__DIR__ . '/plugins.html') ) {
+        include __DIR__ . '/plugins.html';
+        exit;
+    }
+}
+
+// 2. Check if the request is trying to access the root domain (the home page)
 if ( ($path === '/' || $path === '/index.php' || $path === '') && !isset($_GET['rest_route']) ) {
     // Output the static HTML landing page
 ?>
@@ -685,6 +697,7 @@ if ( ($path === '/' || $path === '/index.php' || $path === '') && !isset($_GET['
                         <li><a href="./main/portpolio.html">All Projects</a></li>
                     </ul>
                 </li>
+                <li><a href="/plugins" class="nav-link">ERP Plugins</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
@@ -1520,14 +1533,14 @@ if ( ($path === '/' || $path === '/index.php' || $path === '') && !isset($_GET['
     exit;
 }
 
-// 2. Check if a request to /main/ was redirected here by Apache
+// 3. Check if a request to /main/ was redirected here by Apache
 // (If the physical file existed in /main/, Apache would have served it statically without hitting index.php.
 // If it reached index.php with /main/, it is a 404 Not Found!)
 if ( strpos($path, '/main/') === 0 ) {
     rps_render_404();
 }
 
-// 3. For ALL other requests (REST API, wp-admin, plugins, or unknown URLs):
+// 4. For ALL other requests (REST API, wp-admin, plugins, or unknown URLs):
 // Load WordPress environment
 if ( file_exists(__DIR__ . '/wp-load.php') ) {
     $wp_did_header = true;

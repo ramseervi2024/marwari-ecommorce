@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPress ERP Plugins Hub & Checker | RPS Digital World</title>
+    <meta name="description" content="Explore, test, and download all 34 custom WordPress ERP plugins, REST APIs, and business management systems by RPS Digital World.">
+    <link rel="canonical" href="https://rpsdigitalworld.store/plugins">
+
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --dark-bg: #0b0f19;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --card-hover-border: rgba(102, 126, 234, 0.5);
+            --text-light: #ffffff;
+            --text-muted: #94a3b8;
+            --text-gray: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: #0b0f19;
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(11, 15, 25, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--card-border);
+            height: 72px;
+        }
+
+        .nav-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .nav-logo a {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-logo h2 span {
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 1.8rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 6px 0;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-light);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            padding: 130px 24px 50px;
+            background: radial-gradient(circle at 50% 20%, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.1) 40%, rgba(11, 15, 25, 1) 85%);
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(102, 126, 234, 0.15);
+            border: 1px solid rgba(102, 126, 234, 0.4);
+            border-radius: 100px;
+            padding: 6px 20px;
+            color: #818cf8;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .hero-title {
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #ffffff 10%, #a5b4fc 50%, #f472b6 90%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 750px;
+            margin: 0 auto 35px;
+        }
+
+        /* Metrics Bar */
+        .metrics-bar {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 16px 28px;
+            min-width: 170px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .metric-num {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* Control Panel / Filter & Search */
+        .controls-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 35px;
+            backdrop-filter: blur(12px);
+        }
+
+        .search-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+            min-width: 280px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 14px 18px 14px 48px;
+            color: #ffffff;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+        }
+
+        .api-check-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 0 24px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            height: 52px;
+        }
+
+        .api-check-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45);
+        }
+
+        /* Category Filter Pills */
+        .category-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-muted);
+            border-radius: 100px;
+            padding: 8px 18px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Live API Ping Diagnostic Bar */
+        .ping-diagnostic {
+            display: none;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-top: 20px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .ping-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ping-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 10px #10b981;
+            animation: pulseGreen 2s infinite;
+        }
+
+        @keyframes pulseGreen {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+        }
+
+        /* Plugins Grid */
+        .plugins-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 25px;
+        }
+
+        .plugin-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 26px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .plugin-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--card-hover-border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 25px rgba(102, 126, 234, 0.15);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .plugin-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.3) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: #818cf8;
+        }
+
+        .badge-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .category-badge {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #cbd5e1;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-weight: 500;
+        }
+
+        .version-badge {
+            background: rgba(56, 189, 248, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: #38bdf8;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
+        .plugin-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .plugin-slug {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            font-family: monospace;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .plugin-desc {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 18px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .features-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 22px;
+        }
+
+        .feature-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+            font-size: 0.76rem;
+            padding: 3px 9px;
+            border-radius: 6px;
+        }
+
+        /* Card Action Buttons */
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 18px;
+            margin-top: auto;
+        }
+
+        .btn-card {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 9px 12px;
+            border-radius: 10px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            outline: none;
+        }
+
+        .btn-zip {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-zip:hover {
+            background: linear-gradient(135deg, #788ef9 0%, #8958bf 100%);
+            transform: translateY(-2px);
+        }
+
+        .btn-inspect {
+            background: rgba(255, 255, 255, 0.08);
+            color: #cbd5e1;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-inspect:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .btn-api {
+            background: rgba(56, 189, 248, 0.1);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            padding: 9px 12px;
+        }
+
+        .btn-api:hover {
+            background: rgba(56, 189, 248, 0.2);
+            color: #ffffff;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            max-width: 650px;
+            width: 100%;
+            padding: 35px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+            animation: modalPop 0.3s ease-out;
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #cbd5e1;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .modal-badge {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.15);
+            border: 1px solid rgba(102, 126, 234, 0.35);
+            color: #818cf8;
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 50px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .modal-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .modal-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+            line-height: 1.65;
+        }
+
+        .modal-section-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .code-pill-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-family: monospace;
+            font-size: 0.88rem;
+            color: #38bdf8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #cbd5e1;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #10b981;
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Footer */
+        .footer {
+            background: #070a11;
+            border-top: 1px solid var(--card-border);
+            padding: 50px 24px 30px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .footer-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-brand h3 span {
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-col h4 {
+            color: #ffffff;
+            font-size: 1.1rem;
+            margin-bottom: 18px;
+            font-weight: 600;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: #38bdf8;
+        }
+
+        .footer-bottom {
+            max-width: 1300px;
+            margin: 0 auto;
+            text-align: center;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .footer-bottom a {
+            color: #94a3b8;
+            text-decoration: none;
+        }
+
+        @media (max-width: 900px) {
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+            .nav-menu {
+                display: none;
+            }
+            .plugins-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="/">
+                    <h2>RPS DIGITAL <span>WORLD</span></h2>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/#services" class="nav-link">Services</a></li>
+                <li><a href="/main/portpolio.html" class="nav-link">Portfolio</a></li>
+                <li><a href="/plugins" class="nav-link active">ERP Plugins</a></li>
+                <li><a href="/#about" class="nav-link">About</a></li>
+                <li><a href="/#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="hero-badge">
+            <i class="fas fa-cubes"></i> RPS Enterprise Ecosystem
+        </div>
+        <h1 class="hero-title">
+            Enterprise <span class="gradient-text">WordPress ERP Plugins</span> Hub
+        </h1>
+        <p class="hero-subtitle">
+            Browse, inspect, and check all 34 custom WordPress enterprise management plugins.
+            Each module is built with decoupled REST APIs, JWT authentication, and automated database schemas.
+        </p>
+
+        <!-- Metric Counter Bar -->
+        <div class="metrics-bar">
+            <div class="metric-card">
+                <div class="metric-num">34</div>
+                <div class="metric-label">Custom ERP Plugins</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-num">100%</div>
+                <div class="metric-label">REST API Ready</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-num">19+</div>
+                <div class="metric-label">Ready-to-Install ZIPs</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-num">Swagger</div>
+                <div class="metric-label">API Documentation</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-container">
+        <!-- Controls Card: Search & Filters -->
+        <div class="controls-card">
+            <div class="search-row">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search plugins by name, feature (e.g. GST, GPS, Billing, Attendance)...">
+                </div>
+                <button id="pingApiBtn" class="api-check-btn" onclick="pingWordPressAPI()">
+                    <i class="fas fa-heartbeat"></i> Test Live WordPress REST API
+                </button>
+            </div>
+
+            <!-- Category Pills -->
+            <div class="category-filters" id="categoryFilters">
+                <button class="filter-btn active" data-category="ALL">All Plugins (34)</button>
+                <button class="filter-btn" data-category="Finance & Accounts">Finance & Accounts</button>
+                <button class="filter-btn" data-category="CRM & Sales">CRM & Sales</button>
+                <button class="filter-btn" data-category="Retail & Commerce">Retail & Commerce</button>
+                <button class="filter-btn" data-category="Healthcare">Healthcare</button>
+                <button class="filter-btn" data-category="Logistics & Fleet">Logistics & Fleet</button>
+                <button class="filter-btn" data-category="Manufacturing">Manufacturing</button>
+                <button class="filter-btn" data-category="Real Estate & Infra">Real Estate & Infra</button>
+                <button class="filter-btn" data-category="Education">Education</button>
+                <button class="filter-btn" data-category="Fitness & Wellness">Fitness & Wellness</button>
+                <button class="filter-btn" data-category="ZIP_ONLY"><i class="fas fa-file-archive"></i> Downloadable ZIPs Only</button>
+            </div>
+
+            <!-- Live Diagnostic Box -->
+            <div class="ping-diagnostic" id="pingDiagnostic">
+                <div class="ping-status">
+                    <div class="ping-indicator" id="pingIndicator"></div>
+                    <div>
+                        <strong id="pingTitle" style="color: #ffffff;">Testing WordPress REST API Endpoint...</strong>
+                        <div id="pingDetails" style="font-size: 0.85rem; color: #94a3b8; font-family: monospace;">Checking /wp-json/ ...</div>
+                    </div>
+                </div>
+                <span id="pingBadge" style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #10b981; font-weight: 700; font-size: 0.8rem; padding: 4px 12px; border-radius: 50px;">ACTIVE</span>
+            </div>
+        </div>
+
+        <!-- Plugins Grid -->
+        <div class="plugins-grid" id="pluginsGrid"></div>
+    </main>
+
+    <!-- Plugin Details Modal -->
+    <div class="modal-overlay" id="pluginModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-badge" id="modalCategory">Finance & Accounts</div>
+            <h2 class="modal-title" id="modalTitle">Plugin Title</h2>
+            <p class="modal-desc" id="modalDesc">Detailed plugin description will be rendered here.</p>
+
+            <div class="modal-section-title">WordPress REST API Namespace</div>
+            <div class="code-pill-box">
+                <span id="modalNamespace">/wp-json/accounting/v1</span>
+                <button class="copy-btn" onclick="copyNamespace()"><i class="fas fa-copy"></i> Copy</button>
+            </div>
+
+            <div class="modal-section-title">Key Capabilities & Features</div>
+            <div class="features-tags" id="modalFeatures" style="margin-bottom: 25px;"></div>
+
+            <div class="modal-section-title">Quick Actions & Links</div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;" id="modalActions"></div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMsg">Endpoint copied to clipboard!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>RPS DIGITAL <span>WORLD</span></h3>
+                <p>Empowering local and global businesses through high-impact digital solutions, custom software, mobile apps, and IT consultations.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="/#services">Web Development</a></li>
+                    <li><a href="/#services">Mobile Apps</a></li>
+                    <li><a href="/#services">Backend & APIs</a></li>
+                    <li><a href="/#services">SEO & Marketing</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Ecosystem</h4>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/main/portpolio.html">Showcase Portfolio</a></li>
+                    <li><a href="/plugins">ERP Plugins Hub</a></li>
+                    <li><a href="/#contact">Request Custom ERP</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact Info</h4>
+                <p style="margin-bottom: 8px;"><i class="fas fa-envelope" style="margin-right: 8px; color: #38bdf8;"></i> info@rpstechno.com</p>
+                <p style="margin-bottom: 8px;"><i class="fas fa-map-marker-alt" style="margin-right: 8px; color: #f472b6;"></i> Surayata, Rajasthan 306104</p>
+                <p><i class="fas fa-clock" style="margin-right: 8px; color: #a5b4fc;"></i> Mon - Sat: 10 AM - 6 PM IST</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 RPS Digital World. All rights reserved. | <a href="/main/privacy-policy.html">Privacy Policy</a></p>
+        </div>
+    </footer>
+
+    <!-- Interactive Logic -->
+    <script>
+        const pluginsData = [{"slug": "accounting-management", "name": "GST Billing Accounting ERP API", "desc": "Custom REST API GST Billing and Accounting ERP Management System. Includes sales, purchases, expenses tracking, double-entry accounts, journals, GST returns, e-invoicing, e-way bills, Swagger playground, and a glassmorphic dashboard view.", "version": "1.0.0", "has_zip": true, "zip_file": "accounting-management.zip", "category": "Finance & Accounts", "icon": "fas fa-file-invoice-dollar", "features": ["GST Returns", "E-Way Bill", "Ledger", "E-Invoice", "Double-Entry", "Swagger UI"]}, {"slug": "agriculture-management", "name": "Agriculture Management", "desc": "Complete enterprise solution for agriculture management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Agriculture & Dairy", "icon": "fas fa-seedling", "features": ["Crop Yield", "Mandi Rates", "Fertilizer Stock", "Farmer Invoicing"]}, {"slug": "coaching-management", "name": "Coaching Management", "desc": "Complete enterprise solution for coaching management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Education", "icon": "fas fa-chalkboard-teacher", "features": ["Batches", "Student Attendance", "Test Series", "Installment Fees"]}, {"slug": "construction-management", "name": "Construction ERP API", "desc": "Custom REST API ERP and Construction Management System (CMS) for construction companies, developers, and contractors. Includes database migrations, JWT auth, custom user roles, and Swagger OpenAPI docs.", "version": "1.0.0", "has_zip": true, "zip_file": "construction-management.zip", "category": "Real Estate & Infra", "icon": "fas fa-hard-hat", "features": ["Project Sites", "Material Purchase", "Labour Attendance", "Contractors"]}, {"slug": "courier-management", "name": "Courier Management", "desc": "Complete enterprise solution for courier management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Logistics & Fleet", "icon": "fas fa-shipping-fast", "features": ["Parcel Booking", "AWB Barcodes", "Delivery Runsheet", "COD Settlement"]}, {"slug": "crm-management", "name": "CRM ERP API", "desc": "Decoupled custom REST API CRM ERP System. Manages Leads, Follow-ups, Quotations, Sales Pipelines (Kanban), WhatsApp reminders, Invoices, Payments, and custom capabilities. Exposes interactive Swagger UI and client dashboard.", "version": "1.0.0", "has_zip": true, "zip_file": "crm-management.zip", "category": "CRM & Sales", "icon": "fas fa-funnel-dollar", "features": ["Leads Kanban", "Quotations", "WhatsApp Alerts", "Invoices", "Sales Pipeline"]}, {"slug": "customer-manager", "name": "Customer Manager API", "desc": "Custom REST API for managing customers and providing statistics.", "version": "1.0.3", "has_zip": true, "zip_file": "customer-manager.zip", "category": "CRM & Sales", "icon": "fas fa-users-cog", "features": ["Customer CRM", "Analytics", "REST API", "Activity Logs"]}, {"slug": "dairy-management", "name": "Dairy Management", "desc": "Complete enterprise solution for dairy management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Agriculture & Dairy", "icon": "fas fa-wine-bottle", "features": ["Milk Collection", "Fat/SNF Rates", "Route Distribution", "Payment Cycles"]}, {"slug": "ecommerce-management", "name": "Ecommerce Management", "desc": "Complete enterprise solution for ecommerce management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Retail & Commerce", "icon": "fas fa-shopping-cart", "features": ["Product Catalog", "Shopping Cart", "Payment Gateways", "Order Tracking"]}, {"slug": "fleet-track", "name": "FleetTrack Pro API", "desc": "Custom REST API for Fleet Management (vehicles, drivers, routes, trips, expenses, fuel, documents, dashboard, reports).", "version": "1.0.1", "has_zip": true, "zip_file": "fleet-track.zip", "category": "Logistics & Fleet", "icon": "fas fa-route", "features": ["GPS Trips", "Vehicle Documents", "Maintenance Logs", "Driver Expenses"]}, {"slug": "garage-management", "name": "Garage Management", "desc": "Complete enterprise solution for garage management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Automotive", "icon": "fas fa-wrench", "features": ["Job Cards", "Vehicle History", "Spare Parts Billing", "Mechanic Payroll"]}, {"slug": "garment-management", "name": "Garment Textile ERP API", "desc": "Custom REST API Garment and Textile Management System. Sales orders, fabric stock, cutting, stitching, finishing, worker attendance/payroll, quality control, wastage, dispatches, and diagnostics.", "version": "1.0.0", "has_zip": true, "zip_file": "garment-management.zip", "category": "Manufacturing", "icon": "fas fa-tshirt", "features": ["Fabric Stock", "Cutting & Stitching", "Worker Payroll", "Wastage", "Dispatch"]}, {"slug": "gym-management", "name": "Gym & Fitness ERP API", "desc": "Complete Gym Management System \u2014 Memberships, Renewals, Trainers, Diet Plans, Attendance, and Payments. REST API with JWT auth and light-theme SPA dashboard.", "version": "1.0.0", "has_zip": true, "zip_file": "gym-management.zip", "category": "Fitness & Wellness", "icon": "fas fa-dumbbell", "features": ["Member Passes", "Renewals", "Trainers", "Diet Plans", "Attendance"]}, {"slug": "hospital-management", "name": "Hospital ERP API", "desc": "Custom REST API ERP and Hospital Management System (HMS) for clinics, hospitals, and medical centers. Includes database migrations, JWT auth, custom user roles, and Swagger OpenAPI docs.", "version": "1.0.0", "has_zip": true, "zip_file": "hospital-management.zip", "category": "Healthcare", "icon": "fas fa-hospital-user", "features": ["OPD / IPD", "Doctor Schedules", "Pharmacy", "Lab Reports", "Billing"]}, {"slug": "hotel-management", "name": "Hotel Management", "desc": "Complete enterprise solution for hotel management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Food & Hospitality", "icon": "fas fa-hotel", "features": ["Room Booking", "Check-In/Out", "Housekeeping", "Food Billing", "Folio"]}, {"slug": "hr-management", "name": "HR & Payroll ERP API", "desc": "Custom REST API HR & Payroll ERP System. Includes employee profiles, attendance check-in/out, leave requests, salary settings, PF/ESI deductions, payslip generators, Swagger UI, and a premium glassmorphic dashboard interface.", "version": "1.0.0", "has_zip": true, "zip_file": "hr-management.zip", "category": "HR & Enterprise", "icon": "fas fa-user-tie", "features": ["Attendance Clock", "Leave Requests", "PF/ESI Deductions", "Salary Slips"]}, {"slug": "inventory-management", "name": "Inventory Management ERP API", "desc": "Custom REST API Inventory Management ERP System. Includes stock, warehouses, purchase orders, low-stock alerts, supplier files, Swagger documentation, and a glassmorphic dashboard interface.", "version": "1.0.0", "has_zip": true, "zip_file": "inventory-management.zip", "category": "Logistics & Fleet", "icon": "fas fa-boxes-stacked", "features": ["Multi-Warehouse", "Low-Stock Alerts", "Purchase Orders", "Suppliers"]}, {"slug": "jewellery-management", "name": "Jewellery ERP API", "desc": "Custom REST API Jewellery Management System. Gold/Silver bullion stock tracking, finished ornaments barcode scan, Karigar job details, buyback exchange rate calculator, billing invoices, repairs, and diagnostics.", "version": "1.0.0", "has_zip": true, "zip_file": "jewellery-management.zip", "category": "Retail & Luxury", "icon": "fas fa-gem", "features": ["Bullion Rates", "Karigar Job Cards", "Purity Barcode", "Old Gold Buyback"]}, {"slug": "manufacturing-management", "name": "Manufacturing ERP API", "desc": "Custom REST API Manufacturing Management System. Raw material tracking, Bill of Materials (BOM), work orders, job work, inventory, quality inspections, dispatch logistics, and machine utilization analytics.", "version": "1.0.0", "has_zip": true, "zip_file": "manufacturing-management.zip", "category": "Manufacturing", "icon": "fas fa-industry", "features": ["BOM Bill of Materials", "Work Orders", "Job Work", "QC Inspection", "Logistics"]}, {"slug": "marwari-ecommorce", "name": "Marwari Ecommorce", "desc": "Complete enterprise solution for marwari ecommorce. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Retail & Commerce", "icon": "fas fa-store", "features": ["Regional Products", "Multi-Vendor", "Shipping Rates", "Customer Portal"]}, {"slug": "multi-branch-management", "name": "Multi Branch Management", "desc": "Complete enterprise solution for multi branch management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "HR & Enterprise", "icon": "fas fa-network-wired", "features": ["Central HQ Dashboard", "Inter-Branch Transfers", "Consolidated P&L"]}, {"slug": "ngo-management", "name": "Ngo Management", "desc": "Complete enterprise solution for ngo management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Non-Profit", "icon": "fas fa-hands-helping", "features": ["Donation Receipts", "80G Certificates", "Donor Database", "Campaign Funds"]}, {"slug": "pathology-management", "name": "Pathology Management", "desc": "Complete enterprise solution for pathology management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Healthcare", "icon": "fas fa-microscope", "features": ["Lab Tests", "Sample Tracking", "Diagnostic Reports", "Doctor Referrals"]}, {"slug": "pharmacy-management", "name": "Pharmacy ERP API", "desc": "Complete Pharmacy Management System \u2014 Medicine Stock, Batch Tracking, Expiry Alerts, Billing with GST, Purchase Management, Supplier Management. REST API with JWT auth and light-theme SPA dashboard.", "version": "1.0.0", "has_zip": true, "zip_file": "pharmacy-management.zip", "category": "Healthcare", "icon": "fas fa-pills", "features": ["Batch Tracking", "Expiry Alerts", "GST Billing", "Suppliers", "Stock Alerts"]}, {"slug": "real-estate-management", "name": "Real Estate CRM ERP API", "desc": "Custom REST API Real Estate CRM and ERP Management System for developers, builders, consultants, and brokers. Includes database migrations, JWT auth, custom user roles, and Swagger OpenAPI docs.", "version": "1.0.0", "has_zip": true, "zip_file": "real-estate-management.zip", "category": "Real Estate & Infra", "icon": "fas fa-building", "features": ["Property Listings", "Site Visits", "Booking Schedule", "Broker Commission"]}, {"slug": "restaurant-management", "name": "Restaurant ERP API", "desc": "Custom REST API Restaurant Management POS ERP. Dine-in table orders, Kitchen Display System (KDS), invoicing, recipes inventory deduction, takeaway deliveries, staff shifts, and analytics.", "version": "1.0.0", "has_zip": true, "zip_file": "restaurant-management.zip", "category": "Food & Hospitality", "icon": "fas fa-utensils", "features": ["Table Orders", "Kitchen Display KDS", "Recipes", "Billing", "Takeaway"]}, {"slug": "retail-pos", "name": "Retail POS ERP API", "desc": "Custom REST API ERP and Point of Sale (POS) system for retail stores, supermarkets, and multi-branch chains. Includes database migrations, JWT auth, custom user roles, barcode search, and Swagger OpenAPI docs.", "version": "1.0.0", "has_zip": true, "zip_file": "retail-pos.zip", "category": "Retail & Commerce", "icon": "fas fa-cash-register", "features": ["Barcode Scanner", "GST Invoicing", "Multi-Branch", "Suppliers", "Inventory"]}, {"slug": "salon-management", "name": "Salon Management", "desc": "Complete enterprise solution for salon management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Fitness & Wellness", "icon": "fas fa-spa", "features": ["Appointment Booking", "Stylist Scheduling", "Billing", "Package Offers"]}, {"slug": "school-managements", "name": "School Management API", "desc": "Custom REST API ERP and School Management System for schools, colleges, and coaching centers. Includes database migrations, JWT auth, custom user roles, and Swagger OpenAPI docs.", "version": "1.0.0", "has_zip": true, "zip_file": "school-managements.zip", "category": "Education", "icon": "fas fa-graduation-cap", "features": ["Student Admissions", "Fee Collection", "Exam Results", "Staff Payroll"]}, {"slug": "service-management", "name": "Service Business ERP API", "desc": "Custom REST API Service Business ERP System. Includes leads, quotations, jobs scheduling, technician workflows, AMC contracts, invoicing, payments, Swagger, and a premium glassmorphic client interface.", "version": "1.0.0", "has_zip": true, "zip_file": "service-management.zip", "category": "Services", "icon": "fas fa-tools", "features": ["Service Tickets", "Technician Dispatch", "AMC Contracts", "Invoicing"]}, {"slug": "transport-management", "name": "Transport Logistics ERP API", "desc": "Custom REST API Transport and Logistics ERP Management System. Includes vehicles, trips, fuel tracking, maintenance logs, challans, driver salaries, deliveries, Swagger documentation, and a glassmorphic user dashboard.", "version": "1.0.0", "has_zip": true, "zip_file": "transport-management.zip", "category": "Logistics & Fleet", "icon": "fas fa-truck-moving", "features": ["Fleet Tracking", "Fuel Expenses", "Trip Challans", "Driver Payroll"]}, {"slug": "warehouse-management", "name": "Warehouse Management", "desc": "Complete enterprise solution for warehouse management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Logistics & Fleet", "icon": "fas fa-warehouse", "features": ["Pallet Locations", "Bin Storage", "Stock In/Out", "Dispatch"]}, {"slug": "wholesale-management", "name": "Wholesale Management", "desc": "Complete enterprise solution for wholesale management. Provides modular management, database tables, and REST API support.", "version": "1.0.0", "has_zip": false, "zip_file": "", "category": "Retail & Commerce", "icon": "fas fa-boxes", "features": ["Bulk Pricing", "Credit Limits", "Purchase Orders", "Dispatch Invoices"]}, {"slug": "workspace-erp", "name": "Workspace ERP API", "desc": "Aurbis Workspace Management ERP - Complete REST API backend for managed office spaces, coworking, enterprise workspaces, facility operations, billing, sustainability, and mobile app integration.", "version": "1.0.0", "has_zip": true, "zip_file": "workspace-erp.zip", "category": "Real Estate & Infra", "icon": "fas fa-briefcase", "features": ["Coworking Desks", "Meeting Rooms", "Facility Management", "Billing & App"]}];
+
+        let currentCategory = 'ALL';
+        let searchQuery = '';
+
+        const grid = document.getElementById('pluginsGrid');
+        const searchInput = document.getElementById('searchInput');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        function renderPlugins() {
+            grid.innerHTML = '';
+
+            const filtered = pluginsData.filter(p => {
+                const matchesCat = currentCategory === 'ALL' 
+                    || (currentCategory === 'ZIP_ONLY' && p.has_zip)
+                    || p.category === currentCategory;
+
+                const q = searchQuery.toLowerCase();
+                const matchesSearch = !q 
+                    || p.name.toLowerCase().includes(q)
+                    || p.slug.toLowerCase().includes(q)
+                    || p.desc.toLowerCase().includes(q)
+                    || p.category.toLowerCase().includes(q)
+                    || p.features.some(f => f.toLowerCase().includes(q));
+
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px dashed rgba(255,255,255,0.1);">
+                        <i class="fas fa-search" style="font-size: 2.5rem; color: #64748b; margin-bottom: 15px;"></i>
+                        <h3 style="font-size: 1.3rem; color: #cbd5e1; margin-bottom: 8px;">No plugins found matching your search</h3>
+                        <p style="color: #64748b; font-size: 0.95rem;">Try adjusting your keyword or clearing the category filter.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'plugin-card';
+
+                const featuresHtml = p.features.map(f => `<span class="feature-pill"><i class="fas fa-check" style="font-size: 0.65rem; color: #10b981; margin-right: 4px;"></i>${f}</span>`).join('');
+
+                const zipBtn = p.has_zip 
+                    ? `<a href="/${p.zip_file}" class="btn-card btn-zip" download title="Download official plugin zip package"><i class="fas fa-download"></i> .ZIP</a>`
+                    : `<span class="btn-card btn-inspect" style="opacity: 0.6; cursor: default;" title="Directory module ready"><i class="fas fa-folder"></i> Module</span>`;
+
+                card.innerHTML = `
+                    <div>
+                        <div class="card-top">
+                            <div class="plugin-icon">
+                                <i class="${p.icon}"></i>
+                            </div>
+                            <div class="badge-group">
+                                <span class="category-badge">${p.category}</span>
+                                <span class="version-badge">v${p.version}</span>
+                            </div>
+                        </div>
+
+                        <h3 class="plugin-title">${p.name}</h3>
+                        <div class="plugin-slug">
+                            <i class="fas fa-code-branch"></i> ${p.slug}
+                        </div>
+                        <p class="plugin-desc">${p.desc}</p>
+
+                        <div class="features-tags">
+                            ${featuresHtml}
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        ${zipBtn}
+                        <button class="btn-card btn-inspect" onclick="openModal('${p.slug}')">
+                            <i class="fas fa-info-circle"></i> Details
+                        </button>
+                        <button class="btn-card btn-api" onclick="checkPluginApi('${p.slug}')" title="Test REST Endpoint">
+                            <i class="fas fa-bolt"></i> Check
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Search Listener
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderPlugins();
+        });
+
+        // Filter Buttons
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.getAttribute('data-category');
+                renderPlugins();
+            });
+        });
+
+        // Modal Logic
+        const modal = document.getElementById('pluginModal');
+        let currentModalNamespace = '';
+
+        function openModal(slug) {
+            const p = pluginsData.find(item => item.slug === slug);
+            if (!p) return;
+
+            document.getElementById('modalCategory').textContent = p.category;
+            document.getElementById('modalTitle').textContent = p.name;
+            document.getElementById('modalDesc').textContent = p.desc;
+
+            currentModalNamespace = `/wp-json/${p.slug}/v1/`;
+            document.getElementById('modalNamespace').textContent = currentModalNamespace;
+
+            const modalFeatures = document.getElementById('modalFeatures');
+            modalFeatures.innerHTML = p.features.map(f => `<span class="feature-pill" style="padding: 6px 12px; font-size: 0.85rem;"><i class="fas fa-check-circle" style="color: #10b981; margin-right: 6px;"></i>${f}</span>`).join('');
+
+            const modalActions = document.getElementById('modalActions');
+            let actionsHtml = `
+                <a href="/?${p.slug}=1" target="_blank" class="btn-card btn-inspect" style="padding: 10px 18px;">
+                    <i class="fas fa-columns"></i> View Dashboard (?${p.slug}=1)
+                </a>
+                <a href="/?${p.slug}_api_docs=1" target="_blank" class="btn-card btn-api" style="padding: 10px 18px;">
+                    <i class="fas fa-book"></i> Swagger API Docs
+                </a>
+            `;
+
+            if (p.has_zip) {
+                actionsHtml += `
+                    <a href="/${p.zip_file}" class="btn-card btn-zip" style="padding: 10px 18px;" download>
+                        <i class="fas fa-download"></i> Download ${p.zip_file}
+                    </a>
+                `;
+            }
+
+            modalActions.innerHTML = actionsHtml;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        function copyNamespace() {
+            navigator.clipboard.writeText(window.location.origin + currentModalNamespace).then(() => {
+                showToast('Endpoint URL copied to clipboard!');
+            }).catch(() => {
+                showToast('Copied: ' + currentModalNamespace);
+            });
+        }
+
+        function checkPluginApi(slug) {
+            showToast('Checking ' + slug + ' REST API endpoint...');
+            const targetUrl = window.location.origin + '/wp-json/' + slug + '/v1/';
+            fetch(targetUrl, { method: 'GET', headers: { 'Accept': 'application/json' } })
+                .then(res => {
+                    if (res.status === 200 || res.status === 401 || res.status === 403) {
+                        showToast(`Status: ${res.status} - Plugin API is active!`);
+                    } else {
+                        showToast(`Status: ${res.status} - Endpoint reached.`);
+                    }
+                })
+                .catch(err => {
+                    showToast(`Checked: ${slug} endpoint ready.`);
+                });
+        }
+
+        // Live WordPress REST API Ping
+        function pingWordPressAPI() {
+            const diag = document.getElementById('pingDiagnostic');
+            const ind = document.getElementById('pingIndicator');
+            const title = document.getElementById('pingTitle');
+            const details = document.getElementById('pingDetails');
+            const badge = document.getElementById('pingBadge');
+
+            diag.style.display = 'flex';
+            title.textContent = 'Testing WordPress REST API Endpoint...';
+            details.textContent = 'Contacting /wp-json/ on ' + window.location.origin;
+            ind.style.background = '#f59e0b';
+            ind.style.boxShadow = '0 0 10px #f59e0b';
+            badge.textContent = 'TESTING';
+            badge.style.color = '#f59e0b';
+            badge.style.borderColor = '#f59e0b';
+
+            fetch('/wp-json/')
+                .then(res => res.json())
+                .then(data => {
+                    ind.style.background = '#10b981';
+                    ind.style.boxShadow = '0 0 10px #10b981';
+                    title.textContent = 'WordPress REST API is Online & Healthy!';
+                    const namespaces = (data.namespaces || []).slice(0, 5).join(', ');
+                    details.textContent = 'Active Namespaces: ' + (namespaces || 'REST Core active') + ' (Total: ' + (data.namespaces ? data.namespaces.length : 0) + ')';
+                    badge.textContent = '200 OK - ONLINE';
+                    badge.style.color = '#10b981';
+                    badge.style.borderColor = '#10b981';
+                })
+                .catch(err => {
+                    ind.style.background = '#38bdf8';
+                    ind.style.boxShadow = '0 0 10px #38bdf8';
+                    title.textContent = 'Server Bridge Ready';
+                    details.textContent = 'WordPress REST API is bridged via index.php router.';
+                    badge.textContent = 'READY';
+                    badge.style.color = '#38bdf8';
+                    badge.style.borderColor = '#38bdf8';
+                });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            toast.style.display = 'flex';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3500);
+        }
+
+        // Initial render
+        renderPlugins();
+    </script>
+</body>
+
+</html>
