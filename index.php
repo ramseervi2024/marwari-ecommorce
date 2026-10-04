@@ -154,16 +154,70 @@
                         </button>
                     </div>
                 </div>
-                <div class="hero-visual">
-                    <!-- Dynamic Lottie Logo/Animation -->
-                    <lottie-player 
-                        src="./ai-logo.json" 
-                        background="transparent" 
-                        speed="1" 
-                        style="width: 100%; height: 100%; max-width: 500px; margin: 0 auto;" 
-                        loop 
-                        autoplay>
-                    </lottie-player>
+                <div class="hero-visual" style="display: flex; justify-content: center; align-items: center; position: relative;">
+                    <!-- Custom Glowing AI Orb (No JSON needed) -->
+                    <style>
+                        .ai-core {
+                            width: 300px;
+                            height: 300px;
+                            position: relative;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        .core-ring {
+                            position: absolute;
+                            border-radius: 50%;
+                            border: 2px solid transparent;
+                            animation: spin infinite linear;
+                        }
+                        .ring-1 {
+                            width: 100%;
+                            height: 100%;
+                            border-top: 3px solid #00f0ff;
+                            border-right: 3px solid transparent;
+                            animation-duration: 3s;
+                            box-shadow: 0 0 20px #00f0ff, inset 0 0 20px #00f0ff;
+                        }
+                        .ring-2 {
+                            width: 80%;
+                            height: 80%;
+                            border-bottom: 3px solid #ff00ff;
+                            border-left: 3px solid transparent;
+                            animation-duration: 2s;
+                            animation-direction: reverse;
+                            box-shadow: 0 0 20px #ff00ff, inset 0 0 20px #ff00ff;
+                        }
+                        .ring-3 {
+                            width: 60%;
+                            height: 60%;
+                            border-top: 3px solid #b200ff;
+                            border-bottom: 3px solid #b200ff;
+                            animation-duration: 4s;
+                        }
+                        .core-center {
+                            width: 30%;
+                            height: 30%;
+                            background: radial-gradient(circle, #ffffff, #00f0ff);
+                            border-radius: 50%;
+                            box-shadow: 0 0 30px #00f0ff, 0 0 60px #00f0ff;
+                            animation: pulse 2s infinite ease-in-out;
+                        }
+                        @keyframes spin {
+                            0% { transform: rotate(0deg); }
+                            100% { transform: rotate(360deg); }
+                        }
+                        @keyframes pulse {
+                            0%, 100% { transform: scale(1); opacity: 0.8; }
+                            50% { transform: scale(1.2); opacity: 1; }
+                        }
+                    </style>
+                    <div class="ai-core">
+                        <div class="core-ring ring-1"></div>
+                        <div class="core-ring ring-2"></div>
+                        <div class="core-ring ring-3"></div>
+                        <div class="core-center"></div>
+                    </div>
                 </div>
             </div>
         </div>
