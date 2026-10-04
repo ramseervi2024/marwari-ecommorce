@@ -97,6 +97,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Lottie Player for Dynamic Animations -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 
 <body>
@@ -153,9 +155,15 @@
                     </div>
                 </div>
                 <div class="hero-visual">
-                    <iframe src="./3dname.html"
-                        style="width: 100%; height: 100%; border: none; overflow: hidden; background: transparent;"
-                        scrolling="no" allowtransparency="true"></iframe>
+                    <!-- Dynamic Lottie Logo/Animation -->
+                    <lottie-player 
+                        src="./ai-logo.json" 
+                        background="transparent" 
+                        speed="1" 
+                        style="width: 100%; height: 100%; max-width: 500px; margin: 0 auto;" 
+                        loop 
+                        autoplay>
+                    </lottie-player>
                 </div>
             </div>
         </div>
