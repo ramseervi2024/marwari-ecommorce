@@ -1,22 +1,565 @@
 <?php
-// Smart Router for RPS Digital World
-$request_uri = $_SERVER['REQUEST_URI'];
+/**
+ * RPS Digital World - Production Router & WordPress Bridge
+ * Handles Homepage, 404 Routing, and WordPress API / Admin seamlessly.
+ */
+
+$request_uri = $_SERVER['REQUEST_URI'] ?? '/';
 $path = parse_url($request_uri, PHP_URL_PATH);
 
-// FAILSAFE 404 REDIRECT:
-// If Apache routes a request starting with '/main/' to this file, it means the file does NOT exist!
-if ( strpos($path, '/main/') === 0 ) {
-    header('Location: /', true, 301);
+// Function to render the custom branded 404 page
+function rps_render_404() {
+    http_response_code(404);
+    if ( file_exists(__DIR__ . '/main/404.html') ) {
+        include __DIR__ . '/main/404.html';
+        exit;
+    }
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - You Are On The Wrong Page | RPS Digital World</title>
+    <meta name="description" content="The page you requested was not found. Return to RPS Digital World homepage.">
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="https://rpsdigitalworld.store/">
+
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --dark-bg: #0b0f19;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --text-light: #ffffff;
+            --text-muted: #94a3b8;
+            --text-dark: #1e293b;
+            --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: #0b0f19;
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--card-border);
+            height: 70px;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .nav-logo a {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-logo h2 span {
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 6px 0;
+        }
+
+        .nav-link:hover {
+            color: var(--text-light);
+        }
+
+        /* 404 Hero Section */
+        .error-hero {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 130px 24px 80px;
+            background: radial-gradient(circle at 50% 30%, rgba(118, 75, 162, 0.25) 0%, rgba(102, 126, 234, 0.1) 40%, rgba(11, 15, 25, 1) 85%);
+            overflow: hidden;
+        }
+
+        /* Ambient glowing background orbs */
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        .orb-1 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, #764ba2 0%, transparent 70%);
+            top: 15%;
+            left: 10%;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #f5576c 0%, transparent 70%);
+            bottom: 10%;
+            right: 10%;
+        }
+
+        .error-card {
+            position: relative;
+            z-index: 2;
+            max-width: 760px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 50px 36px;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(245, 87, 108, 0.15);
+            border: 1px solid rgba(245, 87, 108, 0.4);
+            border-radius: 100px;
+            padding: 8px 24px;
+            color: #ff758c;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.2);
+        }
+
+        .status-badge i {
+            font-size: 1rem;
+            animation: pulseWarning 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseWarning {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.15);
+                opacity: 0.8;
+            }
+        }
+
+        /* 404 Number */
+        .error-code {
+            font-size: clamp(5.5rem, 15vw, 9.5rem);
+            font-weight: 900;
+            line-height: 0.95;
+            margin-bottom: 12px;
+            letter-spacing: -3px;
+            background: linear-gradient(135deg, #ffffff 10%, #a5b4fc 45%, #f472b6 90%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 15px 40px rgba(165, 180, 252, 0.2);
+        }
+
+        /* Heading */
+        .error-title {
+            font-size: clamp(1.6rem, 4vw, 2.3rem);
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .error-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 580px;
+            margin: 0 auto 30px;
+            line-height: 1.65;
+        }
+
+        /* Countdown Pill */
+        .countdown-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(102, 126, 234, 0.12);
+            border: 1px solid rgba(102, 126, 234, 0.35);
+            border-radius: 100px;
+            padding: 10px 24px;
+            margin-bottom: 35px;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .countdown-pill span {
+            color: #38bdf8;
+            font-weight: 800;
+            font-size: 1.15rem;
+        }
+
+        /* Button group */
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 36px;
+            border-radius: 50px;
+            font-size: 1.02rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.45);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 36px rgba(102, 126, 234, 0.6);
+            background: linear-gradient(135deg, #7b90f7 0%, #8a57be 100%);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.16);
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            background: #070a11;
+            border-top: 1px solid var(--card-border);
+            padding: 50px 24px 30px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-brand h3 span {
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-col h4 {
+            color: #ffffff;
+            font-size: 1.1rem;
+            margin-bottom: 18px;
+            font-weight: 600;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: #38bdf8;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .footer-bottom a {
+            color: #94a3b8;
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            color: #ffffff;
+        }
+
+        @media (max-width: 900px) {
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+
+            .error-card {
+                padding: 40px 20px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="/">
+                    <h2>RPS DIGITAL <span>WORLD</span></h2>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/#services" class="nav-link">Services</a></li>
+                <li><a href="/main/portpolio.html" class="nav-link">Portfolio</a></li>
+                <li><a href="/#about" class="nav-link">About</a></li>
+                <li><a href="/#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Error Hero Section -->
+    <main class="error-hero">
+        <div class="ambient-orb orb-1"></div>
+        <div class="ambient-orb orb-2"></div>
+
+        <div class="error-card">
+            <!-- Wrong Page Badge -->
+            <div class="status-badge">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>You Are On The Wrong Page</span>
+            </div>
+
+            <!-- Big 404 Visual -->
+            <div class="error-code">404</div>
+
+            <!-- Descriptive Titles -->
+            <h1 class="error-title">Page Not Found</h1>
+            <p class="error-desc">
+                The URL or showcase demo you are trying to visit does not exist, has been removed, or was mistyped.
+                Let's get you back on track!
+            </p>
+
+            <!-- Auto Redirect Notice -->
+            <div class="countdown-pill">
+                <i class="fas fa-sync-alt fa-spin" style="color: #38bdf8;"></i>
+                <span>Redirecting to main page in <strong id="timer-sec">8</strong>s</span>
+            </div>
+
+            <!-- Call to Action Buttons -->
+            <div class="btn-group">
+                <a href="/" class="btn btn-primary">
+                    <i class="fas fa-home"></i>
+                    Redirect to Main Page
+                </a>
+                <a href="/main/portpolio.html" class="btn btn-secondary">
+                    <i class="fas fa-th-large"></i>
+                    Explore Showcase Projects
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>RPS DIGITAL <span>WORLD</span></h3>
+                <p>Empowering local and global businesses through high-impact digital solutions, custom software, mobile
+                    apps, and IT consultations.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="/#services">Web Development</a></li>
+                    <li><a href="/#services">Mobile Apps</a></li>
+                    <li><a href="/#services">Backend & APIs</a></li>
+                    <li><a href="/#services">SEO & Marketing</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/main/portpolio.html">Portfolio</a></li>
+                    <li><a href="/#about">About Us</a></li>
+                    <li><a href="/#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact Info</h4>
+                <p style="margin-bottom: 8px;"><i class="fas fa-envelope"
+                        style="margin-right: 8px; color: #38bdf8;"></i> info@rpstechno.com</p>
+                <p style="margin-bottom: 8px;"><i class="fas fa-map-marker-alt"
+                        style="margin-right: 8px; color: #f472b6;"></i> Surayata, Rajasthan 306104</p>
+                <p><i class="fas fa-clock" style="margin-right: 8px; color: #a5b4fc;"></i> Mon - Sat: 10 AM - 6 PM IST
+                </p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 RPS Digital World. All rights reserved. | <a href="/main/privacy-policy.html">Privacy
+                    Policy</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Automatic redirection countdown
+        let secondsLeft = 8;
+        const timerSec = document.getElementById('timer-sec');
+        const interval = setInterval(() => {
+            secondsLeft--;
+            if (timerSec) timerSec.textContent = secondsLeft;
+            if (secondsLeft <= 0) {
+                clearInterval(interval);
+                window.location.href = '/';
+            }
+        }, 1000);
+    </script>
+</body>
+
+</html>
+<?php
     exit;
 }
 
-
-// Check if the request is trying to access the root domain (the home page)
-if ( $path === '/' || $path === '/index.php' || $path === '' ) {
-    
-    // Check if it's NOT a WordPress API call
-    if ( !isset($_GET['rest_route']) ) {
-        // Output the static HTML landing page
+// 1. Check if the request is trying to access the root domain (the home page)
+if ( ($path === '/' || $path === '/index.php' || $path === '') && !isset($_GET['rest_route']) ) {
+    // Output the static HTML landing page
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -974,10 +1517,32 @@ if ( $path === '/' || $path === '/index.php' || $path === '' ) {
 
 </html>
 <?php
-        exit;
-    }
+    exit;
 }
 
-// For ALL other requests (REST API, wp-admin, plugins), load WordPress normally
-define( 'WP_USE_THEMES', true );
-require __DIR__ . '/wp-blog-header.php';
+// 2. Check if a request to /main/ was redirected here by Apache
+// (If the physical file existed in /main/, Apache would have served it statically without hitting index.php.
+// If it reached index.php with /main/, it is a 404 Not Found!)
+if ( strpos($path, '/main/') === 0 ) {
+    rps_render_404();
+}
+
+// 3. For ALL other requests (REST API, wp-admin, plugins, or unknown URLs):
+// Load WordPress environment
+if ( file_exists(__DIR__ . '/wp-load.php') ) {
+    $wp_did_header = true;
+    require_once __DIR__ . '/wp-load.php';
+    wp();
+
+    // If WordPress determined this is a 404 (no post/page/query found)
+    if ( is_404() ) {
+        rps_render_404();
+    }
+
+    // Otherwise, load WordPress template/theme/admin normally
+    require_once ABSPATH . WPINC . '/template-loader.php';
+    exit;
+}
+
+// Fallback if wp-load.php does not exist
+rps_render_404();
