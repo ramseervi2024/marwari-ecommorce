@@ -392,7 +392,7 @@ function seedSampleOrders() {
 
 // Theme Management
 function initTheme() {
-  const isLight = localStorage.getItem("light_mode") === "true";
+  const isLight = localStorage.getItem("light_mode") !== "false"; // Default to light mode
   const themeIcon = document.getElementById("theme-icon");
   if (isLight) {
     document.body.classList.add("light-mode");
