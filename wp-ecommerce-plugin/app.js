@@ -507,19 +507,31 @@ function renderStorefront(category = "All", query = "") {
   filtered.forEach(p => {
     const card = document.createElement("div");
     card.className = "product-card";
+    const originalPrice = p.price + Math.floor(p.price * 0.15); // Add ~15% for original price display
     card.innerHTML = `
-      <div class="product-image-container">
-        ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
-        <img src="${p.image}" alt="${p.name}" loading="lazy">
-      </div>
-      <div class="product-info">
-        <span class="product-category">${p.category}</span>
-        <h3 class="product-name" title="${p.name}">${p.name}</h3>
-        <p class="product-description-snippet">${p.description}</p>
-        <div class="product-footer">
-          <span class="product-price">₹${p.price.toLocaleString("en-IN")}</span>
-          <button class="add-cart-btn" data-id="${p.id}" title="Quick Add to Cart">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg>
+      <div style="border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column;">
+        <div style="position: relative; width: 100%; aspect-ratio: 1/1; overflow: hidden; background: #f8fafc;">
+          <span style="position: absolute; top: 0.75rem; left: 0.75rem; background: #b91c1c; color: white; padding: 0.25rem 0.5rem; font-size: 0.65rem; font-weight: 700; border-radius: 4px; z-index: 2;">10% OFF</span>
+          <button style="position: absolute; top: 0.75rem; right: 0.75rem; background: white; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; z-index: 2; color: #94a3b8;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          </button>
+          <img src="${p.image}" alt="${p.name}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <div style="padding: 1.25rem; display: flex; flex-direction: column; flex: 1;">
+          <div style="font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; color: #64748b; text-transform: uppercase; margin-bottom: 0.35rem;">${p.category}</div>
+          <h3 style="font-size: 1.1rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0; line-height: 1.3;">${p.name}</h3>
+          <div style="display: flex; align-items: center; gap: 0.25rem; margin-bottom: 0.75rem;">
+             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#fbbf24" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+             <span style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-left: 2px;">4.8</span> 
+             <span style="font-size: 0.8rem; color: #94a3b8;">(134)</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 1.25rem; margin-top: auto;">
+             <span style="font-size: 1.25rem; font-weight: 800; color: #991b1b;">₹${p.price.toLocaleString("en-IN")}</span>
+             <span style="font-size: 0.85rem; font-weight: 500; color: #94a3b8; text-decoration: line-through;">₹${originalPrice.toLocaleString("en-IN")}</span>
+          </div>
+          <button class="add-cart-btn" data-id="${p.id}" style="width: 100%; background: #991b1b; color: white; border: none; padding: 0.75rem; border-radius: 6px; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 0.5rem; cursor: pointer;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+            Add To Cart
           </button>
         </div>
       </div>

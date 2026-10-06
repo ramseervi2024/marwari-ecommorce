@@ -16,144 +16,312 @@
 
 <body>
 
-  <!-- Top Notification Toast Container -->
-  <div class="toast-container" id="toast-container"></div>
-
-  <!-- Top Banner -->
-  <div style="background: #0d1f3b; color: #fff; font-size: 0.75rem; padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center;">
-    <div style="display: flex; gap: 1.5rem;">
-      <span style="display: flex; align-items: center; gap: 0.5rem;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 22M22 2L12 22"/></svg> Authentic Rajasthan Heritage</span>
-      <span style="display: flex; align-items: center; gap: 0.5rem;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg> Handcrafted by Local Artisans</span>
-      <span style="display: flex; align-items: center; gap: 0.5rem;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Pan-India Delivery</span>
-    </div>
-    <div style="color: #b58530; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Free Shipping on Orders Above ₹999
-    </div>
+  <!-- Notice Bar -->
+  <div style="background-color: var(--primary); color: #fef08a; padding: 0.5rem 0; font-size: 0.75rem; font-weight: 500; display: flex; justify-content: center; gap: 2rem;">
+    <span style="display:flex; align-items:center; gap:0.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Authentic Rajasthan Heritage</span>
+    <span style="display:flex; align-items:center; gap:0.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg> Handcrafted by Local Artisans</span>
+    <span style="display:flex; align-items:center; gap:0.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16 10-4 4-4-4"/></svg> Pan-India Delivery</span>
+    <span style="display:flex; align-items:center; gap:0.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/></svg> Free Shipping on Orders Above ₹999</span>
   </div>
 
   <!-- Royal Navigation Header -->
-  <header class="navbar" style="background: var(--bg-card); border-bottom: 1px solid var(--border-color); padding: 1rem 0;">
-    <div class="container nav-container" style="display: flex; align-items: center; justify-content: space-between;">
-      <a href="index.html" class="logo animate-fade-in" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#b58530" stroke-width="1.5"><path d="M12 2L14 8h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z"/></svg>
-        <div style="display: flex; flex-direction: column;">
-          <span style="font-size: 1.25rem; font-weight: 700; color: #1e293b; letter-spacing: 1px;">MARWARI</span>
-          <span style="font-size: 0.6rem; color: #b58530; letter-spacing: 2px;">E-COMMERCE</span>
+  <header class="navbar" style="border-bottom: 1px solid var(--border-color); background: var(--bg-card); position: sticky; top: 0; z-index: 50; padding: 1rem 0;">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
+      <a href="index.html" class="logo animate-fade-in" style="display:flex; align-items:center; gap:0.75rem; text-decoration:none;">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="19" stroke="#b45309" stroke-width="2" stroke-dasharray="4 2"/>
+          <path d="M20 5 L23 15 L33 15 L25 22 L28 32 L20 26 L12 32 L15 22 L7 15 L17 15 Z" fill="#b45309"/>
+        </svg>
+        <div style="display:flex; flex-direction:column; line-height:1.2;">
+          <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.5rem; letter-spacing: 1px; color: var(--primary);">MARWARI</span>
+          <span style="font-size: 0.65rem; font-weight: 700; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase;">E-Commerce</span>
         </div>
       </a>
 
       <!-- Search Bar -->
-      <div class="search-bar" style="display: flex; align-items: center; background: #fff; border: 1px solid var(--border-color); border-radius: 99px; width: 450px; overflow: hidden; padding-left: 1rem;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.3-4.3" />
-        </svg>
-        <input type="text" id="search-input" placeholder="Search sarees, mojari, jewellery, handicrafts..." style="flex: 1; border: none; outline: none; padding: 0.75rem; font-size: 0.9rem;">
-        <button style="background: #b58530; border: none; padding: 0.75rem 1.25rem; cursor: pointer; color: #fff;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        </button>
+      <div class="search-bar" style="display:flex; align-items:center; background:var(--bg-app); border:1px solid var(--border-color); border-radius:99px; padding:0.6rem 1.25rem; width:450px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="search-input" placeholder="Search sarees, mojari, jewellery, handicrafts..." style="border:none; background:none; outline:none; margin-left:0.75rem; width:100%; font-size:0.9rem; color:var(--text-primary);">
       </div>
 
-      <!-- Actions (Cart, Theme, Auth Profile) -->
-      <div class="nav-actions" style="display: flex; gap: 1.5rem;">
-        <button class="nav-btn" style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; background: none; border: none; cursor: pointer; color: #475569;">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <span style="font-size: 0.7rem; font-weight: 500;">Wishlist</span>
+      <!-- Actions -->
+      <div class="nav-actions" style="display:flex; align-items:center; gap:1.5rem;">
+        <button style="background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:0.25rem; color:var(--text-secondary); cursor:pointer;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          <span style="font-size:0.65rem; font-weight:600; text-transform:uppercase;">Wishlist</span>
         </button>
-        <button class="nav-btn" id="cart-trigger" style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; background: none; border: none; cursor: pointer; color: #475569; position: relative;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="8" cy="21" r="1" />
-            <circle cx="19" cy="21" r="1" />
-            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-          </svg>
-          <span class="cart-count" style="position: absolute; top: -5px; right: 0; background: #921224; color: #fff; font-size: 0.6rem; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">0</span>
-          <span style="font-size: 0.7rem; font-weight: 500;">Cart</span>
+        <button class="nav-btn" id="cart-trigger" style="background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:0.25rem; color:var(--text-secondary); cursor:pointer; position:relative;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          <span class="cart-count" style="display:none; position:absolute; top:-5px; right:5px; background:var(--accent); color:white; font-size:0.65rem; padding:0.1rem 0.4rem; border-radius:99px; font-weight:bold;">0</span>
+          <span style="font-size:0.65rem; font-weight:600; text-transform:uppercase;">Cart</span>
         </button>
-        <div class="user-profile-menu" id="user-menu-container" style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
-          <!-- Dynamically populated by app.js -->
+        <div id="user-menu-container" style="display:flex; flex-direction:column; align-items:center; gap:0.25rem; color:var(--text-secondary); cursor:pointer;">
+          <!-- Populated by app.js -->
         </div>
       </div>
     </div>
-  </header>
-  
-  <nav style="background: var(--bg-card); border-bottom: 1px solid var(--border-color); padding: 0.75rem 0;">
-    <div class="container" style="display: flex; gap: 2rem; font-size: 0.85rem; font-weight: 600; color: #1e293b;">
-        <a href="#" style="color: #921224; text-decoration: none; border-bottom: 2px solid #921224; padding-bottom: 0.2rem;">Home</a>
-        <a href="#shop-section" style="color: #1e293b; text-decoration: none; display: flex; align-items: center; gap: 0.25rem;">Shop <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></a>
-        <a href="#" style="color: #1e293b; text-decoration: none;">Royal Apparel</a>
-        <a href="#" style="color: #1e293b; text-decoration: none;">Handicrafts</a>
-        <a href="#" style="color: #1e293b; text-decoration: none;">Jewellery</a>
-        <a href="#" style="color: #1e293b; text-decoration: none;">Food & Spices</a>
-        <a href="#" style="color: #1e293b; text-decoration: none;">Home & Decor</a>
-        <a href="#" style="color: #1e293b; text-decoration: none;">Our Story</a>
+    
+    <!-- Secondary Nav -->
+    <div style="border-top:1px solid var(--border-color); margin-top:1rem; padding-top:1rem;">
+      <div class="container" style="max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
+        <ul style="display:flex; list-style:none; gap:2.5rem; justify-content:center; margin:0; padding:0; font-size:0.9rem; font-weight:600; color:var(--text-primary);">
+          <li style="color:var(--primary); border-bottom:2px solid var(--primary); padding-bottom:0.25rem; cursor:pointer;">Home</li>
+          <li style="cursor:pointer;">Shop <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; margin-bottom:-2px;"><path d="m6 9 6 6 6-6"/></svg></li>
+          <li style="cursor:pointer; color:var(--text-secondary);">Royal Apparel</li>
+          <li style="cursor:pointer; color:var(--text-secondary);">Handicrafts</li>
+          <li style="cursor:pointer; color:var(--text-secondary);">Jewellery</li>
+          <li style="cursor:pointer; color:var(--text-secondary);">Food & Spices</li>
+          <li style="cursor:pointer; color:var(--text-secondary);">Home & Décor</li>
+          <li style="cursor:pointer; color:var(--text-secondary);">Our Story</li>
+        </ul>
+      </div>
     </div>
-  </nav>
+  </header>
 
   <!-- Storefront view containers -->
 
   <!-- Hero Section -->
-  <section class="hero" id="hero-section" style="position: relative; width: 100%; min-height: 500px; background: url('https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat; display: flex; align-items: center; border-radius: 0;">
-    <!-- Gradient Overlay -->
-    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to right, rgba(252, 250, 248, 0.95) 0%, rgba(252, 250, 248, 0.7) 40%, transparent 100%);"></div>
-    
-    <div class="container hero-content animate-fade-in" style="position: relative; z-index: 10; max-width: 600px; margin: 0; margin-left: auto; margin-right: auto; padding: 4rem 2rem;">
-      <span style="color: #b58530; font-weight: 700; letter-spacing: 2px; font-size: 0.85rem; text-transform: uppercase;">Authentic Rajasthan</span>
-      <h1 style="font-size: 4rem; color: #1e293b; line-height: 1.1; margin: 1rem 0; font-family: 'Playfair Display', serif;">Timeless Heritage.<br>Crafted for Today.</h1>
-      <p style="color: #475569; font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">Discover handcrafted treasures from Rajasthan – traditional textiles, jewellery, handicrafts and authentic Marwari delicacies.</p>
-      
-      <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 3rem;">
-        <button onclick="document.getElementById('shop-section').scrollIntoView({behavior: 'smooth'})" style="background: #921224; color: #fff; padding: 1rem 2rem; border: none; border-radius: 99px; font-weight: 600; font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 14px rgba(146, 18, 36, 0.4);">
-          Explore Collection <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </button>
-        <button style="background: transparent; color: #1e293b; padding: 1rem 2rem; border: 2px solid #e2e8f0; border-radius: 99px; font-weight: 600; font-size: 1rem; cursor: pointer;">
-          Our Story
-        </button>
-      </div>
+  <div class="toast-container" id="toast-container"></div>
 
-      <div style="display: flex; gap: 2rem; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 1.5rem;">
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-          <svg width="24" height="24" fill="none" stroke="#b58530" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-          <div style="font-size: 0.75rem; color: #1e293b; font-weight: 600; line-height: 1.2;">100% Authentic<br><span style="color: #475569; font-weight: 400;">Rajasthan Craft</span></div>
+  <!-- Hero Section -->
+  <section class="hero" id="hero-section" style="position:relative; min-height:600px; display:flex; align-items:center; background-image:url('https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=1920&q=80'); background-size:cover; background-position:center;">
+    <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 40%, rgba(255,255,255,0) 100%); z-index:1;"></div>
+    <div class="container" style="position:relative; z-index:2; max-width:1400px; margin:0 auto; padding:0 4rem;">
+      <div class="hero-content animate-fade-in" style="max-width:550px;">
+        <span style="font-size:0.85rem; font-weight:700; letter-spacing:2px; color:#b45309; text-transform:uppercase; margin-bottom:1rem; display:block;">AUTHENTIC RAJASTHAN</span>
+        <h1 style="font-family: 'Plus Jakarta Sans', serif; font-size:4.5rem; font-weight:800; line-height:1.1; color:#0f172a; margin-bottom:1.5rem;">Timeless Heritage.<br>Crafted for Today.</h1>
+        <p style="font-size:1.1rem; color:#475569; line-height:1.6; margin-bottom:2.5rem;">Discover handcrafted treasures from Rajasthan — traditional textiles, jewellery, handicrafts and authentic Marwari delicacies.</p>
+        <div style="display:flex; gap:1rem;">
+          <button class="btn-primary" onclick="document.getElementById('shop-section').scrollIntoView({behavior: 'smooth'})" style="background:#b45309; border:none; padding:1rem 2rem; font-size:1rem; border-radius:6px; display:flex; align-items:center; gap:0.5rem; font-weight:600;">
+            Explore Collection <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <button style="background:white; border:1px solid #cbd5e1; color:#0f172a; padding:1rem 2rem; font-size:1rem; border-radius:6px; font-weight:600; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+            Our Story
+          </button>
         </div>
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-          <svg width="24" height="24" fill="none" stroke="#b58530" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          <div style="font-size: 0.75rem; color: #1e293b; font-weight: 600; line-height: 1.2;">Artisan Made<br><span style="color: #475569; font-weight: 400;">Since Generations</span></div>
-        </div>
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-          <svg width="24" height="24" fill="none" stroke="#b58530" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
-          <div style="font-size: 0.75rem; color: #1e293b; font-weight: 600; line-height: 1.2;">Tradition<br><span style="color: #475569; font-weight: 400;">Meets Modern Living</span></div>
+        <div style="display:flex; gap:2rem; margin-top:3rem; padding-top:2rem; border-top:1px solid rgba(0,0,0,0.1);">
+          <div style="display:flex; align-items:center; gap:0.75rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+            <div><div style="font-weight:700; font-size:0.85rem; color:#0f172a;">100% Authentic</div><div style="font-size:0.75rem; color:#64748b;">Rajasthan Craft</div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.75rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <div><div style="font-weight:700; font-size:0.85rem; color:#0f172a;">Artisan Made</div><div style="font-size:0.75rem; color:#64748b;">Since Generations</div></div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Categories Filter Tab Slider -->
-  <section class="categories-section" id="categories-section">
-    <div class="container">
-      <div class="category-tabs">
-        <button class="category-tab active" data-category="All">All Treasures</button>
-        <button class="category-tab" data-category="Apparel">Royal Apparel</button>
-        <button class="category-tab" data-category="Handicrafts">Jaipur Handicrafts</button>
-        <button class="category-tab" data-category="Jewelry">Silver Jewelry</button>
-        <button class="category-tab" data-category="Sweets & Spices">Sweets & Spices</button>
+  <!-- Shop by Category Image Grid -->
+  <section class="categories-section" id="categories-section" style="padding: 5rem 0; background-color: #fafaf9;">
+    <div class="container" style="max-width:1400px; margin:0 auto; padding:0 2rem;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:2.5rem;">
+        <div>
+          <span style="font-size:0.75rem; font-weight:700; letter-spacing:2px; color:#b45309; text-transform:uppercase; margin-bottom:0.5rem; display:block;">SHOP BY CATEGORY</span>
+          <h2 style="font-family: 'Plus Jakarta Sans', serif; font-size:2.25rem; font-weight:700; color:#0f172a; margin:0;">Explore Our Heritage Collections</h2>
+        </div>
+        <a href="#" style="color:#b45309; font-weight:600; text-decoration:none; display:flex; align-items:center; gap:0.25rem; font-size:0.95rem;">View All Categories <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a>
+      </div>
+      
+      <div class="category-tabs" style="display:grid; grid-template-columns:repeat(6, 1fr); gap:1.5rem;">
+        <div class="category-tab active" data-category="Apparel" style="cursor:pointer; display:flex; flex-direction:column; gap:1rem;">
+          <img src="https://images.unsplash.com/photo-1583391733958-6c7827810355?auto=format&fit=crop&w=300&q=80" alt="Royal Apparel" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+          <div>
+            <h3 style="font-size:1.1rem; font-weight:600; color:#0f172a; margin:0 0 0.25rem 0;">Royal Apparel</h3>
+            <span style="color:#b45309; font-size:0.85rem; font-weight:500;">Explore &rarr;</span>
+          </div>
+        </div>
+        <div class="category-tab" data-category="Handicrafts" style="cursor:pointer; display:flex; flex-direction:column; gap:1rem;">
+          <img src="https://images.unsplash.com/photo-1610715936287-6c2ab208cb22?auto=format&fit=crop&w=300&q=80" alt="Handicrafts" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+          <div>
+            <h3 style="font-size:1.1rem; font-weight:600; color:#0f172a; margin:0 0 0.25rem 0;">Handicrafts</h3>
+            <span style="color:#b45309; font-size:0.85rem; font-weight:500;">Explore &rarr;</span>
+          </div>
+        </div>
+        <div class="category-tab" data-category="Jewelry" style="cursor:pointer; display:flex; flex-direction:column; gap:1rem;">
+          <img src="https://images.unsplash.com/photo-1599643477873-1cd6b9bfd3fb?auto=format&fit=crop&w=300&q=80" alt="Silver Jewellery" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+          <div>
+            <h3 style="font-size:1.1rem; font-weight:600; color:#0f172a; margin:0 0 0.25rem 0;">Silver Jewellery</h3>
+            <span style="color:#b45309; font-size:0.85rem; font-weight:500;">Explore &rarr;</span>
+          </div>
+        </div>
+        <div class="category-tab" data-category="All" style="cursor:pointer; display:flex; flex-direction:column; gap:1rem;">
+          <img src="https://images.unsplash.com/photo-1601058269785-5b48bc4e393b?auto=format&fit=crop&w=300&q=80" alt="Marwari Mojari" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+          <div>
+            <h3 style="font-size:1.1rem; font-weight:600; color:#0f172a; margin:0 0 0.25rem 0;">Marwari Mojari</h3>
+            <span style="color:#b45309; font-size:0.85rem; font-weight:500;">Explore &rarr;</span>
+          </div>
+        </div>
+        <div class="category-tab" data-category="Sweets & Spices" style="cursor:pointer; display:flex; flex-direction:column; gap:1rem;">
+          <img src="https://images.unsplash.com/photo-1605197584547-c917ee72f887?auto=format&fit=crop&w=300&q=80" alt="Sweets & Spices" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+          <div>
+            <h3 style="font-size:1.1rem; font-weight:600; color:#0f172a; margin:0 0 0.25rem 0;">Sweets & Spices</h3>
+            <span style="color:#b45309; font-size:0.85rem; font-weight:500;">Explore &rarr;</span>
+          </div>
+        </div>
+        <div class="category-tab" data-category="All" style="cursor:pointer; display:flex; flex-direction:column; gap:1rem;">
+          <img src="https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?auto=format&fit=crop&w=300&q=80" alt="Home & Decor" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+          <div>
+            <h3 style="font-size:1.1rem; font-weight:600; color:#0f172a; margin:0 0 0.25rem 0;">Home & Décor</h3>
+            <span style="color:#b45309; font-size:0.85rem; font-weight:500;">Explore &rarr;</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Products Main Storefront Grid -->
-  <section class="shop-section" id="shop-section">
-    <div class="container">
-      <div class="section-title">
-        <h2>Our Curated <span>Heritage Collection</span></h2>
+  <section class="shop-section" id="shop-section" style="padding: 5rem 0;">
+    <div class="container" style="max-width:1400px; margin:0 auto; padding:0 2rem;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:2.5rem;">
+        <div>
+          <h2 style="font-family: 'Plus Jakarta Sans', serif; font-size:2.25rem; font-weight:700; color:#0f172a; margin:0 0 0.5rem 0;">Featured Treasures</h2>
+          <span style="font-size:1rem; color:#475569;">Handpicked favorites from our royal collection</span>
+        </div>
+        <a href="#" style="color:#b45309; font-weight:600; text-decoration:none; display:flex; align-items:center; gap:0.25rem; font-size:0.95rem;">View All Products <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a>
       </div>
-      <div class="products-grid" id="products-container">
+      <div class="products-grid" id="products-container" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:2rem;">
         <!-- Dynamically Populated Product Cards by app.js -->
       </div>
     </div>
   </section>
+  <!-- Shop by Heritage -->
+  <section style="padding: 5rem 0; background-color: white;">
+    <div class="container" style="max-width:1400px; margin:0 auto; padding:0 2rem;">
+      <div style="display:flex; align-items:flex-end; gap:3rem; margin-bottom:3rem;">
+        <div style="flex: 0 0 350px;">
+          <span style="font-size:0.75rem; font-weight:700; letter-spacing:2px; color:#b45309; text-transform:uppercase; margin-bottom:0.5rem; display:block;">SHOP BY HERITAGE</span>
+          <h2 style="font-family: 'Plus Jakarta Sans', serif; font-size:2.25rem; font-weight:700; color:#0f172a; margin:0 0 1rem 0;">The Royal Cities of Rajasthan</h2>
+          <p style="font-size:1rem; color:#475569; margin-bottom:1.5rem;">Explore unique treasures from the royal cities known for their rich culture, art and craftsmanship.</p>
+          <button style="background:#b45309; color:white; border:none; padding:0.75rem 1.5rem; border-radius:99px; font-weight:600; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; gap:0.5rem;">
+            Explore All Cities <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+        <div style="display:flex; gap:1.5rem; flex:1; overflow-x:auto; padding-bottom:1rem;">
+          <div style="min-width:200px;">
+            <img src="https://images.unsplash.com/photo-1599839619722-39751411ea63?auto=format&fit=crop&w=400&q=80" alt="Jodhpur" style="width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:12px; margin-bottom:1rem;">
+            <h4 style="margin:0 0 0.25rem 0; font-size:1.1rem; color:#0f172a;">Jodhpur</h4>
+            <span style="font-size:0.85rem; color:#64748b;">Royal Apparel</span>
+          </div>
+          <div style="min-width:200px;">
+            <img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format&fit=crop&w=400&q=80" alt="Jaipur" style="width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:12px; margin-bottom:1rem;">
+            <h4 style="margin:0 0 0.25rem 0; font-size:1.1rem; color:#0f172a;">Jaipur</h4>
+            <span style="font-size:0.85rem; color:#64748b;">Blue Pottery</span>
+          </div>
+          <div style="min-width:200px;">
+            <img src="https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?auto=format&fit=crop&w=400&q=80" alt="Bikaner" style="width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:12px; margin-bottom:1rem;">
+            <h4 style="margin:0 0 0.25rem 0; font-size:1.1rem; color:#0f172a;">Bikaner</h4>
+            <span style="font-size:0.85rem; color:#64748b;">Sweets & Spices</span>
+          </div>
+          <div style="min-width:200px;">
+            <img src="https://images.unsplash.com/photo-1600100397608-f010f419b9bc?auto=format&fit=crop&w=400&q=80" alt="Udaipur" style="width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:12px; margin-bottom:1rem;">
+            <h4 style="margin:0 0 0.25rem 0; font-size:1.1rem; color:#0f172a;">Udaipur</h4>
+            <span style="font-size:0.85rem; color:#64748b;">Silver Crafts</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- Meet the Artisans -->
+  <section style="padding: 5rem 0; background-color: #f8fafc;">
+    <div class="container" style="max-width:1400px; margin:0 auto; padding:0 2rem;">
+      <div style="display:flex; align-items:center; gap:4rem; background:white; border-radius:24px; padding:3rem; box-shadow:0 10px 15px -3px rgba(0,0,0,0.05);">
+        <div style="flex:1; position:relative;">
+          <img src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=800&q=80" alt="Artisan" style="width:100%; border-radius:16px; object-fit:cover; aspect-ratio:16/9;">
+          <button style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:64px; height:64px; border-radius:50%; background:rgba(255,255,255,0.9); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#b45309" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </button>
+        </div>
+        <div style="flex:1;">
+          <span style="font-size:0.75rem; font-weight:700; letter-spacing:2px; color:#b45309; text-transform:uppercase; margin-bottom:0.5rem; display:block;">ARTISAN STORIES</span>
+          <h2 style="font-family: 'Plus Jakarta Sans', serif; font-size:2.25rem; font-weight:700; color:#0f172a; margin:0 0 1rem 0;">Meet the Artisans</h2>
+          <p style="font-size:1.1rem; color:#475569; margin-bottom:2rem; line-height:1.6;">Every product carries a story of tradition, skill and generations of craftsmanship.</p>
+          <button style="background:#b45309; color:white; border:none; padding:0.75rem 1.5rem; border-radius:99px; font-weight:600; font-size:0.9rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.5rem; margin-bottom:2rem;">
+            Discover Their Story <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <div style="border-left: 3px solid #b45309; padding-left: 1.5rem; font-style:italic; color:#64748b; font-size:1.1rem; line-height:1.6;">
+            "Our hands create more than products, we create a piece of our heritage."
+            <div style="font-style:normal; font-size:0.85rem; font-weight:600; color:#0f172a; margin-top:0.75rem;">— Jaipur Blue Pottery Artisan</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- The Marwari Legacy Banner -->
+  <section style="position:relative; padding:8rem 0; display:flex; align-items:center; background-image:url('https://images.unsplash.com/photo-1594451000755-e7eb7e8d28df?auto=format&fit=crop&w=1920&q=80'); background-size:cover; background-position:center;">
+    <div style="position:absolute; inset:0; background:rgba(15,23,42,0.8); z-index:1;"></div>
+    <div class="container" style="position:relative; z-index:2; max-width:1400px; margin:0 auto; padding:0 2rem; color:white;">
+      <span style="font-size:0.75rem; font-weight:700; letter-spacing:2px; color:#fef08a; text-transform:uppercase; margin-bottom:1rem; display:block;">THE MARWARI LEGACY</span>
+      <h2 style="font-family: 'Plus Jakarta Sans', serif; font-size:3.5rem; font-weight:800; line-height:1.2; margin:0 0 1.5rem 0; max-width:600px;">More Than Products.<br>A Heritage Passed Down.</h2>
+      <p style="font-size:1.1rem; color:#cbd5e1; max-width:500px; line-height:1.6; margin-bottom:2.5rem;">From the royal courts of Jodhpur to the artisan streets of Jaipur, we bring authentic Rajasthan directly to your doorstep.</p>
+      <button style="background:transparent; color:white; border:1px solid rgba(255,255,255,0.3); padding:0.75rem 2rem; border-radius:99px; font-weight:600; font-size:0.9rem; cursor:pointer; display:inline-flex; align-items:center; gap:0.5rem; backdrop-filter:blur(4px);">
+        Our Story <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </section>
 
+  <!-- Trust Badges & Reviews -->
+  <section style="padding: 5rem 0; background-color: white;">
+    <div class="container" style="max-width:1400px; margin:0 auto; padding:0 2rem;">
+      <!-- Badges -->
+      <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color); padding-bottom:4rem; margin-bottom:4rem;">
+        <div style="display:flex; align-items:center; gap:1rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <div><h4 style="margin:0 0 0.25rem 0; font-size:1rem; color:#0f172a;">Authentic Products</h4><p style="margin:0; font-size:0.85rem; color:#64748b;">100% Genuine</p></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:1rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <div><h4 style="margin:0 0 0.25rem 0; font-size:1rem; color:#0f172a;">Secure Payments</h4><p style="margin:0; font-size:0.85rem; color:#64748b;">Safe & Encrypted</p></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:1rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><path d="M9 4v16M15 4v16M4 9h16M4 15h16"/></svg>
+          <div><h4 style="margin:0 0 0.25rem 0; font-size:1rem; color:#0f172a;">Pan India Delivery</h4><p style="margin:0; font-size:0.85rem; color:#64748b;">Fast & Reliable</p></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:1rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          <div><h4 style="margin:0 0 0.25rem 0; font-size:1rem; color:#0f172a;">Easy Returns</h4><p style="margin:0; font-size:0.85rem; color:#64748b;">Hassle Free</p></div>
+        </div>
+      </div>
+      
+      <!-- Reviews -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:2.5rem;">
+        <div>
+          <h2 style="font-family: 'Plus Jakarta Sans', serif; font-size:2.25rem; font-weight:700; color:#0f172a; margin:0 0 0.5rem 0;">What Our Customers Say</h2>
+          <span style="font-size:1rem; color:#475569;">Real stories. Real experiences.</span>
+        </div>
+        <a href="#" style="color:#b45309; font-weight:600; text-decoration:none; display:flex; align-items:center; gap:0.25rem; font-size:0.95rem;">View All Reviews <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:2rem;">
+        <div style="background:#f8fafc; padding:2rem; border-radius:16px;">
+          <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem;">
+            <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Priya" style="width:48px; height:48px; border-radius:50%;">
+            <div><h4 style="margin:0 0 0.25rem 0; font-size:1rem; color:#0f172a;">Priya Sharma</h4><span style="font-size:0.85rem; color:#64748b;">Jaipur</span></div>
+          </div>
+          <div style="color:#fbbf24; margin-bottom:1rem;">★★★★★</div>
+          <p style="font-size:0.95rem; color:#475569; line-height:1.6; margin:0;">"Beautiful quality and authentic products. The saree I ordered is exactly as shown in the pictures. Loved the packaging and quick delivery!"</p>
+        </div>
+        <div style="background:#f8fafc; padding:2rem; border-radius:16px;">
+          <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem;">
+            <img src="https://i.pravatar.cc/150?u=a042581f4e29026704b" alt="Rohit" style="width:48px; height:48px; border-radius:50%;">
+            <div><h4 style="margin:0 0 0.25rem 0; font-size:1rem; color:#0f172a;">Rohit Mehta</h4><span style="font-size:0.85rem; color:#64748b;">Udaipur</span></div>
+          </div>
+          <div style="color:#fbbf24; margin-bottom:1rem;">★★★★★</div>
+          <p style="font-size:0.95rem; color:#475569; line-height:1.6; margin:0;">"Amazing collection of traditional items. The blue pottery products are just perfect. Will definitely shop again!"</p>
+        </div>
+        <div style="background:#f8fafc; padding:2rem; border-radius:16px;">
+          <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem;">
+            <img src="https://i.pravatar.cc/150?u=a042581f4e29026704c" alt="Neha" style="width:48px; height:48px; border-radius:50%;">
+            <div><h4 style="margin:0 0 0.25rem 0; font-size:1rem; color:#0f172a;">Neha Singh</h4><span style="font-size:0.85rem; color:#64748b;">Bikaner</span></div>
+          </div>
+          <div style="color:#fbbf24; margin-bottom:1rem;">★★★★★</div>
+          <p style="font-size:0.95rem; color:#475569; line-height:1.6; margin:0;">"The taste of Rajasthani sweets is outstanding. Fresh, authentic and delivered on time. Highly recommended!"</p>
+        </div>
+      </div>
+    </div>
+  </section>
   <!-- My Account View Container -->
   <section class="container account-view-wrapper" id="account-view" style="display: none; padding: 3rem 0;">
     <div class="admin-header">
@@ -301,39 +469,81 @@
   </section>
 
   <!-- Footer Section -->
-  <footer>
-    <div class="container footer-grid">
-      <div class="footer-col">
-        <h3><span>Mārwāri</span> E-Commerce</h3>
-        <p style="max-width: 250px;">Preserving and presenting the glorious Royal heritage of Marwar region through
-          curated premium artifacts and traditional apparel.</p>
+  <footer style="background-color: #0f172a; color: #cbd5e1; padding: 4rem 0 2rem 0; font-family: 'Plus Jakarta Sans', sans-serif;">
+    <div class="container" style="max-width:1400px; margin:0 auto; padding:0 2rem;">
+      <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr 2fr; gap:3rem; margin-bottom:4rem;">
+        <div>
+          <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem;">
+            <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="20" cy="20" r="19" stroke="#fef08a" stroke-width="2" stroke-dasharray="4 2"/>
+              <path d="M20 5 L23 15 L33 15 L25 22 L28 32 L20 26 L12 32 L15 22 L7 15 L17 15 Z" fill="#fef08a"/>
+            </svg>
+            <div style="display:flex; flex-direction:column; line-height:1.2;">
+              <span style="font-weight: 800; font-size: 1.25rem; letter-spacing: 1px; color: #fef08a;">MARWARI</span>
+              <span style="font-size: 0.55rem; font-weight: 700; letter-spacing: 3px; color: #94a3b8; text-transform: uppercase;">E-Commerce</span>
+            </div>
+          </div>
+          <p style="font-size:0.9rem; line-height:1.6; margin-bottom:1.5rem; color:#94a3b8; max-width:280px;">Preserving Rajasthan's heritage through authentic handcrafted products, traditional craftsmanship and royal artistry.</p>
+          <div style="display:flex; gap:1rem;">
+            <a href="#" style="color:#94a3b8;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+            <a href="#" style="color:#94a3b8;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+            <a href="#" style="color:#94a3b8;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg></a>
+            <a href="#" style="color:#94a3b8;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg></a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 style="color:white; font-size:1rem; font-weight:700; margin-bottom:1.25rem;">Shop</h4>
+          <ul style="list-style:none; padding:0; margin:0; font-size:0.9rem; line-height:2.2;">
+            <li><a href="#" style="color:#94a3b8; text-decoration:none;">Royal Apparel</a></li>
+            <li><a href="#" style="color:#94a3b8; text-decoration:none;">Jewellery</a></li>
+            <li><a href="#" style="color:#94a3b8; text-decoration:none;">Handicrafts</a></li>
+            <li><a href="#" style="color:#94a3b8; text-decoration:none;">Food & Spices</a></li>
+            <li><a href="#" style="color:#94a3b8; text-decoration:none;">Home & Décor</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 style="color:white; font-size:1rem; font-weight:700; margin-bottom:1.25rem;">About</h4>
+          <ul style="list-style:none; padding:0; margin:0; font-size:0.9rem; line-height:2.2;">
+            <li><a href="#" style="color:#94a3b8; text-decoration:none;">Our Story</a></li>
+            <li><a href="#" style="color:#94a3b8; text-decoration:none;">Artisans</a></li>
+            <li><a href="#" style="color:#94a3b8; text-decoration:none;">Heritage</a></li>
+            <li><a href="#" style="color:#94a3b8; text-decoration:none;">Our Mission</a></li>
+            <li><a href="#" style="color:#94a3b8; text-decoration:none;">Blog</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color:white; font-size:1rem; font-weight:700; margin-bottom:1.25rem;">Support</h4>
+          <ul style="list-style:none; padding:0; margin:0; font-size:0.9rem; line-height:2.2;">
+            <li><a href="#" style="color:#94a3b8; text-decoration:none;">Contact Us</a></li>
+            <li><a href="#" style="color:#94a3b8; text-decoration:none;">Shipping</a></li>
+            <li><a href="#" style="color:#94a3b8; text-decoration:none;">Returns</a></li>
+            <li><a href="#" style="color:#94a3b8; text-decoration:none;">FAQ</a></li>
+            <li><a href="#" style="color:#94a3b8; text-decoration:none;">Track Order</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color:white; font-size:1rem; font-weight:700; margin-bottom:1.25rem;">Get Updates</h4>
+          <p style="font-size:0.9rem; line-height:1.5; color:#94a3b8; margin-bottom:1.25rem;">Subscribe to our newsletter for exclusive offers and heritage stories.</p>
+          <div style="display:flex;">
+            <input type="email" placeholder="Enter your email" style="width:100%; padding:0.75rem 1rem; border:none; border-radius:6px 0 0 6px; outline:none; font-family:inherit;">
+            <button style="background:#b45309; color:white; border:none; padding:0.75rem 1rem; border-radius:0 6px 6px 0; cursor:pointer;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+          </div>
+        </div>
       </div>
-      <div class="footer-col">
-        <h3>Heritage Hubs</h3>
-        <ul class="footer-links">
-          <li><a href="#">Jodhpur Royal Court</a></li>
-          <li><a href="#">Jaipur Blue Artisans</a></li>
-          <li><a href="#">Bikaner Spices Union</a></li>
-          <li><a href="#">Udaipur Silver Smiths</a></li>
-        </ul>
+      
+      <div style="border-top:1px solid #1e293b; padding-top:2rem; display:flex; justify-content:space-between; align-items:center;">
+        <p style="font-size:0.85rem; color:#64748b; margin:0;">&copy; 2026 Marwari E-Commerce. Crafted with Royal Pride for Rajasthan Heritage.</p>
+        <div style="display:flex; gap:1rem; align-items:center; color:#94a3b8;">
+          <span style="font-size:0.85rem; margin-right:0.5rem;">Secure Payments</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="20" viewBox="0 0 32 20" fill="none"><rect width="32" height="20" rx="4" fill="#1e293b"/><text x="4" y="14" fill="white" font-size="10" font-weight="bold">VISA</text></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="20" viewBox="0 0 32 20" fill="none"><rect width="32" height="20" rx="4" fill="#1e293b"/><circle cx="11" cy="10" r="5" fill="#ef4444"/><circle cx="19" cy="10" r="5" fill="#f59e0b" fill-opacity="0.8"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="20" viewBox="0 0 32 20" fill="none"><rect width="32" height="20" rx="4" fill="#1e293b"/><text x="5" y="14" fill="white" font-size="9" font-weight="bold">UPI</text></svg>
+        </div>
       </div>
-      <div class="footer-col">
-        <h3>Policy Details</h3>
-        <ul class="footer-links">
-          <li><a href="#">Authenticity Certificate</a></li>
-          <li><a href="#">Handicraft Insurance</a></li>
-          <li><a href="#">Global Royal Shipments</a></li>
-          <li><a href="#">Return & Exchange Policy</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h3>Contact Darbar</h3>
-        <p style="margin-bottom: 0.5rem;">Royal Heritage Lane, Fort Area<br>Jodhpur, Rajasthan - 342001</p>
-        <p>Email: padharo@marwari.com<br>Phone: +91 291 2740001</p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2026 Mārwāri E-Commerce. Crafted with Royal Pride for Rajasthan Heritage.</p>
     </div>
   </footer>
 
