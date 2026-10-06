@@ -26,7 +26,7 @@ const DEFAULT_PRODUCTS = [
   {
     id: "prod-1",
     name: "Royal Jaipuri Silk Bandhani Saree",
-    category: "Apparel",
+    category: "Royal Apparel",
     price: 8499,
     description: "Experience the royal heritage of Rajasthan with this premium pure silk Bandhani Saree. Hand-dyed by traditional artisans in Jaipur using the classic tie-dye technique, featuring intricate golden zari borders and elegant motifs perfect for festive occasions.",
     image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80",
@@ -35,7 +35,7 @@ const DEFAULT_PRODUCTS = [
   {
     id: "prod-2",
     name: "Classic Navy Blue Royal Jodhpuri Suit",
-    category: "Apparel",
+    category: "Royal Apparel",
     price: 12999,
     description: "An epitome of sophistication, this Jodhpuri Suit is tailored to perfection. Crafted from premium wool-blend fabric, it features a bandhgala collar, structured shoulders, and brass crest buttons. Represents the true legacy of Marwari aristocracy.",
     image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=600&q=80",
@@ -53,7 +53,7 @@ const DEFAULT_PRODUCTS = [
   {
     id: "prod-4",
     name: "Pure Silver Meenakari Pearl Jhumkas",
-    category: "Jewelry",
+    category: "Silver Jewellery",
     price: 4999,
     description: "Exquisite traditional earrings featuring intricate Meenakari (enamel) artwork hand-painted on pure sterling silver. Suspended with premium freshwater pearls and detailed with delicate filigree work inspired by Royal Rajasthani palaces.",
     image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=600&q=80",
@@ -62,7 +62,7 @@ const DEFAULT_PRODUCTS = [
   {
     id: "prod-5",
     name: "Traditional Camel Leather Mojaris",
-    category: "Apparel",
+    category: "Marwari Mojari",
     price: 1899,
     description: "Authentic Marwari Mojaris made from genuine, double-tanned camel leather. Hand-stitched with premium silk and golden zari threads. Designed with a soft cushioned sole for comfort and durability while maintaining absolute style.",
     image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80",
@@ -71,7 +71,7 @@ const DEFAULT_PRODUCTS = [
   {
     id: "prod-6",
     name: "Premium Saffron & Cardamom Kesaria Peda",
-    category: "Sweets & Spices",
+    category: "Food & Spices",
     price: 899,
     description: "Indulge in the true taste of Marwar. Our Kesaria Peda is cooked slowly using fresh condensed milk (khoya), flavored with organic Kashmiri saffron (kesar) and ground green cardamom, garnished with premium sliced pistachios and almonds.",
     image: "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80",
@@ -85,6 +85,123 @@ const DEFAULT_PRODUCTS = [
     description: "Add a touch of elegance to your home with this authentic Jaipur Blue Pottery decorative vase. Crafted with Egyptian paste clay, hand-painted with cobalt blue dye in traditional floral motifs, and glazed to a premium shine.",
     image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80",
     badge: "Heritage Art"
+  },
+  {
+    id: "prod-8",
+    name: "Authentic Bikaneri Bhujia & Namkeen Hamper",
+    category: "Food & Spices",
+    price: 599,
+    description: "Crispy, savory, and spicy Bikaneri Bhujia prepared with moth bean flour and aromatic spices from the deserts of Bikaner. A true staple of Marwari hospitality, served in a royal festive gift box.",
+    image: "https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&w=600&q=80",
+    badge: "Authentic GI"
+  },
+  {
+    id: "prod-9",
+    name: "Shekhawati Carved Teakwood Wall Mirror",
+    category: "Home & Décor",
+    price: 6499,
+    description: "Hand-carved by master woodworkers in Shekhawati, this antique jharokha-style mirror frame features intricate archways and distressed finish that brings timeless palace architecture to your sanctuary.",
+    image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80",
+    badge: "Hand-Carved"
+  },
+  {
+    id: "prod-10",
+    name: "Royal Kundan Polki Choker Necklace",
+    category: "Silver Jewellery",
+    price: 15999,
+    description: "An opulent bridal necklace set adorned with uncut polki stones set in pure silver foil, finished with emerald drops and meenakari enameling on the reverse side. A prized family heirloom.",
+    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80",
+    badge: "Royal Bridal"
+  },
+  {
+    id: "prod-11",
+    name: "Hand-Block Printed Chanderi Silk Dupatta",
+    category: "Royal Apparel",
+    price: 1899,
+    description: "Woven in sheer Chanderi silk with delicate golden zari border, hand-stamped using traditional Bagru wooden blocks with organic vegetable dyes.",
+    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600&q=80",
+    badge: "Organic Dyes"
+  },
+  {
+    id: "prod-12",
+    name: "Antique Brass Royal Peacock Lamp (Diya)",
+    category: "Home & Décor",
+    price: 2899,
+    description: "Heavy solid brass oil lamp hand-cast using the lost-wax technique by artisan coppersmiths. Featuring an intricately sculpted royal peacock crest.",
+    image: "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?auto=format&fit=crop&w=600&q=80",
+    badge: "Solid Brass"
+  },
+  {
+    id: "prod-13",
+    name: "Famous Mathania Red Chilli Powder & Spices",
+    category: "Food & Spices",
+    price: 649,
+    description: "World-renowned Mathania red chillies from Jodhpur, stone-ground without adulteration. Imparts deep crimson color and rich, smoky, pungent warmth to royal curries.",
+    image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80",
+    badge: "Pure Organic"
+  },
+  {
+    id: "prod-14",
+    name: "Hand-Embroidered Marwari Gota Patti Odhani",
+    category: "Royal Apparel",
+    price: 4299,
+    description: "Traditional Rajasthani festive odhani embellished with authentic pure silver gota ribbons applique work stitched by women artisans in rural Rajasthan.",
+    image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=600&q=80",
+    badge: "Artisan Zari"
+  },
+  {
+    id: "prod-15",
+    name: "Makrana Marble Inlay Pietra Dura Coasters",
+    category: "Home & Décor",
+    price: 1499,
+    description: "Set of four pristine white Makrana marble coasters embedded with lapis lazuli and malachite semi-precious stone inlays, echoing royal Taj Mahal artistry.",
+    image: "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=600&q=80",
+    badge: "Makrana Marble"
+  },
+  {
+    id: "prod-16",
+    name: "Royal Rajputana Sterling Silver Kada",
+    category: "Silver Jewellery",
+    price: 5499,
+    description: "Heavy 92.5 sterling silver cuff kada featuring carved lion-head finials, symbolizing courage and valor of the royal Rajput warriors.",
+    image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=600&q=80",
+    badge: "925 Silver"
+  },
+  {
+    id: "prod-17",
+    name: "Traditional Handcrafted Kathputli Puppet Pair",
+    category: "Handicrafts",
+    price: 999,
+    description: "Hand-carved mango wood puppets dressed in vibrant Rajasthani tie-dye fabrics and sequin embroidery, depicting the folklore of King Amar Singh Rathore.",
+    image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80",
+    badge: "Folk Puppet"
+  },
+  {
+    id: "prod-18",
+    name: "Royal Kesariya Mawa Ghewar Festive Box",
+    category: "Food & Spices",
+    price: 1199,
+    description: "Crispy honeycomb disc pastry made with pure Desi cow ghee, soaked in saffron sugar syrup and generously topped with rich reduced mawa and silver vark.",
+    image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80",
+    badge: "Desi Ghee"
+  },
+  {
+    id: "prod-19",
+    name: "Traditional Dabu Hand-Dyed Indigo Kurta",
+    category: "Royal Apparel",
+    price: 2399,
+    description: "Breathable pure organic cotton kurta crafted using ancient mud-resist Dabu printing and natural indigo vat fermentation technique from Akola village.",
+    image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=600&q=80",
+    badge: "Natural Indigo"
+  },
+  {
+    id: "prod-20",
+    name: "Imperial Udaipur Heritage Silver Peacock Box",
+    category: "Handicrafts",
+    price: 7899,
+    description: "An extraordinary masterwork created by royal silversmiths of Udaipur. Crafted with hand-carved floral repoussé engraving and a majestic perched peacock on the lid, lined with royal maroon velvet. Perfect for royal keepsakes and luxury heirloom gifting.",
+    image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=600&q=80",
+    badge: "Royal Masterpiece"
   }
 ];
 
@@ -99,9 +216,11 @@ class AppState {
     const DEFAULT_CATEGORIES = [
       { id: "cat-1", name: "Royal Apparel", slug: "Apparel", image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=400&q=80" },
       { id: "cat-2", name: "Handicrafts", slug: "Handicrafts", image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=400&q=80" },
-      { id: "cat-3", name: "Jewellery", slug: "Jewellery", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=400&q=80" },
-      { id: "cat-4", name: "Food & Spices", slug: "Food & Spices", image: "https://images.unsplash.com/photo-1596450514735-111a2fe02935?auto=format&fit=crop&w=400&q=80" },
-      { id: "cat-5", name: "Home & Décor", slug: "Home & Décor", image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=400&q=80" }
+      { id: "cat-3", name: "Silver Jewellery", slug: "Jewelry", image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=400&q=80" },
+      { id: "cat-4", name: "Marwari Mojari", slug: "Apparel", image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=400&q=80" },
+      { id: "cat-5", name: "Sweets & Spices", slug: "Sweets & Spices", image: "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=400&q=80" },
+      { id: "cat-6", name: "Home & Décor", slug: "Home & Décor", image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=400&q=80" },
+      { id: "cat-7", name: "Art & Collectibles", slug: "Handicrafts", image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=400&q=80" }
     ];
 
     const DEFAULT_COUPONS = [
@@ -109,9 +228,13 @@ class AppState {
       { id: "cp-2", code: "ROYAL500", type: "flat", amount: 500, expiry: "2026-12-31" }
     ];
 
-    this.products = this.loadLocalStorage("marwari_products", DEFAULT_PRODUCTS);
+    this.products = this.loadLocalStorage("marwari_products_v7", DEFAULT_PRODUCTS);
+    if (!this.products || this.products.length < DEFAULT_PRODUCTS.length) {
+      this.products = DEFAULT_PRODUCTS;
+      localStorage.setItem("marwari_products_v7", JSON.stringify(DEFAULT_PRODUCTS));
+    }
     this.users = this.loadLocalStorage("marwari_users", DEFAULT_USERS);
-    this.categories = this.loadLocalStorage("marwari_categories_v3", DEFAULT_CATEGORIES);
+    this.categories = this.loadLocalStorage("marwari_categories_v5", DEFAULT_CATEGORIES);
     this.coupons = this.loadLocalStorage("marwari_coupons", DEFAULT_COUPONS);
     this.orders = this.loadLocalStorage("marwari_orders", []);
     this.cart = this.loadLocalStorage("marwari_cart", []);
@@ -132,12 +255,12 @@ class AppState {
         this.users[idx] = { ...this.users[idx], ...this.currentUser };
       }
     }
-    localStorage.setItem("marwari_products", JSON.stringify(this.products));
+    localStorage.setItem("marwari_products_v7", JSON.stringify(this.products));
     localStorage.setItem("marwari_users", JSON.stringify(this.users));
     localStorage.setItem("marwari_orders", JSON.stringify(this.orders));
     localStorage.setItem("marwari_cart", JSON.stringify(this.cart));
     localStorage.setItem("marwari_session", JSON.stringify(this.currentUser));
-    localStorage.setItem("marwari_categories_v3", JSON.stringify(this.categories));
+    localStorage.setItem("marwari_categories_v5", JSON.stringify(this.categories));
     localStorage.setItem("marwari_coupons", JSON.stringify(this.coupons));
 
     // Sync state to WordPress Backend APIs for Mobile App integration
@@ -320,7 +443,12 @@ class AppState {
     this.activeCoupon = null;
     localStorage.removeItem('wp_ecommerce_jwt');
     this.saveState();
-    window.location.href = '/login';
+    if (typeof navigateTo !== 'undefined') {
+      navigateTo('/ecommerce/website');
+    } else {
+      const isLocalFile = window.location.protocol === 'file:';
+      window.location.href = isLocalFile ? 'index.html' : '/ecommerce/website';
+    }
   }
 
   // Coupon Logic
@@ -540,23 +668,12 @@ function renderStorefrontCategories() {
   const container = document.querySelector(".category-tabs");
   if (!container) return;
 
-  const activeTab = container.querySelector(".category-tab.active");
+  const activeTab = container.querySelector(".category-card.active");
   const activeCategory = activeTab ? activeTab.dataset.category : "All";
 
-  container.innerHTML = `
-    <div class="category-card ${activeCategory === 'All' ? 'active' : ''}" data-category="All" style="cursor:pointer; display:flex; flex-direction:column; gap:1rem; transition: transform 0.2s;">
-      <div style="width:100%; aspect-ratio:1/1; background:linear-gradient(135deg, var(--primary) 0%, #78350f 100%); border-radius:12px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
-        <span style="color:#fef08a; font-family:'Plus Jakarta Sans'; font-size:1.5rem; font-weight:800; text-align:center; line-height:1.2;">All<br>Treasures</span>
-      </div>
-      <div>
-        <h3 style="font-size:1.1rem; font-weight:600; color:var(--text-primary); margin:0 0 0.25rem 0;">All Treasures</h3>
-        <span style="color:#b45309; font-size:0.85rem; font-weight:500;">Explore &rarr;</span>
-      </div>
-    </div>
-  `;
-
+  let html = "";
   app.categories.forEach(cat => {
-    container.innerHTML += `
+    html += `
       <div class="category-card ${activeCategory === cat.slug ? 'active' : ''}" data-category="${cat.slug}" style="cursor:pointer; display:flex; flex-direction:column; gap:1rem; transition: transform 0.2s;">
         <img src="${cat.image || 'https://images.unsplash.com/photo-1596450514735-111a2fe02935?auto=format&fit=crop&w=400&q=80'}" alt="${cat.name}" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
         <div>
@@ -566,6 +683,7 @@ function renderStorefrontCategories() {
       </div>
     `;
   });
+  container.innerHTML = html;
 
   const catTabs = container.querySelectorAll(".category-card");
   const searchInput = document.getElementById("search-input");
@@ -835,103 +953,78 @@ function updateNavBarState() {
   }
 }
 
-// Switch between Main Shop, Admin Dashboard, and Account details
-// Switch between Main Shop, Admin Dashboard, and Account details
+// Switch between Main Shop, Admin Dashboard, Account/Dashboard, Product Detail, and Auth
 function switchView(view, updateHistory = true, productId = null) {
+  const homeView = document.getElementById("home-view");
   const heroSection = document.getElementById("hero-section");
   const catSection = document.getElementById("categories-section");
   const shopSection = document.getElementById("shop-section");
   const adminView = document.getElementById("admin-view");
   const accountView = document.getElementById("account-view");
+  const detailView = document.getElementById("product-detail-view");
+  const authView = document.getElementById("auth-view");
+  const mainNavbar = document.querySelector('.navbar');
+  const noticeBar = document.querySelector('.notice-bar');
+  const footer = document.querySelector('.main-footer') || document.querySelector('footer');
+
+  // Hide all primary views first to guarantee NO content bleeding
+  if (homeView) homeView.style.display = "none";
+  if (heroSection) heroSection.style.display = "none";
+  if (catSection) catSection.style.display = "none";
+  if (shopSection) shopSection.style.display = "none";
+  if (detailView) detailView.style.display = "none";
+  if (authView) authView.style.display = "none";
+  if (accountView) {
+    accountView.style.display = "none";
+    accountView.classList.remove("active");
+  }
 
   if (view === "shop") {
+    if (homeView) homeView.style.display = "block";
     if (heroSection) heroSection.style.display = "block";
     if (catSection) catSection.style.display = "block";
     if (shopSection) shopSection.style.display = "block";
-    if (adminView) adminView.classList.remove("active");
-    if (accountView) accountView.classList.remove("active");
-    
-    const detailView = document.getElementById("product-detail-view");
-    if (detailView) detailView.style.display = "none";
-    
-    // Show navbar and footer
-    const mainNavbar = document.querySelector('.navbar');
-    const subNavbar = document.querySelector('.sub-navbar');
-    const footer = document.querySelector('.main-footer');
-    if (mainNavbar) mainNavbar.style.display = 'flex';
-    if (subNavbar) subNavbar.style.display = 'flex';
+    if (mainNavbar) mainNavbar.style.display = 'block';
+    if (noticeBar) noticeBar.style.display = 'flex';
     if (footer) footer.style.display = 'block';
 
-    const authView = document.getElementById("auth-view");
-    if (authView) authView.style.display = "none";
     renderStorefront();
     if (updateHistory) {
-      updateURLState('/');
+      updateURLState('/ecommerce/website');
     }
+    window.scrollTo({ top: 0, behavior: 'instant' });
   } else if (view === "admin") {
-    // TEMPORARY BYPASS FOR WORDPRESS DEMO
-    // if (!app.currentUser || app.currentUser.role !== "admin") {
-    //   showToast("Access Denied: Admins Only", "danger");
-    //   switchView("shop", updateHistory);
-    //   return;
-    // }
-    // Redirect to the separate admin page
     const isLocalFile = window.location.protocol === 'file:';
     window.location.href = isLocalFile ? 'superpanel.html' : '/ecommerce/admin';
-  } else if (view === "account") {
+  } else if (view === "account" || view === "dashboard") {
     if (!app.currentUser) {
-      showToast("Please log in to view account details", "danger");
-      switchView("shop", updateHistory);
+      showToast("Please sign in to access your dashboard", "warning");
+      switchView("auth", updateHistory);
       return;
     }
-    if (heroSection) heroSection.style.display = "none";
-    if (catSection) catSection.style.display = "none";
-    if (shopSection) shopSection.style.display = "none";
-    if (adminView) adminView.classList.remove("active");
-    if (accountView) accountView.classList.add("active");
-    
-    const detailView = document.getElementById("product-detail-view");
-    if (detailView) detailView.style.display = "none";
-    
-    // Show navbar and footer
-    const mainNavbar = document.querySelector('.navbar');
-    const subNavbar = document.querySelector('.sub-navbar');
-    const footer = document.querySelector('.main-footer');
-    if (mainNavbar) mainNavbar.style.display = 'flex';
-    if (subNavbar) subNavbar.style.display = 'flex';
+    if (accountView) {
+      accountView.style.display = "block";
+      accountView.classList.add("active");
+    }
+    if (mainNavbar) mainNavbar.style.display = 'block';
+    if (noticeBar) noticeBar.style.display = 'flex';
     if (footer) footer.style.display = 'block';
-    const authView = document.getElementById("auth-view");
-    if (authView) authView.style.display = "none";
     renderAccountDashboard();
     if (updateHistory) {
-      updateURLState('/account');
+      updateURLState('/ecommerce/dashboard');
     }
+    window.scrollTo({ top: 0, behavior: 'instant' });
   } else if (view === "product-detail") {
-    if (heroSection) heroSection.style.display = "none";
-    if (catSection) catSection.style.display = "none";
-    if (shopSection) shopSection.style.display = "none";
-    if (adminView) adminView.classList.remove("active");
-    if (accountView) accountView.classList.remove("active");
-    
-    // Show navbar and footer
-    const mainNavbar = document.querySelector('.navbar');
-    const subNavbar = document.querySelector('.sub-navbar');
-    const footer = document.querySelector('.main-footer');
-    if (mainNavbar) mainNavbar.style.display = 'flex';
-    if (subNavbar) subNavbar.style.display = 'flex';
+    if (detailView) detailView.style.display = "block";
+    if (mainNavbar) mainNavbar.style.display = 'block';
+    if (noticeBar) noticeBar.style.display = 'flex';
     if (footer) footer.style.display = 'block';
 
-    const authView = document.getElementById("auth-view");
-    if (authView) authView.style.display = "none";
-    
-    const detailView = document.getElementById("product-detail-view");
-    if (detailView) detailView.style.display = "block";
-    
     if (updateHistory && productId) {
-      updateURLState(`/product?id=${productId}`);
+      const cleanId = String(productId).replace('prod-', '');
+      updateURLState(`/ecommerce/product/${cleanId}`);
     }
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
   } else if (view === "auth") {
     if (app.currentUser) {
       if (!updateHistory) {
@@ -941,62 +1034,89 @@ function switchView(view, updateHistory = true, productId = null) {
       }
       return;
     }
-    if (heroSection) heroSection.style.display = "none";
-    if (catSection) catSection.style.display = "none";
-    if (shopSection) shopSection.style.display = "none";
-    if (adminView) adminView.classList.remove("active");
-    if (accountView) accountView.classList.remove("active");
-    
-    // Hide navbar and footer
-    const mainNavbar = document.querySelector('.navbar');
-    const subNavbar = document.querySelector('.sub-navbar');
-    const footer = document.querySelector('.main-footer');
     if (mainNavbar) mainNavbar.style.display = 'none';
-    if (subNavbar) subNavbar.style.display = 'none';
+    if (noticeBar) noticeBar.style.display = 'none';
     if (footer) footer.style.display = 'none';
-    
-    const authView = document.getElementById("auth-view");
-    if (authView) {
-      authView.style.display = "flex";
-    }
-    
-    // Auto-select tab based on URL or intent
+
+    if (authView) authView.style.display = "flex";
+
     const path = window.location.pathname;
     const hash = window.location.hash;
-    const isRegister = path.endsWith('/register') || path.endsWith('/register/') || hash === '#register' || hash === '#/register';
-    
-    if (isRegister) {
-      document.getElementById("auth-view-title").innerText = "Register";
-      document.getElementById("auth-email-form").style.display = "none";
-      document.getElementById("auth-signup-form").style.display = "block";
-    } else {
-      document.getElementById("auth-view-title").innerText = "Login";
-      document.getElementById("auth-signup-form").style.display = "none";
-      document.getElementById("auth-email-form").style.display = "block";
-    }
-    
-    if (updateHistory) {
-      updateURLState(isRegister ? '/register' : '/login');
-    }
+    const isRegister = path.includes('/register') || hash.includes('register');
+    app.switchAuthTab(isRegister ? 'signup' : 'signin', updateHistory);
   }
+}
+
+// Function to switch between Login and Register tabs on dedicated auth page
+app.switchAuthTab = function(type, updateHistory = true) {
+  const isRegister = type === 'signup' || type === 'register';
+  const title = document.getElementById("auth-view-title");
+  const emailForm = document.getElementById("auth-email-form");
+  const signupForm = document.getElementById("auth-signup-form");
+
+  if (isRegister) {
+    if (title) title.innerText = "Create Account";
+    if (emailForm) emailForm.style.display = "none";
+    if (signupForm) signupForm.style.display = "block";
+    if (updateHistory) updateURLState('/ecommerce/register');
+  } else {
+    if (title) title.innerText = "Login";
+    if (signupForm) signupForm.style.display = "none";
+    if (emailForm) emailForm.style.display = "block";
+    if (updateHistory) updateURLState('/ecommerce/login');
+  }
+};
+
+function getRouteBase() {
+  if (window.location.protocol === 'file:') return '';
+  return window.location.pathname.startsWith('/ecommerce') ? '/ecommerce' : '';
 }
 
 function updateURLState(targetPath) {
   const isLocalFile = window.location.protocol === 'file:';
   if (isLocalFile) {
-    if (targetPath === '/superpanel') {
-      window.location.hash = 'superpanel';
-    } else if (targetPath === '/account') {
-      window.location.hash = 'account';
+    if (targetPath.includes('/admin')) {
+      window.location.hash = 'admin';
+    } else if (targetPath.includes('/dashboard') || targetPath.includes('/account')) {
+      window.location.hash = 'dashboard';
+    } else if (targetPath.includes('/register')) {
+      window.location.hash = 'register';
+    } else if (targetPath.includes('/login')) {
+      window.location.hash = 'login';
+    } else if (targetPath.includes('/product/')) {
+      const id = targetPath.split('/product/')[1].split('?')[0];
+      window.location.hash = `product/${id}`;
     } else {
       window.location.hash = '';
     }
   } else {
-    if (window.location.pathname !== targetPath) {
-      window.history.pushState({ view: targetPath }, "", targetPath);
+    let fullPath = targetPath;
+    const base = getRouteBase();
+    if (base === '/ecommerce' && !fullPath.startsWith('/ecommerce')) {
+      fullPath = '/ecommerce' + (fullPath.startsWith('/') ? fullPath : '/' + fullPath);
+    }
+    if (window.location.pathname !== fullPath) {
+      window.history.pushState({ view: fullPath }, "", fullPath);
     }
   }
 }
+
+function navigateTo(route) {
+  const isLocalFile = window.location.protocol === 'file:';
+  if (isLocalFile) {
+    if (route.includes('/admin')) window.location.hash = 'admin';
+    else if (route.includes('/dashboard') || route.includes('/account')) window.location.hash = 'dashboard';
+    else if (route.includes('/register')) window.location.hash = 'register';
+    else if (route.includes('/login')) window.location.hash = 'login';
+    else if (route.includes('/product/')) window.location.hash = `product/${route.split('/product/')[1]}`;
+    else window.location.hash = '';
+    handleRouting();
+    return;
+  }
+  updateURLState(route);
+  handleRouting();
+}
+window.navigateTo = navigateTo;
 
 function handleRouting() {
   const isLocalFile = window.location.protocol === 'file:';
@@ -1005,45 +1125,93 @@ function handleRouting() {
   const searchParams = new URLSearchParams(window.location.search);
 
   if (isLocalFile) {
-    if (hash === '#superpanel' || hash === '#/superpanel') {
+    if (hash === '#admin' || hash === '#superpanel' || hash === '#/superpanel') {
       window.location.href = 'superpanel.html';
       return;
     }
-    if (hash === '#account' || hash === '#/account') {
+    if (hash === '#dashboard' || hash === '#account' || hash === '#/account') {
       if (app.currentUser) {
         switchView('account', false);
       } else {
+        showToast("Please sign in to access your dashboard", "info");
         switchView('auth', false);
+        app.switchAuthTab('signin', false);
       }
-    } else if (hash === '#login' || hash === '#/login' || hash === '#register' || hash === '#/register') {
+    } else if (hash.includes('register')) {
       switchView('auth', false);
+      app.switchAuthTab('signup', false);
+    } else if (hash.includes('login')) {
+      switchView('auth', false);
+      app.switchAuthTab('signin', false);
+    } else if (hash.includes('product') || searchParams.has('id')) {
+      let targetId = searchParams.get('id');
+      if (!targetId && hash.includes('product/')) {
+        targetId = hash.split('product/')[1].split('?')[0];
+      } else if (!targetId && hash.includes('id=')) {
+        targetId = hash.split('id=')[1].split('&')[0];
+      }
+      resolveAndRenderProduct(targetId || '20');
     } else {
       switchView('shop', false);
     }
   } else {
-    if (path.endsWith('/superpanel') || path.endsWith('/superpanel/')) {
-      window.location.href = '/superpanel';
+    // Web routing
+    if (path.endsWith('/admin') || path.endsWith('/admin/') || path.includes('/superpanel')) {
+      window.location.href = '/ecommerce/admin';
       return;
     }
-    if (path.endsWith('/account') || path.endsWith('/account/')) {
-      if (app.currentUser) {
-        switchView('account', false);
-      } else {
-        switchView('auth', false);
-      }
-    } else if (path.endsWith('/login') || path.endsWith('/login/') || path.endsWith('/register') || path.endsWith('/register/')) {
+
+    if (path.includes('/register')) {
       switchView('auth', false);
-    } else if (path.includes('/product') || searchParams.has('id')) {
-      const id = searchParams.get('id');
-      const p = app.products.find(prod => prod.id === id);
-      if (p) {
-        renderProductDetailPage(p);
+      app.switchAuthTab('signup', false);
+    } else if (path.includes('/login')) {
+      switchView('auth', false);
+      app.switchAuthTab('signin', false);
+    } else if (path.includes('/dashboard') || path.includes('/account')) {
+      if (app.currentUser) {
+        if (app.currentUser.role === 'admin') {
+          window.location.href = '/ecommerce/admin';
+        } else {
+          switchView('account', false);
+        }
       } else {
-        switchView('shop', false);
+        showToast("Please sign in to access your dashboard", "info");
+        switchView('auth', false);
+        app.switchAuthTab('signin', false);
       }
+    } else if (path.includes('/product') || searchParams.has('id')) {
+      let targetId = null;
+      if (path.includes('/product/')) {
+        targetId = path.split('/product/')[1].split('/')[0].split('?')[0];
+      } else if (searchParams.has('id')) {
+        targetId = searchParams.get('id');
+      }
+      resolveAndRenderProduct(targetId || '20');
     } else {
+      // Default to storefront website
       switchView('shop', false);
     }
+  }
+}
+
+function resolveAndRenderProduct(targetId) {
+  let p = null;
+  if (targetId) {
+    p = app.products.find(prod => 
+      String(prod.id).toLowerCase() === String(targetId).toLowerCase() ||
+      String(prod.id) === `prod-${targetId}` ||
+      String(prod.id).replace('prod-', '') === String(targetId)
+    );
+    if (!p && !isNaN(parseInt(targetId))) {
+      const idx = parseInt(targetId);
+      p = app.products[idx - 1] || app.products[idx];
+    }
+  }
+  if (!p) p = app.products[0];
+  if (p) {
+    renderProductDetailPage(p, false);
+  } else {
+    switchView('shop', false);
   }
 }
 
@@ -1066,7 +1234,7 @@ function closeModal() {
 }
 
 // Product Details Page Render
-function renderProductDetailPage(product) {
+function renderProductDetailPage(product, updateHistory = true) {
   const detailView = document.getElementById("product-detail-view");
   if (!detailView) return;
 
@@ -1092,19 +1260,23 @@ function renderProductDetailPage(product) {
   detailView.innerHTML = `
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
       <!-- Breadcrumb -->
-      <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 2rem;">
-        <a href="javascript:void(0)" onclick="switchView('shop')" style="color: #64748b; text-decoration: none;">Home</a> 
-        <span style="margin: 0 0.5rem;">&rsaquo;</span> 
-        <a href="javascript:void(0)" style="color: #64748b; text-decoration: none;">${product.category}</a> 
-        <span style="margin: 0 0.5rem;">&rsaquo;</span> 
+      <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.5rem;">
+        <a href="javascript:void(0)" onclick="switchView('shop')" style="color: #b45309; text-decoration: none; font-weight: 500;">Home</a> 
+        <span style="color: #cbd5e1;">&rsaquo;</span> 
+        <a href="javascript:void(0)" onclick="switchView('shop'); setTimeout(() => document.querySelector(\`.category-card[data-category='\${product.category}']\`)?.click(), 100);" style="color: #64748b; text-decoration: none;">${product.category}</a> 
+        <span style="color: #cbd5e1;">&rsaquo;</span> 
         <span style="color: #0f172a; font-weight: 600;">${product.name}</span>
       </div>
 
       <!-- Product Area -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; background: white; padding: 3rem; border-radius: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);">
-        <!-- Image Gallery -->
-        <div class="product-zoom-container" style="border-radius: 16px; overflow: hidden; background: #f8fafc; border: 1px solid var(--border-color); position: relative; height: 500px; cursor: crosshair;">
-          <img src="${product.image}" alt="${product.name}" class="product-zoom-img" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.1s ease, object-fit 0.1s;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; background: white; padding: 3rem; border-radius: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); align-items: start;">
+        <!-- Image Gallery with Zoom Container -->
+        <div class="product-zoom-container" style="border-radius: 16px; overflow: hidden; background: #f8fafc; border: 1px solid var(--border-color); position: relative; height: 500px; cursor: crosshair; display: flex; align-items: center; justify-content: center;">
+          <img src="${product.image}" alt="${product.name}" class="product-zoom-img" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.15s ease-out;">
+          <div style="position: absolute; bottom: 1rem; left: 1rem; background: rgba(15,23,42,0.75); backdrop-filter: blur(4px); color: white; padding: 0.35rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; gap: 0.35rem; pointer-events: none; z-index: 5;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            Hover to Zoom (2x)
+          </div>
         </div>
 
         <!-- Info -->
@@ -1117,38 +1289,47 @@ function renderProductDetailPage(product) {
                ${[1,2,3,4,5].map(() => `<svg viewBox="0 0 24 24" width="18" height="18" fill="#fbbf24" stroke="#fbbf24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`).join('')}
              </div>
              <span style="font-size: 0.95rem; color: #64748b; margin-left: 0.5rem;">(134 Reviews)</span>
+             <span style="font-size: 0.75rem; font-weight: 600; background: #ecfdf5; color: #059669; padding: 0.2rem 0.6rem; border-radius: 99px; margin-left: 0.5rem;">Verified Authentic</span>
           </div>
 
-          <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 2rem;">
+          <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem;">
              <span style="font-size: 2.5rem; font-weight: 800; color: #991b1b;">₹${product.price.toLocaleString("en-IN")}</span>
              <span style="font-size: 1.25rem; font-weight: 500; color: #94a3b8; text-decoration: line-through;">₹${originalPrice.toLocaleString("en-IN")}</span>
-             <span style="background: #fef2f2; color: #991b1b; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; margin-left: auto;">15% OFF</span>
+             <span style="background: #fef2f2; color: #991b1b; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">15% OFF</span>
           </div>
 
-          <p style="font-size: 1.05rem; line-height: 1.7; color: #475569; margin-bottom: 2.5rem; flex-grow: 1;">
+          <p style="font-size: 1.05rem; line-height: 1.7; color: #475569; margin-bottom: 2rem;">
             ${product.description}
           </p>
 
-          <div style="display: flex; gap: 1rem; align-items: center;">
+          <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 2rem;">
             <div style="display: flex; align-items: center; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; height: 50px;">
-              <button class="qty-dec" style="width: 40px; height: 100%; background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #64748b;">-</button>
-              <span class="qty-val" style="width: 40px; text-align: center; font-weight: 600; font-size: 1.1rem; color: #0f172a;">1</span>
-              <button class="qty-inc" style="width: 40px; height: 100%; background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #64748b;">+</button>
+              <button class="qty-dec" style="width: 44px; height: 100%; background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #64748b; font-weight: 600;">-</button>
+              <span class="qty-val" style="width: 44px; text-align: center; font-weight: 700; font-size: 1.1rem; color: #0f172a;">1</span>
+              <button class="qty-inc" style="width: 44px; height: 100%; background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #64748b; font-weight: 600;">+</button>
             </div>
-            <button class="add-detail-cart" style="flex: 1; background: #991b1b; color: white; border: none; height: 50px; border-radius: 8px; font-weight: 600; font-size: 1.1rem; display: flex; justify-content: center; align-items: center; gap: 0.75rem; cursor: pointer; transition: all 0.2s;">
+            <button class="add-detail-cart" style="flex: 1; background: #831843; color: white; border: none; height: 50px; border-radius: 8px; font-weight: 600; font-size: 1.05rem; display: flex; justify-content: center; align-items: center; gap: 0.75rem; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(131,24,67,0.2);">
               <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
               Add to Bag
             </button>
           </div>
           
-          <div style="margin-top: 2rem; display: flex; gap: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
-            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748b; font-size: 0.9rem;">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Pan-India Delivery
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748b; font-size: 0.85rem;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#b45309" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Pan-India Delivery (3-5 Days)
             </div>
-            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748b; font-size: 0.9rem;">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Secure Checkout
+            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748b; font-size: 0.85rem;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#b45309" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              100% Authentic Guaranteed
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748b; font-size: 0.85rem;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#b45309" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              7 Days Hassle-Free Returns
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748b; font-size: 0.85rem;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#b45309" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/></svg>
+              Secure Online Payments
             </div>
           </div>
         </div>
@@ -1162,7 +1343,7 @@ function renderProductDetailPage(product) {
   let qty = 1;
   const qtyVal = detailView.querySelector(".qty-val");
   
-  // Image Zoom logic
+  // Image Zoom logic (Smooth cursor tracking & 2.2x magnification)
   const zoomContainer = detailView.querySelector('.product-zoom-container');
   const zoomImg = detailView.querySelector('.product-zoom-img');
   if (zoomContainer && zoomImg) {
@@ -1173,7 +1354,7 @@ function renderProductDetailPage(product) {
       const xPercent = (x / rect.width) * 100;
       const yPercent = (y / rect.height) * 100;
       zoomImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
-      zoomImg.style.transform = 'scale(2)';
+      zoomImg.style.transform = 'scale(2.2)';
       zoomImg.style.objectFit = 'cover';
     });
     zoomContainer.addEventListener('mouseleave', () => {
@@ -1209,6 +1390,7 @@ function renderProductDetailPage(product) {
     relatedProducts.forEach(p => {
       const card = document.createElement("div");
       card.className = "product-card";
+      card.style.cursor = "pointer";
       const oPrice = p.price + Math.floor(p.price * 0.15);
       card.innerHTML = `
         <div style="border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column;">
@@ -1239,13 +1421,13 @@ function renderProductDetailPage(product) {
           }
           return;
         }
-        renderProductDetailPage(p);
+        renderProductDetailPage(p, true);
       });
       relatedGrid.appendChild(card);
     });
   }
   
-  switchView('product-detail', true, product.id);
+  switchView('product-detail', updateHistory, product.id);
 }
 
 // ==========================================
@@ -2090,9 +2272,6 @@ function setupEventListeners() {
     });
   });
 
-  let generatedEmailOTPCode = null;
-  let pendingEmailLoginCreds = null;
-
   // Login via Email submission
   if (authEmailForm) {
     authEmailForm.addEventListener("submit", (e) => {
@@ -2100,52 +2279,21 @@ function setupEventListeners() {
       const email = document.getElementById("login-email").value.trim();
       const password = document.getElementById("login-password").value;
 
-      const validation = app.validateEmailLogin(email, password);
-      if (!validation.success) {
-        showToast(validation.message, "danger");
-        return;
-      }
+      const res = app.loginWithEmail(email, password);
+      if (res.success) {
+        showToast(`Welcome back, ${res.user.name}!`);
+        updateNavBarState();
+        authEmailForm.reset();
 
-      generatedEmailOTPCode = Math.floor(100000 + Math.random() * 900000).toString();
-      pendingEmailLoginCreds = { email, password };
-      
-      document.getElementById("email-login-credentials").style.display = "none";
-      document.getElementById("email-login-otp-section").style.display = "block";
-      
-      alert(`[Demo OTP Service] Your Email OTP code to log in is: ${generatedEmailOTPCode}`);
-      showToast(`Verification code sent to ${email}`);
-    });
-
-    const verifyEmailBtn = document.getElementById("verify-email-login-btn");
-    if (verifyEmailBtn) {
-      verifyEmailBtn.addEventListener("click", () => {
-        const otpInput = document.getElementById("login-email-otp").value.trim();
-        if (otpInput !== generatedEmailOTPCode) {
-          showToast("Incorrect OTP. Please check your email.", "danger");
-          return;
-        }
-
-        const res = app.loginWithEmail(pendingEmailLoginCreds.email, pendingEmailLoginCreds.password);
-        if (res.success) {
-          showToast(`Welcome back, ${res.user.name}!`);
-          updateNavBarState();
-          closeModal(); // Still safe to call
-          
-          document.getElementById("email-login-credentials").style.display = "block";
-          document.getElementById("email-login-otp-section").style.display = "none";
-          document.getElementById("login-email-otp").value = "";
-          authEmailForm.reset();
-
-          if (res.user.role === 'admin') {
-            switchView("admin");
-          } else {
-            switchView("shop");
-          }
+        if (res.user.role === 'admin') {
+          navigateTo('/ecommerce/admin');
         } else {
-          showToast(res.message, "danger");
+          navigateTo('/ecommerce/website');
         }
-      });
-    }
+      } else {
+        showToast(res.message, "danger");
+      }
+    });
   }
 
   // Mobile login OTP display and verification
@@ -2169,8 +2317,6 @@ function setupEventListeners() {
 
       otpSection.style.display = "block";
       sendOtpBtn.innerText = "Resend OTP";
-
-      alert(`[Demo OTP Service] Your OTP code to log in is: ${generatedOTPCode}`);
       showToast(`OTP code sent to +91 ${phone}`);
     });
   }
@@ -2190,16 +2336,15 @@ function setupEventListeners() {
       if (res.success) {
         showToast(`Welcome back, ${res.user.name}!`);
         updateNavBarState();
-        closeModal();
         generatedOTPCode = null;
-        otpSection.style.display = "none";
-        sendOtpBtn.innerText = "Send OTP";
+        if (otpSection) otpSection.style.display = "none";
+        if (sendOtpBtn) sendOtpBtn.innerText = "Send OTP";
         document.getElementById("login-otp").value = "";
 
         if (res.user.role === 'admin') {
-          switchView("admin");
+          navigateTo('/ecommerce/admin');
         } else {
-          switchView("shop");
+          navigateTo('/ecommerce/website');
         }
       } else {
         showToast(res.message, "danger");
@@ -2207,61 +2352,26 @@ function setupEventListeners() {
     });
   }
 
-  let generatedSignupOTPCode = null;
-  let pendingSignupCreds = null;
-
   // Register via Signup Submission
   if (authSignupForm) {
     authSignupForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const name = document.getElementById("signup-name").value.trim();
-      const phone = document.getElementById("signup-phone").value.trim();
       const email = document.getElementById("signup-email").value.trim();
+      const phoneInput = document.getElementById("signup-phone");
+      const phone = phoneInput ? phoneInput.value.trim() : "9876543210";
       const password = document.getElementById("signup-password").value;
 
-      const validation = app.validateSignup(email);
-      if (!validation.success) {
-        showToast(validation.message, "danger");
-        return;
+      const res = app.signup(name, phone, email, password);
+      if (res.success) {
+        showToast(`Account created successfully! Welcome, ${res.user.name}`);
+        updateNavBarState();
+        authSignupForm.reset();
+        navigateTo('/ecommerce/website');
+      } else {
+        showToast(res.message, "danger");
       }
-
-      generatedSignupOTPCode = Math.floor(100000 + Math.random() * 900000).toString();
-      pendingSignupCreds = { name, phone, email, password };
-      
-      document.getElementById("signup-credentials").style.display = "none";
-      document.getElementById("signup-email-otp-section").style.display = "block";
-      
-      alert(`[Demo OTP Service] Your Registration OTP code is: ${generatedSignupOTPCode}`);
-      showToast(`Verification code sent to ${email}`);
     });
-
-    const verifySignupBtn = document.getElementById("verify-signup-email-btn");
-    if (verifySignupBtn) {
-      verifySignupBtn.addEventListener("click", () => {
-        const otpInput = document.getElementById("signup-email-otp").value.trim();
-        if (otpInput !== generatedSignupOTPCode) {
-          showToast("Incorrect OTP. Please check your email.", "danger");
-          return;
-        }
-
-        const res = app.signup(pendingSignupCreds.name, pendingSignupCreds.phone, pendingSignupCreds.email, pendingSignupCreds.password);
-        if (res.success) {
-          showToast(`Account created successfully! Welcome, ${res.user.name}`);
-          updateNavBarState();
-          closeModal();
-          
-          document.getElementById("signup-credentials").style.display = "block";
-          document.getElementById("signup-email-otp-section").style.display = "none";
-          document.getElementById("signup-email-otp").value = "";
-          authSignupForm.reset();
-          
-          // Redirect to shop
-          switchView("shop");
-        } else {
-          showToast(res.message, "danger");
-        }
-      });
-    }
   }
 
   // Profile update form submission

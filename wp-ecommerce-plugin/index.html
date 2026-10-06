@@ -17,7 +17,7 @@
 <body>
 
   <!-- Notice Bar -->
-  <div style="background-color: var(--primary); color: #fef08a; padding: 0.5rem 0; font-size: 0.75rem; font-weight: 500; display: flex; justify-content: center; gap: 2rem;">
+  <div class="notice-bar" style="background-color: var(--primary); color: #fef08a; padding: 0.5rem 0; font-size: 0.75rem; font-weight: 500; display: flex; justify-content: center; gap: 2rem;">
     <span style="display:flex; align-items:center; gap:0.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Authentic Rajasthan Heritage</span>
     <span style="display:flex; align-items:center; gap:0.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg> Handcrafted by Local Artisans</span>
     <span style="display:flex; align-items:center; gap:0.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16 10-4 4-4-4"/></svg> Pan-India Delivery</span>
@@ -27,7 +27,7 @@
   <!-- Royal Navigation Header -->
   <header class="navbar" style="border-bottom: 1px solid var(--border-color); background: var(--bg-card); position: sticky; top: 0; z-index: 50; padding: 1rem 0;">
     <div class="container" style="display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
-      <a href="index.html" class="logo animate-fade-in" style="display:flex; align-items:center; gap:0.75rem; text-decoration:none;">
+      <a href="javascript:void(0)" onclick="switchView('shop')" class="logo animate-fade-in" style="display:flex; align-items:center; gap:0.75rem; text-decoration:none;">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="20" cy="20" r="19" stroke="#b45309" stroke-width="2" stroke-dasharray="4 2"/>
           <path d="M20 5 L23 15 L33 15 L25 22 L28 32 L20 26 L12 32 L15 22 L7 15 L17 15 Z" fill="#b45309"/>
@@ -76,35 +76,54 @@
   <!-- Hero Section -->
   <div class="toast-container" id="toast-container"></div>
 
-  <!-- Hero Section -->
-  <section class="hero" id="hero-section" style="position:relative; min-height:600px; display:flex; align-items:center; background-image:url('https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=1920&q=80'); background-size:cover; background-position:center;">
-    <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 40%, rgba(255,255,255,0) 100%); z-index:1;"></div>
-    <div class="container" style="position:relative; z-index:2; max-width:1400px; margin:0 auto; padding:0 4rem;">
-      <div class="hero-content animate-fade-in" style="max-width:550px;">
-        <span style="font-size:0.85rem; font-weight:700; letter-spacing:2px; color:#b45309; text-transform:uppercase; margin-bottom:1rem; display:block;">AUTHENTIC RAJASTHAN</span>
-        <h1 style="font-family: 'Plus Jakarta Sans', serif; font-size:4.5rem; font-weight:800; line-height:1.1; color:#0f172a; margin-bottom:1.5rem;">Timeless Heritage.<br>Crafted for Today.</h1>
-        <p style="font-size:1.1rem; color:#475569; line-height:1.6; margin-bottom:2.5rem;">Discover handcrafted treasures from Rajasthan — traditional textiles, jewellery, handicrafts and authentic Marwari delicacies.</p>
-        <div style="display:flex; gap:1rem;">
-          <button class="btn-primary" onclick="document.getElementById('shop-section').scrollIntoView({behavior: 'smooth'})" style="background:#b45309; border:none; padding:1rem 2rem; font-size:1rem; border-radius:6px; display:flex; align-items:center; gap:0.5rem; font-weight:600;">
-            Explore Collection <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
-          <button style="background:white; border:1px solid #cbd5e1; color:#0f172a; padding:1rem 2rem; font-size:1rem; border-radius:6px; font-weight:600; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
-            Our Story
-          </button>
-        </div>
-        <div style="display:flex; gap:2rem; margin-top:3rem; padding-top:2rem; border-top:1px solid rgba(0,0,0,0.1);">
-          <div style="display:flex; align-items:center; gap:0.75rem;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
-            <div><div style="font-weight:700; font-size:0.85rem; color:#0f172a;">100% Authentic</div><div style="font-size:0.75rem; color:#64748b;">Rajasthan Craft</div></div>
+  <!-- Complete Storefront Home View Wrapper -->
+  <div id="home-view">
+    <!-- Hero Section -->
+    <section class="hero" id="hero-section" style="position:relative; padding: 3.5rem 0 4rem 0; background: linear-gradient(135deg, #fefce8 0%, #fffbeb 50%, #fef3c7 100%); border-bottom: 1px solid var(--border-color);">
+      <div class="container" style="max-width:1400px; margin:0 auto; padding:0 2rem;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:3rem; flex-wrap:wrap;">
+          <!-- Left Text Content -->
+          <div class="hero-content animate-fade-in" style="flex: 1 1 550px; max-width:620px;">
+            <span style="font-size:0.8rem; font-weight:700; letter-spacing:2px; color:#b45309; text-transform:uppercase; margin-bottom:0.75rem; display:block;">AUTHENTIC RAJASTHAN</span>
+            <h1 style="font-family: 'Plus Jakarta Sans', serif; font-size:3.75rem; font-weight:800; line-height:1.15; color:#0f172a; margin:0 0 1.25rem 0;">Timeless Heritage.<br>Crafted for Today.</h1>
+            <p style="font-size:1.1rem; color:#475569; line-height:1.6; margin-bottom:2rem;">Discover handcrafted treasures from Rajasthan — traditional textiles, jewellery, handicrafts and authentic Marwari delicacies.</p>
+            <div style="display:flex; gap:1rem; align-items:center;">
+              <button class="btn-primary" onclick="document.getElementById('shop-section')?.scrollIntoView({behavior: 'smooth'})" style="background:#831843; border:none; padding:0.9rem 2rem; font-size:1rem; border-radius:6px; display:flex; align-items:center; gap:0.5rem; font-weight:600; cursor:pointer; box-shadow:0 4px 6px -1px rgba(131,24,67,0.2);">
+                Explore Collection <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+              <button style="background:white; border:1px solid #cbd5e1; color:#0f172a; padding:0.9rem 2rem; font-size:1rem; border-radius:6px; font-weight:600; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.05);" onclick="document.querySelector('.legacy-section')?.scrollIntoView({behavior:'smooth'})">
+                Our Story
+              </button>
+            </div>
+            <div style="display:flex; gap:2rem; margin-top:2.5rem; padding-top:2rem; border-top:1px solid rgba(180,83,9,0.15); flex-wrap:wrap;">
+              <div style="display:flex; align-items:center; gap:0.75rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+                <div><div style="font-weight:700; font-size:0.85rem; color:#0f172a;">100% Authentic</div><div style="font-size:0.75rem; color:#64748b;">Rajasthan Craft</div></div>
+              </div>
+              <div style="display:flex; align-items:center; gap:0.75rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <div><div style="font-weight:700; font-size:0.85rem; color:#0f172a;">Artisan Made</div><div style="font-size:0.75rem; color:#64748b;">Since Generations</div></div>
+              </div>
+              <div style="display:flex; align-items:center; gap:0.75rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v4M12 14v4M16 14v4"/></svg>
+                <div><div style="font-weight:700; font-size:0.85rem; color:#0f172a;">Tradition</div><div style="font-size:0.75rem; color:#64748b;">Meets Modern Living</div></div>
+              </div>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:0.75rem;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            <div><div style="font-weight:700; font-size:0.85rem; color:#0f172a;">Artisan Made</div><div style="font-size:0.75rem; color:#64748b;">Since Generations</div></div>
+          <!-- Right Featured Showcase Image (Matching Reference media_1791228586359.jpg) -->
+          <div style="flex: 1 1 450px; max-width:550px; position:relative;">
+            <div style="position:relative; border-radius:24px; overflow:hidden; box-shadow:0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); background:#fef3c7;">
+              <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80" alt="Royal Rajasthan Heritage Collection" style="width:100%; height:480px; object-fit:cover; display:block;">
+              <!-- Decorative Floating Heritage Badge -->
+              <div style="position:absolute; top:1.5rem; right:1.5rem; background:rgba(255,255,255,0.95); backdrop-filter:blur(8px); padding:0.6rem 1.25rem; border-radius:99px; display:flex; align-items:center; gap:0.5rem; box-shadow:0 4px 6px rgba(0,0,0,0.08); border:1px solid #fef08a;">
+                <span style="font-size:1.1rem;">👑</span>
+                <span style="font-size:0.8rem; font-weight:700; color:#831843; letter-spacing:0.5px;">Royal Rajasthan Collection</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
   <!-- Shop by Category Image Grid -->
   <section class="categories-section" id="categories-section" style="padding: 5rem 0; background-color: #fafaf9;">
@@ -315,6 +334,13 @@
       </div>
     </div>
   </section>
+  </div> <!-- /#home-view -->
+
+  <!-- Standalone Product Detail Page View -->
+  <section id="product-detail-view" style="display:none; padding: 2.5rem 0; min-height: 80vh; background: #f8fafc;">
+    <!-- Content injected via JS -->
+  </section>
+
   <!-- My Account View Container -->
   <section class="container account-view-wrapper" id="account-view" style="display: none; padding: 3rem 0;">
     <div class="admin-header">
@@ -461,11 +487,6 @@
     </div>
   </section>
 
-  <!-- Product Detail Page View -->
-  <section id="product-detail-view" style="display:none; padding: 2rem 0; min-height: 80vh; background: #f8fafc;">
-    <!-- Content injected via JS -->
-  </section>
-
   <!-- Footer Section -->
   <footer style="background-color: #0f172a; color: #cbd5e1; padding: 4rem 0 2rem 0; font-family: 'Plus Jakarta Sans', sans-serif;">
     <div class="container" style="max-width:1400px; margin:0 auto; padding:0 2rem;">
@@ -583,94 +604,76 @@
     </div>
   </div>
 
+  <!-- STANDALONE DEDICATED AUTHENTICATION VIEW (LOGIN & REGISTER PAGES) -->
+  <section id="auth-view" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #077b9f; z-index: 99999; overflow-y: auto; align-items: center; justify-content: center; padding: 2rem 1rem;">
+    <div style="background: white; border-radius: 4px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); width: 100%; max-width: 440px; padding: 3rem 2.5rem 2.5rem; margin: auto; position: relative; box-sizing: border-box;">
+      
+      <!-- Back to Store Link -->
+      <button type="button" onclick="switchView('shop')" style="position: absolute; top: 1.25rem; left: 1.25rem; background: none; border: none; color: #6b7280; font-size: 0.85rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.5rem; border-radius: 4px; transition: color 0.2s;" onmouseover="this.style.color='#077b9f'" onmouseout="this.style.color='#6b7280'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Back to Store
+      </button>
+
+      <h2 id="auth-view-title" style="color: #4b5563; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 1.85rem; font-weight: 400; text-align: center; margin-top: 1rem; margin-bottom: 2rem;">Login</h2>
+      
+      <div class="auth-form-container">
+        <!-- A. Email Login Form (Matching Reference media_1791296500459.png) -->
+        <form id="auth-email-form">
+          <div style="margin-bottom: 1.25rem;">
+            <label for="login-email" style="display: block; font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Email:</label>
+            <input type="email" id="login-email" style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #d1d5db; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none; box-sizing: border-box; transition: border-color 0.2s;" placeholder="Enter email" required onfocus="this.style.borderColor='#077b9f'" onblur="this.style.borderColor='#d1d5db'">
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label for="login-password" style="display: block; font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Password:</label>
+            <input type="password" id="login-password" style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #d1d5db; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none; box-sizing: border-box; transition: border-color 0.2s;" placeholder="Enter password" required onfocus="this.style.borderColor='#077b9f'" onblur="this.style.borderColor='#d1d5db'">
+          </div>
+          <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            <input type="checkbox" id="login-show-password" style="cursor: pointer; width: 16px; height: 16px;" onclick="document.getElementById('login-password').type = this.checked ? 'text' : 'password'">
+            <label for="login-show-password" style="font-size: 0.9rem; color: #4b5563; cursor: pointer; user-select: none;">Show Password</label>
+          </div>
+          <button type="submit" style="width: 100%; padding: 0.9rem; border-radius: 2px; font-weight: 600; font-size: 0.95rem; letter-spacing: 0.5px; background-color: #077b9f; color: white; border: none; cursor: pointer; text-transform: uppercase; transition: background 0.2s;" onmouseover="this.style.backgroundColor='#056482'" onmouseout="this.style.backgroundColor='#077b9f'">SIGN IN</button>
+          
+          <div style="text-align: center; margin-top: 2rem; font-size: 0.9rem; color: #4b5563; display: flex; flex-direction: column; gap: 0.6rem;">
+            <div>Forgot <a href="javascript:void(0)" onclick="showToast('Password reset instructions sent to your email.', 'info')" style="color: #077b9f; text-decoration: none;">Username / Password</a>?</div>
+            <div>Don't have an account? <a href="javascript:void(0)" onclick="app.switchAuthTab('signup')" style="color: #077b9f; text-decoration: none; font-weight: 500;">Sign up</a></div>
+          </div>
+        </form>
+
+        <!-- B. Register Form -->
+        <form id="auth-signup-form" style="display: none;">
+          <div style="margin-bottom: 1.25rem;">
+            <label for="signup-name" style="display: block; font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Full Name:</label>
+            <input type="text" id="signup-name" style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #d1d5db; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none; box-sizing: border-box; transition: border-color 0.2s;" placeholder="Enter your full name" required onfocus="this.style.borderColor='#077b9f'" onblur="this.style.borderColor='#d1d5db'">
+          </div>
+          <div style="margin-bottom: 1.25rem;">
+            <label for="signup-email" style="display: block; font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Email:</label>
+            <input type="email" id="signup-email" style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #d1d5db; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none; box-sizing: border-box; transition: border-color 0.2s;" placeholder="Enter email" required onfocus="this.style.borderColor='#077b9f'" onblur="this.style.borderColor='#d1d5db'">
+          </div>
+          <div style="margin-bottom: 1.25rem;">
+            <label for="signup-phone" style="display: block; font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Mobile Number (Optional):</label>
+            <input type="tel" id="signup-phone" style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #d1d5db; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none; box-sizing: border-box; transition: border-color 0.2s;" placeholder="Enter mobile number" pattern="[0-9]{10}" onfocus="this.style.borderColor='#077b9f'" onblur="this.style.borderColor='#d1d5db'">
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <label for="signup-password" style="display: block; font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Password:</label>
+            <input type="password" id="signup-password" style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #d1d5db; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none; box-sizing: border-box; transition: border-color 0.2s;" placeholder="Enter password" required onfocus="this.style.borderColor='#077b9f'" onblur="this.style.borderColor='#d1d5db'">
+          </div>
+          <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            <input type="checkbox" id="signup-show-password" style="cursor: pointer; width: 16px; height: 16px;" onclick="document.getElementById('signup-password').type = this.checked ? 'text' : 'password'">
+            <label for="signup-show-password" style="font-size: 0.9rem; color: #4b5563; cursor: pointer; user-select: none;">Show Password</label>
+          </div>
+          <button type="submit" style="width: 100%; padding: 0.9rem; border-radius: 2px; font-weight: 600; font-size: 0.95rem; letter-spacing: 0.5px; background-color: #077b9f; color: white; border: none; cursor: pointer; text-transform: uppercase; transition: background 0.2s;" onmouseover="this.style.backgroundColor='#056482'" onmouseout="this.style.backgroundColor='#077b9f'">SIGN UP</button>
+          
+          <div style="text-align: center; margin-top: 2rem; font-size: 0.9rem; color: #4b5563;">
+            Already have an account? <a href="javascript:void(0)" onclick="app.switchAuthTab('signin')" style="color: #077b9f; text-decoration: none; font-weight: 500;">Sign in</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
   <!-- SHARED MODALS BACKDROP CONTAINER -->
   <div class="modal-overlay" id="modal-overlay-container">
-
-    <!-- Authentication View (Email/Password, Mobile/OTP, or Signup) -->
-    <section id="auth-view" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #077b9f; z-index: 9999; display: flex; align-items: center; justify-content: center; overflow-y: auto;">
-      <div style="background: white; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; padding: 2.5rem 2rem; margin: auto;">
-        <h2 id="auth-view-title" style="color: #4b5563; font-family: sans-serif; font-size: 1.75rem; font-weight: 400; text-align: center; margin-bottom: 2rem; margin-top: 0;">Login</h2>
-        
-        <div class="auth-form-container">
-          <!-- A. Email Password Form -->
-          <form id="auth-email-form">
-            <div id="email-login-credentials">
-              <div class="form-group" style="margin-bottom: 1.25rem;">
-                <label for="login-email" style="display: block; font-weight: normal; font-size: 0.95rem; margin-bottom: 0.5rem; color: #1f2937;">Email:</label>
-                <input type="text" id="login-email" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none;" placeholder="Enter email" required>
-              </div>
-              <div class="form-group" style="margin-bottom: 1rem;">
-                <label for="login-password" style="display: block; font-weight: normal; font-size: 0.95rem; margin-bottom: 0.5rem; color: #1f2937;">Password:</label>
-                <input type="password" id="login-password" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none;" placeholder="Enter password" required>
-              </div>
-              <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                <input type="checkbox" id="login-show-password" onclick="document.getElementById('login-password').type = this.checked ? 'text' : 'password'">
-                <label for="login-show-password" style="font-size: 0.9rem; color: #4b5563; cursor: pointer;">Show Password</label>
-              </div>
-              <button type="submit" style="width: 100%; padding: 0.875rem; border-radius: 2px; font-weight: 500; font-size: 1rem; margin-top: 0.5rem; background-color: #077b9f; color: white; border: none; cursor: pointer; text-transform: uppercase;">SIGN IN</button>
-            </div>
-            <div id="email-login-otp-section" style="display: none; border-top: 1px dashed var(--border-color); padding-top: 1rem; margin-top: 1rem;">
-              <div class="form-group">
-                <label for="login-email-otp" style="display: block; font-weight: normal; font-size: 0.95rem; margin-bottom: 0.5rem; color: #1f2937;">Email Verification OTP</label>
-                <input type="text" id="login-email-otp" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 2px; font-size: 0.95rem;" placeholder="Enter code received in email" pattern="[0-9]{4,6}">
-                <div class="form-tip" style="font-size: 0.8rem; color: #6b7280; margin-top: 0.5rem;">Enter the OTP code shown in the pop-up notification box.</div>
-              </div>
-              <button type="button" id="verify-email-login-btn" style="width: 100%; padding: 0.875rem; border-radius: 2px; font-weight: 500; font-size: 1rem; margin-top: 1.5rem; background-color: #077b9f; color: white; border: none; cursor: pointer; text-transform: uppercase;">Verify and Login</button>
-            </div>
-            
-            <div style="text-align: center; margin-top: 2rem; font-size: 0.9rem; color: #4b5563; display: flex; flex-direction: column; gap: 0.5rem;">
-              <div>Forgot <a href="#" style="color: #077b9f; text-decoration: none;">Username / Password</a>?</div>
-              <div>Don't have an account? <a href="javascript:void(0)" onclick="app.switchAuthTab('signup')" style="color: #077b9f; text-decoration: none;">Sign up</a></div>
-            </div>
-          </form>
-
-          <!-- C. Register Form -->
-          <form id="auth-signup-form" style="display: none;">
-            <div id="signup-credentials">
-              <div class="form-group" style="margin-bottom: 1.25rem;">
-                <label for="signup-name" style="display: block; font-weight: normal; font-size: 0.95rem; margin-bottom: 0.5rem; color: #1f2937;">Full Name:</label>
-                <input type="text" id="signup-name" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none;" placeholder="Enter your full name" required>
-              </div>
-              <div class="form-group" style="margin-bottom: 1.25rem;">
-                <label for="signup-phone" style="display: block; font-weight: normal; font-size: 0.95rem; margin-bottom: 0.5rem; color: #1f2937;">Mobile Number (Optional):</label>
-                <input type="tel" id="signup-phone" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none;" placeholder="Enter mobile number" pattern="[0-9]{10}">
-              </div>
-              <div class="form-group" style="margin-bottom: 1.25rem;">
-                <label for="signup-email" style="display: block; font-weight: normal; font-size: 0.95rem; margin-bottom: 0.5rem; color: #1f2937;">Email:</label>
-                <input type="email" id="signup-email" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none;" placeholder="Enter email" required>
-              </div>
-              <div class="form-group" style="margin-bottom: 1rem;">
-                <label for="signup-password" style="display: block; font-weight: normal; font-size: 0.95rem; margin-bottom: 0.5rem; color: #1f2937;">Password:</label>
-                <input type="password" id="signup-password" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none;" placeholder="Enter password" required>
-              </div>
-              <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                <input type="checkbox" id="signup-show-password" onclick="document.getElementById('signup-password').type = this.checked ? 'text' : 'password'">
-                <label for="signup-show-password" style="font-size: 0.9rem; color: #4b5563; cursor: pointer;">Show Password</label>
-              </div>
-              <button type="submit" style="width: 100%; padding: 0.875rem; border-radius: 2px; font-weight: 500; font-size: 1rem; margin-top: 0.5rem; background-color: #077b9f; color: white; border: none; cursor: pointer; text-transform: uppercase;">SIGN UP</button>
-            </div>
-            
-            <div id="signup-email-otp-section" style="display: none; border-top: 1px dashed var(--border-color); padding-top: 1rem; margin-top: 1rem;">
-              <div class="form-group">
-                <label for="signup-email-otp" style="display: block; font-weight: normal; font-size: 0.95rem; margin-bottom: 0.5rem; color: #1f2937;">Email Verification OTP</label>
-                <input type="text" id="signup-email-otp" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 2px; font-size: 0.95rem;" placeholder="Enter code received in email" pattern="[0-9]{4,6}">
-                <div class="form-tip" style="font-size: 0.8rem; color: #6b7280; margin-top: 0.5rem;">Enter the OTP code shown in the pop-up notification box.</div>
-              </div>
-              <button type="button" id="verify-signup-email-btn" style="width: 100%; padding: 0.875rem; border-radius: 2px; font-weight: 500; font-size: 1rem; margin-top: 1.5rem; background-color: #077b9f; color: white; border: none; cursor: pointer; text-transform: uppercase;">Verify and Complete Registration</button>
-            </div>
-            
-            <div style="text-align: center; margin-top: 2rem; font-size: 0.9rem; color: #4b5563;">
-              Already have an account? <a href="javascript:void(0)" onclick="app.switchAuthTab('email')" style="color: #077b9f; text-decoration: none;">Sign in</a>
-            </div>
-          </form>
-          
-          <button style="position: absolute; top: 1rem; left: 1rem; background: rgba(0,0,0,0.2); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;" onclick="app.closeAuthView()">
-             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-             Back to Store
-          </button>
-        </div>
-      </div>
-    </section>    <!-- 3. Checkout details Form Modal -->
+    <!-- Checkout Modal -->
     <div class="modal-content" id="checkout-modal" style="display:none;">
       <button class="modal-close-btn" onclick="closeModal()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
