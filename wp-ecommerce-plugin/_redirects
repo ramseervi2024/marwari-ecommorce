@@ -1,3 +1,5 @@
+/ecommerce/api-docs* /swagger.html               200
+/ecommerce/swagger*  /swagger.html               200
 /ecommerce/admin*    /superpanel.html            200
 /superpanel          /superpanel.html            200
 /customer-management /customer-management.html   200

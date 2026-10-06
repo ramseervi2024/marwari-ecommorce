@@ -74,7 +74,17 @@ function wp_ecommerce_custom_routes($wp = null) {
     }
 
     $plugin_url = plugin_dir_url(__FILE__);
-    $cache_ver = time() . '65';
+    $cache_ver = time() . '75';
+
+    // Route: Swagger API Documentation (Interactive Swagger UI)
+    if (strpos($request_uri, '/ecommerce/api-docs') !== false || strpos($request_uri, '/ecommerce/swagger') !== false) {
+        $executed = true;
+        if (!defined('DONOTCACHEPAGE')) define('DONOTCACHEPAGE', true);
+        nocache_headers();
+        $html = file_get_contents( WP_ECOMMERCE_PLUGIN_DIR . 'swagger.html' );
+        echo $html;
+        exit;
+    }
 
     // Route: Admin Super Panel
     if (strpos($request_uri, '/ecommerce/admin') !== false || strpos($request_uri, '/superpanel') !== false) {

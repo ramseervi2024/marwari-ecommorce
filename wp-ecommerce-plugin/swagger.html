@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mārwāri E-Commerce API Documentation (Swagger UI)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
+  <link rel="icon" type="image/png" href="https://unpkg.com/swagger-ui-dist@5.11.0/favicon-32x32.png" sizes="32x32" />
+  <style>
+    body {
+      margin: 0;
+      background: #fafafa;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .topbar {
+      background: #0f172a !important;
+      padding: 10px 0;
+      border-bottom: 2px solid #b45309;
+    }
+    .topbar-wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+    .brand-title {
+      color: #fef08a;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .rn-badge {
+      background: #0284c7;
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-weight: 600;
+    }
+    .swagger-ui .info {
+      margin: 25px 0;
+    }
+    .swagger-ui .info .title {
+      color: #0f172a;
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-wrapper">
+      <a href="/ecommerce/website" class="brand-title">
+        <span>🏛️ MĀRWĀRI E-COMMERCE API</span>
+      </a>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="rn-badge">React Native & Web Ready</span>
+        <a href="/ecommerce/website" style="color:#cbd5e1; text-decoration:none; font-size:0.85rem; font-weight:500;">&larr; Back to Store</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="swagger-ui"></div>
+
+  <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js"></script>
+  <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-standalone-preset.js"></script>
+  <script>
+    window.onload = function() {
+      // Determine the spec URL or load inline
+      const specUrl = window.location.origin + '/wp-json/wp-ecommerce/v1/swagger';
+      
+      window.ui = SwaggerUIBundle({
+        url: specUrl,
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout",
+        defaultModelsExpandDepth: 1,
+        defaultModelExpandDepth: 1,
+        docExpansion: "list",
+        filter: true
+      });
+    };
+  </script>
+</body>
+</html>
