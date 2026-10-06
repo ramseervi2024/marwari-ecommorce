@@ -76,11 +76,11 @@ const DEFAULT_USERS = [
 class AppState {
   constructor() {
     const DEFAULT_CATEGORIES = [
-      { id: "cat-1", name: "Royal Apparel", slug: "Apparel" },
-      { id: "cat-2", name: "Handicrafts", slug: "Handicrafts" },
-      { id: "cat-3", name: "Jewellery", slug: "Jewellery" },
-      { id: "cat-4", name: "Food & Spices", slug: "Food & Spices" },
-      { id: "cat-5", name: "Home & Décor", slug: "Home & Décor" }
+      { id: "cat-1", name: "Royal Apparel", slug: "Apparel", image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=400&q=80" },
+      { id: "cat-2", name: "Handicrafts", slug: "Handicrafts", image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=400&q=80" },
+      { id: "cat-3", name: "Jewellery", slug: "Jewellery", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=400&q=80" },
+      { id: "cat-4", name: "Food & Spices", slug: "Food & Spices", image: "https://images.unsplash.com/photo-1596450514735-111a2fe02935?auto=format&fit=crop&w=400&q=80" },
+      { id: "cat-5", name: "Home & Décor", slug: "Home & Décor", image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=400&q=80" }
     ];
 
     const DEFAULT_COUPONS = [
@@ -90,7 +90,7 @@ class AppState {
 
     this.products = this.loadLocalStorage("marwari_products", DEFAULT_PRODUCTS);
     this.users = this.loadLocalStorage("marwari_users", DEFAULT_USERS);
-    this.categories = this.loadLocalStorage("marwari_categories_v2", DEFAULT_CATEGORIES);
+    this.categories = this.loadLocalStorage("marwari_categories_v3", DEFAULT_CATEGORIES);
     this.coupons = this.loadLocalStorage("marwari_coupons", DEFAULT_COUPONS);
     this.orders = this.loadLocalStorage("marwari_orders", []);
     this.cart = this.loadLocalStorage("marwari_cart", []);
@@ -116,8 +116,18 @@ class AppState {
     localStorage.setItem("marwari_orders", JSON.stringify(this.orders));
     localStorage.setItem("marwari_cart", JSON.stringify(this.cart));
     localStorage.setItem("marwari_session", JSON.stringify(this.currentUser));
-    localStorage.setItem("marwari_categories", JSON.stringify(this.categories));
+    localStorage.setItem("marwari_categories_v3", JSON.stringify(this.categories));
     localStorage.setItem("marwari_coupons", JSON.stringify(this.coupons));
+
+    // Sync state to WordPress Backend APIs for Mobile App integration
+    try {
+      const baseApi = window.location.origin + '/wp-json/wp-ecommerce/v1';
+      fetch(baseApi + '/products', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(this.products) }).catch(()=>{});
+      fetch(baseApi + '/categories', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(this.categories) }).catch(()=>{});
+      fetch(baseApi + '/users', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(this.users) }).catch(()=>{});
+      fetch(baseApi + '/coupons', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(this.coupons) }).catch(()=>{});
+      fetch(baseApi + '/orders', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(this.orders) }).catch(()=>{});
+    } catch(e) {}
   }
 
   // Cart Management
@@ -467,13 +477,27 @@ function renderStorefrontCategories() {
   const activeTab = container.querySelector(".category-tab.active");
   const activeCategory = activeTab ? activeTab.dataset.category : "All";
 
-  container.innerHTML = `<button class="category-tab ${activeCategory === 'All' ? 'active' : ''}" data-category="All">All Treasures</button>`;
+  container.innerHTML = `
+    <div class="category-tab ${activeCategory === 'All' ? 'active' : ''}" data-category="All" style="cursor:pointer; display:flex; flex-direction:column; gap:1rem;">
+      <div style="width:100%; aspect-ratio:1/1; background:linear-gradient(135deg, var(--primary) 0%, #78350f 100%); border-radius:12px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+        <span style="color:#fef08a; font-family:'Plus Jakarta Sans'; font-size:1.5rem; font-weight:800; text-align:center; line-height:1.2;">All<br>Treasures</span>
+      </div>
+      <div>
+        <h3 style="font-size:1.1rem; font-weight:600; color:var(--text-primary); margin:0 0 0.25rem 0;">All Treasures</h3>
+        <span style="color:#b45309; font-size:0.85rem; font-weight:500;">Explore &rarr;</span>
+      </div>
+    </div>
+  `;
 
   app.categories.forEach(cat => {
     container.innerHTML += `
-      <button class="category-tab ${activeCategory === cat.slug ? 'active' : ''}" data-category="${cat.slug}">
-        ${cat.name}
-      </button>
+      <div class="category-tab ${activeCategory === cat.slug ? 'active' : ''}" data-category="${cat.slug}" style="cursor:pointer; display:flex; flex-direction:column; gap:1rem;">
+        <img src="${cat.image || 'https://images.unsplash.com/photo-1596450514735-111a2fe02935?auto=format&fit=crop&w=400&q=80'}" alt="${cat.name}" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:12px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+        <div>
+          <h3 style="font-size:1.1rem; font-weight:600; color:var(--text-primary); margin:0 0 0.25rem 0;">${cat.name}</h3>
+          <span style="color:#b45309; font-size:0.85rem; font-weight:500;">Explore &rarr;</span>
+        </div>
+      </div>
     `;
   });
 
@@ -1480,7 +1504,10 @@ function renderAdminCategoriesList() {
   app.categories.forEach(cat => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td style="font-weight:600;">${cat.name}</td>
+      <td style="font-weight:600; display:flex; align-items:center; gap:1rem;">
+        <img src="${cat.image || 'https://images.unsplash.com/photo-1596450514735-111a2fe02935?auto=format&fit=crop&w=40&q=80'}" style="width:40px; height:40px; object-fit:cover; border-radius:4px; border:1px solid var(--border-color);" alt="${cat.name}">
+        ${cat.name}
+      </td>
       <td><code>${cat.slug}</code></td>
       <td>
         <button class="action-icon-btn delete delete-cat" data-id="${cat.id}">
@@ -2069,6 +2096,7 @@ function setupEventListeners() {
       e.preventDefault();
       const name = document.getElementById("cat-name-input").value.trim();
       const slug = document.getElementById("cat-slug-input").value.trim();
+      const image = document.getElementById("cat-image-input").value.trim() || "https://images.unsplash.com/photo-1596450514735-111a2fe02935?auto=format&fit=crop&w=400&q=80";
 
       const exists = app.categories.some(c => c.slug.toLowerCase() === slug.toLowerCase());
       if (exists) {
@@ -2079,7 +2107,8 @@ function setupEventListeners() {
       app.categories.push({
         id: "cat-" + Math.random().toString(36).substr(2, 9),
         name,
-        slug
+        slug,
+        image
       });
       app.saveState();
       showToast(`Category "${name}" added successfully`);

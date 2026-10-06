@@ -1862,3 +1862,39 @@ select.form-input {
 .account-view-wrapper.active {
   display: block;
 }
+/* Responsive Grids for Mobile App Friendliness */
+.responsive-grid-6 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+.responsive-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+}
+.responsive-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-grid-6 { grid-template-columns: repeat(3, 1fr); }
+  .responsive-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .responsive-grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .responsive-grid-6 { grid-template-columns: repeat(6, 1fr); gap: 1.5rem; }
+  .responsive-grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .responsive-grid-3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Mobile App Navbar Adjustments */
+@media (max-width: 768px) {
+  .search-bar { display: none !important; }
+  .secondary-nav { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; padding-bottom: 0.5rem; }
+  .container { padding: 0 1rem !important; }
+  .hero-title { font-size: 2.5rem !important; }
+}
