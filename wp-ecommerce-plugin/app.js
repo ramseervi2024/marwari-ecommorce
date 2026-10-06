@@ -77,9 +77,10 @@ class AppState {
   constructor() {
     const DEFAULT_CATEGORIES = [
       { id: "cat-1", name: "Royal Apparel", slug: "Apparel" },
-      { id: "cat-2", name: "Jaipur Handicrafts", slug: "Handicrafts" },
-      { id: "cat-3", name: "Silver Jewelry", slug: "Jewelry" },
-      { id: "cat-4", name: "Sweets & Spices", slug: "Sweets & Spices" }
+      { id: "cat-2", name: "Handicrafts", slug: "Handicrafts" },
+      { id: "cat-3", name: "Jewellery", slug: "Jewellery" },
+      { id: "cat-4", name: "Food & Spices", slug: "Food & Spices" },
+      { id: "cat-5", name: "Home & Décor", slug: "Home & Décor" }
     ];
 
     const DEFAULT_COUPONS = [
@@ -89,7 +90,7 @@ class AppState {
 
     this.products = this.loadLocalStorage("marwari_products", DEFAULT_PRODUCTS);
     this.users = this.loadLocalStorage("marwari_users", DEFAULT_USERS);
-    this.categories = this.loadLocalStorage("marwari_categories", DEFAULT_CATEGORIES);
+    this.categories = this.loadLocalStorage("marwari_categories_v2", DEFAULT_CATEGORIES);
     this.coupons = this.loadLocalStorage("marwari_coupons", DEFAULT_COUPONS);
     this.orders = this.loadLocalStorage("marwari_orders", []);
     this.cart = this.loadLocalStorage("marwari_cart", []);
@@ -309,6 +310,7 @@ function initApp() {
   } else {
     // Initialize Storefront views
     renderStorefrontCategories();
+    renderDynamicNav();
     updateNavBarState();
     setupEventListeners();
     seedSampleOrders();
@@ -431,6 +433,31 @@ function toggleTheme() {
     }
   }
 }
+
+// Render dynamic secondary nav
+function renderDynamicNav() {
+  const navContainer = document.getElementById("dynamic-nav");
+  if (!navContainer) return;
+
+  // Start with Home and Shop
+  let html = `
+    <li style="color:var(--primary); border-bottom:2px solid var(--primary); padding-bottom:0.25rem; cursor:pointer;" onclick="switchView('shop')">Home</li>
+    <li style="cursor:pointer; display:flex; align-items:center; gap:0.25rem;" onclick="switchView('shop')">Shop <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:-2px;"><path d="m6 9 6 6 6-6"/></svg></li>
+  `;
+
+  // Dynamically append categories
+  app.categories.forEach(cat => {
+    html += `<li style="cursor:pointer; color:var(--text-secondary);" onclick="document.querySelector('.category-tab[data-category=\\'${cat.name}\\']')?.click();">${cat.name}</li>`;
+  });
+
+  // End with Our Story
+  html += `
+    <li style="cursor:pointer; color:var(--text-secondary);">Our Story</li>
+  `;
+
+  navContainer.innerHTML = html;
+}
+
 
 // Render dynamic category tabs
 function renderStorefrontCategories() {

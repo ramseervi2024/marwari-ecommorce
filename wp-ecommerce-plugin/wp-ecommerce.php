@@ -63,8 +63,8 @@ function wp_ecommerce_custom_routes($wp) {
     
     if (strpos($request_uri, '/ecommerce/website') !== false) {
         $html = file_get_contents( WP_ECOMMERCE_PLUGIN_DIR . 'index.html' );
-        $html = str_replace('href="style.css"', 'href="' . $plugin_url . 'style.css?v=' . time() . '5"', $html);
-        $html = str_replace('src="app.js"', 'src="' . $plugin_url . 'app.js?v=' . time() . '5"', $html);
+        $html = str_replace('href="style.css"', 'href="' . $plugin_url . 'style.css?v=' . time() . '7"', $html);
+        $html = str_replace('src="app.js"', 'src="' . $plugin_url . 'app.js?v=' . time() . '7"', $html);
         echo $html;
         exit;
     }
