@@ -349,7 +349,7 @@ function initApp() {
     // Check if redirecting from admin page due to unauthenticated state
     if (sessionStorage.getItem('openAdminLogin') === 'true') {
       sessionStorage.removeItem('openAdminLogin');
-      openModal('auth-modal');
+      switchView('auth');
       showToast("Please log in as Administrator.", "warning");
     }
 
@@ -783,7 +783,7 @@ function updateNavBarState() {
 
     const openAuth = document.getElementById("open-auth-btn");
     openAuth.addEventListener("click", () => {
-      openModal("auth-modal");
+      switchView('auth');
     });
   }
 }
@@ -803,6 +803,8 @@ function switchView(view, updateHistory = true) {
     if (shopSection) shopSection.style.display = "block";
     if (adminView) adminView.classList.remove("active");
     if (accountView) accountView.classList.remove("active");
+    const authView = document.getElementById("auth-view");
+    if (authView) authView.style.display = "none";
     renderStorefront();
     if (updateHistory) {
       updateURLState('/');
@@ -828,9 +830,28 @@ function switchView(view, updateHistory = true) {
     if (shopSection) shopSection.style.display = "none";
     if (adminView) adminView.classList.remove("active");
     if (accountView) accountView.classList.add("active");
+    const authView = document.getElementById("auth-view");
+    if (authView) authView.style.display = "none";
     renderAccountDashboard();
     if (updateHistory) {
       updateURLState('/account');
+    }
+  } else if (view === "auth") {
+    if (app.currentUser) {
+      switchView("shop", updateHistory);
+      return;
+    }
+    if (heroSection) heroSection.style.display = "none";
+    if (catSection) catSection.style.display = "none";
+    if (shopSection) shopSection.style.display = "none";
+    if (adminView) adminView.classList.remove("active");
+    if (accountView) accountView.classList.remove("active");
+    
+    const authView = document.getElementById("auth-view");
+    if (authView) authView.style.display = "block";
+    
+    if (updateHistory) {
+      updateURLState('/login');
     }
   }
 }
@@ -866,8 +887,10 @@ function handleRouting() {
       if (app.currentUser) {
         switchView('account', false);
       } else {
-        switchView('shop', false);
+        switchView('auth', false);
       }
+    } else if (hash === '#login' || hash === '#/login') {
+      switchView('auth', false);
     } else {
       switchView('shop', false);
     }
@@ -880,8 +903,10 @@ function handleRouting() {
       if (app.currentUser) {
         switchView('account', false);
       } else {
-        switchView('shop', false);
+        switchView('auth', false);
       }
+    } else if (path.endsWith('/login') || path.endsWith('/login/')) {
+      switchView('auth', false);
     } else {
       switchView('shop', false);
     }
@@ -1530,12 +1555,23 @@ function renderAdminCategoriesList() {
         ${cat.name}
       </td>
       <td><code>${cat.slug}</code></td>
-      <td>
+      <td style="display:flex; gap:0.5rem;">
+        <button class="action-icon-btn edit-cat" data-id="${cat.id}">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </button>
         <button class="action-icon-btn delete delete-cat" data-id="${cat.id}">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6"/></svg>
         </button>
       </td>
     `;
+
+    row.querySelector(".edit-cat").addEventListener("click", () => {
+      document.getElementById("edit-cat-old-slug").value = cat.slug;
+      document.getElementById("edit-cat-name").value = cat.name;
+      document.getElementById("edit-cat-slug").value = cat.slug;
+      document.getElementById("edit-cat-image").value = cat.image || "";
+      openModal("edit-category-modal");
+    });
 
     row.querySelector(".delete-cat").addEventListener("click", () => {
       // Prevent deleting if default or in use
@@ -1963,7 +1999,7 @@ function setupEventListeners() {
       if (!app.currentUser) {
         showToast("Please log in to purchase products", "danger");
         closeCartFn();
-        openModal("auth-modal");
+        switchView('auth');
         return;
       }
 
@@ -2140,6 +2176,43 @@ function setupEventListeners() {
     });
   }
 
+  const editCategoryForm = document.getElementById("admin-edit-category-form");
+  if (editCategoryForm) {
+    editCategoryForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const oldSlug = document.getElementById("edit-cat-old-slug").value;
+      const newName = document.getElementById("edit-cat-name").value.trim();
+      const newSlug = document.getElementById("edit-cat-slug").value.trim().toLowerCase().replace(/ /g, '-');
+      const newImage = document.getElementById("edit-cat-image").value.trim();
+
+      const catIndex = app.categories.findIndex(c => c.slug === oldSlug);
+      if (catIndex > -1) {
+        // Update product categories if slug changed
+        if (oldSlug !== newSlug) {
+          const exists = app.categories.some(c => c.slug === newSlug);
+          if (exists) {
+            showToast("A category with this slug already exists", "danger");
+            return;
+          }
+          app.products.forEach(p => {
+            if (p.category === oldSlug) p.category = newSlug;
+          });
+        }
+        
+        app.categories[catIndex].name = newName;
+        app.categories[catIndex].slug = newSlug;
+        app.categories[catIndex].image = newImage;
+        
+        app.saveState();
+        showToast("Category updated successfully");
+        closeModal();
+        renderAdminDashboard();
+        renderStorefrontCategories();
+        populateCategorySelects();
+      }
+    });
+  }
+
   // Coupon Add form submission modal
   const addCouponForm = document.getElementById("admin-add-coupon-form");
   if (addCouponForm) {
@@ -2221,7 +2294,7 @@ function setupEventListeners() {
 
   // Superpanel sidebar Back to shop button (superpanel.html specific)
   const isSuperpanel = window.location.pathname.includes('superpanel');
-  if (isSuperpanel) {
+  if (isSuperpanel || document.getElementById("admin-overview")) {
     const adminBackShopBtn = document.getElementById("back-to-shop-btn");
     if (adminBackShopBtn) {
       adminBackShopBtn.addEventListener("click", () => {
@@ -2229,6 +2302,29 @@ function setupEventListeners() {
         showToast("Logged out of Super Panel");
         const isLocalFile = window.location.protocol === 'file:';
         window.location.href = isLocalFile ? 'index.html' : '/';
+      });
+    }
+
+    // Dashboard Period Dropdown Logic
+    const periodBtn = document.getElementById("dashboard-period-btn");
+    const periodDropdown = document.getElementById("dashboard-period-dropdown");
+    if (periodBtn && periodDropdown) {
+      periodBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isHidden = periodDropdown.style.display === "none";
+        periodDropdown.style.display = isHidden ? "flex" : "none";
+      });
+
+      document.querySelectorAll(".period-option").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          document.getElementById("dashboard-period-text").innerText = e.target.innerText;
+          periodDropdown.style.display = "none";
+          // We can call renderAdminDashboard() if we had date filtering, but it's fine as a visual update
+        });
+      });
+
+      document.addEventListener("click", () => {
+        periodDropdown.style.display = "none";
       });
     }
   }
@@ -2242,3 +2338,37 @@ window.onclick = function (event) {
   }
 };
 
+
+// Native WordPress Image Upload Function
+async function uploadImageToWP(fileInput, targetInputId) {
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  const targetInput = document.getElementById(targetInputId);
+  const originalPlaceholder = targetInput.placeholder;
+  targetInput.placeholder = "Uploading...";
+  targetInput.value = "";
+  if (window.showToast) window.showToast("Uploading image...", "success");
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const res = await fetch('/wp-json/wp-ecommerce/v1/upload', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const data = await res.json();
+    if (data.success) {
+      targetInput.value = data.url;
+      if (window.showToast) window.showToast("Image uploaded successfully!");
+    } else {
+      if (window.showToast) window.showToast("Upload failed: " + (data.message || "Unknown error"), "danger");
+      targetInput.placeholder = originalPlaceholder;
+    }
+  } catch (err) {
+    if (window.showToast) window.showToast("Upload failed: " + err.message, "danger");
+    targetInput.placeholder = originalPlaceholder;
+  }
+}
