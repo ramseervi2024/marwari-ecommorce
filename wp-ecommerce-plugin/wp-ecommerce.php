@@ -61,12 +61,12 @@ function wp_ecommerce_custom_routes($wp) {
     $request_uri = $_SERVER['REQUEST_URI'];
     $plugin_url = plugin_dir_url(__FILE__);
     
-    if (strpos($request_uri, '/ecommerce/website') !== false) {
+    if (strpos($request_uri, '/ecommerce/website') !== false || strpos($request_uri, '/login') !== false || strpos($request_uri, '/register') !== false || strpos($request_uri, '/product') !== false) {
         if (!defined('DONOTCACHEPAGE')) define('DONOTCACHEPAGE', true);
         nocache_headers();
         $html = file_get_contents( WP_ECOMMERCE_PLUGIN_DIR . 'index.html' );
-        $html = str_replace('href="style.css"', 'href="' . $plugin_url . 'style.css?v=' . time() . '11"', $html);
-        $html = str_replace('src="app.js"', 'src="' . $plugin_url . 'app.js?v=' . time() . '11"', $html);
+        $html = str_replace('href="style.css"', 'href="' . $plugin_url . 'style.css?v=' . time() . '18"', $html);
+        $html = str_replace('src="app.js"', 'src="' . $plugin_url . 'app.js?v=' . time() . '18"', $html);
         echo $html;
         exit;
     }

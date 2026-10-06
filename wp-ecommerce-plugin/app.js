@@ -153,6 +153,16 @@ class AppState {
 
   // Cart Management
   addToCart(productId, quantity = 1) {
+    if (!this.currentUser) {
+      if (typeof showToast !== 'undefined') {
+        showToast("Please login or register to add items to your cart", "warning");
+      }
+      if (typeof switchView !== 'undefined') {
+        switchView('auth');
+      }
+      return false;
+    }
+    
     const product = this.products.find(p => p.id === productId);
     if (!product) return false;
 
@@ -308,7 +318,9 @@ class AppState {
     this.currentUser = null;
     this.cart = [];
     this.activeCoupon = null;
+    localStorage.removeItem('wp_ecommerce_jwt');
     this.saveState();
+    window.location.href = '/login';
   }
 
   // Coupon Logic
@@ -646,12 +658,14 @@ function renderStorefront(category = "All", query = "") {
       if (e.target.closest(".add-cart-btn")) {
         e.stopPropagation();
         const id = e.target.closest(".add-cart-btn").dataset.id;
-        app.addToCart(id);
-        updateCartUI();
-        showToast("Added item to your Cart");
+        const success = app.addToCart(id);
+        if (success) {
+          updateCartUI();
+          showToast("Added item to your Cart");
+        }
         return;
       }
-      openProductDetailModal(p);
+      renderProductDetailPage(p);
     });
 
     container.appendChild(card);
@@ -810,7 +824,7 @@ function updateNavBarState() {
     profileContainer.innerHTML = `
       <button class="btn-primary" id="open-auth-btn">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
-        <span>Login</span>
+        <span>Login / Register</span>
       </button>
     `;
 
@@ -823,7 +837,7 @@ function updateNavBarState() {
 
 // Switch between Main Shop, Admin Dashboard, and Account details
 // Switch between Main Shop, Admin Dashboard, and Account details
-function switchView(view, updateHistory = true) {
+function switchView(view, updateHistory = true, productId = null) {
   const heroSection = document.getElementById("hero-section");
   const catSection = document.getElementById("categories-section");
   const shopSection = document.getElementById("shop-section");
@@ -836,6 +850,18 @@ function switchView(view, updateHistory = true) {
     if (shopSection) shopSection.style.display = "block";
     if (adminView) adminView.classList.remove("active");
     if (accountView) accountView.classList.remove("active");
+    
+    const detailView = document.getElementById("product-detail-view");
+    if (detailView) detailView.style.display = "none";
+    
+    // Show navbar and footer
+    const mainNavbar = document.querySelector('.navbar');
+    const subNavbar = document.querySelector('.sub-navbar');
+    const footer = document.querySelector('.main-footer');
+    if (mainNavbar) mainNavbar.style.display = 'flex';
+    if (subNavbar) subNavbar.style.display = 'flex';
+    if (footer) footer.style.display = 'block';
+
     const authView = document.getElementById("auth-view");
     if (authView) authView.style.display = "none";
     renderStorefront();
@@ -863,15 +889,56 @@ function switchView(view, updateHistory = true) {
     if (shopSection) shopSection.style.display = "none";
     if (adminView) adminView.classList.remove("active");
     if (accountView) accountView.classList.add("active");
+    
+    const detailView = document.getElementById("product-detail-view");
+    if (detailView) detailView.style.display = "none";
+    
+    // Show navbar and footer
+    const mainNavbar = document.querySelector('.navbar');
+    const subNavbar = document.querySelector('.sub-navbar');
+    const footer = document.querySelector('.main-footer');
+    if (mainNavbar) mainNavbar.style.display = 'flex';
+    if (subNavbar) subNavbar.style.display = 'flex';
+    if (footer) footer.style.display = 'block';
     const authView = document.getElementById("auth-view");
     if (authView) authView.style.display = "none";
     renderAccountDashboard();
     if (updateHistory) {
       updateURLState('/account');
     }
+  } else if (view === "product-detail") {
+    if (heroSection) heroSection.style.display = "none";
+    if (catSection) catSection.style.display = "none";
+    if (shopSection) shopSection.style.display = "none";
+    if (adminView) adminView.classList.remove("active");
+    if (accountView) accountView.classList.remove("active");
+    
+    // Show navbar and footer
+    const mainNavbar = document.querySelector('.navbar');
+    const subNavbar = document.querySelector('.sub-navbar');
+    const footer = document.querySelector('.main-footer');
+    if (mainNavbar) mainNavbar.style.display = 'flex';
+    if (subNavbar) subNavbar.style.display = 'flex';
+    if (footer) footer.style.display = 'block';
+
+    const authView = document.getElementById("auth-view");
+    if (authView) authView.style.display = "none";
+    
+    const detailView = document.getElementById("product-detail-view");
+    if (detailView) detailView.style.display = "block";
+    
+    if (updateHistory && productId) {
+      updateURLState(`/product?id=${productId}`);
+    }
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } else if (view === "auth") {
     if (app.currentUser) {
-      switchView("shop", updateHistory);
+      if (!updateHistory) {
+        window.location.href = "/ecommerce/website";
+      } else {
+        switchView("shop", updateHistory);
+      }
       return;
     }
     if (heroSection) heroSection.style.display = "none";
@@ -880,11 +947,36 @@ function switchView(view, updateHistory = true) {
     if (adminView) adminView.classList.remove("active");
     if (accountView) accountView.classList.remove("active");
     
+    // Hide navbar and footer
+    const mainNavbar = document.querySelector('.navbar');
+    const subNavbar = document.querySelector('.sub-navbar');
+    const footer = document.querySelector('.main-footer');
+    if (mainNavbar) mainNavbar.style.display = 'none';
+    if (subNavbar) subNavbar.style.display = 'none';
+    if (footer) footer.style.display = 'none';
+    
     const authView = document.getElementById("auth-view");
-    if (authView) authView.style.display = "block";
+    if (authView) {
+      authView.style.display = "flex";
+    }
+    
+    // Auto-select tab based on URL or intent
+    const path = window.location.pathname;
+    const hash = window.location.hash;
+    const isRegister = path.endsWith('/register') || path.endsWith('/register/') || hash === '#register' || hash === '#/register';
+    
+    if (isRegister) {
+      document.getElementById("auth-view-title").innerText = "Register";
+      document.getElementById("auth-email-form").style.display = "none";
+      document.getElementById("auth-signup-form").style.display = "block";
+    } else {
+      document.getElementById("auth-view-title").innerText = "Login";
+      document.getElementById("auth-signup-form").style.display = "none";
+      document.getElementById("auth-email-form").style.display = "block";
+    }
     
     if (updateHistory) {
-      updateURLState('/login');
+      updateURLState(isRegister ? '/register' : '/login');
     }
   }
 }
@@ -910,6 +1002,7 @@ function handleRouting() {
   const isLocalFile = window.location.protocol === 'file:';
   const path = window.location.pathname;
   const hash = window.location.hash;
+  const searchParams = new URLSearchParams(window.location.search);
 
   if (isLocalFile) {
     if (hash === '#superpanel' || hash === '#/superpanel') {
@@ -922,7 +1015,7 @@ function handleRouting() {
       } else {
         switchView('auth', false);
       }
-    } else if (hash === '#login' || hash === '#/login') {
+    } else if (hash === '#login' || hash === '#/login' || hash === '#register' || hash === '#/register') {
       switchView('auth', false);
     } else {
       switchView('shop', false);
@@ -938,8 +1031,16 @@ function handleRouting() {
       } else {
         switchView('auth', false);
       }
-    } else if (path.endsWith('/login') || path.endsWith('/login/')) {
+    } else if (path.endsWith('/login') || path.endsWith('/login/') || path.endsWith('/register') || path.endsWith('/register/')) {
       switchView('auth', false);
+    } else if (path.includes('/product') || searchParams.has('id')) {
+      const id = searchParams.get('id');
+      const p = app.products.find(prod => prod.id === id);
+      if (p) {
+        renderProductDetailPage(p);
+      } else {
+        switchView('shop', false);
+      }
     } else {
       switchView('shop', false);
     }
@@ -964,62 +1065,187 @@ function closeModal() {
   overlay.classList.remove("active");
 }
 
-// Product Details Modal Renders
-function openProductDetailModal(product) {
-  const detailModal = document.getElementById("product-detail-modal");
-  if (!detailModal) return;
+// Product Details Page Render
+function renderProductDetailPage(product) {
+  const detailView = document.getElementById("product-detail-view");
+  if (!detailView) return;
 
-  detailModal.innerHTML = `
-    <button class="modal-close-btn" onclick="closeModal()">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-    </button>
-    <div class="detail-img-pane">
-      <img src="${product.image}" alt="${product.name}">
-    </div>
-    <div class="detail-info-pane">
-      <span class="detail-category">${product.category}</span>
-      <h2 class="detail-name">${product.name}</h2>
-      <div class="detail-price">
-        <span>₹${product.price.toLocaleString("en-IN")}</span>
-        ${product.badge ? `<span class="product-badge" style="position:static;">${product.badge}</span>` : ''}
-      </div>
-      <p class="detail-desc">${product.description}</p>
-      <div class="detail-actions">
-        <div class="quantity-control">
-          <button class="quantity-btn dec-btn">-</button>
-          <span class="quantity-value">1</span>
-          <button class="quantity-btn inc-btn">+</button>
+  // Find related products in the same category
+  const relatedProducts = app.products
+    .filter(p => p.category === product.category && p.id !== product.id)
+    .slice(0, 4); // max 4
+
+  const originalPrice = product.price + Math.floor(product.price * 0.15);
+
+  let relatedHTML = '';
+  if (relatedProducts.length > 0) {
+    relatedHTML = `
+      <div style="margin-top: 4rem; padding-top: 3rem; border-top: 1px solid var(--border-color);">
+        <h3 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin-bottom: 2rem;">Recommended from ${product.category}</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;" id="related-products-grid">
+          <!-- Populated below -->
         </div>
-        <button class="btn-primary add-detail-cart" style="flex-grow:1; justify-content:center;">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-          Add to Bag
-        </button>
       </div>
+    `;
+  }
+
+  detailView.innerHTML = `
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+      <!-- Breadcrumb -->
+      <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 2rem;">
+        <a href="javascript:void(0)" onclick="switchView('shop')" style="color: #64748b; text-decoration: none;">Home</a> 
+        <span style="margin: 0 0.5rem;">&rsaquo;</span> 
+        <a href="javascript:void(0)" style="color: #64748b; text-decoration: none;">${product.category}</a> 
+        <span style="margin: 0 0.5rem;">&rsaquo;</span> 
+        <span style="color: #0f172a; font-weight: 600;">${product.name}</span>
+      </div>
+
+      <!-- Product Area -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; background: white; padding: 3rem; border-radius: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);">
+        <!-- Image Gallery -->
+        <div class="product-zoom-container" style="border-radius: 16px; overflow: hidden; background: #f8fafc; border: 1px solid var(--border-color); position: relative; height: 500px; cursor: crosshair;">
+          <img src="${product.image}" alt="${product.name}" class="product-zoom-img" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.1s ease, object-fit 0.1s;">
+        </div>
+
+        <!-- Info -->
+        <div style="display: flex; flex-direction: column;">
+          <div style="font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; color: #b45309; text-transform: uppercase; margin-bottom: 0.5rem;">${product.category}</div>
+          <h1 style="font-size: 2.25rem; font-weight: 800; color: #0f172a; margin: 0 0 1rem 0; line-height: 1.2;">${product.name}</h1>
+          
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+             <div style="display:flex; gap:0.1rem;">
+               ${[1,2,3,4,5].map(() => `<svg viewBox="0 0 24 24" width="18" height="18" fill="#fbbf24" stroke="#fbbf24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`).join('')}
+             </div>
+             <span style="font-size: 0.95rem; color: #64748b; margin-left: 0.5rem;">(134 Reviews)</span>
+          </div>
+
+          <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 2rem;">
+             <span style="font-size: 2.5rem; font-weight: 800; color: #991b1b;">₹${product.price.toLocaleString("en-IN")}</span>
+             <span style="font-size: 1.25rem; font-weight: 500; color: #94a3b8; text-decoration: line-through;">₹${originalPrice.toLocaleString("en-IN")}</span>
+             <span style="background: #fef2f2; color: #991b1b; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; margin-left: auto;">15% OFF</span>
+          </div>
+
+          <p style="font-size: 1.05rem; line-height: 1.7; color: #475569; margin-bottom: 2.5rem; flex-grow: 1;">
+            ${product.description}
+          </p>
+
+          <div style="display: flex; gap: 1rem; align-items: center;">
+            <div style="display: flex; align-items: center; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; height: 50px;">
+              <button class="qty-dec" style="width: 40px; height: 100%; background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #64748b;">-</button>
+              <span class="qty-val" style="width: 40px; text-align: center; font-weight: 600; font-size: 1.1rem; color: #0f172a;">1</span>
+              <button class="qty-inc" style="width: 40px; height: 100%; background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #64748b;">+</button>
+            </div>
+            <button class="add-detail-cart" style="flex: 1; background: #991b1b; color: white; border: none; height: 50px; border-radius: 8px; font-weight: 600; font-size: 1.1rem; display: flex; justify-content: center; align-items: center; gap: 0.75rem; cursor: pointer; transition: all 0.2s;">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+              Add to Bag
+            </button>
+          </div>
+          
+          <div style="margin-top: 2rem; display: flex; gap: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748b; font-size: 0.9rem;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Pan-India Delivery
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748b; font-size: 0.9rem;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Secure Checkout
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      ${relatedHTML}
     </div>
   `;
 
+  // Quantity controls
   let qty = 1;
-  const qtyVal = detailModal.querySelector(".quantity-value");
-  detailModal.querySelector(".dec-btn").addEventListener("click", () => {
+  const qtyVal = detailView.querySelector(".qty-val");
+  
+  // Image Zoom logic
+  const zoomContainer = detailView.querySelector('.product-zoom-container');
+  const zoomImg = detailView.querySelector('.product-zoom-img');
+  if (zoomContainer && zoomImg) {
+    zoomContainer.addEventListener('mousemove', (e) => {
+      const rect = zoomContainer.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const xPercent = (x / rect.width) * 100;
+      const yPercent = (y / rect.height) * 100;
+      zoomImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+      zoomImg.style.transform = 'scale(2)';
+      zoomImg.style.objectFit = 'cover';
+    });
+    zoomContainer.addEventListener('mouseleave', () => {
+      zoomImg.style.transformOrigin = 'center';
+      zoomImg.style.transform = 'scale(1)';
+      zoomImg.style.objectFit = 'contain';
+    });
+  }
+
+  detailView.querySelector(".qty-dec").addEventListener("click", () => {
     if (qty > 1) {
       qty--;
       qtyVal.innerText = qty;
     }
   });
-
-  detailModal.querySelector(".inc-btn").addEventListener("click", () => {
+  detailView.querySelector(".qty-inc").addEventListener("click", () => {
     qty++;
     qtyVal.innerText = qty;
   });
 
-  detailModal.querySelector(".add-detail-cart").addEventListener("click", () => {
-    app.addToCart(product.id, qty);
-    updateCartUI();
-    closeModal();
-    showToast(`Added ${qty} item(s) to Cart`);
+  // Add to cart
+  detailView.querySelector(".add-detail-cart").addEventListener("click", () => {
+    const success = app.addToCart(product.id, qty);
+    if (success) {
+      updateCartUI();
+      showToast(`Added ${qty} item(s) to Cart`);
+    }
   });
 
-  openModal("product-detail-modal");
+  // Render related products
+  if (relatedProducts.length > 0) {
+    const relatedGrid = detailView.querySelector("#related-products-grid");
+    relatedProducts.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "product-card";
+      const oPrice = p.price + Math.floor(p.price * 0.15);
+      card.innerHTML = `
+        <div style="border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column;">
+          <div style="position: relative; width: 100%; aspect-ratio: 1/1; overflow: hidden; background: #f8fafc;">
+            <img src="${p.image}" alt="${p.name}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div style="padding: 1.25rem; display: flex; flex-direction: column; flex: 1;">
+            <div style="font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; color: #64748b; text-transform: uppercase; margin-bottom: 0.35rem;">${p.category}</div>
+            <h3 style="font-size: 1.1rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0; line-height: 1.3;">${p.name}</h3>
+            <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 1.25rem; margin-top: auto;">
+               <span style="font-size: 1.25rem; font-weight: 800; color: #991b1b;">₹${p.price.toLocaleString("en-IN")}</span>
+               <span style="font-size: 0.85rem; font-weight: 500; color: #94a3b8; text-decoration: line-through;">₹${oPrice.toLocaleString("en-IN")}</span>
+            </div>
+            <button class="add-cart-btn" data-id="${p.id}" style="width: 100%; background: #991b1b; color: white; border: none; padding: 0.75rem; border-radius: 6px; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+              Add To Cart
+            </button>
+          </div>
+        </div>
+      `;
+      card.addEventListener("click", (e) => {
+        if (e.target.closest(".add-cart-btn")) {
+          e.stopPropagation();
+          const success = app.addToCart(p.id);
+          if (success) {
+            updateCartUI();
+            showToast("Added item to your Cart");
+          }
+          return;
+        }
+        renderProductDetailPage(p);
+      });
+      relatedGrid.appendChild(card);
+    });
+  }
+  
+  switchView('product-detail', true, product.id);
 }
 
 // ==========================================
@@ -1829,9 +2055,20 @@ function setupEventListeners() {
   const searchInput = document.getElementById("search-input");
   if (searchInput) {
     searchInput.addEventListener("input", (e) => {
-      const activeTab = document.querySelector(".category-tab.active");
+      const activeTab = document.querySelector(".category-card.active");
       const category = activeTab ? activeTab.dataset.category : "All";
       renderStorefront(category, e.target.value);
+      
+      // Optionally scroll to products section if user is typing
+      if (e.target.value.length > 0) {
+        const shopSection = document.getElementById("shop-section");
+        if (shopSection) {
+          const rect = shopSection.getBoundingClientRect();
+          if (rect.top > window.innerHeight || rect.bottom < 0) {
+            shopSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      }
     });
   }
 
