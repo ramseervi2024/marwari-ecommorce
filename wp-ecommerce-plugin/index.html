@@ -601,17 +601,27 @@
         <div class="auth-form-container">
           <!-- A. Email Password Form -->
           <form id="auth-email-form">
-            <div class="form-group">
-              <label for="login-email">Email Address or Username</label>
-              <input type="text" id="login-email" class="form-input" placeholder="e.g. admin or user@gmail.com" required>
-              <div class="form-tip">Demo Admin: <code>admin</code> | User: <code>user@gmail.com</code></div>
+            <div id="email-login-credentials">
+              <div class="form-group">
+                <label for="login-email">Email Address or Username</label>
+                <input type="text" id="login-email" class="form-input" placeholder="e.g. admin or user@gmail.com" required>
+                <div class="form-tip">Demo Admin: <code>admin</code> | User: <code>user@gmail.com</code></div>
+              </div>
+              <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
+                <div class="form-tip">Demo Passwords: <code>123456</code> (admin) or <code>password123</code> (user)</div>
+              </div>
+              <button type="submit" class="auth-submit-btn" style="width: 100%; padding: 0.875rem; border-radius: 8px; font-weight: 600; margin-top: 1rem;">Authorize Session</button>
             </div>
-            <div class="form-group">
-              <label for="login-password">Password</label>
-              <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
-              <div class="form-tip">Demo Passwords: <code>123456</code> (admin) or <code>password123</code> (user)</div>
+            <div id="email-login-otp-section" style="display: none; border-top: 1px dashed var(--border-color); padding-top: 1rem; margin-top: 1rem;">
+              <div class="form-group">
+                <label for="login-email-otp">Email Verification OTP</label>
+                <input type="text" id="login-email-otp" class="form-input" placeholder="Enter code received in email" pattern="[0-9]{4,6}">
+                <div class="form-tip">Enter the OTP code shown in the pop-up notification box.</div>
+              </div>
+              <button type="button" id="verify-email-login-btn" class="auth-submit-btn" style="width: 100%; padding: 0.875rem; border-radius: 8px; font-weight: 600;">Verify and Login</button>
             </div>
-            <button type="submit" class="auth-submit-btn" style="width: 100%; padding: 0.875rem; border-radius: 8px; font-weight: 600; margin-top: 1rem;">Authorize Session</button>
           </form>
 
           <!-- B. Mobile OTP Form -->
@@ -642,28 +652,39 @@
 
           <!-- C. Register Form -->
           <form id="auth-signup-form" style="display: none;">
-            <div class="form-group">
-              <label for="signup-name">Full Name</label>
-              <input type="text" id="signup-name" class="form-input" placeholder="e.g. Ramesh Seervi" required>
-            </div>
-            <div class="form-group">
-              <label for="signup-phone">Mobile Number</label>
-              <div style="display: flex; gap: 0.5rem;">
-                <span class="form-input"
-                  style="width: auto; background: var(--bg-app); border-color: var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: 600;">+91</span>
-                <input type="tel" id="signup-phone" class="form-input" placeholder="98765 43210" required
-                  pattern="[0-9]{10}">
+            <div id="signup-credentials">
+              <div class="form-group">
+                <label for="signup-name">Full Name</label>
+                <input type="text" id="signup-name" class="form-input" placeholder="e.g. Ramesh Seervi" required>
               </div>
+              <div class="form-group">
+                <label for="signup-phone">Mobile Number (Optional)</label>
+                <div style="display: flex; gap: 0.5rem;">
+                  <span class="form-input"
+                    style="width: auto; background: var(--bg-app); border-color: var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: 600;">+91</span>
+                  <input type="tel" id="signup-phone" class="form-input" placeholder="98765 43210"
+                    pattern="[0-9]{10}">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="signup-email">Email Address</label>
+                <input type="email" id="signup-email" class="form-input" placeholder="e.g. user@gmail.com" required>
+              </div>
+              <div class="form-group">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" class="form-input" placeholder="••••••••" required>
+              </div>
+              <button type="submit" class="auth-submit-btn" style="width: 100%; padding: 0.875rem; border-radius: 8px; font-weight: 600; margin-top: 1rem;">Create Royal Account</button>
             </div>
-            <div class="form-group">
-              <label for="signup-email">Email Address</label>
-              <input type="email" id="signup-email" class="form-input" placeholder="e.g. user@gmail.com" required>
+            
+            <div id="signup-email-otp-section" style="display: none; border-top: 1px dashed var(--border-color); padding-top: 1rem; margin-top: 1rem;">
+              <div class="form-group">
+                <label for="signup-email-otp">Email Verification OTP</label>
+                <input type="text" id="signup-email-otp" class="form-input" placeholder="Enter code received in email" pattern="[0-9]{4,6}">
+                <div class="form-tip">Enter the OTP code shown in the pop-up notification box.</div>
+              </div>
+              <button type="button" id="verify-signup-email-btn" class="auth-submit-btn" style="width: 100%; padding: 0.875rem; border-radius: 8px; font-weight: 600;">Verify and Complete Registration</button>
             </div>
-            <div class="form-group">
-              <label for="signup-password">Password</label>
-              <input type="password" id="signup-password" class="form-input" placeholder="••••••••" required>
-            </div>
-            <button type="submit" class="auth-submit-btn" style="width: 100%; padding: 0.875rem; border-radius: 8px; font-weight: 600; margin-top: 1rem;">Create Royal Account</button>
           </form>
         </div>
       </div>

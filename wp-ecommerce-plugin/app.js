@@ -200,7 +200,16 @@ class AppState {
   }
 
   // User Authentication
-  loginWithEmail(emailOrUsername, password) {
+  validateEmailLogin(emailOrUsername, password) {
+    const userExists = this.users.some(u => 
+      (u.email.toLowerCase() === emailOrUsername.toLowerCase() ||
+      (u.username && u.username.toLowerCase() === emailOrUsername.toLowerCase()))
+    );
+
+    if (!userExists) {
+      return { success: false, message: "User not found. Please register." };
+    }
+
     const user = this.users.find(u =>
       (u.email.toLowerCase() === emailOrUsername.toLowerCase() ||
         (u.username && u.username.toLowerCase() === emailOrUsername.toLowerCase())) &&
@@ -211,11 +220,24 @@ class AppState {
       if (user.status === "blocked") {
         return { success: false, message: "Your account is blocked. Please contact support." };
       }
-      this.currentUser = { ...user };
-      this.saveState();
-      return { success: true, user: this.currentUser };
+      return { success: true, user: user };
     }
-    return { success: false, message: "Invalid email/username or password" };
+    return { success: false, message: "Invalid password" };
+  }
+
+  loginWithEmail(emailOrUsername, password) {
+    const validation = this.validateEmailLogin(emailOrUsername, password);
+    if (!validation.success) return validation;
+
+    const user = validation.user;
+    this.currentUser = { ...user };
+    
+    // Simulate JWT Token generation
+    const jwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({email: user.email, role: user.role, exp: Date.now() + 86400000})) + ".signature";
+    localStorage.setItem('wp_ecommerce_jwt', jwtToken);
+    
+    this.saveState();
+    return { success: true, user: this.currentUser, token: jwtToken };
   }
 
   loginWithOTP(phone, otpInput, generatedOTP) {
@@ -247,11 +269,17 @@ class AppState {
     return { success: true, user: this.currentUser };
   }
 
-  signup(name, phone, email, password) {
-    const exists = this.users.some(u => u.email.toLowerCase() === email.toLowerCase() || u.phone === phone);
+  validateSignup(email) {
+    const exists = this.users.some(u => u.email.toLowerCase() === email.toLowerCase());
     if (exists) {
-      return { success: false, message: "User with this email or mobile number already exists." };
+      return { success: false, message: "Email already exists." };
     }
+    return { success: true };
+  }
+
+  signup(name, phone, email, password) {
+    const validation = this.validateSignup(email);
+    if (!validation.success) return validation;
 
     const newUser = {
       username: email.split("@")[0],
@@ -267,8 +295,13 @@ class AppState {
 
     this.users.push(newUser);
     this.currentUser = { ...newUser };
+    
+    // Simulate JWT Token generation
+    const jwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({email: newUser.email, role: newUser.role, exp: Date.now() + 86400000})) + ".signature";
+    localStorage.setItem('wp_ecommerce_jwt', jwtToken);
+    
     this.saveState();
-    return { success: true, user: newUser };
+    return { success: true, user: newUser, token: jwtToken };
   }
 
   logout() {
@@ -1820,6 +1853,9 @@ function setupEventListeners() {
     });
   });
 
+  let generatedEmailOTPCode = null;
+  let pendingEmailLoginCreds = null;
+
   // Login via Email submission
   if (authEmailForm) {
     authEmailForm.addEventListener("submit", (e) => {
@@ -1827,21 +1863,52 @@ function setupEventListeners() {
       const email = document.getElementById("login-email").value.trim();
       const password = document.getElementById("login-password").value;
 
-      const res = app.loginWithEmail(email, password);
-      if (res.success) {
-        showToast(`Welcome back, ${res.user.name}!`);
-        updateNavBarState();
-        closeModal();
-
-        if (res.user.role === 'admin') {
-          switchView("admin");
-        } else {
-          switchView("shop");
-        }
-      } else {
-        showToast(res.message, "danger");
+      const validation = app.validateEmailLogin(email, password);
+      if (!validation.success) {
+        showToast(validation.message, "danger");
+        return;
       }
+
+      generatedEmailOTPCode = Math.floor(100000 + Math.random() * 900000).toString();
+      pendingEmailLoginCreds = { email, password };
+      
+      document.getElementById("email-login-credentials").style.display = "none";
+      document.getElementById("email-login-otp-section").style.display = "block";
+      
+      alert(`[Demo OTP Service] Your Email OTP code to log in is: ${generatedEmailOTPCode}`);
+      showToast(`Verification code sent to ${email}`);
     });
+
+    const verifyEmailBtn = document.getElementById("verify-email-login-btn");
+    if (verifyEmailBtn) {
+      verifyEmailBtn.addEventListener("click", () => {
+        const otpInput = document.getElementById("login-email-otp").value.trim();
+        if (otpInput !== generatedEmailOTPCode) {
+          showToast("Incorrect OTP. Please check your email.", "danger");
+          return;
+        }
+
+        const res = app.loginWithEmail(pendingEmailLoginCreds.email, pendingEmailLoginCreds.password);
+        if (res.success) {
+          showToast(`Welcome back, ${res.user.name}!`);
+          updateNavBarState();
+          closeModal(); // Still safe to call
+          
+          document.getElementById("email-login-credentials").style.display = "block";
+          document.getElementById("email-login-otp-section").style.display = "none";
+          document.getElementById("login-email-otp").value = "";
+          authEmailForm.reset();
+
+          if (res.user.role === 'admin') {
+            switchView("admin");
+          } else {
+            switchView("shop");
+          }
+        } else {
+          showToast(res.message, "danger");
+        }
+      });
+    }
   }
 
   // Mobile login OTP display and verification
@@ -1903,6 +1970,9 @@ function setupEventListeners() {
     });
   }
 
+  let generatedSignupOTPCode = null;
+  let pendingSignupCreds = null;
+
   // Register via Signup Submission
   if (authSignupForm) {
     authSignupForm.addEventListener("submit", (e) => {
@@ -1912,18 +1982,49 @@ function setupEventListeners() {
       const email = document.getElementById("signup-email").value.trim();
       const password = document.getElementById("signup-password").value;
 
-      const res = app.signup(name, phone, email, password);
-      if (res.success) {
-        showToast(`Account created successfully! Welcome, ${res.user.name}`);
-        updateNavBarState();
-        closeModal();
-        authSignupForm.reset();
-        // Set default tab back to login
-        authTabBtns[0].click();
-      } else {
-        showToast(res.message, "danger");
+      const validation = app.validateSignup(email);
+      if (!validation.success) {
+        showToast(validation.message, "danger");
+        return;
       }
+
+      generatedSignupOTPCode = Math.floor(100000 + Math.random() * 900000).toString();
+      pendingSignupCreds = { name, phone, email, password };
+      
+      document.getElementById("signup-credentials").style.display = "none";
+      document.getElementById("signup-email-otp-section").style.display = "block";
+      
+      alert(`[Demo OTP Service] Your Registration OTP code is: ${generatedSignupOTPCode}`);
+      showToast(`Verification code sent to ${email}`);
     });
+
+    const verifySignupBtn = document.getElementById("verify-signup-email-btn");
+    if (verifySignupBtn) {
+      verifySignupBtn.addEventListener("click", () => {
+        const otpInput = document.getElementById("signup-email-otp").value.trim();
+        if (otpInput !== generatedSignupOTPCode) {
+          showToast("Incorrect OTP. Please check your email.", "danger");
+          return;
+        }
+
+        const res = app.signup(pendingSignupCreds.name, pendingSignupCreds.phone, pendingSignupCreds.email, pendingSignupCreds.password);
+        if (res.success) {
+          showToast(`Account created successfully! Welcome, ${res.user.name}`);
+          updateNavBarState();
+          closeModal();
+          
+          document.getElementById("signup-credentials").style.display = "block";
+          document.getElementById("signup-email-otp-section").style.display = "none";
+          document.getElementById("signup-email-otp").value = "";
+          authSignupForm.reset();
+          
+          // Redirect to shop
+          switchView("shop");
+        } else {
+          showToast(res.message, "danger");
+        }
+      });
+    }
   }
 
   // Profile update form submission
