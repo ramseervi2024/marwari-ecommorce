@@ -1130,39 +1130,66 @@ function renderAdminDashboard() {
   if (statsContainer) {
     statsContainer.innerHTML = `
       <div class="stat-card">
-        <div class="stat-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <div class="stat-icon" style="background: #ede9fe; color: #8b5cf6;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
         <div class="stat-details">
           <h4>Total Revenue</h4>
           <p>₹${totalSales.toLocaleString("en-IN")}</p>
+          <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.25rem;">
+            <span style="color: #10b981; font-size: 0.75rem; font-weight: 600;">↑ 12.5%</span> 
+            <span style="font-size: 0.7rem; color: var(--text-muted);">vs last 30 days</span>
+          </div>
+        </div>
+        <div class="stat-chart" style="margin-left: auto;">
+            <svg width="60" height="25" viewBox="0 0 60 25" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M0,20 Q10,25 20,15 T40,10 T60,5" stroke-linecap="round"/></svg>
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/><path d="M12 7.5V12l3 3"/></svg>
+        <div class="stat-icon" style="background: #e0f2fe; color: #3b82f6;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
         </div>
         <div class="stat-details">
-          <h4>Live Products</h4>
-          <p>${productsCount}</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-        </div>
-        <div class="stat-details">
-          <h4>Orders Queue</h4>
+          <h4>Total Orders</h4>
           <p>${totalOrders}</p>
+          <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.25rem;">
+            <span style="color: #10b981; font-size: 0.75rem; font-weight: 600;">↑ 8.4%</span> 
+            <span style="font-size: 0.7rem; color: var(--text-muted);">vs last 30 days</span>
+          </div>
+        </div>
+        <div class="stat-chart" style="margin-left: auto;">
+            <svg width="60" height="25" viewBox="0 0 60 25" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M0,15 Q10,5 20,20 T40,15 T60,5" stroke-linecap="round"/></svg>
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        <div class="stat-icon" style="background: #dcfce3; color: #22c55e;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
         </div>
         <div class="stat-details">
           <h4>Customers</h4>
           <p>${customersCount}</p>
+          <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.25rem;">
+            <span style="color: #10b981; font-size: 0.75rem; font-weight: 600;">↑ 14.2%</span> 
+            <span style="font-size: 0.7rem; color: var(--text-muted);">vs last 30 days</span>
+          </div>
+        </div>
+        <div class="stat-chart" style="margin-left: auto;">
+            <svg width="60" height="25" viewBox="0 0 60 25" fill="none" stroke="#22c55e" stroke-width="2"><path d="M0,25 Q15,10 25,20 T45,5 T60,0" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #ffedd5; color: #f97316;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/><path d="M12 7.5V12l3 3"/></svg>
+        </div>
+        <div class="stat-details">
+          <h4>Products</h4>
+          <p>${productsCount}</p>
+          <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.25rem;">
+            <span style="color: #ef4444; font-size: 0.75rem; font-weight: 600;">⚠ 6 low stock</span>
+          </div>
+        </div>
+        <div class="stat-chart" style="margin-left: auto;">
+            <svg width="60" height="25" viewBox="0 0 60 25" fill="none" stroke="#f97316" stroke-width="2"><path d="M0,10 Q10,20 20,5 T40,20 T60,10" stroke-linecap="round"/></svg>
         </div>
       </div>
     `;

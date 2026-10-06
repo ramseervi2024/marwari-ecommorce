@@ -33,25 +33,25 @@
 
 /* Light Theme Variables (Premium Tailwind Slate) */
 body.light-mode {
-  --bg-app: #f8fafc;
+  --bg-app: #fcfaf8;
   --bg-card: #ffffff;
   --bg-navbar: rgba(255, 255, 255, 0.95);
-  --border-color: #e2e8f0;
-  --text-primary: #0f172a;
+  --border-color: #f0ebe1;
+  --text-primary: #1e293b;
   --text-secondary: #475569;
-  --text-muted: #94a3b8;
+  --text-muted: #8c7e6c;
 
-  --primary: #4f46e5; /* Tailwind Indigo 600 */
-  --primary-hover: #4338ca; /* Tailwind Indigo 700 */
-  --primary-glow: rgba(79, 70, 229, 0.1);
+  --primary: #921224; /* Heritage Maroon */
+  --primary-hover: #7a0e1c;
+  --primary-glow: rgba(146, 18, 36, 0.1);
 
-  --accent: #e11d48; /* Tailwind Rose 600 */
-  --accent-glow: rgba(225, 29, 72, 0.1);
+  --accent: #b58530; /* Heritage Gold */
+  --accent-glow: rgba(181, 133, 48, 0.1);
 
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
-  --glass-bg: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  --glass-bg: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(0, 0, 0, 0.03);
 }
 
 /* Reset & Global Styles */
