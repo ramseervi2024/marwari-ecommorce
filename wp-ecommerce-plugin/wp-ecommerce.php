@@ -65,8 +65,8 @@ function wp_ecommerce_custom_routes($wp) {
         if (!defined('DONOTCACHEPAGE')) define('DONOTCACHEPAGE', true);
         nocache_headers();
         $html = file_get_contents( WP_ECOMMERCE_PLUGIN_DIR . 'index.html' );
-        $html = str_replace('href="style.css"', 'href="' . $plugin_url . 'style.css?v=' . time() . '8"', $html);
-        $html = str_replace('src="app.js"', 'src="' . $plugin_url . 'app.js?v=' . time() . '8"', $html);
+        $html = str_replace('href="style.css"', 'href="' . $plugin_url . 'style.css?v=' . time() . '10"', $html);
+        $html = str_replace('src="app.js"', 'src="' . $plugin_url . 'app.js?v=' . time() . '10"', $html);
         echo $html;
         exit;
     }
@@ -75,9 +75,9 @@ function wp_ecommerce_custom_routes($wp) {
         if (!defined('DONOTCACHEPAGE')) define('DONOTCACHEPAGE', true);
         nocache_headers();
         $html = file_get_contents( WP_ECOMMERCE_PLUGIN_DIR . 'superpanel.html' );
-        $html = str_replace('href="style.css"', 'href="' . $plugin_url . 'style.css?v=' . time() . '5"', $html);
-        $html = str_replace('src="app.js"', 'src="' . $plugin_url . 'app.js?v=' . time() . '5"', $html);
-        $html = str_replace('src="customer-management.js"', 'src="' . $plugin_url . 'customer-management.js?v=' . time() . '5"', $html);
+        $html = str_replace('href="style.css"', 'href="' . $plugin_url . 'style.css?v=' . time() . '7"', $html);
+        $html = str_replace('src="app.js"', 'src="' . $plugin_url . 'app.js?v=' . time() . '7"', $html);
+        $html = str_replace('src="customer-management.js"', 'src="' . $plugin_url . 'customer-management.js?v=' . time() . '7"', $html);
         echo $html;
         exit;
     }

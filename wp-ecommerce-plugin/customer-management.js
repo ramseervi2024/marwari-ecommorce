@@ -364,7 +364,7 @@ function renderCustomersTable() {
         <div class="table-actions">
           ${canEdit ? `
             <button class="table-btn edit-cust-btn" data-id="${c.id}" title="Edit Profile">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor"
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
               </svg>
@@ -372,7 +372,7 @@ function renderCustomersTable() {
           ` : ''}
           ${canDelete ? `
             <button class="table-btn danger delete-cust-btn" data-id="${c.id}" title="Soft Delete">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor"
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6"/>
               </svg>
@@ -414,7 +414,7 @@ function renderPaginationControls() {
   prevBtn.className = 'pagination-btn';
   prevBtn.disabled = pagination.page === 1;
   prevBtn.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor"
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor"
       stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <path d="m15 18-6-6 6-6"/>
     </svg>
@@ -442,7 +442,7 @@ function renderPaginationControls() {
   nextBtn.className = 'pagination-btn';
   nextBtn.disabled = pagination.page === pagination.pages;
   nextBtn.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor"
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor"
       stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <path d="m9 18 6-6-6-6"/>
     </svg>
