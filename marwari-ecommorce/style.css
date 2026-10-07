@@ -2239,6 +2239,248 @@ select.form-input {
   text-align: center;
 }
 
+
+/* ==========================================================================
+   2. ROYAL AUTH VIEW: OPULENT BACKGROUND & DUAL-PANE SHOWCASE DESIGN
+   ========================================================================== */
+#auth-view {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background:
+    radial-gradient(ellipse at 15% 20%, rgba(217, 119, 6, 0.22) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 80%, rgba(131, 24, 67, 0.45) 0%, transparent 55%),
+    radial-gradient(circle at 50% 0%, #4a0d26 0%, #1a040f 60%, #0d0106 100%);
+  z-index: 99999;
+  overflow-y: auto;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.25rem;
+  box-sizing: border-box;
+}
+
+.auth-ambient-glow {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(100px);
+  z-index: 1;
+}
+.auth-ambient-glow-1 {
+  width: 480px;
+  height: 480px;
+  top: -80px;
+  left: -80px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.2) 0%, transparent 70%);
+}
+.auth-ambient-glow-2 {
+  width: 550px;
+  height: 550px;
+  bottom: -100px;
+  right: -100px;
+  background: radial-gradient(circle, rgba(131, 24, 67, 0.5) 0%, transparent 70%);
+}
+
+.auth-bg-pattern {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: 
+    radial-gradient(#fbbf24 1.5px, transparent 1.5px), 
+    radial-gradient(#fbbf24 1.5px, transparent 1.5px);
+  background-size: 36px 36px;
+  background-position: 0 0, 18px 18px;
+  z-index: 2;
+}
+
+.royal-auth-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 460px;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 28px;
+  box-shadow: 
+    0 35px 80px -15px rgba(0, 0, 0, 0.75), 
+    0 0 0 1px rgba(245, 158, 11, 0.3),
+    0 0 40px rgba(131, 24, 67, 0.25);
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+  margin: auto;
+  animation: royalAuthSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes royalAuthSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (min-width: 960px) {
+  .royal-auth-container {
+    grid-template-columns: 1fr 1.15fr;
+    max-width: 1020px;
+    border-radius: 32px;
+  }
+  .royal-auth-showcase-panel {
+    display: flex !important;
+  }
+}
+
+.royal-auth-showcase-panel {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3.5rem 3rem;
+  background: 
+    linear-gradient(145deg, #701337 0%, #4a0925 50%, #240312 100%);
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  border-right: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.royal-auth-showcase-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(251, 191, 36, 0.18) 0%, transparent 50%),
+    radial-gradient(circle at 90% 85%, rgba(244, 114, 182, 0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.royal-showcase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  color: #fbbf24;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.royal-showcase-brand {
+  font-family: 'Cinzel', serif, Georgia, serif;
+  color: #ffffff;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  margin: 1.25rem 0 0.25rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.royal-showcase-tagline {
+  color: #fcd34d;
+  font-size: 0.78rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.royal-showcase-heading {
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.35;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+}
+
+.royal-showcase-subtext {
+  color: #fce7f3;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  opacity: 0.92;
+  margin-bottom: 2rem;
+}
+
+.royal-benefit-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 1rem 1.15rem;
+  margin-bottom: 0.85rem;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s;
+}
+.royal-benefit-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(251, 191, 36, 0.4);
+  transform: translateX(4px);
+}
+
+.royal-benefit-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(251, 191, 36, 0.18);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fcd34d;
+  flex-shrink: 0;
+  font-size: 1.15rem;
+}
+
+.royal-benefit-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.2rem;
+}
+
+.royal-benefit-desc {
+  font-size: 0.8rem;
+  color: #fce7f3;
+  line-height: 1.45;
+  opacity: 0.85;
+}
+
+.royal-showcase-footer {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: #fbcfe8;
+  font-weight: 600;
+}
+
+.royal-auth-form-panel {
+  padding: 3rem 2.5rem 2.5rem;
+  position: relative;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .royal-auth-form-panel {
+    padding: 2.25rem 1.5rem 2rem;
+  }
+}
+
+
 /* Mobile Sticky Bottom Navigation Bar (Image 4) */
 .royal-mobile-bottom-nav {
   display: none;

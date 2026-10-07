@@ -605,125 +605,193 @@
   </div>
 
   <!-- STANDALONE DEDICATED AUTHENTICATION VIEW (ROYAL LOGIN & REGISTER PAGES) -->
-  <section id="auth-view" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at 50% 15%, #3b071e 0%, #1e050f 65%, #0f0208 100%); z-index: 99999; overflow-y: auto; align-items: center; justify-content: center; padding: 2rem 1rem;">
-    <div style="background: #ffffff; border-radius: 28px; box-shadow: 0 25px 60px -15px rgba(0,0,0,0.5); width: 100%; max-width: 440px; padding: 2.75rem 2.25rem 2.25rem; margin: auto; position: relative; box-sizing: border-box;">
-      
-      <!-- Back to Store Link -->
-      <button type="button" onclick="switchView('shop')" style="position: absolute; top: 1.25rem; left: 1.25rem; background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.75rem; border-radius: 20px; transition: all 0.2s;" onmouseover="this.style.background='#f1f5f9'; this.style.color='#831843'" onmouseout="this.style.background='#f8fafc'; this.style.color='#475569'">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        Store
-      </button>
+  <section id="auth-view">
+    <!-- Ambient Background Lighting & Motif Overlay -->
+    <div class="auth-ambient-glow auth-ambient-glow-1"></div>
+    <div class="auth-ambient-glow auth-ambient-glow-2"></div>
+    <div class="auth-bg-pattern"></div>
 
-      <!-- Royal Brand Header -->
-      <div style="text-align: center; margin-top: 0.5rem; margin-bottom: 1.5rem;">
-        <div style="display: inline-flex; align-items: center; gap: 0.4rem; justify-content: center; margin-bottom: 0.25rem;">
-          <span style="font-size: 1.35rem;">👑</span>
-          <span style="font-family: 'Cinzel', serif, var(--font-primary, sans-serif); font-size: 1.6rem; font-weight: 800; color: #831843; letter-spacing: 2px;">MĀRWĀRI</span>
+    <!-- Grand Dual-Pane Authentication Centerpiece -->
+    <div class="royal-auth-container">
+      
+      <!-- 1. LEFT SHOWCASE PANEL (DISPLAYED ON DESKTOP & TABLETS) -->
+      <div class="royal-auth-showcase-panel">
+        <div>
+          <div class="royal-showcase-badge">
+            <span>👑</span>
+            <span>Patron Exclusive Portal</span>
+          </div>
+          
+          <h2 class="royal-showcase-brand">MĀRWĀRI</h2>
+          <div class="royal-showcase-tagline">The Royal Heritage of Rajasthan • Estd. 1948</div>
+          
+          <div class="royal-showcase-heading">
+            Step into the Splendor of Authentic Rajputana Couture & Handcrafts
+          </div>
+          <p class="royal-showcase-subtext">
+            Join our distinguished patron circle to discover rare handlooms, royal Jodhpuri finery, certified heirloom jewelry, and master-artisan splendors.
+          </p>
+
+          <!-- 3 High-End Patron Benefit Cards -->
+          <div class="royal-benefit-card">
+            <div class="royal-benefit-icon">👑</div>
+            <div>
+              <div class="royal-benefit-title">Royal Privilege Rewards</div>
+              <div class="royal-benefit-desc">Earn 5% patron coin returns on acquisitions with private drops & previews.</div>
+            </div>
+          </div>
+
+          <div class="royal-benefit-card">
+            <div class="royal-benefit-icon">🛡️</div>
+            <div>
+              <div class="royal-benefit-title">Imperial Craft Guarantee</div>
+              <div class="royal-benefit-desc">100% verified GI-tagged authentic artisans from Jodhpur, Jaipur & Udaipur.</div>
+            </div>
+          </div>
+
+          <div class="royal-benefit-card">
+            <div class="royal-benefit-icon">🚚</div>
+            <div>
+              <div class="royal-benefit-title">Complimentary Royal Courier</div>
+              <div class="royal-benefit-desc">Express white-glove insured delivery across India with 7-day heritage returns.</div>
+            </div>
+          </div>
         </div>
-        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 2px; color: #b45309; font-weight: 700; margin-bottom: 0.75rem;">Royal Heritage of Rajasthan</div>
-        <h2 id="auth-view-title" style="color: #0f172a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 1.45rem; font-weight: 800; text-align: center; margin: 0 0 0.25rem;">Sign In</h2>
-        <p id="auth-view-subtitle" style="font-size: 0.85rem; color: #64748b; margin: 0; line-height: 1.4;">Access your exclusive patron profile and royal privileges</p>
+
+        <!-- Trust Footer Metric -->
+        <div class="royal-showcase-footer">
+          <span>⭐ 4.9/5 Patron Rating</span>
+          <span>50,000+ Patrons Worldwide</span>
+          <span>🔒 256-Bit Vault</span>
+        </div>
       </div>
 
-      <!-- Tab Switcher (Sign In vs Create Account) -->
-      <div style="display: flex; background: #fdf2f4; border-radius: 12px; padding: 4px; margin-bottom: 1.25rem; gap: 4px;">
-        <button type="button" id="auth-tab-pill-signin" onclick="app.switchAuthTab('signin')" style="flex: 1; padding: 0.6rem 0.5rem; border: none; border-radius: 9px; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: all 0.2s; background: #831843; color: white;">Sign In</button>
-        <button type="button" id="auth-tab-pill-signup" onclick="app.switchAuthTab('signup')" style="flex: 1; padding: 0.6rem 0.5rem; border: none; border-radius: 9px; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: all 0.2s; background: transparent; color: #831843;">Create Account</button>
+      <!-- 2. RIGHT AUTHENTICATION FORM PANEL -->
+      <div class="royal-auth-form-panel">
+        
+        <!-- Back to Store Link -->
+        <button type="button" onclick="switchView('shop')" style="position: absolute; top: 1.25rem; left: 1.25rem; background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.75rem; border-radius: 20px; transition: all 0.2s;" onmouseover="this.style.background='#f1f5f9'; this.style.color='#831843'" onmouseout="this.style.background='#f8fafc'; this.style.color='#475569'">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          Store
+        </button>
+
+        <!-- Royal Brand Header -->
+        <div style="text-align: center; margin-top: 0.75rem; margin-bottom: 1.5rem;">
+          <div style="display: inline-flex; align-items: center; gap: 0.4rem; justify-content: center; margin-bottom: 0.25rem;">
+            <span style="font-size: 1.35rem;">👑</span>
+            <span style="font-family: 'Cinzel', serif, var(--font-primary, sans-serif); font-size: 1.6rem; font-weight: 800; color: #831843; letter-spacing: 2px;">MĀRWĀRI</span>
+          </div>
+          <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 2px; color: #b45309; font-weight: 700; margin-bottom: 0.75rem;">Royal Heritage of Rajasthan</div>
+          <h2 id="auth-view-title" style="color: #0f172a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 1.45rem; font-weight: 800; text-align: center; margin: 0 0 0.25rem;">Sign In</h2>
+          <p id="auth-view-subtitle" style="font-size: 0.85rem; color: #64748b; margin: 0; line-height: 1.4;">Access your exclusive patron profile and royal privileges</p>
+        </div>
+
+        <!-- Tab Switcher (Sign In vs Create Account) -->
+        <div style="display: flex; background: #fdf2f4; border-radius: 12px; padding: 4px; margin-bottom: 1.25rem; gap: 4px;">
+          <button type="button" id="auth-tab-pill-signin" onclick="app.switchAuthTab('signin')" style="flex: 1; padding: 0.65rem 0.5rem; border: none; border-radius: 9px; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: all 0.2s; background: #831843; color: white;">Sign In</button>
+          <button type="button" id="auth-tab-pill-signup" onclick="app.switchAuthTab('signup')" style="flex: 1; padding: 0.65rem 0.5rem; border: none; border-radius: 9px; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: all 0.2s; background: transparent; color: #831843;">Create Account</button>
+        </div>
+
+        <!-- Demo Patron Quick Fill Chip -->
+        <div class="demo-chip" onclick="fillPageLoginCreds()" style="width: 100%; justify-content: center; margin-bottom: 1.25rem; font-size: 0.8rem; padding: 0.55rem 0.75rem; background: #fffbeb; border: 1px dashed #f59e0b; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; color: #92400e;">
+          <span>⚡ Demo Patron:</span> <strong>user@gmail.com / password123</strong> (Click to fill)
+        </div>
+        
+        <div class="auth-form-container">
+          <!-- A. Royal Email Login Form -->
+          <form id="auth-email-form">
+            <div style="margin-bottom: 1.15rem;">
+              <label for="login-email" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Email Address</label>
+              <div class="royal-input-wrapper">
+                <span class="royal-input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                </span>
+                <input type="email" id="login-email" class="royal-input" placeholder="patron@domain.com" required>
+              </div>
+            </div>
+            <div style="margin-bottom: 1rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+                <label for="login-password" style="font-size: 0.85rem; font-weight: 700; color: #1e293b; margin: 0;">Password</label>
+                <a href="javascript:void(0)" onclick="showToast('Password reset instructions sent to your email.', 'info')" style="font-size: 0.8rem; color: #831843; text-decoration: none; font-weight: 600;">Forgot?</a>
+              </div>
+              <div class="royal-input-wrapper">
+                <span class="royal-input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </span>
+                <input type="password" id="login-password" class="royal-input" placeholder="••••••••" required>
+                <button type="button" class="royal-password-toggle" onclick="togglePasswordVisibility('login-password', this)" title="Show/Hide">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="royal-btn-primary" style="margin-top: 1.25rem;">
+              Sign In to Patron Portal &rarr;
+            </button>
+            
+            <div style="text-align: center; margin-top: 1.5rem; font-size: 0.88rem; color: #64748b;">
+              Don't have an account? <a href="javascript:void(0)" onclick="app.switchAuthTab('signup')" style="color: #831843; font-weight: 700; text-decoration: none;">Create Account &rarr;</a>
+            </div>
+          </form>
+
+          <!-- B. Royal Register Form -->
+          <form id="auth-signup-form" style="display: none;">
+            <div style="margin-bottom: 1.15rem;">
+              <label for="signup-name" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Full Name</label>
+              <div class="royal-input-wrapper">
+                <span class="royal-input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </span>
+                <input type="text" id="signup-name" class="royal-input" placeholder="e.g. Kunwar Pratap" required>
+              </div>
+            </div>
+            <div style="margin-bottom: 1.15rem;">
+              <label for="signup-email" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Email Address</label>
+              <div class="royal-input-wrapper">
+                <span class="royal-input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                </span>
+                <input type="email" id="signup-email" class="royal-input" placeholder="patron@domain.com" required>
+              </div>
+            </div>
+            <div style="margin-bottom: 1.15rem;">
+              <label for="signup-phone" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Contact Mobile (+91)</label>
+              <div class="royal-input-wrapper">
+                <span class="royal-input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
+                </span>
+                <input type="tel" id="signup-phone" class="royal-input" placeholder="9876543210" pattern="[0-9]{10}">
+              </div>
+            </div>
+            <div style="margin-bottom: 1rem;">
+              <label for="signup-password" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Set Password</label>
+              <div class="royal-input-wrapper">
+                <span class="royal-input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </span>
+                <input type="password" id="signup-password" class="royal-input" placeholder="••••••••" required>
+                <button type="button" class="royal-password-toggle" onclick="togglePasswordVisibility('signup-password', this)" title="Show/Hide">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="royal-btn-primary" style="margin-top: 1.25rem;">
+              Create Royal Account &rarr;
+            </button>
+            
+            <div style="text-align: center; margin-top: 1.5rem; font-size: 0.88rem; color: #64748b;">
+              Already a patron? <a href="javascript:void(0)" onclick="app.switchAuthTab('signin')" style="color: #831843; font-weight: 700; text-decoration: none;">Sign In &rarr;</a>
+            </div>
+          </form>
+        </div>
+
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #f1f5f9; text-align: center; font-size: 0.75rem; color: #94a3b8; display: flex; align-items: center; justify-content: center; gap: 0.35rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>256-Bit Imperial Encryption • Official Patron Gateway</span>
+        </div>
       </div>
 
-      <!-- Demo Patron Quick Fill Chip -->
-      <div class="demo-chip" onclick="fillPageLoginCreds()" style="width: 100%; justify-content: center; margin-bottom: 1.25rem; font-size: 0.8rem; padding: 0.55rem 0.75rem; background: #fffbeb; border: 1px dashed #f59e0b; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; color: #92400e;">
-        <span>⚡ Demo Patron:</span> <strong>user@gmail.com / password123</strong> (Click to fill)
-      </div>
-      
-      <div class="auth-form-container">
-        <!-- A. Royal Email Login Form -->
-        <form id="auth-email-form">
-          <div style="margin-bottom: 1.15rem;">
-            <label for="login-email" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Email Address</label>
-            <div class="royal-input-wrapper">
-              <span class="royal-input-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-              </span>
-              <input type="email" id="login-email" class="royal-input" placeholder="patron@domain.com" required>
-            </div>
-          </div>
-          <div style="margin-bottom: 1rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
-              <label for="login-password" style="font-size: 0.85rem; font-weight: 700; color: #1e293b; margin: 0;">Password</label>
-              <a href="javascript:void(0)" onclick="showToast('Password reset instructions sent to your email.', 'info')" style="font-size: 0.8rem; color: #831843; text-decoration: none; font-weight: 600;">Forgot?</a>
-            </div>
-            <div class="royal-input-wrapper">
-              <span class="royal-input-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              </span>
-              <input type="password" id="login-password" class="royal-input" placeholder="••••••••" required>
-              <button type="button" class="royal-password-toggle" onclick="togglePasswordVisibility('login-password', this)" title="Show/Hide">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
-            </div>
-          </div>
-
-          <button type="submit" class="royal-btn-primary" style="margin-top: 1.25rem;">
-            Sign In to Patron Portal &rarr;
-          </button>
-          
-          <div style="text-align: center; margin-top: 1.5rem; font-size: 0.88rem; color: #64748b;">
-            Don't have an account? <a href="javascript:void(0)" onclick="app.switchAuthTab('signup')" style="color: #831843; font-weight: 700; text-decoration: none;">Create Account &rarr;</a>
-          </div>
-        </form>
-
-        <!-- B. Royal Register Form -->
-        <form id="auth-signup-form" style="display: none;">
-          <div style="margin-bottom: 1.15rem;">
-            <label for="signup-name" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Full Name</label>
-            <div class="royal-input-wrapper">
-              <span class="royal-input-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              </span>
-              <input type="text" id="signup-name" class="royal-input" placeholder="e.g. Kunwar Pratap" required>
-            </div>
-          </div>
-          <div style="margin-bottom: 1.15rem;">
-            <label for="signup-email" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Email Address</label>
-            <div class="royal-input-wrapper">
-              <span class="royal-input-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-              </span>
-              <input type="email" id="signup-email" class="royal-input" placeholder="patron@domain.com" required>
-            </div>
-          </div>
-          <div style="margin-bottom: 1.15rem;">
-            <label for="signup-phone" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Contact Mobile (+91)</label>
-            <div class="royal-input-wrapper">
-              <span class="royal-input-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
-              </span>
-              <input type="tel" id="signup-phone" class="royal-input" placeholder="9876543210" pattern="[0-9]{10}">
-            </div>
-          </div>
-          <div style="margin-bottom: 1rem;">
-            <label for="signup-password" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Set Password</label>
-            <div class="royal-input-wrapper">
-              <span class="royal-input-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              </span>
-              <input type="password" id="signup-password" class="royal-input" placeholder="••••••••" required>
-              <button type="button" class="royal-password-toggle" onclick="togglePasswordVisibility('signup-password', this)" title="Show/Hide">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
-            </div>
-          </div>
-
-          <button type="submit" class="royal-btn-primary" style="margin-top: 1.25rem;">
-            Create Royal Account &rarr;
-          </button>
-          
-          <div style="text-align: center; margin-top: 1.5rem; font-size: 0.88rem; color: #64748b;">
-            Already a patron? <a href="javascript:void(0)" onclick="app.switchAuthTab('signin')" style="color: #831843; font-weight: 700; text-decoration: none;">Sign In &rarr;</a>
-          </div>
-        </form>
-      </div>
     </div>
   </section>
 
