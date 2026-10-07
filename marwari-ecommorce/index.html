@@ -604,67 +604,123 @@
     </div>
   </div>
 
-  <!-- STANDALONE DEDICATED AUTHENTICATION VIEW (LOGIN & REGISTER PAGES) -->
-  <section id="auth-view" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #077b9f; z-index: 99999; overflow-y: auto; align-items: center; justify-content: center; padding: 2rem 1rem;">
-    <div style="background: white; border-radius: 4px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); width: 100%; max-width: 440px; padding: 3rem 2.5rem 2.5rem; margin: auto; position: relative; box-sizing: border-box;">
+  <!-- STANDALONE DEDICATED AUTHENTICATION VIEW (ROYAL LOGIN & REGISTER PAGES) -->
+  <section id="auth-view" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at 50% 15%, #3b071e 0%, #1e050f 65%, #0f0208 100%); z-index: 99999; overflow-y: auto; align-items: center; justify-content: center; padding: 2rem 1rem;">
+    <div style="background: #ffffff; border-radius: 28px; box-shadow: 0 25px 60px -15px rgba(0,0,0,0.5); width: 100%; max-width: 440px; padding: 2.75rem 2.25rem 2.25rem; margin: auto; position: relative; box-sizing: border-box;">
       
       <!-- Back to Store Link -->
-      <button type="button" onclick="switchView('shop')" style="position: absolute; top: 1.25rem; left: 1.25rem; background: none; border: none; color: #6b7280; font-size: 0.85rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.5rem; border-radius: 4px; transition: color 0.2s;" onmouseover="this.style.color='#077b9f'" onmouseout="this.style.color='#6b7280'">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        Back to Store
+      <button type="button" onclick="switchView('shop')" style="position: absolute; top: 1.25rem; left: 1.25rem; background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.75rem; border-radius: 20px; transition: all 0.2s;" onmouseover="this.style.background='#f1f5f9'; this.style.color='#831843'" onmouseout="this.style.background='#f8fafc'; this.style.color='#475569'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Store
       </button>
 
-      <h2 id="auth-view-title" style="color: #4b5563; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 1.85rem; font-weight: 400; text-align: center; margin-top: 1rem; margin-bottom: 2rem;">Login</h2>
+      <!-- Royal Brand Header -->
+      <div style="text-align: center; margin-top: 0.5rem; margin-bottom: 1.5rem;">
+        <div style="display: inline-flex; align-items: center; gap: 0.4rem; justify-content: center; margin-bottom: 0.25rem;">
+          <span style="font-size: 1.35rem;">👑</span>
+          <span style="font-family: 'Cinzel', serif, var(--font-primary, sans-serif); font-size: 1.6rem; font-weight: 800; color: #831843; letter-spacing: 2px;">MĀRWĀRI</span>
+        </div>
+        <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 2px; color: #b45309; font-weight: 700; margin-bottom: 0.75rem;">Royal Heritage of Rajasthan</div>
+        <h2 id="auth-view-title" style="color: #0f172a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 1.45rem; font-weight: 800; text-align: center; margin: 0 0 0.25rem;">Sign In</h2>
+        <p id="auth-view-subtitle" style="font-size: 0.85rem; color: #64748b; margin: 0; line-height: 1.4;">Access your exclusive patron profile and royal privileges</p>
+      </div>
+
+      <!-- Tab Switcher (Sign In vs Create Account) -->
+      <div style="display: flex; background: #fdf2f4; border-radius: 12px; padding: 4px; margin-bottom: 1.25rem; gap: 4px;">
+        <button type="button" id="auth-tab-pill-signin" onclick="app.switchAuthTab('signin')" style="flex: 1; padding: 0.6rem 0.5rem; border: none; border-radius: 9px; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: all 0.2s; background: #831843; color: white;">Sign In</button>
+        <button type="button" id="auth-tab-pill-signup" onclick="app.switchAuthTab('signup')" style="flex: 1; padding: 0.6rem 0.5rem; border: none; border-radius: 9px; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: all 0.2s; background: transparent; color: #831843;">Create Account</button>
+      </div>
+
+      <!-- Demo Patron Quick Fill Chip -->
+      <div class="demo-chip" onclick="fillPageLoginCreds()" style="width: 100%; justify-content: center; margin-bottom: 1.25rem; font-size: 0.8rem; padding: 0.55rem 0.75rem; background: #fffbeb; border: 1px dashed #f59e0b; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; color: #92400e;">
+        <span>⚡ Demo Patron:</span> <strong>user@gmail.com / password123</strong> (Click to fill)
+      </div>
       
       <div class="auth-form-container">
-        <!-- A. Email Login Form (Matching Reference media_1791296500459.png) -->
+        <!-- A. Royal Email Login Form -->
         <form id="auth-email-form">
-          <div style="margin-bottom: 1.25rem;">
-            <label for="login-email" style="display: block; font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Email:</label>
-            <input type="email" id="login-email" style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #d1d5db; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none; box-sizing: border-box; transition: border-color 0.2s;" placeholder="Enter email" required onfocus="this.style.borderColor='#077b9f'" onblur="this.style.borderColor='#d1d5db'">
+          <div style="margin-bottom: 1.15rem;">
+            <label for="login-email" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Email Address</label>
+            <div class="royal-input-wrapper">
+              <span class="royal-input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              </span>
+              <input type="email" id="login-email" class="royal-input" placeholder="patron@domain.com" required>
+            </div>
           </div>
           <div style="margin-bottom: 1rem;">
-            <label for="login-password" style="display: block; font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Password:</label>
-            <input type="password" id="login-password" style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #d1d5db; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none; box-sizing: border-box; transition: border-color 0.2s;" placeholder="Enter password" required onfocus="this.style.borderColor='#077b9f'" onblur="this.style.borderColor='#d1d5db'">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+              <label for="login-password" style="font-size: 0.85rem; font-weight: 700; color: #1e293b; margin: 0;">Password</label>
+              <a href="javascript:void(0)" onclick="showToast('Password reset instructions sent to your email.', 'info')" style="font-size: 0.8rem; color: #831843; text-decoration: none; font-weight: 600;">Forgot?</a>
+            </div>
+            <div class="royal-input-wrapper">
+              <span class="royal-input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </span>
+              <input type="password" id="login-password" class="royal-input" placeholder="••••••••" required>
+              <button type="button" class="royal-password-toggle" onclick="togglePasswordVisibility('login-password', this)" title="Show/Hide">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
           </div>
-          <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-            <input type="checkbox" id="login-show-password" style="cursor: pointer; width: 16px; height: 16px;" onclick="document.getElementById('login-password').type = this.checked ? 'text' : 'password'">
-            <label for="login-show-password" style="font-size: 0.9rem; color: #4b5563; cursor: pointer; user-select: none;">Show Password</label>
-          </div>
-          <button type="submit" style="width: 100%; padding: 0.9rem; border-radius: 2px; font-weight: 600; font-size: 0.95rem; letter-spacing: 0.5px; background-color: #077b9f; color: white; border: none; cursor: pointer; text-transform: uppercase; transition: background 0.2s;" onmouseover="this.style.backgroundColor='#056482'" onmouseout="this.style.backgroundColor='#077b9f'">SIGN IN</button>
+
+          <button type="submit" class="royal-btn-primary" style="margin-top: 1.25rem;">
+            Sign In to Patron Portal &rarr;
+          </button>
           
-          <div style="text-align: center; margin-top: 2rem; font-size: 0.9rem; color: #4b5563; display: flex; flex-direction: column; gap: 0.6rem;">
-            <div>Forgot <a href="javascript:void(0)" onclick="showToast('Password reset instructions sent to your email.', 'info')" style="color: #077b9f; text-decoration: none;">Username / Password</a>?</div>
-            <div>Don't have an account? <a href="javascript:void(0)" onclick="app.switchAuthTab('signup')" style="color: #077b9f; text-decoration: none; font-weight: 500;">Sign up</a></div>
+          <div style="text-align: center; margin-top: 1.5rem; font-size: 0.88rem; color: #64748b;">
+            Don't have an account? <a href="javascript:void(0)" onclick="app.switchAuthTab('signup')" style="color: #831843; font-weight: 700; text-decoration: none;">Create Account &rarr;</a>
           </div>
         </form>
 
-        <!-- B. Register Form -->
+        <!-- B. Royal Register Form -->
         <form id="auth-signup-form" style="display: none;">
-          <div style="margin-bottom: 1.25rem;">
-            <label for="signup-name" style="display: block; font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Full Name:</label>
-            <input type="text" id="signup-name" style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #d1d5db; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none; box-sizing: border-box; transition: border-color 0.2s;" placeholder="Enter your full name" required onfocus="this.style.borderColor='#077b9f'" onblur="this.style.borderColor='#d1d5db'">
+          <div style="margin-bottom: 1.15rem;">
+            <label for="signup-name" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Full Name</label>
+            <div class="royal-input-wrapper">
+              <span class="royal-input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </span>
+              <input type="text" id="signup-name" class="royal-input" placeholder="e.g. Kunwar Pratap" required>
+            </div>
           </div>
-          <div style="margin-bottom: 1.25rem;">
-            <label for="signup-email" style="display: block; font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Email:</label>
-            <input type="email" id="signup-email" style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #d1d5db; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none; box-sizing: border-box; transition: border-color 0.2s;" placeholder="Enter email" required onfocus="this.style.borderColor='#077b9f'" onblur="this.style.borderColor='#d1d5db'">
+          <div style="margin-bottom: 1.15rem;">
+            <label for="signup-email" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Email Address</label>
+            <div class="royal-input-wrapper">
+              <span class="royal-input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              </span>
+              <input type="email" id="signup-email" class="royal-input" placeholder="patron@domain.com" required>
+            </div>
           </div>
-          <div style="margin-bottom: 1.25rem;">
-            <label for="signup-phone" style="display: block; font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Mobile Number (Optional):</label>
-            <input type="tel" id="signup-phone" style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #d1d5db; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none; box-sizing: border-box; transition: border-color 0.2s;" placeholder="Enter mobile number" pattern="[0-9]{10}" onfocus="this.style.borderColor='#077b9f'" onblur="this.style.borderColor='#d1d5db'">
+          <div style="margin-bottom: 1.15rem;">
+            <label for="signup-phone" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Contact Mobile (+91)</label>
+            <div class="royal-input-wrapper">
+              <span class="royal-input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
+              </span>
+              <input type="tel" id="signup-phone" class="royal-input" placeholder="9876543210" pattern="[0-9]{10}">
+            </div>
           </div>
           <div style="margin-bottom: 1rem;">
-            <label for="signup-password" style="display: block; font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem; color: #1f2937;">Password:</label>
-            <input type="password" id="signup-password" style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #d1d5db; border-radius: 2px; font-size: 0.95rem; color: #4b5563; outline: none; box-sizing: border-box; transition: border-color 0.2s;" placeholder="Enter password" required onfocus="this.style.borderColor='#077b9f'" onblur="this.style.borderColor='#d1d5db'">
+            <label for="signup-password" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Set Password</label>
+            <div class="royal-input-wrapper">
+              <span class="royal-input-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </span>
+              <input type="password" id="signup-password" class="royal-input" placeholder="••••••••" required>
+              <button type="button" class="royal-password-toggle" onclick="togglePasswordVisibility('signup-password', this)" title="Show/Hide">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
           </div>
-          <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-            <input type="checkbox" id="signup-show-password" style="cursor: pointer; width: 16px; height: 16px;" onclick="document.getElementById('signup-password').type = this.checked ? 'text' : 'password'">
-            <label for="signup-show-password" style="font-size: 0.9rem; color: #4b5563; cursor: pointer; user-select: none;">Show Password</label>
-          </div>
-          <button type="submit" style="width: 100%; padding: 0.9rem; border-radius: 2px; font-weight: 600; font-size: 0.95rem; letter-spacing: 0.5px; background-color: #077b9f; color: white; border: none; cursor: pointer; text-transform: uppercase; transition: background 0.2s;" onmouseover="this.style.backgroundColor='#056482'" onmouseout="this.style.backgroundColor='#077b9f'">SIGN UP</button>
+
+          <button type="submit" class="royal-btn-primary" style="margin-top: 1.25rem;">
+            Create Royal Account &rarr;
+          </button>
           
-          <div style="text-align: center; margin-top: 2rem; font-size: 0.9rem; color: #4b5563;">
-            Already have an account? <a href="javascript:void(0)" onclick="app.switchAuthTab('signin')" style="color: #077b9f; text-decoration: none; font-weight: 500;">Sign in</a>
+          <div style="text-align: center; margin-top: 1.5rem; font-size: 0.88rem; color: #64748b;">
+            Already a patron? <a href="javascript:void(0)" onclick="app.switchAuthTab('signin')" style="color: #831843; font-weight: 700; text-decoration: none;">Sign In &rarr;</a>
           </div>
         </form>
       </div>
@@ -674,116 +730,33 @@
   <!-- SHARED MODALS BACKDROP CONTAINER -->
   <div class="modal-overlay" id="modal-overlay-container">
 
-    <!-- 1. GUEST AUTH MODAL (ROYAL PATRON AUTH INTERCEPTOR) -->
-    <div class="modal-content guest-auth-modal" id="guest-auth-modal" style="display:none; padding:0;">
-      <button class="modal-close-btn" onclick="closeModal()" style="top:1rem; right:1rem; z-index:20; background:rgba(255,255,255,0.2); color:white; border:none;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- 1. ROYAL PRIVILEGES MODAL (MATCHING IMAGE 2 EXACTLY) -->
+    <div class="modal-content guest-auth-modal" id="guest-auth-modal" style="display:none; padding:2.25rem 2rem; text-align:center;">
+      <button type="button" class="royal-modal-close" onclick="closeModal()" title="Close" aria-label="Close modal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 6 6 18M6 6l12 12" />
         </svg>
       </button>
 
-      <!-- Royal Maroon Header -->
-      <div class="guest-auth-header">
-        <div style="display:inline-flex; align-items:center; gap:0.4rem; background:rgba(251,191,36,0.2); padding:0.25rem 0.75rem; border-radius:99px; font-size:0.7rem; font-weight:700; color:#fef08a; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.4rem; border:1px solid rgba(251,191,36,0.3);">
-          👑 Royal Patron Access
-        </div>
-        <h3>MĀRWĀRI</h3>
-        <p id="guest-auth-subtitle">Sign in to complete your checkout and royal order</p>
+      <!-- Centered Soft Pink Circle with Maroon Shield (Image 2) -->
+      <div class="royal-shield-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#831843" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
       </div>
 
-      <!-- Auth Tabs: OTP vs Password vs Register -->
-      <div class="guest-auth-tabs">
-        <button type="button" class="guest-auth-tab-btn active" id="modal-tab-otp" onclick="switchModalAuthTab('otp')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          Mobile OTP
-        </button>
-        <button type="button" class="guest-auth-tab-btn" id="modal-tab-password" onclick="switchModalAuthTab('password')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Email & Password
-        </button>
-        <button type="button" class="guest-auth-tab-btn" id="modal-tab-register" onclick="switchModalAuthTab('register')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
-          New Patron
-        </button>
-      </div>
+      <h3 class="royal-auth-title">Royal Privileges</h3>
+      <p class="royal-auth-subtitle">
+        Please sign in to access your Bag, Orders, and Profile.
+      </p>
 
-      <!-- Tab 1: Mobile OTP Form -->
-      <div class="guest-auth-body" id="modal-otp-pane">
-        <div class="demo-chip" onclick="fillDemoPhone()">
-          <span>⚡ Demo Mobile:</span> <strong>9876543210</strong> (Click to fill)
-        </div>
-        <form id="modal-otp-form">
-          <div class="form-group" id="modal-phone-group">
-            <label for="modal-otp-phone" style="font-size:0.85rem; font-weight:600; color:var(--text-primary);">Mobile Number</label>
-            <div style="display:flex; align-items:center; background:var(--bg-app); border:1px solid var(--border-color); border-radius:10px; overflow:hidden; padding:0 0.75rem;">
-              <span style="font-size:0.9rem; font-weight:700; color:#b45309; padding-right:0.5rem; border-right:1px solid var(--border-color);">+91</span>
-              <input type="tel" id="modal-otp-phone" class="form-input" placeholder="9876543210" pattern="[0-9]{10}" required style="border:none; background:none; outline:none; box-shadow:none; padding-left:0.5rem;">
-            </div>
-          </div>
-          <button type="button" id="modal-send-otp-btn" class="auth-submit-btn" style="background:#831843; margin-top:0.5rem;">
-            Send Royal OTP
-          </button>
-
-          <!-- Step 2: OTP Verification Field -->
-          <div id="modal-otp-verify-section" style="display:none; margin-top:1.25rem; padding-top:1.25rem; border-top:1px dashed var(--border-color);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-              <label for="modal-otp-code" style="font-size:0.85rem; font-weight:600; color:var(--text-primary);">Enter 6-Digit OTP</label>
-              <span style="font-size:0.75rem; color:#b45309; font-weight:700; background:#fef3c7; padding:0.15rem 0.5rem; border-radius:4px;">Demo OTP: 123456</span>
-            </div>
-            <input type="text" id="modal-otp-code" class="form-input" placeholder="123456" maxlength="6" style="letter-spacing:4px; font-size:1.2rem; text-align:center; font-weight:700; font-family:monospace;">
-            <button type="submit" id="modal-verify-otp-btn" class="auth-submit-btn" style="background:#831843; margin-top:1rem;">
-              Verify & Proceed &rarr;
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Tab 2: Email & Password Form -->
-      <div class="guest-auth-body" id="modal-password-pane" style="display:none;">
-        <div class="demo-chip" onclick="fillDemoEmail()">
-          <span>⚡ Demo Patron:</span> <strong>user@gmail.com / password123</strong>
-        </div>
-        <form id="modal-email-login-form">
-          <div class="form-group">
-            <label for="modal-login-email" style="font-size:0.85rem; font-weight:600;">Email or Username</label>
-            <input type="text" id="modal-login-email" class="form-input" placeholder="user@gmail.com" required>
-          </div>
-          <div class="form-group">
-            <label for="modal-login-password" style="font-size:0.85rem; font-weight:600;">Password</label>
-            <input type="password" id="modal-login-password" class="form-input" placeholder="••••••••" required>
-          </div>
-          <button type="submit" class="auth-submit-btn" style="background:#831843; margin-top:0.5rem;">
-            Sign In as Patron
-          </button>
-        </form>
-      </div>
-
-      <!-- Tab 3: Register Patron Form -->
-      <div class="guest-auth-body" id="modal-register-pane" style="display:none;">
-        <form id="modal-register-form">
-          <div class="form-group">
-            <label for="modal-reg-name" style="font-size:0.85rem; font-weight:600;">Full Name</label>
-            <input type="text" id="modal-reg-name" class="form-input" placeholder="e.g. Ramesh Seervi" required>
-          </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-            <div class="form-group">
-              <label for="modal-reg-phone" style="font-size:0.85rem; font-weight:600;">Mobile (+91)</label>
-              <input type="tel" id="modal-reg-phone" class="form-input" placeholder="9876543210" pattern="[0-9]{10}" required>
-            </div>
-            <div class="form-group">
-              <label for="modal-reg-email" style="font-size:0.85rem; font-weight:600;">Email</label>
-              <input type="email" id="modal-reg-email" class="form-input" placeholder="name@email.com" required>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="modal-reg-password" style="font-size:0.85rem; font-weight:600;">Password</label>
-            <input type="password" id="modal-reg-password" class="form-input" placeholder="Minimum 6 characters" required minlength="6">
-          </div>
-          <button type="submit" class="auth-submit-btn" style="background:#831843; margin-top:0.5rem;">
-            Register Patron Profile
-          </button>
-        </form>
-      </div>
+      <button type="button" class="royal-btn-primary" onclick="goToLoginFromModal()" id="modal-login-now-btn">
+        Login Now &rarr;
+      </button>
+      <button type="button" class="royal-btn-secondary" onclick="goToRegisterFromModal()" id="modal-create-account-btn">
+        Create Account
+      </button>
     </div>
 
     <!-- 2. HIGH-RESOLUTION MASTERPIECE IMAGE LIGHTBOX -->
@@ -970,6 +943,44 @@
 
   <!-- Core JavaScript logic -->
   <script src="app.js"></script>
+
+  <!-- MOBILE BOTTOM STICKY NAVIGATION BAR (MATCHING IMAGE 4) -->
+  <nav class="royal-mobile-bottom-nav" id="royal-mobile-bottom-nav">
+    <button type="button" class="royal-nav-tab active" id="mobile-nav-home" onclick="switchView('shop'); updateMobileNavTab('home');">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      <span>Home</span>
+    </button>
+    <button type="button" class="royal-nav-tab" id="mobile-nav-collections" onclick="switchView('shop'); updateMobileNavTab('collections'); setTimeout(() => document.getElementById('categories-section')?.scrollIntoView({behavior:'smooth'}), 100);">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>
+      </svg>
+      <span>Collections</span>
+    </button>
+    <button type="button" class="royal-nav-tab" id="mobile-nav-cart" onclick="handleRestrictedAccess('cart')">
+      <div style="position:relative;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+        </svg>
+        <span class="cart-count royal-nav-tab-badge" style="display:none;">0</span>
+      </div>
+      <span>Royal Bag</span>
+    </button>
+    <button type="button" class="royal-nav-tab" id="mobile-nav-orders" onclick="handleRestrictedAccess('orders')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" x2="12" y1="22.08" y2="12"/>
+      </svg>
+      <span>Orders</span>
+    </button>
+    <button type="button" class="royal-nav-tab" id="mobile-nav-profile" onclick="handleRestrictedAccess('profile')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+      <span>Profile</span>
+    </button>
+  </nav>
+
 </body>
 
 </html>

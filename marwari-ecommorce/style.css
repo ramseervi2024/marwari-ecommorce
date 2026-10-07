@@ -1940,82 +1940,376 @@ select.form-input {
 }
 
 /* ==========================================================================
-   1. GUEST GATEKEEPING MODAL (ROYAL PATRON AUTH INTERCEPTOR)
+   1. GUEST GATEKEEPING MODAL & ROYAL PRIVILEGES (MATCHING MOBILE SPEC & POPUP)
    ========================================================================== */
 .guest-auth-modal {
-  max-width: 480px;
-  width: 95%;
-  background: var(--bg-card);
-  border-radius: 20px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  max-width: 440px;
+  width: 92%;
+  background: #ffffff;
+  border-radius: 28px;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.35), 0 0 1px 1px rgba(0, 0, 0, 0.05);
   overflow: hidden;
-  animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+  animation: royalModalSpring 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
 }
 
-@keyframes modalSlideUp {
-  from { opacity: 0; transform: translateY(24px) scale(0.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes royalModalSpring {
+  from { opacity: 0; transform: scale(0.92) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.guest-auth-header {
-  background: linear-gradient(135deg, #831843 0%, #500724 100%);
-  color: white;
-  padding: 1.75rem 2rem 1.5rem;
-  text-align: center;
-  position: relative;
-  border-bottom: 2px solid #b45309;
+.guest-auth-pane {
+  padding: 2.25rem 2rem 2.25rem;
+  box-sizing: border-box;
 }
 
-.guest-auth-header h3 {
-  font-family: var(--font-heading);
-  font-size: 1.4rem;
-  font-weight: 800;
-  margin: 0.35rem 0 0.25rem;
-  color: #fef08a;
-  letter-spacing: 0.5px;
-}
-
-.guest-auth-header p {
-  font-size: 0.85rem;
-  color: #fce7f3;
-  margin: 0;
-  opacity: 0.95;
-}
-
-.guest-auth-tabs {
-  display: flex;
-  background: rgba(15, 23, 42, 0.05);
-  border-bottom: 1px solid var(--border-color);
-  padding: 0.25rem 0.5rem 0;
-}
-
-.guest-auth-tab-btn {
-  flex: 1;
-  background: none;
-  border: none;
-  padding: 0.85rem 0.5rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: all 0.2s;
+/* Shield Emblem Badge (Image 4) */
+.royal-shield-badge {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: #fdf2f4;
+  margin: 0.5rem auto 1.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
+  box-shadow: 0 6px 16px rgba(131, 24, 67, 0.08);
 }
 
-.guest-auth-tab-btn.active {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
-  background: var(--bg-card);
+/* Sparkle Emblem Badge (Image 3) */
+.royal-sparkle-badge {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: #fdf2f4;
+  margin: 0.25rem auto 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 6px 16px rgba(131, 24, 67, 0.08);
 }
 
-.guest-auth-body {
-  padding: 1.75rem 2rem 2rem;
+.royal-sparkle-icon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: #831843;
+  animation: sparkleTwinkle 2.2s infinite ease-in-out;
+}
+
+@keyframes sparkleTwinkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.9; }
+  50% { transform: scale(1.25) rotate(18deg); opacity: 1; }
+}
+
+/* Modal Close Button (Image 4 top-right) */
+.royal-modal-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.2s;
+  z-index: 20;
+}
+.royal-modal-close:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  transform: rotate(90deg);
+}
+
+/* Back Arrow Button (Image 3 top-left) */
+.royal-modal-back {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #0f172a;
+  transition: all 0.2s;
+  z-index: 20;
+}
+.royal-modal-back:hover {
+  background: #e2e8f0;
+  transform: translateX(-2px);
+}
+
+/* Typography matching Image 3 & 4 */
+.royal-auth-title {
+  font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "Inter", sans-serif;
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.25;
+}
+
+.royal-auth-subtitle {
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0 0 1.5rem 0;
+}
+
+/* Form inputs with sleek left icon & right toggle */
+.royal-field-group {
+  margin-bottom: 1.15rem;
+  text-align: left;
+}
+
+.royal-field-label {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.45rem;
+}
+
+.royal-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  transition: all 0.2s;
+  overflow: hidden;
+}
+
+.royal-input-wrapper:focus-within {
+  border-color: #831843;
+  box-shadow: 0 0 0 3px rgba(131, 24, 67, 0.12);
+}
+
+.royal-input-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 1rem;
+  padding-right: 0.25rem;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.royal-input-wrapper:focus-within .royal-input-icon {
+  color: #831843;
+}
+
+.royal-input {
+  width: 100%;
+  padding: 0.88rem 1rem 0.88rem 0.5rem;
+  border: none;
+  background: transparent;
+  font-size: 0.95rem;
+  color: #0f172a;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.royal-input::placeholder {
+  color: #94a3b8;
+}
+
+.royal-password-toggle {
+  background: none;
+  border: none;
+  padding: 0 1rem;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+.royal-password-toggle:hover {
+  color: #831843;
+}
+
+/* Primary Button (Image 3 & 4) */
+.royal-btn-primary {
+  width: 100%;
+  height: 52px;
+  background: #831843;
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(131, 24, 67, 0.25);
+  margin-top: 0.5rem;
+}
+.royal-btn-primary:hover {
+  background: #701337;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(131, 24, 67, 0.35);
+}
+.royal-btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary Button (Image 3 & 4) */
+.royal-btn-secondary {
+  width: 100%;
+  height: 52px;
+  background: #ffffff;
+  color: #831843;
+  border: 1.5px solid #831843;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  margin-top: 0.75rem;
+}
+.royal-btn-secondary:hover {
+  background: #fdf2f4;
+  border-color: #701337;
+  color: #701337;
+}
+
+/* Checkbox Row & Links */
+.royal-auth-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+  margin: 0.5rem 0 1.25rem;
+}
+
+.royal-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #475569;
+  cursor: pointer;
+  user-select: none;
+}
+
+.royal-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #831843;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.royal-link-highlight {
+  color: #831843;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.royal-link-highlight:hover {
+  color: #500724;
+  text-decoration: underline;
+}
+
+.royal-auth-footer {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #64748b;
+  text-align: center;
+}
+
+/* Mobile Sticky Bottom Navigation Bar (Image 4) */
+.royal-mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-top: 1px solid rgba(226, 232, 240, 0.9);
+  padding: 0.35rem 0.5rem 0.55rem;
+  z-index: 9999;
+  box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.08);
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .royal-mobile-bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  body {
+    padding-bottom: 65px;
+  }
+}
+
+.royal-nav-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.35rem 0;
+  color: #64748b;
+  text-decoration: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 0.72rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.royal-nav-tab:hover, .royal-nav-tab.active {
+  color: #831843;
+}
+.royal-nav-tab.active svg {
+  color: #831843;
+  transform: scale(1.08);
+}
+.royal-nav-tab svg {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.2s;
+}
+.royal-nav-tab-badge {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  background: #831843;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  border: 1.5px solid white;
 }
 
 .demo-chip {

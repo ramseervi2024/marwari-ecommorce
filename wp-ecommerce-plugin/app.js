@@ -1203,18 +1203,27 @@ function switchView(view, updateHistory = true, productId = null) {
 app.switchAuthTab = function(type, updateHistory = true) {
   const isRegister = type === 'signup' || type === 'register';
   const title = document.getElementById("auth-view-title");
+  const subtitle = document.getElementById("auth-view-subtitle");
   const emailForm = document.getElementById("auth-email-form");
   const signupForm = document.getElementById("auth-signup-form");
+  const pillSignin = document.getElementById("auth-tab-pill-signin");
+  const pillSignup = document.getElementById("auth-tab-pill-signup");
 
   if (isRegister) {
     if (title) title.innerText = "Create Account";
+    if (subtitle) subtitle.innerText = "Join the royal heritage club and unlock patron rewards";
     if (emailForm) emailForm.style.display = "none";
     if (signupForm) signupForm.style.display = "block";
+    if (pillSignin) { pillSignin.style.background = "transparent"; pillSignin.style.color = "#831843"; }
+    if (pillSignup) { pillSignup.style.background = "#831843"; pillSignup.style.color = "#ffffff"; }
     if (updateHistory) updateURLState('/ecommerce/register');
   } else {
-    if (title) title.innerText = "Login";
+    if (title) title.innerText = "Sign In";
+    if (subtitle) subtitle.innerText = "Access your exclusive patron profile and royal privileges";
     if (signupForm) signupForm.style.display = "none";
     if (emailForm) emailForm.style.display = "block";
+    if (pillSignin) { pillSignin.style.background = "#831843"; pillSignin.style.color = "#ffffff"; }
+    if (pillSignup) { pillSignup.style.background = "transparent"; pillSignup.style.color = "#831843"; }
     if (updateHistory) updateURLState('/ecommerce/login');
   }
 };
@@ -2553,45 +2562,106 @@ function updateLightboxTransform() {
   }
 }
 
-// --- GUEST GATEKEEPER & ROYAL PATRON AUTH INTERCEPTOR ---
+// --- GUEST GATEKEEPER & ROYAL PRIVILEGES MODAL (MATCHING IMAGE 2 EXACTLY) ---
 window.pendingGuestAction = null;
 
-function openGuestAuthModal(actionContext = 'checkout') {
+function openGuestAuthModal(actionContext = 'privileges') {
   window.pendingGuestAction = actionContext;
-  const subtitle = document.getElementById("guest-auth-subtitle");
-  if (subtitle) {
-    if (actionContext === 'checkout') {
-      subtitle.innerText = "Authenticate as Patron to complete your order";
-    } else if (actionContext === 'profile') {
-      subtitle.innerText = "Sign in to access your Patron Profile and Saved Addresses";
-    } else if (actionContext === 'orders') {
-      subtitle.innerText = "Sign in to track your acquisitions and view invoices";
-    }
-  }
-  switchModalAuthTab('otp');
   openModal("guest-auth-modal");
 }
+window.openGuestAuthModal = openGuestAuthModal;
 
-function switchModalAuthTab(tabName) {
-  const tabs = ['otp', 'password', 'register'];
+function goToLoginFromModal() {
+  closeModal();
+  if (window.location.protocol === 'file:') {
+    window.location.hash = 'login';
+    handleRouting();
+  } else {
+    navigateTo('/ecommerce/login');
+  }
+}
+window.goToLoginFromModal = goToLoginFromModal;
+
+function goToRegisterFromModal() {
+  closeModal();
+  if (window.location.protocol === 'file:') {
+    window.location.hash = 'register';
+    handleRouting();
+  } else {
+    navigateTo('/ecommerce/register');
+  }
+}
+window.goToRegisterFromModal = goToRegisterFromModal;
+
+function fillPageLoginCreds() {
+  const email = document.getElementById("login-email");
+  const pass = document.getElementById("login-password");
+  if (email) email.value = "user@gmail.com";
+  if (pass) pass.value = "password123";
+  showToast("Demo Patron credentials filled (user@gmail.com / password123)");
+}
+window.fillPageLoginCreds = fillPageLoginCreds;
+
+function showGuestAuthStep(step) {
+  if (step === 'login') {
+    goToLoginFromModal();
+  } else if (step === 'register') {
+    goToRegisterFromModal();
+  }
+}
+window.showGuestAuthStep = showGuestAuthStep;
+
+function fillModalLoginCreds() {
+  fillPageLoginCreds();
+}
+
+function fillModalOtpPhone() {
+  showToast("Demo mobile number filled (+91 9876543210)");
+}
+
+function togglePasswordVisibility(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const isPassword = input.type === "password";
+  input.type = isPassword ? "text" : "password";
+  if (btn) {
+    btn.innerHTML = isPassword ? `
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/>
+      </svg>
+    ` : `
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+      </svg>
+    `;
+  }
+}
+
+function handleRestrictedAccess(target) {
+  if (!app.currentUser) {
+    openGuestAuthModal(target);
+    return;
+  }
+  updateMobileNavTab(target);
+  if (target === 'cart') {
+    const trigger = document.getElementById("cart-trigger");
+    if (trigger) trigger.click();
+  } else if (target === 'orders') {
+    switchView('account');
+    setTimeout(() => {
+      document.querySelector('[data-tab="account-orders"]')?.click();
+    }, 150);
+  } else if (target === 'profile') {
+    switchView('account');
+  }
+}
+
+function updateMobileNavTab(tabName) {
+  const tabs = ['home', 'collections', 'cart', 'orders', 'profile'];
   tabs.forEach(t => {
-    const btn = document.getElementById(`modal-tab-${t}`);
-    const pane = document.getElementById(`modal-${t}-pane`);
+    const btn = document.getElementById(`mobile-nav-${t}`);
     if (btn) btn.classList.toggle("active", t === tabName);
-    if (pane) pane.style.display = (t === tabName) ? "block" : "none";
   });
-}
-
-function fillDemoPhone() {
-  const input = document.getElementById("modal-otp-phone");
-  if (input) input.value = "9876543210";
-}
-
-function fillDemoEmail() {
-  const emailInput = document.getElementById("modal-login-email");
-  const passInput = document.getElementById("modal-login-password");
-  if (emailInput) emailInput.value = "user@gmail.com";
-  if (passInput) passInput.value = "password123";
 }
 
 function executePendingGuestAction() {
@@ -2600,6 +2670,9 @@ function executePendingGuestAction() {
 
   if (action === 'checkout') {
     openCheckoutModal();
+  } else if (action === 'cart') {
+    const trigger = document.getElementById("cart-trigger");
+    if (trigger) trigger.click();
   } else if (action === 'profile') {
     switchView('account');
   } else if (action === 'orders') {
@@ -2999,6 +3072,8 @@ function setupEventListeners() {
 
         if (res.user.role === 'admin') {
           navigateTo('/ecommerce/admin');
+        } else if (window.pendingGuestAction) {
+          executePendingGuestAction();
         } else {
           navigateTo('/ecommerce/website');
         }
@@ -3079,7 +3154,11 @@ function setupEventListeners() {
         showToast(`Account created successfully! Welcome, ${res.user.name}`);
         updateNavBarState();
         authSignupForm.reset();
-        navigateTo('/ecommerce/website');
+        if (window.pendingGuestAction) {
+          executePendingGuestAction();
+        } else {
+          navigateTo('/ecommerce/website');
+        }
       } else {
         showToast(res.message, "danger");
       }
@@ -3480,30 +3559,69 @@ function setupEventListeners() {
     });
   }
 
-  // Guest Auth Interceptor Modal Form Listeners
-  const modalSendOtpBtn = document.getElementById("modal-send-otp-btn");
-  if (modalSendOtpBtn) {
-    modalSendOtpBtn.addEventListener("click", () => {
-      const phoneInput = document.getElementById("modal-otp-phone");
-      const phone = phoneInput ? phoneInput.value.trim() : "";
+  // Royal Privileges & Welcome Back Modal Form Listeners (Image 4 & 3)
+  const royalLoginForm = document.getElementById("royal-login-form");
+  if (royalLoginForm) {
+    royalLoginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("royal-login-email").value.trim();
+      const pass = document.getElementById("royal-login-password").value;
+
+      const res = app.login(email, pass);
+      if (res.success) {
+        closeModal();
+        updateNavBarState();
+        showToast(`Welcome back, ${res.user.name}! Enjoy your Royal Privileges.`);
+        executePendingGuestAction();
+      } else {
+        showToast(res.message, "danger");
+      }
+    });
+  }
+
+  const royalRegisterForm = document.getElementById("royal-register-form");
+  if (royalRegisterForm) {
+    royalRegisterForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("royal-reg-name").value.trim();
+      const email = document.getElementById("royal-reg-email").value.trim();
+      const phone = document.getElementById("royal-reg-phone")?.value.trim() || "9876543210";
+      const pass = document.getElementById("royal-reg-password").value;
+
+      const res = app.signup(name, phone, email, pass);
+      if (res.success) {
+        closeModal();
+        updateNavBarState();
+        showToast(`Royal Patron Account created! Welcome, ${res.user.name}`);
+        executePendingGuestAction();
+      } else {
+        showToast(res.message, "danger");
+      }
+    });
+  }
+
+  const royalSendOtpBtn = document.getElementById("royal-send-otp-btn");
+  if (royalSendOtpBtn) {
+    royalSendOtpBtn.addEventListener("click", () => {
+      const phone = document.getElementById("royal-otp-phone-input")?.value.trim();
       if (!phone || phone.length < 10) {
         showToast("Please enter a valid 10-digit mobile number", "danger");
         return;
       }
-      const verifySection = document.getElementById("modal-otp-verify-section");
-      if (verifySection) verifySection.style.display = "block";
-      const codeInput = document.getElementById("modal-otp-code");
-      if (codeInput) codeInput.value = "123456";
+      const codeContainer = document.getElementById("royal-otp-code-container");
+      if (codeContainer) codeContainer.style.display = "block";
+      const digitInput = document.getElementById("royal-otp-digit-input");
+      if (digitInput) digitInput.value = "123456";
       showToast(`Royal OTP sent to +91 ${phone} (Demo Code: 123456)`);
     });
   }
 
-  const modalOtpForm = document.getElementById("modal-otp-form");
-  if (modalOtpForm) {
-    modalOtpForm.addEventListener("submit", (e) => {
+  const royalOtpForm = document.getElementById("royal-otp-form");
+  if (royalOtpForm) {
+    royalOtpForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const phone = document.getElementById("modal-otp-phone")?.value.trim();
-      const code = document.getElementById("modal-otp-code")?.value.trim();
+      const phone = document.getElementById("royal-otp-phone-input")?.value.trim();
+      const code = document.getElementById("royal-otp-digit-input")?.value.trim();
       if (!code) {
         showToast("Please enter the OTP code", "danger");
         return;
@@ -3532,46 +3650,6 @@ function setupEventListeners() {
       updateNavBarState();
       showToast(`Welcome back, ${user.name}!`);
       executePendingGuestAction();
-    });
-  }
-
-  const modalEmailForm = document.getElementById("modal-email-login-form");
-  if (modalEmailForm) {
-    modalEmailForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const email = document.getElementById("modal-login-email").value.trim();
-      const pass = document.getElementById("modal-login-password").value;
-
-      const res = app.login(email, pass);
-      if (res.success) {
-        closeModal();
-        updateNavBarState();
-        showToast(`Welcome back, ${res.user.name}!`);
-        executePendingGuestAction();
-      } else {
-        showToast(res.message, "danger");
-      }
-    });
-  }
-
-  const modalRegForm = document.getElementById("modal-register-form");
-  if (modalRegForm) {
-    modalRegForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const name = document.getElementById("modal-reg-name").value.trim();
-      const phone = document.getElementById("modal-reg-phone").value.trim();
-      const email = document.getElementById("modal-reg-email").value.trim();
-      const pass = document.getElementById("modal-reg-password").value;
-
-      const res = app.signup(name, phone, email, pass);
-      if (res.success) {
-        closeModal();
-        updateNavBarState();
-        showToast(`Royal Patron Account created! Welcome, ${res.user.name}`);
-        executePendingGuestAction();
-      } else {
-        showToast(res.message, "danger");
-      }
     });
   }
 
@@ -3733,3 +3811,10 @@ window.addEventListener('keydown', (e) => {
     closeLightbox();
   }
 });
+
+window.showGuestAuthStep = showGuestAuthStep;
+window.fillModalLoginCreds = fillModalLoginCreds;
+window.fillModalOtpPhone = fillModalOtpPhone;
+window.togglePasswordVisibility = togglePasswordVisibility;
+window.handleRestrictedAccess = handleRestrictedAccess;
+window.updateMobileNavTab = updateMobileNavTab;
