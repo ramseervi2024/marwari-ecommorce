@@ -673,83 +673,288 @@
 
   <!-- SHARED MODALS BACKDROP CONTAINER -->
   <div class="modal-overlay" id="modal-overlay-container">
-    <!-- Checkout Modal -->
-    <div class="modal-content" id="checkout-modal" style="display:none;">
+
+    <!-- 1. GUEST AUTH MODAL (ROYAL PATRON AUTH INTERCEPTOR) -->
+    <div class="modal-content guest-auth-modal" id="guest-auth-modal" style="display:none; padding:0;">
+      <button class="modal-close-btn" onclick="closeModal()" style="top:1rem; right:1rem; z-index:20; background:rgba(255,255,255,0.2); color:white; border:none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Royal Maroon Header -->
+      <div class="guest-auth-header">
+        <div style="display:inline-flex; align-items:center; gap:0.4rem; background:rgba(251,191,36,0.2); padding:0.25rem 0.75rem; border-radius:99px; font-size:0.7rem; font-weight:700; color:#fef08a; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.4rem; border:1px solid rgba(251,191,36,0.3);">
+          👑 Royal Patron Access
+        </div>
+        <h3>MĀRWĀRI</h3>
+        <p id="guest-auth-subtitle">Sign in to complete your checkout and royal order</p>
+      </div>
+
+      <!-- Auth Tabs: OTP vs Password vs Register -->
+      <div class="guest-auth-tabs">
+        <button type="button" class="guest-auth-tab-btn active" id="modal-tab-otp" onclick="switchModalAuthTab('otp')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Mobile OTP
+        </button>
+        <button type="button" class="guest-auth-tab-btn" id="modal-tab-password" onclick="switchModalAuthTab('password')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Email & Password
+        </button>
+        <button type="button" class="guest-auth-tab-btn" id="modal-tab-register" onclick="switchModalAuthTab('register')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+          New Patron
+        </button>
+      </div>
+
+      <!-- Tab 1: Mobile OTP Form -->
+      <div class="guest-auth-body" id="modal-otp-pane">
+        <div class="demo-chip" onclick="fillDemoPhone()">
+          <span>⚡ Demo Mobile:</span> <strong>9876543210</strong> (Click to fill)
+        </div>
+        <form id="modal-otp-form">
+          <div class="form-group" id="modal-phone-group">
+            <label for="modal-otp-phone" style="font-size:0.85rem; font-weight:600; color:var(--text-primary);">Mobile Number</label>
+            <div style="display:flex; align-items:center; background:var(--bg-app); border:1px solid var(--border-color); border-radius:10px; overflow:hidden; padding:0 0.75rem;">
+              <span style="font-size:0.9rem; font-weight:700; color:#b45309; padding-right:0.5rem; border-right:1px solid var(--border-color);">+91</span>
+              <input type="tel" id="modal-otp-phone" class="form-input" placeholder="9876543210" pattern="[0-9]{10}" required style="border:none; background:none; outline:none; box-shadow:none; padding-left:0.5rem;">
+            </div>
+          </div>
+          <button type="button" id="modal-send-otp-btn" class="auth-submit-btn" style="background:#831843; margin-top:0.5rem;">
+            Send Royal OTP
+          </button>
+
+          <!-- Step 2: OTP Verification Field -->
+          <div id="modal-otp-verify-section" style="display:none; margin-top:1.25rem; padding-top:1.25rem; border-top:1px dashed var(--border-color);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+              <label for="modal-otp-code" style="font-size:0.85rem; font-weight:600; color:var(--text-primary);">Enter 6-Digit OTP</label>
+              <span style="font-size:0.75rem; color:#b45309; font-weight:700; background:#fef3c7; padding:0.15rem 0.5rem; border-radius:4px;">Demo OTP: 123456</span>
+            </div>
+            <input type="text" id="modal-otp-code" class="form-input" placeholder="123456" maxlength="6" style="letter-spacing:4px; font-size:1.2rem; text-align:center; font-weight:700; font-family:monospace;">
+            <button type="submit" id="modal-verify-otp-btn" class="auth-submit-btn" style="background:#831843; margin-top:1rem;">
+              Verify & Proceed &rarr;
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tab 2: Email & Password Form -->
+      <div class="guest-auth-body" id="modal-password-pane" style="display:none;">
+        <div class="demo-chip" onclick="fillDemoEmail()">
+          <span>⚡ Demo Patron:</span> <strong>user@gmail.com / password123</strong>
+        </div>
+        <form id="modal-email-login-form">
+          <div class="form-group">
+            <label for="modal-login-email" style="font-size:0.85rem; font-weight:600;">Email or Username</label>
+            <input type="text" id="modal-login-email" class="form-input" placeholder="user@gmail.com" required>
+          </div>
+          <div class="form-group">
+            <label for="modal-login-password" style="font-size:0.85rem; font-weight:600;">Password</label>
+            <input type="password" id="modal-login-password" class="form-input" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="auth-submit-btn" style="background:#831843; margin-top:0.5rem;">
+            Sign In as Patron
+          </button>
+        </form>
+      </div>
+
+      <!-- Tab 3: Register Patron Form -->
+      <div class="guest-auth-body" id="modal-register-pane" style="display:none;">
+        <form id="modal-register-form">
+          <div class="form-group">
+            <label for="modal-reg-name" style="font-size:0.85rem; font-weight:600;">Full Name</label>
+            <input type="text" id="modal-reg-name" class="form-input" placeholder="e.g. Ramesh Seervi" required>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+            <div class="form-group">
+              <label for="modal-reg-phone" style="font-size:0.85rem; font-weight:600;">Mobile (+91)</label>
+              <input type="tel" id="modal-reg-phone" class="form-input" placeholder="9876543210" pattern="[0-9]{10}" required>
+            </div>
+            <div class="form-group">
+              <label for="modal-reg-email" style="font-size:0.85rem; font-weight:600;">Email</label>
+              <input type="email" id="modal-reg-email" class="form-input" placeholder="name@email.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="modal-reg-password" style="font-size:0.85rem; font-weight:600;">Password</label>
+            <input type="password" id="modal-reg-password" class="form-input" placeholder="Minimum 6 characters" required minlength="6">
+          </div>
+          <button type="submit" class="auth-submit-btn" style="background:#831843; margin-top:0.5rem;">
+            Register Patron Profile
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 2. HIGH-RESOLUTION MASTERPIECE IMAGE LIGHTBOX -->
+    <div class="lightbox-modal" id="masterpiece-lightbox" onclick="if(event.target === this) closeLightbox();">
+      <div class="lightbox-toolbar">
+        <button class="lightbox-btn" onclick="zoomLightbox(0.25)" title="Zoom In (+)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </button>
+        <button class="lightbox-btn" onclick="zoomLightbox(-0.25)" title="Zoom Out (-)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </button>
+        <button class="lightbox-btn" onclick="resetLightboxZoom()" title="Reset (1x)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+        <button class="lightbox-btn" onclick="closeLightbox()" title="Close (Esc)" style="background:rgba(239,68,68,0.25); border-color:rgba(239,68,68,0.4);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="lightbox-viewport" id="lightbox-viewport">
+        <img src="" alt="Masterpiece Inspection" class="lightbox-img" id="lightbox-main-img">
+      </div>
+
+      <div class="lightbox-caption">
+        <span id="lightbox-caption-name" style="font-weight:700; color:#fef08a;">Masterpiece Inspection</span>
+        <span style="opacity:0.6;">•</span>
+        <span id="lightbox-zoom-level" style="font-weight:600; color:#38bdf8;">100% Zoom</span>
+        <span style="opacity:0.6;">•</span>
+        <span style="font-size:0.75rem; color:#94a3b8;">Drag to pan across artisan details</span>
+      </div>
+    </div>
+
+    <!-- 3. ENHANCED DYNAMIC ADDRESS CHECKOUT MODAL -->
+    <div class="modal-content" id="checkout-modal" style="display:none; max-width:680px; width:95%; max-height:90vh; overflow-y:auto;">
       <button class="modal-close-btn" onclick="closeModal()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 6 6 18M6 6l12 12" />
         </svg>
       </button>
-      <div style="padding: 2rem;">
-        <h3
-          style="font-size: 1.4rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
-          Royal Shipping Details</h3>
+
+      <div style="padding: 2.25rem 2rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.5rem;">
+          <div>
+            <span style="font-size:0.75rem; font-weight:700; letter-spacing:1px; color:#b45309; text-transform:uppercase;">STEP 1 OF 2</span>
+            <h3 style="font-size: 1.4rem; font-weight:800; color:var(--text-primary); margin:0.15rem 0 0 0;">
+              Royal Shipping Destination</h3>
+          </div>
+          <div style="font-size:0.8rem; background:rgba(131,24,67,0.1); color:var(--primary); padding:0.3rem 0.75rem; border-radius:99px; font-weight:600;">
+            100% Secure Checkout
+          </div>
+        </div>
+
         <form id="checkout-payment-form">
-          <div class="form-group">
-            <label for="checkout-name">Recipient Name</label>
-            <input type="text" id="checkout-name" class="form-input" required>
-          </div>
-          <div class="form-group">
-            <label for="checkout-phone">Contact Number</label>
-            <input type="tel" id="checkout-phone" class="form-input" required pattern="[0-9]{10}">
-          </div>
-          <div class="form-group">
-            <label for="checkout-address">Delivery Address (Darbar/House/Street)</label>
-            <input type="text" id="checkout-address" class="form-input" placeholder="e.g. Royal Villas, Road No. 4"
-              required>
-          </div>
-          <div style="display: flex; gap: 1rem;">
-            <div class="form-group" style="flex: 1.2;">
-              <label for="checkout-city">City</label>
-              <input type="text" id="checkout-city" class="form-input" value="Jodhpur" required>
+          <!-- Address Selection Area -->
+          <div style="margin-bottom:1.5rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+              <label style="font-weight:700; font-size:0.95rem; color:var(--text-primary);">Select Delivery Destination</label>
+              <button type="button" class="btn-secondary" id="checkout-add-address-trigger" onclick="toggleCheckoutAddressForm()" style="font-size:0.8rem; padding:0.4rem 0.8rem; display:flex; align-items:center; gap:0.35rem; color:var(--primary); font-weight:600;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                + Add New Address
+              </button>
             </div>
-            <div class="form-group" style="flex: 0.8;">
-              <label for="checkout-zip">Pin Code</label>
-              <input type="text" id="checkout-zip" class="form-input" placeholder="342001" required pattern="[0-9]{6}">
+
+            <!-- Selectable Address Cards Grid -->
+            <div id="checkout-saved-addresses-container" class="checkout-addresses-grid">
+              <!-- Dynamically rendered -->
+            </div>
+
+            <!-- Inline Dynamic Add Address Form (Hidden by default unless toggled or 0 addresses) -->
+            <div id="checkout-inline-address-form" style="display:none; background:var(--bg-app); border:1px dashed var(--border-color); border-radius:12px; padding:1.25rem; margin-top:1rem;">
+              <h4 style="font-size:0.95rem; font-weight:700; margin:0 0 1rem 0; color:var(--text-primary);">New Delivery Destination</h4>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                <div class="form-group">
+                  <label for="new-addr-name" style="font-size:0.8rem; font-weight:600;">Recipient Full Name</label>
+                  <input type="text" id="new-addr-name" class="form-input" placeholder="e.g. Ramesh Seervi">
+                </div>
+                <div class="form-group">
+                  <label for="new-addr-phone" style="font-size:0.8rem; font-weight:600;">Contact Phone (+91)</label>
+                  <input type="tel" id="new-addr-phone" class="form-input" placeholder="9876543210" pattern="[0-9]{10}">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="new-addr-street" style="font-size:0.8rem; font-weight:600;">Street Address / Darbar / Colony</label>
+                <input type="text" id="new-addr-street" class="form-input" placeholder="e.g. 12 Heritage Lane, Paota">
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem;">
+                <div class="form-group">
+                  <label for="new-addr-city" style="font-size:0.8rem; font-weight:600;">City</label>
+                  <input type="text" id="new-addr-city" class="form-input" value="Jodhpur">
+                </div>
+                <div class="form-group">
+                  <label for="new-addr-state" style="font-size:0.8rem; font-weight:600;">State</label>
+                  <input type="text" id="new-addr-state" class="form-input" value="Rajasthan">
+                </div>
+                <div class="form-group">
+                  <label for="new-addr-zip" style="font-size:0.8rem; font-weight:600;">Pincode</label>
+                  <input type="text" id="new-addr-zip" class="form-input" placeholder="342001" pattern="[0-9]{6}">
+                </div>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem;">
+                <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.8rem; color:var(--text-secondary); cursor:pointer;">
+                  <input type="checkbox" id="new-addr-save-profile" checked style="accent-color:var(--primary);">
+                  Save to Patron Profile for next orders
+                </label>
+                <button type="button" class="btn-primary" onclick="saveNewCheckoutAddress()" style="padding:0.4rem 1rem; font-size:0.85rem; background:#831843;">
+                  Save & Use Address
+                </button>
+              </div>
             </div>
           </div>
-          <div class="form-group" style="display:flex; gap:0.5rem; align-items:flex-end;">
-            <div style="flex:1;">
-              <label for="checkout-coupon">Promo Coupon Code</label>
-              <input type="text" id="checkout-coupon" class="form-input" placeholder="e.g. MARWARI10"
-                style="text-transform: uppercase;">
+
+          <!-- Hidden storage for selected address -->
+          <input type="hidden" id="selected-address-id" value="">
+          <input type="hidden" id="checkout-name" value="">
+          <input type="hidden" id="checkout-phone" value="">
+          <input type="hidden" id="checkout-address" value="">
+          <input type="hidden" id="checkout-city" value="">
+          <input type="hidden" id="checkout-zip" value="">
+
+          <!-- Promo Coupon Engine Area -->
+          <div style="margin-bottom:1.5rem; background:rgba(180,83,9,0.04); border:1px solid rgba(180,83,9,0.15); border-radius:12px; padding:1.25rem;">
+            <label for="checkout-coupon" style="font-weight:700; font-size:0.85rem; display:block; margin-bottom:0.5rem; color:#b45309;">
+              👑 Royal Promo Voucher
+            </label>
+            <div style="display:flex; gap:0.5rem;">
+              <input type="text" id="checkout-coupon" class="form-input" placeholder="e.g. MARWARI10 or ROYAL500" style="text-transform: uppercase; font-family:monospace; font-weight:700; letter-spacing:1px; flex:1;">
+              <button type="button" class="btn-primary" id="apply-coupon-btn" style="background:#b45309; padding:0 1.25rem; font-weight:600; white-space:nowrap;">
+                Apply Code
+              </button>
             </div>
-            <button type="button" class="btn-primary" id="apply-coupon-btn"
-              style="padding: 0.8rem 1.2rem; border-radius: 12px; height: 46px; border:1px solid var(--border-color);">Apply</button>
+            
+            <div id="checkout-discount-summary" style="display:none; margin-top:1rem; padding-top:0.75rem; border-top:1px dashed var(--border-color); font-size:0.85rem;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.35rem;">
+                <span style="color:var(--text-secondary);">Subtotal:</span>
+                <span id="checkout-subtotal-val" style="font-weight:600;">₹0</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.35rem; color:var(--success); font-weight:700;">
+                <span>Royal Discount Applied:</span>
+                <span id="checkout-discount-val">-₹0</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.35rem; color:var(--text-secondary);">
+                <span>Heritage Courier:</span>
+                <span style="color:var(--success); font-weight:600;">FREE (Orders above ₹999)</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:1.15rem; font-weight:800; border-top:1px solid var(--border-color); padding-top:0.5rem; margin-top:0.5rem; color:var(--primary);">
+                <span>Grand Acquisition Total:</span>
+                <span id="checkout-total-val">₹0</span>
+              </div>
+            </div>
           </div>
-          <div id="checkout-discount-summary"
-            style="display:none; margin-bottom: 1.25rem; padding: 1rem; background:rgba(16,185,129,0.05); border:1px dashed var(--success); border-radius:12px;">
-            <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
-              <span>Subtotal:</span>
-              <span id="checkout-subtotal-val">₹0</span>
-            </div>
-            <div
-              style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--success); font-weight:600; margin-top:0.25rem;">
-              <span>Discount Applied:</span>
-              <span id="checkout-discount-val">-₹0</span>
-            </div>
-            <div
-              style="display:flex; justify-content:space-between; font-size:1.1rem; font-weight:800; border-top:1px solid var(--border-color); margin-top:0.5rem; padding-top:0.5rem;">
-              <span>Grand Total:</span>
-              <span id="checkout-total-val" style="color:var(--primary);">₹0</span>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="checkout-payment-method">Payment Protocol</label>
-            <select id="checkout-payment-method" class="form-input" required>
+
+          <!-- Payment Protocol -->
+          <div class="form-group" style="margin-bottom:1.75rem;">
+            <label for="checkout-payment-method" style="font-weight:700; font-size:0.9rem;">Payment Method</label>
+            <select id="checkout-payment-method" class="form-input" required style="padding:0.75rem 1rem;">
               <option value="Complimentary Cash On Delivery">Cash On Delivery (Royal Complimentary)</option>
-              <option value="Royal Card">Royal Card Privilege (Simulated)</option>
+              <option value="UPI / Net Banking">UPI / GooglePay / Net Banking (Instant)</option>
+              <option value="Royal Card Privilege">Royal Card Privilege (Master / Visa)</option>
             </select>
           </div>
-          <button type="submit" class="auth-submit-btn">Place Order & Ship</button>
+
+          <button type="submit" class="auth-submit-btn" style="background:#831843; font-size:1.05rem; padding:1rem; box-shadow:0 10px 15px -3px rgba(131,24,67,0.3);">
+            Place Order & Dispatch &rarr;
+          </button>
         </form>
       </div>
     </div>
 
-
-    <!-- 6. Invoice Details / Order View Modal -->
-    <div class="modal-content" id="order-details-modal" style="display:none; max-width:650px;">
+    <!-- 4. INVOICE DETAILS / ORDER VIEW MODAL -->
+    <div class="modal-content" id="order-details-modal" style="display:none; max-width:680px; width:95%;">
       <button class="modal-close-btn" onclick="closeModal()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -760,7 +965,6 @@
         <!-- Rendered dynamically -->
       </div>
     </div>
-
 
   </div>
 

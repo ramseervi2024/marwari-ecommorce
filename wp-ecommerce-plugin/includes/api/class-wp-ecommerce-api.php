@@ -248,14 +248,14 @@ class WP_ECommerce_API {
     private function get_default_seed($type) {
         if ($type === 'products') {
             return array(
-                array("id" => "prod-1", "name" => "Royal Jaipuri Silk Bandhani Saree", "category" => "Royal Apparel", "price" => 8499, "image" => "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80", "badge" => "Bestseller"),
-                array("id" => "prod-2", "name" => "Classic Navy Blue Royal Jodhpuri Suit", "category" => "Royal Apparel", "price" => 12999, "image" => "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=600&q=80", "badge" => "Royal Exclusive"),
-                array("id" => "prod-3", "name" => "Handcrafted Gold-Leaf Jaipuri Quilt", "category" => "Handicrafts", "price" => 3499, "image" => "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=600&q=80", "badge" => "100% Cotton"),
-                array("id" => "prod-4", "name" => "Pure Silver Meenakari Pearl Jhumkas", "category" => "Silver Jewellery", "price" => 4999, "image" => "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=600&q=80", "badge" => "Handmade"),
-                array("id" => "prod-5", "name" => "Traditional Camel Leather Mojaris", "category" => "Marwari Mojari", "price" => 1899, "image" => "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80", "badge" => "Artisan Leather"),
-                array("id" => "prod-6", "name" => "Premium Saffron & Cardamom Kesaria Peda", "category" => "Food & Spices", "price" => 899, "image" => "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80", "badge" => "Freshly Made"),
-                array("id" => "prod-7", "name" => "Jaipur Traditional Blue Pottery Vase", "category" => "Handicrafts", "price" => 2299, "image" => "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80", "badge" => "Heritage Art"),
-                array("id" => "prod-20", "name" => "Imperial Udaipur Heritage Silver Peacock Box", "category" => "Handicrafts", "price" => 7899, "image" => "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=600&q=80", "badge" => "Royal Masterpiece")
+                array("id" => "prod-1", "name" => "Royal Jaipuri Silk Bandhani Saree", "category" => "Royal Apparel", "price" => 8499, "stock" => 15, "status" => "active", "image" => "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80", "badge" => "Bestseller"),
+                array("id" => "prod-2", "name" => "Classic Navy Blue Royal Jodhpuri Suit", "category" => "Royal Apparel", "price" => 12999, "stock" => 8, "status" => "active", "image" => "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=600&q=80", "badge" => "Royal Exclusive"),
+                array("id" => "prod-3", "name" => "Handcrafted Gold-Leaf Jaipuri Quilt", "category" => "Handicrafts", "price" => 3499, "stock" => 25, "status" => "active", "image" => "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=600&q=80", "badge" => "100% Cotton"),
+                array("id" => "prod-4", "name" => "Pure Silver Meenakari Pearl Jhumkas", "category" => "Silver Jewellery", "price" => 4999, "stock" => 12, "status" => "active", "image" => "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=600&q=80", "badge" => "Handmade"),
+                array("id" => "prod-5", "name" => "Traditional Camel Leather Mojaris", "category" => "Marwari Mojari", "price" => 1899, "stock" => 20, "status" => "active", "image" => "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80", "badge" => "Artisan Leather"),
+                array("id" => "prod-6", "name" => "Premium Saffron & Cardamom Kesaria Peda", "category" => "Food & Spices", "price" => 899, "stock" => 40, "status" => "active", "image" => "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80", "badge" => "Freshly Made"),
+                array("id" => "prod-7", "name" => "Jaipur Traditional Blue Pottery Vase", "category" => "Handicrafts", "price" => 2299, "stock" => 0, "status" => "active", "image" => "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80", "badge" => "Heritage Art"),
+                array("id" => "prod-20", "name" => "Imperial Udaipur Heritage Silver Peacock Box", "category" => "Handicrafts", "price" => 7899, "stock" => 5, "status" => "active", "image" => "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=600&q=80", "badge" => "Royal Masterpiece")
             );
         }
         if ($type === 'categories') {
@@ -271,8 +271,18 @@ class WP_ECommerce_API {
         }
         if ($type === 'users') {
             return array(
-                array("username" => "admin", "email" => "admin@marwari.com", "password" => "123456", "name" => "Marwari Admin", "role" => "admin", "phone" => "9876543210", "status" => "active"),
-                array("username" => "user", "email" => "user@gmail.com", "password" => "password123", "name" => "Ramesh Seervi", "role" => "user", "phone" => "9001122334", "status" => "active", "addresses" => array(array("id" => "addr-1", "label" => "Home Base", "street" => "12 Heritage Lane", "city" => "Jodhpur", "zip" => "342001", "default" => true)))
+                array("username" => "admin", "email" => "admin@marwari.com", "password" => "123456", "name" => "Marwari Admin", "role" => "admin", "phone" => "9876543210", "status" => "active", "verified" => true),
+                array("username" => "user", "email" => "user@gmail.com", "password" => "password123", "name" => "Ramesh Seervi", "role" => "user", "phone" => "9001122334", "status" => "active", "verified" => true, "addresses" => array(
+                    array("id" => "addr-1", "label" => "Primary Palace", "street" => "12 Heritage Lane, Paota", "city" => "Jodhpur", "state" => "Rajasthan", "zip" => "342001", "default" => true),
+                    array("id" => "addr-2", "label" => "City Haveli", "street" => "45 Nai Sarak, Clock Tower", "city" => "Jodhpur", "state" => "Rajasthan", "zip" => "342002", "default" => false)
+                ))
+            );
+        }
+        if ($type === 'coupons') {
+            return array(
+                array("id" => "cp-1", "code" => "WELCOME10", "type" => "percentage", "amount" => 10, "usage_limit" => 100, "used_count" => 14, "expiry" => "2027-12-31"),
+                array("id" => "cp-2", "code" => "ROYAL500", "type" => "flat", "amount" => 500, "usage_limit" => 50, "used_count" => 8, "expiry" => "2027-06-30"),
+                array("id" => "cp-3", "code" => "MARWARI20", "type" => "percentage", "amount" => 20, "usage_limit" => 200, "used_count" => 35, "expiry" => "2027-12-31")
             );
         }
         return array();

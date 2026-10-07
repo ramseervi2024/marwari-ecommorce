@@ -11,48 +11,66 @@
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="light-mode">
 
   <!-- Top Notification Toast Container -->
   <div class="toast-container" id="toast-container"></div>
+
+  <!-- Super Admin Login Gate (Strict Role-Based Access) -->
+  <div class="admin-auth-gate" id="admin-auth-gate" style="display:none;">
+    <div class="admin-auth-card animate-fade-in">
+      <div style="text-align:center;">
+        <span class="admin-auth-badge">👑 RESTRICTED ADMIN CONSOLE</span>
+        <h2>MĀRWĀRI</h2>
+        <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:1.5rem;">Super-Admin Authentication Gate</p>
+      </div>
+
+      <div class="demo-chip" onclick="fillAdminCredentials()" style="width:100%; justify-content:center; margin-bottom:1.5rem; cursor:pointer;">
+        <span>⚡ Demo Credentials:</span> <strong>admin / 123456</strong> (Click to auto-fill)
+      </div>
+
+      <form id="admin-login-gate-form">
+        <div class="form-group">
+          <label for="admin-gate-username" style="font-size:0.85rem; font-weight:600; color:#cbd5e1;">Admin Username / Email</label>
+          <input type="text" id="admin-gate-username" class="form-input" placeholder="admin" required value="admin">
+        </div>
+        <div class="form-group">
+          <label for="admin-gate-password" style="font-size:0.85rem; font-weight:600; color:#cbd5e1;">Admin Password</label>
+          <input type="password" id="admin-gate-password" class="form-input" placeholder="••••••••" required value="123456">
+        </div>
+        <button type="submit" class="auth-submit-btn" style="background:#831843; margin-top:1rem; font-weight:700;">
+          Unlock Super Admin Panel &rarr;
+        </button>
+      </form>
+    </div>
+  </div>
 
   <!-- Admin View Dashboard Wrapper -->
   <section class="admin-view-wrapper active" id="admin-view">
     <!-- Admin Sidebar Navigation -->
     <aside class="admin-sidebar">
-      <div class="admin-logo">
-        <span>Mārwāri</span> Admin
+      <div class="admin-logo animate-fade-in">
+        <span style="border-radius: 8px;">MA</span>
+        <div style="display: flex; flex-direction: column; gap: 0;">
+          <div style="line-height: 1.2;">Mārwāri</div>
+          <div style="font-size: 0.75rem; color: #fbbf24; font-weight: 500; line-height: 1;">Super Admin</div>
+        </div>
       </div>
       <nav class="admin-nav-links">
+        <div style="font-size: 0.7rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; padding: 1rem 1rem 0.25rem 1rem;">Main</div>
         <button class="admin-nav-link active" data-panel="admin-overview">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect width="7" height="9" x="3" y="3" rx="1" />
             <rect width="7" height="5" x="14" y="3" rx="1" />
             <rect width="7" height="9" x="14" y="12" rx="1" />
             <rect width="7" height="5" x="3" y="16" rx="1" />
           </svg>
-          Overview
+          Dashboard
         </button>
-        <button class="admin-nav-link" data-panel="admin-products">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m7.5 4.27 9 5.15M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-            <path d="M12 7.5V12l3 3" />
-          </svg>
-          Products
-        </button>
-        <button class="admin-nav-link" data-panel="admin-orders">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="8" cy="21" r="1" />
-            <circle cx="19" cy="21" r="1" />
-            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-          </svg>
-          Orders
-        </button>
+        <div style="font-size: 0.7rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; padding: 1rem 1rem 0.25rem 1rem;">Operations</div>
         <button class="admin-nav-link" data-panel="admin-customers">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
             <circle cx="9" cy="7" r="4" />
@@ -61,8 +79,32 @@
           </svg>
           Customers
         </button>
+        <button class="admin-nav-link" data-panel="admin-orders" style="display:flex; justify-content:space-between; align-items:center;">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="21" r="1" />
+            <circle cx="19" cy="21" r="1" />
+            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+          </svg>
+          <div style="display:flex; flex:1; justify-content:space-between; align-items:center;">
+            <span>Orders</span>
+            <span style="background: rgba(255,255,255,0.1); color: #ffffff; font-size:0.75rem; padding:0.1rem 0.5rem; border-radius:99px; font-weight:600;">2</span>
+          </div>
+        </button>
+        <div style="font-size: 0.7rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; padding: 1rem 1rem 0.25rem 1rem;">Catalog</div>
+        <button class="admin-nav-link" data-panel="admin-products" style="display:flex; justify-content:space-between; align-items:center;">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m7.5 4.27 9 5.15M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            <path d="M12 7.5V12l3 3" />
+          </svg>
+          <div style="display:flex; flex:1; justify-content:space-between; align-items:center;">
+            <span>Products</span>
+            <span style="background: rgba(255,255,255,0.1); color: #ffffff; font-size:0.75rem; padding:0.1rem 0.5rem; border-radius:99px; font-weight:600;">6</span>
+          </div>
+        </button>
         <button class="admin-nav-link" data-panel="admin-categories">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
             <polyline points="9 22 9 12 15 12 15 22" />
@@ -70,23 +112,25 @@
           Categories
         </button>
         <button class="admin-nav-link" data-panel="admin-coupons">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect width="18" height="18" x="3" y="3" rx="2" />
             <path d="M9 17V7h6M9 12h6" />
           </svg>
           Coupons
         </button>
+        <div style="font-size: 0.7rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; padding: 1rem 1rem 0.25rem 1rem;">Communications</div>
         <button class="admin-nav-link" data-panel="admin-reports">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 3v18h18" />
             <path d="m19 9-5 5-4-4-3 3" />
           </svg>
-          Reports
+          Marketing
         </button>
+        <div style="font-size: 0.7rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; padding: 1rem 1rem 0.25rem 1rem;">Administration</div>
         <button class="admin-nav-link" data-panel="admin-settings">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3" />
             <path
@@ -95,24 +139,75 @@
           Settings
         </button>
       </nav>
-      <button class="admin-logout-btn" id="back-to-shop-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
-          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m12 19-7-7 7-7M5 12h14" />
+      <button class="admin-logout-btn" onclick="if(typeof app !== 'undefined') { app.logout(); }">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>
         </svg>
-        Return to Shop
+        Logout
       </button>
     </aside>
 
     <!-- Admin Content Area -->
-    <main class="admin-content-area">
-      <!-- 1. Overview Panel -->
-      <div class="admin-panel active" id="admin-overview">
-        <div class="admin-panel-header">
-          <h2>Overview Dashboard</h2>
-          <p>Real-time shop operations and metrics overview.</p>
+    <main class="admin-content-area" style="position: relative;">
+      <div style="font-size: 0.65rem; font-weight: 700; color: #2563eb; letter-spacing: 1px; padding: 1rem 2rem 0; text-transform: uppercase;">RPS DIGITAL WORLD > DASHBOARD</div>
+      <!-- Admin Topbar -->
+      <div class="admin-topbar" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 2rem 1rem; border-bottom: 1px solid var(--border-color); background: #f8fafc; position: sticky; top: 0; z-index: 50;">
+        <div class="search-bar" style="display: flex; align-items: center; background: var(--bg-app); border-radius: 99px; padding: 0.5rem 1rem; width: 350px; border: 1px solid var(--border-color);">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted);"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+          <input type="text" placeholder="Search products, orders, customers..." style="background: none; border: none; outline: none; margin-left: 0.5rem; width: 100%; color: var(--text-primary); font-size: 0.9rem;">
         </div>
-        <div class="admin-stats-grid" id="admin-stats-container">
+        <div class="topbar-actions" style="display: flex; align-items: center; gap: 1.5rem;">
+          <button style="background: none; border: none; color: var(--text-secondary); cursor: pointer; position: relative;">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+            <span style="position: absolute; top: 0; right: 2px; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; border: 2px solid var(--bg-card);"></span>
+          </button>
+          <div style="position: relative;">
+            <div onclick="document.getElementById('admin-dropdown').style.display = document.getElementById('admin-dropdown').style.display === 'block' ? 'none' : 'block'" style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 0.25rem; border-radius: 99px; transition: var(--transition);">
+              <img src="https://i.pravatar.cc/150?u=admin" alt="Admin" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">
+              <span style="font-weight: 500; font-size: 0.95rem;">Admin</span>
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+            
+            <!-- Dropdown Menu -->
+            <div id="admin-dropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: var(--card-shadow); width: 200px; padding: 0.5rem; z-index: 100;">
+              <button onclick="window.location.href='/ecommerce/website'" style="width: 100%; text-align: left; padding: 0.75rem 1rem; border: none; background: none; cursor: pointer; color: var(--text-primary); font-size: 0.9rem; border-radius: 8px; transition: all 0.2s; display:flex; align-items:center; gap:0.5rem;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                View Website
+              </button>
+              <div style="height: 1px; background: var(--border-color); margin: 0.25rem 0;"></div>
+              <button onclick="if(typeof app !== 'undefined') { app.logout(); }" style="width: 100%; text-align: left; padding: 0.75rem 1rem; border: none; background: none; cursor: pointer; color: var(--danger); font-size: 0.9rem; border-radius: 8px; transition: all 0.2s; display:flex; align-items:center; gap:0.5rem;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding: 2rem;">
+        <!-- 1. Overview Panel -->
+        <div class="admin-panel active" id="admin-overview">
+          <div class="admin-panel-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem;">
+            <div>
+              <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem;">Dashboard</h2>
+              <p style="color: var(--text-muted);">Here's what's happening with your store today.</p>
+            </div>
+            <div style="position: relative;">
+              <button id="dashboard-period-btn" style="display: flex; align-items: center; gap: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 6px; font-weight: 500; color: var(--text-secondary); cursor: pointer;">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                <span id="dashboard-period-text">Last 30 days</span>
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div id="dashboard-period-dropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); z-index: 50; width: 160px; overflow: hidden; flex-direction: column;">
+                <button class="period-option" data-days="7" style="background: none; border: none; text-align: left; padding: 0.75rem 1rem; width: 100%; cursor: pointer; color: var(--text-primary);">Last 7 days</button>
+                <button class="period-option" data-days="30" style="background: none; border: none; text-align: left; padding: 0.75rem 1rem; width: 100%; cursor: pointer; color: var(--text-primary);">Last 30 days</button>
+                <button class="period-option" data-days="90" style="background: none; border: none; text-align: left; padding: 0.75rem 1rem; width: 100%; cursor: pointer; color: var(--text-primary);">Last 90 days</button>
+                <button class="period-option" data-days="all" style="background: none; border: none; text-align: left; padding: 0.75rem 1rem; width: 100%; cursor: pointer; color: var(--text-primary);">All Time</button>
+              </div>
+            </div>
+          </div>
+          <div class="admin-stats-grid" id="admin-stats-container">
           <!-- Dynamically filled -->
         </div>
         <div
@@ -157,7 +252,7 @@
           <div style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
             <div>
               <h2>Products Inventory</h2>
-              <p>Add, edit, or delete items in the storefront catalog.</p>
+              <p>Add, edit, manage stock, hide or delete items in the storefront catalog.</p>
             </div>
             <button class="btn-primary" onclick="openAddProductModal()">
               + Add Product
@@ -172,7 +267,8 @@
                   <th>Product</th>
                   <th>Category</th>
                   <th>Price</th>
-                  <th>Badge</th>
+                  <th>Inventory / Stock</th>
+                  <th>Visibility</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -185,8 +281,8 @@
       <!-- 3. Orders Panel -->
       <div class="admin-panel" id="admin-orders">
         <div class="admin-panel-header">
-          <h2>Orders Management</h2>
-          <p>Process, ship, cancel, and track client orders.</p>
+          <h2>Live Orders Feed</h2>
+          <p>Real-time orders data table with instant status synchronization.</p>
         </div>
         <div class="admin-panel-card" style="margin-top: 1.5rem;">
           <div class="admin-table-container">
@@ -194,9 +290,10 @@
               <thead>
                 <tr>
                   <th>Order ID</th>
-                  <th>Customer</th>
+                  <th>Patron</th>
                   <th>Items</th>
                   <th>Total</th>
+                  <th>Placed Date</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -210,21 +307,22 @@
       <!-- 4. Customers Panel -->
       <div class="admin-panel" id="admin-customers">
         <div class="admin-panel-header">
-          <h2>Customers Database</h2>
-          <p>Review customer information, order history, and block access.</p>
+          <h2>Patron & Customer Directory</h2>
+          <p>Review customer information, OTP verified status, saved addresses, and concierge purchase history.</p>
         </div>
         <div class="admin-panel-card" style="margin-top: 1.5rem;">
           <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
             <input type="text" id="admin-customer-search" class="form-input"
-              placeholder="Search customer by name, email, or phone...">
+              placeholder="Search patron by name, email, or phone...">
           </div>
           <div class="admin-table-container">
             <table class="admin-table">
               <thead>
                 <tr>
-                  <th>Customer Name</th>
-                  <th>Email</th>
-                  <th>Phone</th>
+                  <th>Patron Name</th>
+                  <th>Contact Info</th>
+                  <th>Saved Addresses</th>
+                  <th>Lifetime Value</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -269,11 +367,11 @@
         <div class="admin-panel-header">
           <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
             <div>
-              <h2>Coupon Campaigns</h2>
-              <p>Launch discount coupon campaigns and codes.</p>
+              <h2>Dynamic Coupon Engine</h2>
+              <p>Create and manage discount codes with custom limits and expiries.</p>
             </div>
             <button class="btn-primary" onclick="openAddCouponModal()">
-              + Create Coupon
+              + Create Promo Code
             </button>
           </div>
         </div>
@@ -282,10 +380,12 @@
             <table class="admin-table">
               <thead>
                 <tr>
-                  <th>Coupon Code</th>
-                  <th>Type</th>
-                  <th>Amount</th>
+                  <th>Promo Code</th>
+                  <th>Discount Type</th>
+                  <th>Discount Value</th>
+                  <th>Usage / Limit</th>
                   <th>Expiry Date</th>
+                  <th>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -376,21 +476,22 @@
           </form>
         </div>
       </div>
+      </div>
     </main>
   </section>
 
   <!-- Modals Overlay for Admin Actions -->
   <div class="modal-overlay" id="modal-overlay-container">
     <!-- 4. Edit Product Modal -->
-    <div class="modal-content" id="edit-product-modal" style="display:none;">
+    <div class="modal-content" id="edit-product-modal" style="display:none; max-width:600px; width:95%;">
       <button class="modal-close-btn" onclick="closeModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 6 6 18M6 6l12 12" />
         </svg>
       </button>
       <div style="padding: 2rem;">
-        <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+        <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; color:var(--text-primary);">
           Edit Royal Product</h3>
         <form id="admin-edit-product-form">
           <input type="hidden" id="edit-pid">
@@ -398,62 +499,104 @@
             <label for="edit-pname">Product Name</label>
             <input type="text" id="edit-pname" class="form-input" required>
           </div>
-          <div class="form-group">
-            <label for="edit-pcategory">Category</label>
-            <select id="edit-pcategory" class="form-input" required>
-              <!-- Populated dynamically -->
-            </select>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+              <label for="edit-pcategory">Category</label>
+              <select id="edit-pcategory" class="form-input" required>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="edit-pprice">Price (INR ₹)</label>
+              <input type="number" id="edit-pprice" class="form-input" required min="1">
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+              <label for="edit-pstock">Inventory Stock</label>
+              <input type="number" id="edit-pstock" class="form-input" required min="0" placeholder="e.g. 15">
+            </div>
+            <div class="form-group">
+              <label for="edit-pstatus">Visibility Status</label>
+              <select id="edit-pstatus" class="form-input">
+                <option value="active">Active (Visible)</option>
+                <option value="hidden">Hidden from Store</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
-            <label for="edit-pprice">Price (INR)</label>
-            <input type="number" id="edit-pprice" class="form-input" required min="1">
-          </div>
-          <div class="form-group">
-            <label for="edit-pimage">Image URL</label>
-            <input type="url" id="edit-pimage" class="form-input" required>
+            <label for="edit-pimage">Image URL or Local Upload</label>
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+              <input type="url" id="edit-pimage" class="form-input" required style="flex:1;">
+              <button type="button" class="btn-secondary" onclick="document.getElementById('edit-pimage-file').click()" style="padding:0.7rem; display:flex; align-items:center; justify-content:center; border-radius:8px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+              </button>
+            </div>
+            <input type="file" id="edit-pimage-file" accept="image/*" style="display:none;" onchange="handleProductImageUpload(this, 'edit-pimage')">
           </div>
           <div class="form-group">
             <label for="edit-pbadge">Badge Label (Optional)</label>
-            <input type="text" id="edit-pbadge" class="form-input">
+            <input type="text" id="edit-pbadge" class="form-input" placeholder="e.g. Bestseller, Royal Exclusive">
           </div>
           <div class="form-group">
             <label for="edit-pdesc">Product Description</label>
             <textarea id="edit-pdesc" class="form-input" rows="4" required></textarea>
           </div>
-          <button type="submit" class="auth-submit-btn">Save Changes</button>
+          <button type="submit" class="auth-submit-btn" style="background:#831843;">Save Product Changes</button>
         </form>
       </div>
     </div>
 
     <!-- 5. Add Product Modal -->
-    <div class="modal-content" id="add-product-modal" style="display:none;">
+    <div class="modal-content" id="add-product-modal" style="display:none; max-width:600px; width:95%;">
       <button class="modal-close-btn" onclick="closeModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 6 6 18M6 6l12 12" />
         </svg>
       </button>
       <div style="padding: 2rem;">
-        <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+        <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; color:var(--text-primary);">
           Add Royal Product</h3>
         <form id="admin-add-product-form-modal">
           <div class="form-group">
             <label for="new-pname">Product Name</label>
             <input type="text" id="new-pname" class="form-input" placeholder="e.g. Royal Marwari Jodhpuri Suit" required>
           </div>
-          <div class="form-group">
-            <label for="new-pcategory">Category</label>
-            <select id="new-pcategory" class="form-input" required>
-              <!-- Populated dynamically -->
-            </select>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+              <label for="new-pcategory">Category</label>
+              <select id="new-pcategory" class="form-input" required>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="new-pprice">Price (INR ₹)</label>
+              <input type="number" id="new-pprice" class="form-input" placeholder="e.g. 12999" required min="1">
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+              <label for="new-pstock">Inventory Stock</label>
+              <input type="number" id="new-pstock" class="form-input" placeholder="e.g. 20" required min="0" value="20">
+            </div>
+            <div class="form-group">
+              <label for="new-pstatus">Visibility Status</label>
+              <select id="new-pstatus" class="form-input">
+                <option value="active">Active (Visible)</option>
+                <option value="hidden">Hidden from Store</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
-            <label for="new-pprice">Price (INR)</label>
-            <input type="number" id="new-pprice" class="form-input" placeholder="e.g. 12999" required min="1">
-          </div>
-          <div class="form-group">
-            <label for="new-pimage">Image URL</label>
-            <input type="url" id="new-pimage" class="form-input" placeholder="https://images.unsplash.com/..." required>
+            <label for="new-pimage">Image URL or Local Upload</label>
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+              <input type="url" id="new-pimage" class="form-input" placeholder="https://images.unsplash.com/..." required style="flex:1;">
+              <button type="button" class="btn-secondary" onclick="document.getElementById('new-pimage-file').click()" style="padding:0.7rem; display:flex; align-items:center; justify-content:center; border-radius:8px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+              </button>
+            </div>
+            <input type="file" id="new-pimage-file" accept="image/*" style="display:none;" onchange="handleProductImageUpload(this, 'new-pimage')">
           </div>
           <div class="form-group">
             <label for="new-pbadge">Badge Label (Optional)</label>
@@ -463,20 +606,26 @@
             <label for="new-pdesc">Product Description</label>
             <textarea id="new-pdesc" class="form-input" rows="4" placeholder="Describe the royal heritage..." required></textarea>
           </div>
-          <button type="submit" class="auth-submit-btn">Publish Product</button>
+          <button type="submit" class="auth-submit-btn" style="background:#831843;">Publish Product to Catalog</button>
         </form>
       </div>
     </div>
 
     <!-- 6. Invoice Details / Order View Modal -->
-    <div class="modal-content" id="order-details-modal" style="display:none; max-width:650px;">
+    <div class="modal-content" id="order-details-modal" style="display:none; max-width:680px; width:95%;">
       <button class="modal-close-btn" onclick="closeModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 6 6 18M6 6l12 12" />
         </svg>
       </button>
-      <div style="padding: 2.5rem;" id="invoice-details-content">
+      <div style="display:flex; justify-content:flex-end; padding:1.5rem 2rem 0;">
+        <button type="button" class="btn-primary print-btn-no-print" onclick="window.print()" style="background:#831843; padding:0.5rem 1rem; border-radius:6px; font-weight:600; display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+          Print / Download PDF Invoice
+        </button>
+      </div>
+      <div style="padding: 1.5rem 2.5rem 2.5rem;" id="invoice-details-content">
         <!-- Rendered dynamically -->
       </div>
     </div>
@@ -484,7 +633,7 @@
     <!-- 7. Add Category Modal -->
     <div class="modal-content small" id="add-category-modal" style="display:none;">
       <button class="modal-close-btn" onclick="closeModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 6 6 18M6 6l12 12" />
         </svg>
@@ -501,15 +650,61 @@
             <label for="cat-slug-input">Category Slug</label>
             <input type="text" id="cat-slug-input" class="form-input" placeholder="e.g. Apparel" required>
           </div>
-          <button type="submit" class="auth-submit-btn">Add Category</button>
+          <div class="form-group">
+            <label for="cat-image-input">Category Image URL or Upload</label>
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+              <input type="url" id="cat-image-input" class="form-input" placeholder="https://... (Optional)" required style="flex:1;">
+              <button type="button" class="btn-secondary" onclick="document.getElementById('cat-image-file').click()" style="padding:0.7rem; display:flex; align-items:center; justify-content:center; border-radius:8px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+              </button>
+            </div>
+            <input type="file" id="cat-image-file" accept="image/*" style="display:none;" onchange="uploadImageToWP(this, 'cat-image-input')">
+          </div>
+          <button type="submit" class="auth-submit-btn" style="background:#831843;">Add Category</button>
         </form>
       </div>
     </div>
 
-    <!-- 8. Add Coupon Modal -->
+    <!-- Edit Category Modal -->
+    <div class="modal-content small" id="edit-category-modal" style="display:none;">
+      <button class="modal-close-btn" onclick="closeModal()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
+          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
+      </button>
+      <div style="padding: 2rem;">
+        <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+          Edit Category</h3>
+        <form id="admin-edit-category-form">
+          <input type="hidden" id="edit-cat-old-slug">
+          <div class="form-group">
+            <label for="edit-cat-name">Category Name</label>
+            <input type="text" id="edit-cat-name" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-cat-slug">Category Slug</label>
+            <input type="text" id="edit-cat-slug" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-cat-image">Category Image URL or Upload</label>
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+              <input type="url" id="edit-cat-image" class="form-input" required style="flex:1;">
+              <button type="button" class="btn-secondary" onclick="document.getElementById('edit-cat-image-file').click()" style="padding:0.7rem; display:flex; align-items:center; justify-content:center; border-radius:8px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+              </button>
+            </div>
+            <input type="file" id="edit-cat-image-file" accept="image/*" style="display:none;" onchange="uploadImageToWP(this, 'edit-cat-image')">
+          </div>
+          <button type="submit" class="auth-submit-btn" style="background:#831843;">Save Changes</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 8. Create Coupon Modal -->
     <div class="modal-content small" id="add-coupon-modal" style="display:none;">
       <button class="modal-close-btn" onclick="closeModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 6 6 18M6 6l12 12" />
         </svg>
@@ -529,22 +724,95 @@
               <option value="flat">Flat Price Discount (₹)</option>
             </select>
           </div>
-          <div class="form-group">
-            <label for="coupon-amount-input">Discount Amount</label>
-            <input type="number" id="coupon-amount-input" class="form-input" placeholder="e.g. 15 or 300" required min="1">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+              <label for="coupon-amount-input">Discount Value</label>
+              <input type="number" id="coupon-amount-input" class="form-input" placeholder="e.g. 15 or 500" required min="1">
+            </div>
+            <div class="form-group">
+              <label for="coupon-limit-input">Usage Limit</label>
+              <input type="number" id="coupon-limit-input" class="form-input" placeholder="e.g. 100" required min="1" value="100">
+            </div>
           </div>
           <div class="form-group">
             <label for="coupon-expiry-input">Expiry Date</label>
             <input type="date" id="coupon-expiry-input" class="form-input" required>
           </div>
-          <button type="submit" class="auth-submit-btn">Publish Coupon</button>
+          <button type="submit" class="auth-submit-btn" style="background:#831843;">Publish Promo Campaign</button>
         </form>
+      </div>
+    </div>
+
+    <!-- 9. Edit Coupon Modal -->
+    <div class="modal-content small" id="edit-coupon-modal" style="display:none;">
+      <button class="modal-close-btn" onclick="closeModal()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
+          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
+      </button>
+      <div style="padding: 2rem;">
+        <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+          Edit Promo Code</h3>
+        <form id="admin-edit-coupon-form">
+          <input type="hidden" id="edit-coupon-id">
+          <div class="form-group">
+            <label for="edit-coupon-code">Promo Code</label>
+            <input type="text" id="edit-coupon-code" class="form-input" required style="text-transform: uppercase;">
+          </div>
+          <div class="form-group">
+            <label for="edit-coupon-type">Discount Type</label>
+            <select id="edit-coupon-type" class="form-input" required>
+              <option value="percentage">Percentage (%)</option>
+              <option value="flat">Flat Price Discount (₹)</option>
+            </select>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+              <label for="edit-coupon-amount">Discount Value</label>
+              <input type="number" id="edit-coupon-amount" class="form-input" required min="1">
+            </div>
+            <div class="form-group">
+              <label for="edit-coupon-limit">Usage Limit</label>
+              <input type="number" id="edit-coupon-limit" class="form-input" required min="1">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="edit-coupon-expiry">Expiry Date</label>
+            <input type="date" id="edit-coupon-expiry" class="form-input" required>
+          </div>
+          <button type="submit" class="auth-submit-btn" style="background:#831843;">Update Promo Code</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 10. Royal Concierge Patron Dossier Modal -->
+    <div class="modal-content" id="royal-concierge-modal" style="display:none; max-width:750px; width:95%; max-height:90vh; overflow-y:auto;">
+      <button class="modal-close-btn" onclick="closeModal()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor"
+          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
+      </button>
+      <div style="padding: 2.5rem;" id="royal-concierge-modal-content">
+        <!-- Dynamically rendered -->
       </div>
     </div>
   </div>
 
   <!-- Core JavaScript logic -->
   <script src="app.js"></script>
+  <script>
+    document.addEventListener('click', function(event) {
+      const dropdown = document.getElementById('admin-dropdown');
+      if (dropdown && dropdown.style.display === 'block') {
+        // If click is not inside the dropdown container wrapper (the relative div)
+        if (!event.target.closest('[style*="position: relative"]')) {
+          dropdown.style.display = 'none';
+        }
+      }
+    });
+  </script>
 </body>
 
 </html>

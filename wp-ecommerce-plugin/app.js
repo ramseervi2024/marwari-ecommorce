@@ -31,6 +31,9 @@ const DEFAULT_PRODUCTS = [
     description: "Experience the royal heritage of Rajasthan with this premium pure silk Bandhani Saree. Hand-dyed by traditional artisans in Jaipur using the classic tie-dye technique, featuring intricate golden zari borders and elegant motifs perfect for festive occasions.",
     image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80",
     badge: "Bestseller"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-2",
@@ -40,6 +43,9 @@ const DEFAULT_PRODUCTS = [
     description: "An epitome of sophistication, this Jodhpuri Suit is tailored to perfection. Crafted from premium wool-blend fabric, it features a bandhgala collar, structured shoulders, and brass crest buttons. Represents the true legacy of Marwari aristocracy.",
     image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=600&q=80",
     badge: "Royal Exclusive"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-3",
@@ -49,6 +55,9 @@ const DEFAULT_PRODUCTS = [
     description: "This world-famous Jaipuri Razai (quilt) is incredibly lightweight yet provides exceptional warmth. Made of 100% pure organic cotton and filled with carded cotton, it is detailed with traditional gold-leaf hand-block printing.",
     image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=600&q=80",
     badge: "100% Cotton"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-4",
@@ -58,6 +67,9 @@ const DEFAULT_PRODUCTS = [
     description: "Exquisite traditional earrings featuring intricate Meenakari (enamel) artwork hand-painted on pure sterling silver. Suspended with premium freshwater pearls and detailed with delicate filigree work inspired by Royal Rajasthani palaces.",
     image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=600&q=80",
     badge: "Handmade"
+  ,
+    stock: 8,
+    status: "active"
   },
   {
     id: "prod-5",
@@ -67,6 +79,9 @@ const DEFAULT_PRODUCTS = [
     description: "Authentic Marwari Mojaris made from genuine, double-tanned camel leather. Hand-stitched with premium silk and golden zari threads. Designed with a soft cushioned sole for comfort and durability while maintaining absolute style.",
     image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80",
     badge: "Artisan Leather"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-6",
@@ -76,6 +91,9 @@ const DEFAULT_PRODUCTS = [
     description: "Indulge in the true taste of Marwar. Our Kesaria Peda is cooked slowly using fresh condensed milk (khoya), flavored with organic Kashmiri saffron (kesar) and ground green cardamom, garnished with premium sliced pistachios and almonds.",
     image: "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80",
     badge: "Freshly Made"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-7",
@@ -85,6 +103,9 @@ const DEFAULT_PRODUCTS = [
     description: "Add a touch of elegance to your home with this authentic Jaipur Blue Pottery decorative vase. Crafted with Egyptian paste clay, hand-painted with cobalt blue dye in traditional floral motifs, and glazed to a premium shine.",
     image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80",
     badge: "Heritage Art"
+  ,
+    stock: 0,
+    status: "active"
   },
   {
     id: "prod-8",
@@ -94,6 +115,9 @@ const DEFAULT_PRODUCTS = [
     description: "Crispy, savory, and spicy Bikaneri Bhujia prepared with moth bean flour and aromatic spices from the deserts of Bikaner. A true staple of Marwari hospitality, served in a royal festive gift box.",
     image: "https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&w=600&q=80",
     badge: "Authentic GI"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-9",
@@ -103,6 +127,9 @@ const DEFAULT_PRODUCTS = [
     description: "Hand-carved by master woodworkers in Shekhawati, this antique jharokha-style mirror frame features intricate archways and distressed finish that brings timeless palace architecture to your sanctuary.",
     image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80",
     badge: "Hand-Carved"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-10",
@@ -112,6 +139,9 @@ const DEFAULT_PRODUCTS = [
     description: "An opulent bridal necklace set adorned with uncut polki stones set in pure silver foil, finished with emerald drops and meenakari enameling on the reverse side. A prized family heirloom.",
     image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80",
     badge: "Royal Bridal"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-11",
@@ -121,6 +151,9 @@ const DEFAULT_PRODUCTS = [
     description: "Woven in sheer Chanderi silk with delicate golden zari border, hand-stamped using traditional Bagru wooden blocks with organic vegetable dyes.",
     image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600&q=80",
     badge: "Organic Dyes"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-12",
@@ -130,6 +163,9 @@ const DEFAULT_PRODUCTS = [
     description: "Heavy solid brass oil lamp hand-cast using the lost-wax technique by artisan coppersmiths. Featuring an intricately sculpted royal peacock crest.",
     image: "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?auto=format&fit=crop&w=600&q=80",
     badge: "Solid Brass"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-13",
@@ -139,6 +175,9 @@ const DEFAULT_PRODUCTS = [
     description: "World-renowned Mathania red chillies from Jodhpur, stone-ground without adulteration. Imparts deep crimson color and rich, smoky, pungent warmth to royal curries.",
     image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80",
     badge: "Pure Organic"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-14",
@@ -148,6 +187,9 @@ const DEFAULT_PRODUCTS = [
     description: "Traditional Rajasthani festive odhani embellished with authentic pure silver gota ribbons applique work stitched by women artisans in rural Rajasthan.",
     image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=600&q=80",
     badge: "Artisan Zari"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-15",
@@ -157,6 +199,9 @@ const DEFAULT_PRODUCTS = [
     description: "Set of four pristine white Makrana marble coasters embedded with lapis lazuli and malachite semi-precious stone inlays, echoing royal Taj Mahal artistry.",
     image: "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=600&q=80",
     badge: "Makrana Marble"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-16",
@@ -166,6 +211,9 @@ const DEFAULT_PRODUCTS = [
     description: "Heavy 92.5 sterling silver cuff kada featuring carved lion-head finials, symbolizing courage and valor of the royal Rajput warriors.",
     image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=600&q=80",
     badge: "925 Silver"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-17",
@@ -175,6 +223,9 @@ const DEFAULT_PRODUCTS = [
     description: "Hand-carved mango wood puppets dressed in vibrant Rajasthani tie-dye fabrics and sequin embroidery, depicting the folklore of King Amar Singh Rathore.",
     image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80",
     badge: "Folk Puppet"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-18",
@@ -184,6 +235,9 @@ const DEFAULT_PRODUCTS = [
     description: "Crispy honeycomb disc pastry made with pure Desi cow ghee, soaked in saffron sugar syrup and generously topped with rich reduced mawa and silver vark.",
     image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80",
     badge: "Desi Ghee"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-19",
@@ -193,6 +247,9 @@ const DEFAULT_PRODUCTS = [
     description: "Breathable pure organic cotton kurta crafted using ancient mud-resist Dabu printing and natural indigo vat fermentation technique from Akola village.",
     image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=600&q=80",
     badge: "Natural Indigo"
+  ,
+    stock: 18,
+    status: "active"
   },
   {
     id: "prod-20",
@@ -202,12 +259,68 @@ const DEFAULT_PRODUCTS = [
     description: "An extraordinary masterwork created by royal silversmiths of Udaipur. Crafted with hand-carved floral repoussé engraving and a majestic perched peacock on the lid, lined with royal maroon velvet. Perfect for royal keepsakes and luxury heirloom gifting.",
     image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=600&q=80",
     badge: "Royal Masterpiece"
+  ,
+    stock: 18,
+    status: "active"
   }
 ];
 
 const DEFAULT_USERS = [
-  { username: "admin", email: "admin@marwari.com", password: "123456", name: "Marwari Admin", role: "admin", phone: "9876543210", status: "active" },
-  { username: "user", email: "user@gmail.com", password: "password123", name: "Ramesh Seervi", role: "user", phone: "9001122334", status: "active", addresses: [{ id: "addr-1", label: "Home Base", street: "12 Heritage Lane", city: "Jodhpur", zip: "342001", default: true }] }
+  { username: "admin", email: "admin@marwari.com", password: "123456", name: "Marwari Super Admin", role: "admin", phone: "9876543210", status: "active", verified: true },
+  { 
+    username: "user", 
+    email: "user@gmail.com", 
+    password: "password123", 
+    name: "Ramesh Seervi", 
+    role: "user", 
+    phone: "9001122334", 
+    status: "active", 
+    verified: true, 
+    addresses: [
+      { id: "addr-1", label: "Darbar Residence (Home)", street: "12 Heritage Lane, Near Umaid Bhawan", city: "Jodhpur", state: "Rajasthan", zip: "342001", default: true },
+      { id: "addr-2", label: "Artisan Studio (Office)", street: "45 Handicrafts Enclave, MI Road", city: "Jaipur", state: "Rajasthan", zip: "302001", default: false }
+    ] 
+  }
+];
+
+const DEFAULT_ORDERS = [
+  {
+    id: "ord-883921",
+    userEmail: "user@gmail.com",
+    items: [
+      { product: DEFAULT_PRODUCTS[0], quantity: 1 },
+      { product: DEFAULT_PRODUCTS[3], quantity: 2 }
+    ],
+    total: 18497,
+    status: "Processing",
+    date: new Date(Date.now() - 86400000 * 2).toISOString(),
+    shippingDetails: {
+      name: "Ramesh Seervi",
+      phone: "9001122334",
+      street: "12 Heritage Lane, Near Umaid Bhawan",
+      city: "Jodhpur",
+      state: "Rajasthan",
+      zip: "342001"
+    }
+  },
+  {
+    id: "ord-742910",
+    userEmail: "user@gmail.com",
+    items: [
+      { product: DEFAULT_PRODUCTS[1], quantity: 1 }
+    ],
+    total: 12999,
+    status: "Delivered",
+    date: new Date(Date.now() - 86400000 * 6).toISOString(),
+    shippingDetails: {
+      name: "Ramesh Seervi",
+      phone: "9001122334",
+      street: "12 Heritage Lane, Near Umaid Bhawan",
+      city: "Jodhpur",
+      state: "Rajasthan",
+      zip: "342001"
+    }
+  }
 ];
 
 // Global Application State Manager
@@ -224,19 +337,33 @@ class AppState {
     ];
 
     const DEFAULT_COUPONS = [
-      { id: "cp-1", code: "MARWARI10", type: "percentage", amount: 10, expiry: "2026-12-31" },
-      { id: "cp-2", code: "ROYAL500", type: "flat", amount: 500, expiry: "2026-12-31" }
+      { id: "cp-1", code: "MARWARI10", type: "percentage", amount: 10, expiry: "2026-12-31", usage_limit: 100, used_count: 14, status: "active" },
+      { id: "cp-2", code: "ROYAL500", type: "flat", amount: 500, expiry: "2026-12-31", usage_limit: 50, used_count: 8, status: "active" },
+      { id: "cp-3", code: "HERITAGE20", type: "percentage", amount: 20, expiry: "2026-12-31", usage_limit: 30, used_count: 5, status: "active" }
     ];
 
-    this.products = this.loadLocalStorage("marwari_products_v7", DEFAULT_PRODUCTS);
+    this.products = this.loadLocalStorage("marwari_products_v8", DEFAULT_PRODUCTS);
     if (!this.products || this.products.length < DEFAULT_PRODUCTS.length) {
       this.products = DEFAULT_PRODUCTS;
-      localStorage.setItem("marwari_products_v7", JSON.stringify(DEFAULT_PRODUCTS));
+      localStorage.setItem("marwari_products_v8", JSON.stringify(DEFAULT_PRODUCTS));
     }
+    // Ensure every product has stock and status
+    this.products.forEach(p => {
+      if (p.stock === undefined) p.stock = (p.id === 'prod-7' ? 0 : 15);
+      if (!p.status) p.status = 'active';
+    });
     this.users = this.loadLocalStorage("marwari_users", DEFAULT_USERS);
     this.categories = this.loadLocalStorage("marwari_categories_v5", DEFAULT_CATEGORIES);
-    this.coupons = this.loadLocalStorage("marwari_coupons", DEFAULT_COUPONS);
-    this.orders = this.loadLocalStorage("marwari_orders", []);
+    this.coupons = this.loadLocalStorage("marwari_coupons_v8", DEFAULT_COUPONS);
+    this.coupons.forEach(c => {
+      if (c.usage_limit === undefined) c.usage_limit = 100;
+      if (c.used_count === undefined) c.used_count = 0;
+      if (!c.status) c.status = 'active';
+    });
+    this.orders = this.loadLocalStorage("marwari_orders", (typeof DEFAULT_ORDERS !== 'undefined' ? DEFAULT_ORDERS : []));
+    if (!this.orders || this.orders.length === 0) {
+      this.orders = (typeof DEFAULT_ORDERS !== 'undefined' ? DEFAULT_ORDERS : []);
+    }
     this.cart = this.loadLocalStorage("marwari_cart", []);
     this.currentUser = this.loadLocalStorage("marwari_session", null);
     this.activeCoupon = null;
@@ -255,13 +382,13 @@ class AppState {
         this.users[idx] = { ...this.users[idx], ...this.currentUser };
       }
     }
-    localStorage.setItem("marwari_products_v7", JSON.stringify(this.products));
+    localStorage.setItem("marwari_products_v8", JSON.stringify(this.products));
     localStorage.setItem("marwari_users", JSON.stringify(this.users));
     localStorage.setItem("marwari_orders", JSON.stringify(this.orders));
     localStorage.setItem("marwari_cart", JSON.stringify(this.cart));
     localStorage.setItem("marwari_session", JSON.stringify(this.currentUser));
     localStorage.setItem("marwari_categories_v5", JSON.stringify(this.categories));
-    localStorage.setItem("marwari_coupons", JSON.stringify(this.coupons));
+    localStorage.setItem("marwari_coupons_v8", JSON.stringify(this.coupons));
 
     // Sync state to WordPress Backend APIs for Mobile App integration
     try {
@@ -274,22 +401,28 @@ class AppState {
     } catch(e) {}
   }
 
-  // Cart Management
+  // Cart Management (Seamless Guest Browsing & Stock Enforcement)
   addToCart(productId, quantity = 1) {
-    if (!this.currentUser) {
-      if (typeof showToast !== 'undefined') {
-        showToast("Please login or register to add items to your cart", "warning");
-      }
-      if (typeof switchView !== 'undefined') {
-        switchView('auth');
-      }
-      return false;
-    }
-    
     const product = this.products.find(p => p.id === productId);
     if (!product) return false;
 
+    // Strict Inventory Stock Check
+    if (typeof product.stock === 'number' && product.stock <= 0) {
+      if (typeof showToast !== 'undefined') {
+        showToast("This royal masterpiece is currently out of stock", "danger");
+      }
+      return false;
+    }
+
     const existingItem = this.cart.find(item => item.product.id === productId);
+    const currentQty = existingItem ? existingItem.quantity : 0;
+    if (typeof product.stock === 'number' && (currentQty + quantity) > product.stock) {
+      if (typeof showToast !== 'undefined') {
+        showToast(`Only ${product.stock} items available in royal stock`, "warning");
+      }
+      return false;
+    }
+
     if (existingItem) {
       existingItem.quantity += quantity;
     } else {
@@ -302,6 +435,13 @@ class AppState {
   updateCartQuantity(productId, quantity) {
     const itemIndex = this.cart.findIndex(item => item.product.id === productId);
     if (itemIndex > -1) {
+      const product = this.products.find(p => p.id === productId) || this.cart[itemIndex].product;
+      if (product && typeof product.stock === 'number' && quantity > product.stock) {
+        if (typeof showToast !== 'undefined') {
+          showToast(`Cannot exceed maximum available stock (${product.stock})`, "warning");
+        }
+        return false;
+      }
       if (quantity <= 0) {
         this.cart.splice(itemIndex, 1);
       } else {
@@ -498,17 +638,7 @@ function initApp() {
   populateCategorySelects();
 
   if (isSuperpanelPage) {
-    // Check if logged-in user is admin
-    // TEMPORARY BYPASS FOR WORDPRESS DEMO
-    // if (!app.currentUser || app.currentUser.role !== 'admin') {
-    //   showToast("Access Denied: Admins Only", "danger");
-    //   sessionStorage.setItem('openAdminLogin', 'true');
-    //   const isLocalFile = window.location.protocol === 'file:';
-    //   window.location.href = isLocalFile ? 'index.html' : '/ecommerce/website';
-    //   return;
-    // }
-
-    // Initialize Admin views
+    initAdminAccess();
     renderAdminDashboard();
     setupEventListeners();
   } else {
@@ -739,18 +869,26 @@ function renderStorefront(category = "All", query = "") {
     return;
   }
 
+  // Filter out products marked as hidden by admin
+  filtered = filtered.filter(p => p.status !== "hidden");
+
   filtered.forEach(p => {
     const card = document.createElement("div");
     card.className = "product-card";
     const originalPrice = p.price + Math.floor(p.price * 0.15); // Add ~15% for original price display
+    const isOutOfStock = typeof p.stock === 'number' && p.stock <= 0;
+    const stockBadge = isOutOfStock
+      ? `<span class="out-of-stock-badge" style="position: absolute; top: 0.75rem; left: 0.75rem; background: #64748b; color: white; padding: 0.25rem 0.55rem; font-size: 0.65rem; font-weight: 700; border-radius: 4px; z-index: 2; text-transform: uppercase; letter-spacing: 0.5px;">Out of Stock</span>`
+      : `<span style="position: absolute; top: 0.75rem; left: 0.75rem; background: #831843; color: white; padding: 0.25rem 0.55rem; font-size: 0.65rem; font-weight: 700; border-radius: 4px; z-index: 2;">10% OFF</span>`;
+
     card.innerHTML = `
       <div style="border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column;">
         <div style="position: relative; width: 100%; aspect-ratio: 1/1; overflow: hidden; background: #f8fafc;">
-          <span style="position: absolute; top: 0.75rem; left: 0.75rem; background: #b91c1c; color: white; padding: 0.25rem 0.5rem; font-size: 0.65rem; font-weight: 700; border-radius: 4px; z-index: 2;">10% OFF</span>
-          <button style="position: absolute; top: 0.75rem; right: 0.75rem; background: white; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; z-index: 2; color: #94a3b8;">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          ${stockBadge}
+          <button class="inspect-masterpiece-btn" data-img="${p.image}" data-name="${p.name.replace(/"/g, '&quot;')}" data-category="${p.category}" title="Inspect Masterpiece (Lightbox)" style="position: absolute; top: 0.75rem; right: 0.75rem; background: rgba(255,255,255,0.95); backdrop-filter: blur(4px); border: none; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 3; color: #831843; transition: all 0.2s;">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
           </button>
-          <img src="${p.image}" alt="${p.name}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+          <img src="${p.image}" alt="${p.name}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;">
         </div>
         <div style="padding: 1.25rem; display: flex; flex-direction: column; flex: 1;">
           <div style="font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; color: #64748b; text-transform: uppercase; margin-bottom: 0.35rem;">${p.category}</div>
@@ -759,22 +897,36 @@ function renderStorefront(category = "All", query = "") {
              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#fbbf24" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
              <span style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-left: 2px;">4.8</span> 
              <span style="font-size: 0.8rem; color: #94a3b8;">(134)</span>
+             ${!isOutOfStock && p.stock <= 5 ? `<span style="margin-left:auto; font-size:0.7rem; color:#b45309; font-weight:700; background:#fef3c7; padding:0.15rem 0.45rem; border-radius:4px;">Only ${p.stock} left</span>` : ''}
           </div>
           <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 1.25rem; margin-top: auto;">
-             <span style="font-size: 1.25rem; font-weight: 800; color: #991b1b;">₹${p.price.toLocaleString("en-IN")}</span>
+             <span style="font-size: 1.25rem; font-weight: 800; color: #831843;">₹${p.price.toLocaleString("en-IN")}</span>
              <span style="font-size: 0.85rem; font-weight: 500; color: #94a3b8; text-decoration: line-through;">₹${originalPrice.toLocaleString("en-IN")}</span>
           </div>
-          <button class="add-cart-btn" data-id="${p.id}" style="width: 100%; background: #991b1b; color: white; border: none; padding: 0.75rem; border-radius: 6px; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 0.5rem; cursor: pointer;">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-            Add To Cart
+          <button class="add-cart-btn" data-id="${p.id}" ${isOutOfStock ? 'disabled' : ''} style="width: 100%; background: ${isOutOfStock ? '#94a3b8' : '#831843'}; color: white; border: none; padding: 0.75rem; border-radius: 6px; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 0.5rem; cursor: ${isOutOfStock ? 'not-allowed' : 'pointer'};">
+            ${isOutOfStock ? 'Out of Stock' : '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> Add To Cart'}
           </button>
         </div>
       </div>
     `;
 
+    // Masterpiece Lightbox click
+    const inspBtn = card.querySelector(".inspect-masterpiece-btn");
+    if (inspBtn) {
+      inspBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openLightbox(p.image, p.name, p.category);
+      });
+    }
+
     card.addEventListener("click", (e) => {
+      if (e.target.closest(".inspect-masterpiece-btn")) return;
       if (e.target.closest(".add-cart-btn")) {
         e.stopPropagation();
+        if (isOutOfStock) {
+          showToast("This masterpiece is currently out of stock", "warning");
+          return;
+        }
         const id = e.target.closest(".add-cart-btn").dataset.id;
         const success = app.addToCart(id);
         if (success) {
@@ -948,7 +1100,7 @@ function updateNavBarState() {
 
     const openAuth = document.getElementById("open-auth-btn");
     openAuth.addEventListener("click", () => {
-      switchView('auth');
+      openGuestAuthModal('profile');
     });
   }
 }
@@ -1292,25 +1444,39 @@ function renderProductDetailPage(product, updateHistory = true) {
              <span style="font-size: 0.75rem; font-weight: 600; background: #ecfdf5; color: #059669; padding: 0.2rem 0.6rem; border-radius: 99px; margin-left: 0.5rem;">Verified Authentic</span>
           </div>
 
+          <!-- Stock Status Badge -->
+          <div style="margin-bottom: 0.75rem;">
+            ${(typeof product.stock === 'number' && product.stock <= 0)
+              ? `<span style="display:inline-block; font-size: 0.75rem; font-weight: 700; background: #fee2e2; color: #991b1b; padding: 0.3rem 0.8rem; border-radius: 99px;">Out of Stock</span>`
+              : (typeof product.stock === 'number' && product.stock <= 5)
+              ? `<span style="display:inline-block; font-size: 0.75rem; font-weight: 700; background: #fef3c7; color: #b45309; padding: 0.3rem 0.8rem; border-radius: 99px;">Only ${product.stock} units remaining - Order soon</span>`
+              : `<span style="display:inline-block; font-size: 0.75rem; font-weight: 700; background: #ecfdf5; color: #059669; padding: 0.3rem 0.8rem; border-radius: 99px;">In Stock (${product.stock ?? 15} units available)</span>`
+            }
+          </div>
+
           <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem;">
-             <span style="font-size: 2.5rem; font-weight: 800; color: #991b1b;">₹${product.price.toLocaleString("en-IN")}</span>
+             <span style="font-size: 2.5rem; font-weight: 800; color: #831843;">₹${product.price.toLocaleString("en-IN")}</span>
              <span style="font-size: 1.25rem; font-weight: 500; color: #94a3b8; text-decoration: line-through;">₹${originalPrice.toLocaleString("en-IN")}</span>
-             <span style="background: #fef2f2; color: #991b1b; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">15% OFF</span>
+             <span style="background: #fef2f2; color: #831843; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">15% OFF</span>
           </div>
 
           <p style="font-size: 1.05rem; line-height: 1.7; color: #475569; margin-bottom: 2rem;">
             ${product.description}
           </p>
 
-          <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 2rem;">
+          <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 2rem; flex-wrap: wrap;">
             <div style="display: flex; align-items: center; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; height: 50px;">
               <button class="qty-dec" style="width: 44px; height: 100%; background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #64748b; font-weight: 600;">-</button>
               <span class="qty-val" style="width: 44px; text-align: center; font-weight: 700; font-size: 1.1rem; color: #0f172a;">1</span>
               <button class="qty-inc" style="width: 44px; height: 100%; background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #64748b; font-weight: 600;">+</button>
             </div>
-            <button class="add-detail-cart" style="flex: 1; background: #831843; color: white; border: none; height: 50px; border-radius: 8px; font-weight: 600; font-size: 1.05rem; display: flex; justify-content: center; align-items: center; gap: 0.75rem; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(131,24,67,0.2);">
+            <button class="add-detail-cart" ${(typeof product.stock === 'number' && product.stock <= 0) ? 'disabled' : ''} style="flex: 1; min-width: 180px; background: ${(typeof product.stock === 'number' && product.stock <= 0) ? '#94a3b8' : '#831843'}; color: white; border: none; height: 50px; border-radius: 8px; font-weight: 600; font-size: 1.05rem; display: flex; justify-content: center; align-items: center; gap: 0.75rem; cursor: ${(typeof product.stock === 'number' && product.stock <= 0) ? 'not-allowed' : 'pointer'}; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(131,24,67,0.2);">
               <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-              Add to Bag
+              ${(typeof product.stock === 'number' && product.stock <= 0) ? 'Currently Out of Stock' : 'Add to Bag'}
+            </button>
+            <button type="button" class="inspect-lightbox-btn" style="height: 50px; padding: 0 1.25rem; border-radius: 8px; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; border: 1.5px solid #831843; background: #fff1f2; color: #831843; cursor: pointer; transition: all 0.2s;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              Inspect Masterpiece
             </button>
           </div>
           
@@ -1375,8 +1541,25 @@ function renderProductDetailPage(product, updateHistory = true) {
     qtyVal.innerText = qty;
   });
 
+  // Lightbox inspection triggers
+  const inspBtn = detailView.querySelector(".inspect-lightbox-btn");
+  if (inspBtn) {
+    inspBtn.addEventListener("click", () => {
+      openLightbox(product.image, product.name, product.category);
+    });
+  }
+  if (zoomContainer) {
+    zoomContainer.addEventListener("click", () => {
+      openLightbox(product.image, product.name, product.category);
+    });
+  }
+
   // Add to cart
   detailView.querySelector(".add-detail-cart").addEventListener("click", () => {
+    if (typeof product.stock === 'number' && product.stock <= 0) {
+      showToast("This item is currently out of stock", "warning");
+      return;
+    }
     const success = app.addToCart(product.id, qty);
     if (success) {
       updateCartUI();
@@ -1553,17 +1736,68 @@ function renderUserOrdersHistory() {
   myOrders.forEach(o => {
     const card = document.createElement("div");
     card.className = "order-history-card";
+    const trackSteps = ['Placed', 'Processing', 'Dispatched', 'In Transit', 'Delivered'];
+    const trackStatusMap = {
+      'pending': 0,
+      'processing': 1,
+      'dispatched': 2,
+      'shipped': 2,
+      'in transit': 3,
+      'delivered': 4
+    };
+    const currentTrackIdx = trackStatusMap[o.status.toLowerCase()] ?? 0;
+
     card.innerHTML = `
       <div class="order-history-header">
         <div>
-          <h4>Order ID: #${o.id.slice(-6).toUpperCase()}</h4>
-          <p>Placed on: ${new Date(o.date).toLocaleDateString("en-IN", { year: 'numeric', month: 'short', day: 'numeric' })}</p>
+          <h4 style="font-size:1.1rem; font-weight:800; color:var(--text-primary);">Order #${o.id.slice(-6).toUpperCase()}</h4>
+          <p style="font-size:0.8rem; color:var(--text-secondary);">Placed on ${new Date(o.date).toLocaleDateString("en-IN", { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
         </div>
         <div style="display:flex; align-items:center; gap:0.5rem;">
           <span class="badge-status ${o.status.toLowerCase()}">${o.status}</span>
-          <button class="badge-status pending" style="cursor:pointer;" onclick="openOrderInvoiceModal('${o.id}')">Invoice</button>
+          <button class="badge-status pending" style="cursor:pointer; background:#fff1f2; color:#831843; border-color:#fecdd3; font-weight:700;" onclick="openOrderInvoiceModal('${o.id}')">
+            📄 Royal Invoice
+          </button>
         </div>
       </div>
+
+      <!-- Real-Time Visual Order Tracking Timeline Bar -->
+      <div class="order-tracking-bar" style="margin: 1.25rem 0; padding: 1.25rem 1rem; background: var(--bg-app); border-radius: 14px; border: 1px solid var(--border-color);">
+        <div style="display:flex; justify-content:space-between; align-items:center; position:relative;">
+          ${trackSteps.map((step, idx) => {
+            let stepClass = 'order-step';
+            let dotColor = '#cbd5e1';
+            let textColor = 'var(--text-muted)';
+            let iconText = (idx + 1).toString();
+            
+            if (o.status === 'Cancelled') {
+              stepClass += ' cancelled';
+              dotColor = '#ef4444';
+              textColor = '#ef4444';
+              iconText = '✕';
+            } else if (idx < currentTrackIdx) {
+              stepClass += ' completed';
+              dotColor = '#10b981';
+              textColor = '#059669';
+              iconText = '✓';
+            } else if (idx === currentTrackIdx) {
+              stepClass += ' active';
+              dotColor = '#831843';
+              textColor = '#831843';
+            }
+
+            return `
+              <div class="${stepClass}" style="display:flex; flex-direction:column; align-items:center; flex:1; text-align:center; position:relative; z-index:2;">
+                <div style="width:28px; height:28px; border-radius:50%; background:${dotColor}; color:white; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:800; margin-bottom:0.4rem; box-shadow:0 2px 5px rgba(0,0,0,0.12); border:2px solid white;">
+                  ${iconText}
+                </div>
+                <span style="font-size:0.75rem; font-weight:${idx === currentTrackIdx ? '800' : '600'}; color:${textColor};">${step}</span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
       <div style="display:flex; flex-direction:column; gap:0.75rem;">
         ${o.items.map(item => `
           <div class="order-history-item">
@@ -1571,16 +1805,16 @@ function renderUserOrdersHistory() {
               <img src="${item.product.image}" alt="${item.product.name}" style="width:48px; height:48px; border-radius:6px; object-fit:cover; border: 1px solid var(--border-color);">
               <div>
                 <div style="font-weight:600; font-size:0.9rem;">${item.product.name}</div>
-                <div style="font-size:0.8rem; color:var(--text-secondary);">Qty: ${item.quantity} x ₹${item.product.price}</div>
+                <div style="font-size:0.8rem; color:var(--text-secondary);">Qty: ${item.quantity} x ₹${item.product.price.toLocaleString("en-IN")}</div>
               </div>
             </div>
             <div style="font-weight:700;">₹${(item.product.price * item.quantity).toLocaleString("en-IN")}</div>
           </div>
         `).join("")}
       </div>
-      <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:0.85rem; color:var(--text-secondary);">Shipment Address: ${o.shippingDetails.street}, ${o.shippingDetails.city}</span>
-        <span style="font-weight:800; font-size:1.1rem; color:var(--primary);">Total: ₹${o.total.toLocaleString("en-IN")}</span>
+      <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+        <span style="font-size:0.85rem; color:var(--text-secondary);">Shipment Destination: <strong>${o.shippingDetails.street || o.shippingDetails.address}, ${o.shippingDetails.city} (${o.shippingDetails.zip})</strong></span>
+        <span style="font-weight:800; font-size:1.15rem; color:#831843;">Grand Total: ₹${o.total.toLocaleString("en-IN")}</span>
       </div>
     `;
     container.appendChild(card);
@@ -1653,8 +1887,15 @@ function openOrderInvoiceModal(orderId) {
       ` : ''}
       <div style="display:flex; width:220px; justify-content:space-between; font-size:1.15rem; font-weight:800; border-top:1px dashed var(--border-color); padding-top:0.5rem;">
         <span>Grand Total:</span>
-        <span style="color:var(--primary);">₹${o.total.toLocaleString("en-IN")}</span>
+        <span style="color:#831843;">₹${o.total.toLocaleString("en-IN")}</span>
       </div>
+    </div>
+    
+    <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+      <button class="btn-primary" onclick="window.print()" style="padding: 0.65rem 1.75rem; font-size: 0.9rem; background: #831843; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; font-weight:700;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+        Print / Download PDF Invoice
+      </button>
     </div>
 
     <div style="text-align:center; font-size:0.8rem; color:var(--text-muted); margin-top:2rem; border-top: 1px dashed var(--border-color); padding-top: 1rem;">
@@ -1813,16 +2054,31 @@ function renderAdminProductsList() {
 
   app.products.forEach(p => {
     const row = document.createElement("tr");
+    const stockVal = typeof p.stock === 'number' ? p.stock : 10;
+    const isHidden = p.status === 'hidden';
+
     row.innerHTML = `
       <td>
         <div class="admin-prod-cell">
           <img src="${p.image}" alt="${p.name}">
-          <span>${p.name}</span>
+          <div>
+            <div style="font-weight:600; color:var(--text-primary);">${p.name}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);">${p.badge ? `<span style="color:#b45309; font-weight:700;">${p.badge}</span>` : 'Standard Catalog'}</div>
+          </div>
         </div>
       </td>
       <td>${p.category}</td>
       <td>₹${p.price.toLocaleString("en-IN")}</td>
-      <td>${p.badge ? `<span class="badge-status pending" style="background:rgba(251,191,36,0.15); color:var(--primary);">${p.badge}</span>` : '<span style="color:var(--text-muted); font-size:0.8rem;">None</span>'}</td>
+      <td>
+        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+          <span class="badge-status ${stockVal > 0 ? 'completed' : 'cancelled'}" style="font-size:0.75rem;">
+            ${stockVal > 0 ? `${stockVal} in stock` : 'Out of Stock'}
+          </span>
+          <button type="button" class="badge-status ${isHidden ? 'pending' : 'completed'}" onclick="toggleProductVisibility('${p.id}')" style="cursor:pointer; font-size:0.7rem; border-style:dashed;">
+            ${isHidden ? '👁️ Hidden' : '✓ Visible'}
+          </button>
+        </div>
+      </td>
       <td>
         <div style="display:flex; gap:0.5rem;">
           <button class="action-icon-btn edit" data-id="${p.id}" title="Edit Product">
@@ -1866,18 +2122,19 @@ function renderAdminOrdersList() {
   app.orders.forEach(o => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td><a href="#" onclick="openOrderInvoiceModal('${o.id}'); return false;" style="font-weight:600; color:var(--primary);">#${o.id.slice(-6).toUpperCase()}</a></td>
+      <td><a href="#" onclick="openOrderInvoiceModal('${o.id}'); return false;" style="font-weight:700; color:#831843;">#${o.id.slice(-6).toUpperCase()}</a></td>
       <td>
         <div style="font-weight:600;">${o.shippingDetails.name}</div>
-        <div style="font-size:0.75rem; color:var(--text-secondary);">${o.shippingDetails.phone}</div>
+        <div style="font-size:0.75rem; color:var(--text-secondary);">${o.shippingDetails.phone || '9876543210'} • ${o.userEmail}</div>
       </td>
       <td>${o.items.map(item => `${item.product.name} (x${item.quantity})`).join(", ")}</td>
-      <td>₹${o.total.toLocaleString("en-IN")}</td>
+      <td style="font-weight:700;">₹${o.total.toLocaleString("en-IN")}</td>
       <td>
-        <select class="badge-status ${o.status.toLowerCase()} status-select" data-id="${o.id}" style="border: 1px solid var(--border-color); background:var(--bg-app); cursor:pointer;">
+        <select class="badge-status ${o.status.toLowerCase().replace(/ /g, '-')} status-select" data-id="${o.id}" style="border: 1px solid var(--border-color); background:var(--bg-app); cursor:pointer; font-weight:700; border-radius:6px; padding:0.25rem 0.5rem;">
           <option value="Pending" ${o.status === 'Pending' ? 'selected' : ''}>Pending</option>
           <option value="Processing" ${o.status === 'Processing' ? 'selected' : ''}>Processing</option>
-          <option value="Shipped" ${o.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+          <option value="Dispatched" ${o.status === 'Dispatched' ? 'selected' : ''}>Dispatched</option>
+          <option value="In Transit" ${o.status === 'In Transit' ? 'selected' : ''}>In Transit</option>
           <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
           <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
         </select>
@@ -1934,9 +2191,9 @@ function renderAdminCustomersList(filterQuery = "") {
   const query = filterQuery.toLowerCase().trim();
 
   const filtered = customers.filter(c =>
-    c.name.toLowerCase().includes(query) ||
-    c.email.toLowerCase().includes(query) ||
-    c.phone.includes(query)
+    (c.name || "").toLowerCase().includes(query) ||
+    (c.email || "").toLowerCase().includes(query) ||
+    (c.phone || "").includes(query)
   );
 
   if (filtered.length === 0) {
@@ -1947,19 +2204,42 @@ function renderAdminCustomersList(filterQuery = "") {
   filtered.forEach(c => {
     const row = document.createElement("tr");
     const isBlocked = c.status === "blocked";
+    
+    // Calculate customer lifetime spend & order count
+    const custOrders = app.orders.filter(o => o.userEmail === c.email && o.status !== "Cancelled");
+    const ltv = custOrders.reduce((sum, o) => sum + o.total, 0);
+    const addressCount = (c.addresses || []).length;
+
     row.innerHTML = `
-      <td style="font-weight:600;">${c.name}</td>
-      <td>${c.email}</td>
-      <td>+91 ${c.phone}</td>
       <td>
-        <span class="badge-status ${isBlocked ? 'cancelled' : 'completed'}">
-          ${isBlocked ? 'Blocked' : 'Active'}
-        </span>
+        <div style="font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:0.4rem;">
+          ${c.name}
+          ${c.verified !== false ? `<span class="badge-status completed" style="font-size:0.65rem; padding:0.1rem 0.4rem; background:#ecfdf5; color:#059669;" title="OTP Verified Patron">✓ Verified</span>` : ''}
+        </div>
+        <div style="font-size:0.75rem; color:var(--text-muted);">Joined Patron Program</div>
       </td>
       <td>
-        <button class="badge-status pending toggle-block-btn" data-email="${c.email}" style="cursor:pointer; font-size:0.75rem; padding: 0.15rem 0.5rem; ${isBlocked ? 'background:rgba(16,185,129,0.05); color:var(--success); border-color:var(--success);' : 'background:rgba(239,68,68,0.05); color:var(--danger); border-color:var(--danger);'}">
-          ${isBlocked ? 'Activate' : 'Block User'}
-        </button>
+        <div>${c.email}</div>
+        <div style="font-size:0.75rem; color:var(--text-muted);">+91 ${c.phone}</div>
+      </td>
+      <td>
+        <span class="badge-status pending" style="background:#f8fafc; border-color:#e2e8f0; color:#475569; font-weight:600;">
+          📍 ${addressCount} Saved Address${addressCount === 1 ? '' : 'es'}
+        </span>
+      </td>
+      <td style="font-weight:800; color:#831843;">
+        ₹${ltv.toLocaleString("en-IN")}
+        <div style="font-size:0.7rem; color:var(--text-muted); font-weight:500;">(${custOrders.length} order${custOrders.length === 1 ? '' : 's'})</div>
+      </td>
+      <td>
+        <div style="display:flex; gap:0.4rem; align-items:center;">
+          <button class="btn-primary" onclick="openRoyalConciergeModal('${c.email}')" style="cursor:pointer; font-size:0.75rem; padding:0.25rem 0.6rem; background:#831843; border-radius:6px; font-weight:700;">
+            👑 Dossier
+          </button>
+          <button class="badge-status pending toggle-block-btn" data-email="${c.email}" style="cursor:pointer; font-size:0.75rem; padding: 0.25rem 0.5rem; ${isBlocked ? 'background:rgba(16,185,129,0.05); color:var(--success); border-color:var(--success);' : 'background:rgba(239,68,68,0.05); color:var(--danger); border-color:var(--danger);'}">
+            ${isBlocked ? 'Activate' : 'Block'}
+          </button>
+        </div>
       </td>
     `;
 
@@ -2046,15 +2326,28 @@ function renderAdminCouponsList() {
 
   app.coupons.forEach(c => {
     const row = document.createElement("tr");
+    const usedCount = c.used_count || 0;
+    const usageLimit = c.usage_limit || 100;
+    const isExhausted = usedCount >= usageLimit;
+
     row.innerHTML = `
-      <td style="font-weight:700; color:var(--primary); font-family:monospace; font-size:1rem;">${c.code}</td>
-      <td style="text-transform:capitalize;">${c.type}</td>
-      <td>${c.type === "percentage" ? `${c.amount}%` : `₹${c.amount}`}</td>
+      <td style="font-weight:800; color:#831843; font-family:monospace; font-size:1rem;">${c.code}</td>
+      <td style="text-transform:capitalize;">${c.type === 'percentage' ? `${c.amount}% OFF` : `₹${c.amount} Flat`}</td>
+      <td>
+        <span class="badge-status ${isExhausted ? 'cancelled' : 'completed'}" style="font-size:0.75rem;">
+          ${usedCount} / ${usageLimit} ${isExhausted ? '(Limit Reached)' : 'Used'}
+        </span>
+      </td>
       <td>${c.expiry}</td>
       <td>
-        <button class="action-icon-btn delete delete-cp" data-id="${c.id}">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6"/></svg>
-        </button>
+        <div style="display:flex; gap:0.5rem;">
+          <button class="action-icon-btn edit-cp-btn" onclick="openEditCouponModal('${c.id}')" title="Edit Coupon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          </button>
+          <button class="action-icon-btn delete delete-cp" data-id="${c.id}" title="Delete Coupon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6"/></svg>
+          </button>
+        </div>
       </td>
     `;
 
@@ -2182,12 +2475,431 @@ function openEditProductModal(productId) {
   document.getElementById("edit-pbadge").value = p.badge || "";
   document.getElementById("edit-pdesc").value = p.description;
 
+  const stockInput = document.getElementById("edit-pstock");
+  if (stockInput) stockInput.value = typeof p.stock === 'number' ? p.stock : 10;
+
+  const statusInput = document.getElementById("edit-pstatus");
+  if (statusInput) statusInput.value = p.status || 'active';
+
   openModal("edit-product-modal");
 }
 
 function openAddCategoryModal() {
   document.getElementById("admin-add-category-form").reset();
   openModal("add-category-modal");
+}
+
+
+// ==========================================
+// ROYAL PLATFORM ADVANCED DYNAMIC FEATURES
+// ==========================================
+
+// --- MASTERPIECE IMAGE LIGHTBOX CONTROLLER ---
+let lightboxScale = 1;
+let lightboxPanX = 0;
+let lightboxPanY = 0;
+let isLightboxPanning = false;
+let panStartX = 0;
+let panStartY = 0;
+
+function openLightbox(imageUrl, title = "Artisan Masterpiece", category = "Heritage Artwork") {
+  const modal = document.getElementById("masterpiece-lightbox");
+  const img = document.getElementById("lightbox-main-img");
+  const nameEl = document.getElementById("lightbox-caption-name");
+  const zoomEl = document.getElementById("lightbox-zoom-level");
+  if (!modal || !img) return;
+
+  img.src = imageUrl;
+  img.alt = title;
+  if (nameEl) nameEl.innerText = `${title} (${category})`;
+  
+  lightboxScale = 1;
+  lightboxPanX = 0;
+  lightboxPanY = 0;
+  updateLightboxTransform();
+
+  modal.style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  const modal = document.getElementById("masterpiece-lightbox");
+  if (modal) {
+    modal.style.display = "none";
+    document.body.style.overflow = "";
+  }
+}
+
+function zoomLightbox(delta) {
+  lightboxScale = Math.min(4.0, Math.max(0.75, Math.round((lightboxScale + delta) * 100) / 100));
+  updateLightboxTransform();
+}
+
+function resetLightboxZoom() {
+  lightboxScale = 1.0;
+  lightboxPanX = 0;
+  lightboxPanY = 0;
+  updateLightboxTransform();
+}
+
+function updateLightboxTransform() {
+  const img = document.getElementById("lightbox-main-img");
+  const zoomEl = document.getElementById("lightbox-zoom-level");
+  if (img) {
+    img.style.transform = `scale(${lightboxScale}) translate(${lightboxPanX}px, ${lightboxPanY}px)`;
+  }
+  if (zoomEl) {
+    zoomEl.innerText = `${Math.round(lightboxScale * 100)}% Zoom`;
+  }
+}
+
+// --- GUEST GATEKEEPER & ROYAL PATRON AUTH INTERCEPTOR ---
+window.pendingGuestAction = null;
+
+function openGuestAuthModal(actionContext = 'checkout') {
+  window.pendingGuestAction = actionContext;
+  const subtitle = document.getElementById("guest-auth-subtitle");
+  if (subtitle) {
+    if (actionContext === 'checkout') {
+      subtitle.innerText = "Authenticate as Patron to complete your order";
+    } else if (actionContext === 'profile') {
+      subtitle.innerText = "Sign in to access your Patron Profile and Saved Addresses";
+    } else if (actionContext === 'orders') {
+      subtitle.innerText = "Sign in to track your acquisitions and view invoices";
+    }
+  }
+  switchModalAuthTab('otp');
+  openModal("guest-auth-modal");
+}
+
+function switchModalAuthTab(tabName) {
+  const tabs = ['otp', 'password', 'register'];
+  tabs.forEach(t => {
+    const btn = document.getElementById(`modal-tab-${t}`);
+    const pane = document.getElementById(`modal-${t}-pane`);
+    if (btn) btn.classList.toggle("active", t === tabName);
+    if (pane) pane.style.display = (t === tabName) ? "block" : "none";
+  });
+}
+
+function fillDemoPhone() {
+  const input = document.getElementById("modal-otp-phone");
+  if (input) input.value = "9876543210";
+}
+
+function fillDemoEmail() {
+  const emailInput = document.getElementById("modal-login-email");
+  const passInput = document.getElementById("modal-login-password");
+  if (emailInput) emailInput.value = "user@gmail.com";
+  if (passInput) passInput.value = "password123";
+}
+
+function executePendingGuestAction() {
+  const action = window.pendingGuestAction;
+  window.pendingGuestAction = null;
+
+  if (action === 'checkout') {
+    openCheckoutModal();
+  } else if (action === 'profile') {
+    switchView('account');
+  } else if (action === 'orders') {
+    switchView('account');
+    setTimeout(() => {
+      document.querySelector('[data-tab="account-orders"]')?.click();
+    }, 200);
+  }
+}
+
+// --- DYNAMIC ADDRESS MANAGEMENT & CHECKOUT MODAL ---
+function openCheckoutModal() {
+  if (!app.currentUser) {
+    openGuestAuthModal('checkout');
+    return;
+  }
+  if (app.cart.length === 0) {
+    showToast("Your cart is empty", "danger");
+    return;
+  }
+
+  // Render selectable address cards
+  renderCheckoutAddresses();
+
+  // Update summary totals
+  const subtotal = app.getCartTotal();
+  const discount = app.getDiscountAmount();
+  const grandTotal = app.getGrandTotal();
+
+  const subtotalEl = document.getElementById("checkout-subtotal-val");
+  const discountEl = document.getElementById("checkout-discount-val");
+  const totalEl = document.getElementById("checkout-total-val");
+  const discountSummary = document.getElementById("checkout-discount-summary");
+
+  if (subtotalEl) subtotalEl.innerText = `₹${subtotal.toLocaleString("en-IN")}`;
+  if (discountEl) discountEl.innerText = `-₹${discount.toLocaleString("en-IN")}`;
+  if (totalEl) totalEl.innerText = `₹${grandTotal.toLocaleString("en-IN")}`;
+  if (discountSummary) discountSummary.style.display = app.activeCoupon ? "block" : "none";
+
+  openModal("checkout-modal");
+}
+
+function renderCheckoutAddresses() {
+  const container = document.getElementById("checkout-saved-addresses-container");
+  const formSection = document.getElementById("checkout-inline-address-form");
+  if (!container) return;
+
+  const addresses = app.currentUser.addresses || [];
+  container.innerHTML = "";
+
+  if (addresses.length === 0) {
+    container.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.75rem;">No saved destinations found. Please enter your royal delivery address below:</p>`;
+    if (formSection) formSection.style.display = "block";
+    return;
+  }
+
+  // Select first or default address
+  let selected = addresses.find(a => a.default) || addresses[0];
+
+  addresses.forEach((addr, idx) => {
+    const isSelected = addr.id === selected.id;
+    const card = document.createElement("div");
+    card.className = `checkout-address-card ${isSelected ? 'selected' : ''}`;
+    card.dataset.id = addr.id;
+
+    card.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.35rem;">
+        <label style="display:flex; align-items:center; gap:0.5rem; font-weight:700; font-size:0.9rem; cursor:pointer;">
+          <input type="radio" name="checkout_selected_address" value="${addr.id}" ${isSelected ? 'checked' : ''} style="accent-color:var(--primary);">
+          ${addr.label || `Destination #${idx + 1}`}
+        </label>
+        ${addr.default ? `<span style="font-size:0.65rem; background:rgba(180,83,9,0.1); color:#b45309; padding:0.15rem 0.5rem; border-radius:99px; font-weight:700;">DEFAULT</span>` : ''}
+      </div>
+      <div style="font-size:0.85rem; color:var(--text-secondary); line-height:1.4; padding-left:1.5rem;">
+        <div>${addr.street}</div>
+        <div>${addr.city}, ${addr.state || 'Rajasthan'} - ${addr.zip}</div>
+      </div>
+    `;
+
+    card.addEventListener("click", () => {
+      document.querySelectorAll(".checkout-address-card").forEach(c => c.classList.remove("selected"));
+      card.classList.add("selected");
+      card.querySelector("input[type=radio]").checked = true;
+      populateCheckoutAddressFields(addr);
+    });
+
+    container.appendChild(card);
+  });
+
+  populateCheckoutAddressFields(selected);
+}
+
+function populateCheckoutAddressFields(addr) {
+  if (!addr) return;
+  document.getElementById("selected-address-id").value = addr.id;
+  document.getElementById("checkout-name").value = app.currentUser.name;
+  document.getElementById("checkout-phone").value = app.currentUser.phone || "9876543210";
+  document.getElementById("checkout-address").value = addr.street;
+  document.getElementById("checkout-city").value = addr.city;
+  document.getElementById("checkout-zip").value = addr.zip;
+}
+
+function toggleCheckoutAddressForm() {
+  const form = document.getElementById("checkout-inline-address-form");
+  if (form) {
+    form.style.display = form.style.display === "none" ? "block" : "none";
+  }
+}
+
+function saveNewCheckoutAddress() {
+  const street = document.getElementById("new-addr-street")?.value.trim();
+  const city = document.getElementById("new-addr-city")?.value.trim() || "Jodhpur";
+  const state = document.getElementById("new-addr-state")?.value.trim() || "Rajasthan";
+  const zip = document.getElementById("new-addr-zip")?.value.trim();
+  const name = document.getElementById("new-addr-name")?.value.trim() || app.currentUser.name;
+  const phone = document.getElementById("new-addr-phone")?.value.trim() || app.currentUser.phone;
+  const saveToProfile = document.getElementById("new-addr-save-profile")?.checked;
+
+  if (!street || !zip) {
+    showToast("Please provide street address and pincode", "danger");
+    return;
+  }
+
+  const newAddr = {
+    id: "addr-" + Math.random().toString(36).substr(2, 9),
+    label: "Custom Destination",
+    street,
+    city,
+    state,
+    zip,
+    default: true
+  };
+
+  if (saveToProfile) {
+    if (!app.currentUser.addresses) app.currentUser.addresses = [];
+    app.currentUser.addresses.forEach(a => a.default = false);
+    app.currentUser.addresses.push(newAddr);
+    app.saveState();
+  }
+
+  // Hide inline form and re-render
+  const form = document.getElementById("checkout-inline-address-form");
+  if (form) form.style.display = "none";
+  renderCheckoutAddresses();
+  showToast("Delivery destination updated successfully");
+}
+
+// --- ADMIN VISIBILITY TOGGLE ---
+function toggleProductVisibility(productId) {
+  const p = app.products.find(item => item.id === productId);
+  if (!p) return;
+
+  p.status = (p.status === "hidden") ? "active" : "hidden";
+  app.saveState();
+  showToast(`Product visibility set to ${p.status === 'hidden' ? 'Hidden' : 'Visible'}`);
+  renderAdminProductsList();
+  renderStorefront();
+}
+
+// --- ROYAL CONCIERGE PATRON DOSSIER MODAL ---
+function openRoyalConciergeModal(userEmail) {
+  const user = app.users.find(u => u.email === userEmail);
+  if (!user) return;
+
+  const contentContainer = document.getElementById("royal-concierge-modal-content");
+  if (!contentContainer) return;
+
+  const patronOrders = app.orders.filter(o => o.userEmail === user.email);
+  const nonCancelledOrders = patronOrders.filter(o => o.status !== "Cancelled");
+  const ltv = nonCancelledOrders.reduce((sum, o) => sum + o.total, 0);
+  const aov = nonCancelledOrders.length > 0 ? Math.round(ltv / nonCancelledOrders.length) : 0;
+
+  contentContainer.innerHTML = `
+    <div style="border-bottom:1px solid var(--border-color); padding-bottom:1.5rem; margin-bottom:1.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <span style="font-size:0.75rem; font-weight:700; color:#b45309; letter-spacing:1px; text-transform:uppercase;">ROYAL CONCIERGE DOSSIER</span>
+          <h2 style="font-size:1.75rem; font-weight:800; color:var(--text-primary); margin:0.25rem 0;">${user.name}</h2>
+          <div style="font-size:0.85rem; color:var(--text-secondary); display:flex; gap:1rem; align-items:center;">
+            <span>📧 ${user.email}</span>
+            <span>📱 +91 ${user.phone}</span>
+            ${user.verified !== false ? `<span class="badge-status completed" style="font-size:0.7rem;">✓ Verified Patron</span>` : ''}
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Patron Tier</div>
+          <div style="font-size:1.1rem; font-weight:800; color:#831843;">${ltv > 50000 ? '👑 Royal Maharaja Tier' : ltv > 10000 ? '⚜️ Noble Rajput Tier' : '✨ Patron Member'}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Patron Key Metrics -->
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem; margin-bottom:2rem;">
+      <div style="background:var(--bg-app); border:1px solid var(--border-color); border-radius:12px; padding:1.25rem; text-align:center;">
+        <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Lifetime Value</div>
+        <div style="font-size:1.5rem; font-weight:800; color:#831843; margin-top:0.25rem;">₹${ltv.toLocaleString("en-IN")}</div>
+      </div>
+      <div style="background:var(--bg-app); border:1px solid var(--border-color); border-radius:12px; padding:1.25rem; text-align:center;">
+        <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Acquisitions</div>
+        <div style="font-size:1.5rem; font-weight:800; color:var(--text-primary); margin-top:0.25rem;">${patronOrders.length} Orders</div>
+      </div>
+      <div style="background:var(--bg-app); border:1px solid var(--border-color); border-radius:12px; padding:1.25rem; text-align:center;">
+        <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Average Order</div>
+        <div style="font-size:1.5rem; font-weight:800; color:var(--text-primary); margin-top:0.25rem;">₹${aov.toLocaleString("en-IN")}</div>
+      </div>
+    </div>
+
+    <!-- Saved Delivery Destinations -->
+    <div style="margin-bottom:2rem;">
+      <h4 style="font-size:1rem; font-weight:700; margin-bottom:0.75rem; color:var(--text-primary);">Registered Haveli & Destinations (${(user.addresses || []).length})</h4>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+        ${(user.addresses || []).map(a => `
+          <div style="background:var(--bg-app); border:1px solid var(--border-color); border-radius:10px; padding:0.85rem; font-size:0.85rem;">
+            <div style="font-weight:700; color:var(--text-primary);">${a.label || 'Delivery Address'} ${a.default ? '⭐' : ''}</div>
+            <div style="color:var(--text-secondary); margin-top:0.2rem;">${a.street}, ${a.city} (${a.zip})</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- Full Chronological Purchase History -->
+    <div>
+      <h4 style="font-size:1rem; font-weight:700; margin-bottom:0.75rem; color:var(--text-primary);">Chronological Acquisition History</h4>
+      ${patronOrders.length === 0 ? `
+        <p style="color:var(--text-muted); font-size:0.85rem;">No acquisitions placed yet.</p>
+      ` : `
+        <div style="display:flex; flex-direction:column; gap:0.75rem;">
+          ${patronOrders.map(o => `
+            <div style="background:var(--bg-app); border:1px solid var(--border-color); border-radius:12px; padding:1rem; display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div style="font-weight:700; font-size:0.95rem; color:var(--text-primary);">Order #${o.id.slice(-6).toUpperCase()}</div>
+                <div style="font-size:0.8rem; color:var(--text-secondary);">${new Date(o.date).toLocaleDateString("en-IN", { year:'numeric', month:'short', day:'numeric' })} • ${o.items.map(i => `${i.product.name} (x${i.quantity})`).join(", ")}</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-weight:800; font-size:1rem; color:#831843;">₹${o.total.toLocaleString("en-IN")}</div>
+                <span class="badge-status ${o.status.toLowerCase().replace(/ /g, '-')}">${o.status}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `}
+    </div>
+  `;
+
+  openModal("royal-concierge-modal");
+}
+
+// --- EDIT COUPON MODAL ---
+function openEditCouponModal(couponId) {
+  const cp = app.coupons.find(c => c.id === couponId);
+  if (!cp) return;
+
+  document.getElementById("edit-coupon-id").value = cp.id;
+  document.getElementById("edit-coupon-code").value = cp.code;
+  document.getElementById("edit-coupon-type").value = cp.type;
+  document.getElementById("edit-coupon-amount").value = cp.amount;
+  document.getElementById("edit-coupon-limit").value = cp.usage_limit || 100;
+  document.getElementById("edit-coupon-expiry").value = cp.expiry;
+
+  openModal("edit-coupon-modal");
+}
+
+// --- ADMIN ACCESS GATE CONTROLLER ---
+function initAdminAccess() {
+  const isSuperpanel = window.location.pathname.includes('superpanel') || document.getElementById("admin-auth-gate");
+  if (!isSuperpanel) return;
+
+  const gate = document.getElementById("admin-auth-gate");
+  const view = document.getElementById("admin-view");
+
+  if (app.currentUser && app.currentUser.role === 'admin') {
+    if (gate) gate.style.display = "none";
+    if (view) view.style.display = "flex";
+  } else {
+    if (gate) gate.style.display = "flex";
+    if (view) view.style.display = "none";
+  }
+}
+
+function fillAdminCredentials() {
+  const u = document.getElementById("admin-gate-username");
+  const p = document.getElementById("admin-gate-password");
+  if (u) u.value = "admin";
+  if (p) p.value = "123456";
+  showToast("Admin credentials auto-filled (admin / 123456)");
+}
+
+function handleProductImageUpload(input, targetInputId) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const targetInput = document.getElementById(targetInputId);
+    if (targetInput) {
+      targetInput.value = e.target.result;
+      showToast("Masterpiece image loaded preview!");
+    }
+  };
+  reader.readAsDataURL(file);
 }
 
 function openAddCouponModal() {
@@ -2435,7 +3147,7 @@ function setupEventListeners() {
     });
   }
 
-  // Checkout trigger
+  // Checkout trigger (Guests intercepted in-place)
   const checkoutTrigger = document.getElementById("checkout-trigger-btn");
   if (checkoutTrigger) {
     checkoutTrigger.addEventListener("click", () => {
@@ -2445,35 +3157,13 @@ function setupEventListeners() {
       }
 
       if (!app.currentUser) {
-        showToast("Please log in to purchase products", "danger");
         closeCartFn();
-        switchView('auth');
+        openGuestAuthModal('checkout');
         return;
       }
 
-      // Populate checkout fields
-      document.getElementById("checkout-name").value = app.currentUser.name;
-      document.getElementById("checkout-phone").value = app.currentUser.phone || "";
-
-      // Attempt to find default address
-      const defAddr = (app.currentUser.addresses || []).find(a => a.default);
-      if (defAddr) {
-        document.getElementById("checkout-address").value = defAddr.street;
-        document.getElementById("checkout-city").value = defAddr.city;
-        document.getElementById("checkout-zip").value = defAddr.zip;
-      } else {
-        document.getElementById("checkout-address").value = "";
-        document.getElementById("checkout-city").value = "Jodhpur";
-        document.getElementById("checkout-zip").value = "";
-      }
-
-      // Set discount summary visibility to none
-      document.getElementById("checkout-discount-summary").style.display = "none";
-      document.getElementById("checkout-coupon").value = "";
-      app.activeCoupon = null;
-
       closeCartFn();
-      openModal("checkout-modal");
+      openCheckoutModal();
     });
   }
 
@@ -2505,26 +3195,53 @@ function setupEventListeners() {
     });
   }
 
-  // Checkout Form Submission
+  // Checkout Form Submission (with stock deduction & coupon usage increment)
   const checkoutForm = document.getElementById("checkout-payment-form");
   if (checkoutForm) {
     checkoutForm.addEventListener("submit", (e) => {
       e.preventDefault();
 
+      const nameVal = document.getElementById("checkout-name")?.value.trim() || app.currentUser.name;
+      const phoneVal = document.getElementById("checkout-phone")?.value.trim() || app.currentUser.phone || "9876543210";
+      const addrVal = document.getElementById("checkout-address")?.value.trim();
+      const cityVal = document.getElementById("checkout-city")?.value.trim() || "Jodhpur";
+      const zipVal = document.getElementById("checkout-zip")?.value.trim();
+
+      if (!addrVal || !zipVal) {
+        showToast("Please choose or add a delivery destination", "danger");
+        return;
+      }
+
+      // Deduct stock for all items
+      app.cart.forEach(item => {
+        const p = app.products.find(prod => prod.id === item.product.id);
+        if (p && typeof p.stock === 'number') {
+          p.stock = Math.max(0, p.stock - item.quantity);
+        }
+      });
+
+      // Increment coupon usage limit count
+      if (app.activeCoupon) {
+        const cp = app.coupons.find(c => c.code === app.activeCoupon.code);
+        if (cp) {
+          cp.used_count = (cp.used_count || 0) + 1;
+        }
+      }
+
       const order = {
-        id: "ord-" + Math.random().toString(36).substr(2, 9),
+        id: "ORD-" + Math.floor(100000 + Math.random() * 900000),
         userEmail: app.currentUser.email,
         items: [...app.cart],
-        total: app.getGrandTotal(), // Reads coupon-subtracted total
+        total: app.getGrandTotal(),
         status: "Pending",
         date: new Date().toISOString(),
         shippingDetails: {
-          name: document.getElementById("checkout-name").value.trim(),
-          phone: document.getElementById("checkout-phone").value.trim(),
-          address: document.getElementById("checkout-address").value.trim(),
-          street: document.getElementById("checkout-address").value.trim(), // backwards compatibility
-          city: document.getElementById("checkout-city").value.trim(),
-          zip: document.getElementById("checkout-zip").value.trim()
+          name: nameVal,
+          phone: phoneVal,
+          address: addrVal,
+          street: addrVal,
+          city: cityVal,
+          zip: zipVal
         }
       };
 
@@ -2538,12 +3255,12 @@ function setupEventListeners() {
 
       setTimeout(() => {
         switchView("account");
-        document.querySelector('[data-tab="account-orders"]').click();
+        document.querySelector('[data-tab="account-orders"]')?.click();
       }, 500);
     });
   }
 
-  // Add Product form submission modal
+  // Add Product form submission modal (saving stock & visibility)
   const addProductFormModal = document.getElementById("admin-add-product-form-modal");
   if (addProductFormModal) {
     addProductFormModal.addEventListener("submit", (e) => {
@@ -2554,6 +3271,8 @@ function setupEventListeners() {
         name: document.getElementById("new-pname").value.trim(),
         category: document.getElementById("new-pcategory").value,
         price: parseFloat(document.getElementById("new-pprice").value),
+        stock: parseInt(document.getElementById("new-pstock")?.value || "20", 10),
+        status: document.getElementById("new-pstatus")?.value || "active",
         description: document.getElementById("new-pdesc").value.trim(),
         image: document.getElementById("new-pimage").value.trim() || "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80",
         badge: document.getElementById("new-pbadge").value.trim() || null
@@ -2569,7 +3288,7 @@ function setupEventListeners() {
     });
   }
 
-  // Edit Product form submission modal
+  // Edit Product form submission modal (updating stock & visibility)
   const editProductForm = document.getElementById("admin-edit-product-form");
   if (editProductForm) {
     editProductForm.addEventListener("submit", (e) => {
@@ -2581,6 +3300,8 @@ function setupEventListeners() {
         app.products[pIndex].name = document.getElementById("edit-pname").value.trim();
         app.products[pIndex].category = document.getElementById("edit-pcategory").value;
         app.products[pIndex].price = parseFloat(document.getElementById("edit-pprice").value);
+        app.products[pIndex].stock = parseInt(document.getElementById("edit-pstock")?.value || "10", 10);
+        app.products[pIndex].status = document.getElementById("edit-pstatus")?.value || "active";
         app.products[pIndex].image = document.getElementById("edit-pimage").value.trim();
         app.products[pIndex].badge = document.getElementById("edit-pbadge").value.trim() || null;
         app.products[pIndex].description = document.getElementById("edit-pdesc").value.trim();
@@ -2661,7 +3382,7 @@ function setupEventListeners() {
     });
   }
 
-  // Coupon Add form submission modal
+  // Coupon Add form submission modal (with usage limit)
   const addCouponForm = document.getElementById("admin-add-coupon-form");
   if (addCouponForm) {
     addCouponForm.addEventListener("submit", (e) => {
@@ -2669,6 +3390,7 @@ function setupEventListeners() {
       const code = document.getElementById("coupon-code-input").value.trim().toUpperCase();
       const type = document.getElementById("coupon-type-input").value;
       const amount = parseFloat(document.getElementById("coupon-amount-input").value);
+      const usage_limit = parseInt(document.getElementById("coupon-limit-input")?.value || "100", 10);
       const expiry = document.getElementById("coupon-expiry-input").value;
 
       const exists = app.coupons.some(c => c.code === code);
@@ -2682,6 +3404,8 @@ function setupEventListeners() {
         code,
         type,
         amount,
+        usage_limit,
+        used_count: 0,
         expiry
       });
       app.saveState();
@@ -2690,6 +3414,167 @@ function setupEventListeners() {
       renderAdminDashboard();
     });
   }
+
+  // Edit Coupon Form Submission
+  const editCouponForm = document.getElementById("admin-edit-coupon-form");
+  if (editCouponForm) {
+    editCouponForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const id = document.getElementById("edit-coupon-id").value;
+      const cp = app.coupons.find(c => c.id === id);
+      if (cp) {
+        cp.code = document.getElementById("edit-coupon-code").value.trim().toUpperCase();
+        cp.type = document.getElementById("edit-coupon-type").value;
+        cp.amount = parseFloat(document.getElementById("edit-coupon-amount").value);
+        cp.usage_limit = parseInt(document.getElementById("edit-coupon-limit").value, 10);
+        cp.expiry = document.getElementById("edit-coupon-expiry").value;
+
+        app.saveState();
+        showToast(`Coupon "${cp.code}" updated successfully`);
+        closeModal();
+        renderAdminDashboard();
+      }
+    });
+  }
+
+  // Super Admin Login Gate Submission
+  const adminGateForm = document.getElementById("admin-login-gate-form");
+  if (adminGateForm) {
+    adminGateForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const u = document.getElementById("admin-gate-username").value.trim();
+      const p = document.getElementById("admin-gate-password").value;
+
+      const res = app.login(u, p);
+      if (res.success && res.user.role === 'admin') {
+        showToast("👑 Access Granted. Welcome Super Administrator!");
+        initAdminAccess();
+        renderAdminDashboard();
+      } else {
+        showToast("Invalid admin credentials or role unauthorized", "danger");
+      }
+    });
+  }
+
+  // Lightbox Viewport drag & pan listeners
+  const lbViewport = document.getElementById("lightbox-viewport");
+  if (lbViewport) {
+    lbViewport.addEventListener("mousedown", (e) => {
+      if (lightboxScale <= 1) return;
+      isLightboxPanning = true;
+      panStartX = e.clientX - lightboxPanX;
+      panStartY = e.clientY - lightboxPanY;
+      lbViewport.style.cursor = "grabbing";
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (!isLightboxPanning) return;
+      lightboxPanX = e.clientX - panStartX;
+      lightboxPanY = e.clientY - panStartY;
+      updateLightboxTransform();
+    });
+
+    window.addEventListener("mouseup", () => {
+      isLightboxPanning = false;
+      if (lbViewport) lbViewport.style.cursor = "grab";
+    });
+  }
+
+  // Guest Auth Interceptor Modal Form Listeners
+  const modalSendOtpBtn = document.getElementById("modal-send-otp-btn");
+  if (modalSendOtpBtn) {
+    modalSendOtpBtn.addEventListener("click", () => {
+      const phoneInput = document.getElementById("modal-otp-phone");
+      const phone = phoneInput ? phoneInput.value.trim() : "";
+      if (!phone || phone.length < 10) {
+        showToast("Please enter a valid 10-digit mobile number", "danger");
+        return;
+      }
+      const verifySection = document.getElementById("modal-otp-verify-section");
+      if (verifySection) verifySection.style.display = "block";
+      const codeInput = document.getElementById("modal-otp-code");
+      if (codeInput) codeInput.value = "123456";
+      showToast(`Royal OTP sent to +91 ${phone} (Demo Code: 123456)`);
+    });
+  }
+
+  const modalOtpForm = document.getElementById("modal-otp-form");
+  if (modalOtpForm) {
+    modalOtpForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const phone = document.getElementById("modal-otp-phone")?.value.trim();
+      const code = document.getElementById("modal-otp-code")?.value.trim();
+      if (!code) {
+        showToast("Please enter the OTP code", "danger");
+        return;
+      }
+
+      let user = app.users.find(u => u.phone === phone);
+      if (!user) {
+        user = {
+          id: "usr-" + Math.random().toString(36).substr(2, 9),
+          name: "Patron " + phone.slice(-4),
+          phone: phone,
+          email: `patron_${phone}@marwari.in`,
+          role: "user",
+          verified: true,
+          addresses: [
+            { id: "addr-1", label: "Primary Palace", street: "12 Heritage Lane, Paota", city: "Jodhpur", state: "Rajasthan", zip: "342001", default: true }
+          ]
+        };
+        app.users.push(user);
+      }
+      user.verified = true;
+      app.currentUser = user;
+      app.saveState();
+
+      closeModal();
+      updateNavBarState();
+      showToast(`Welcome back, ${user.name}!`);
+      executePendingGuestAction();
+    });
+  }
+
+  const modalEmailForm = document.getElementById("modal-email-login-form");
+  if (modalEmailForm) {
+    modalEmailForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("modal-login-email").value.trim();
+      const pass = document.getElementById("modal-login-password").value;
+
+      const res = app.login(email, pass);
+      if (res.success) {
+        closeModal();
+        updateNavBarState();
+        showToast(`Welcome back, ${res.user.name}!`);
+        executePendingGuestAction();
+      } else {
+        showToast(res.message, "danger");
+      }
+    });
+  }
+
+  const modalRegForm = document.getElementById("modal-register-form");
+  if (modalRegForm) {
+    modalRegForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("modal-reg-name").value.trim();
+      const phone = document.getElementById("modal-reg-phone").value.trim();
+      const email = document.getElementById("modal-reg-email").value.trim();
+      const pass = document.getElementById("modal-reg-password").value;
+
+      const res = app.signup(name, phone, email, pass);
+      if (res.success) {
+        closeModal();
+        updateNavBarState();
+        showToast(`Royal Patron Account created! Welcome, ${res.user.name}`);
+        executePendingGuestAction();
+      } else {
+        showToast(res.message, "danger");
+      }
+    });
+  }
+
 
   // Customer search input
   const custSearchInput = document.getElementById("admin-customer-search");
@@ -2820,3 +3705,31 @@ async function uploadImageToWP(fileInput, targetInputId) {
     targetInput.placeholder = originalPlaceholder;
   }
 }
+
+// Global Window Function Bindings for HTML inline event triggers
+window.openLightbox = openLightbox;
+window.closeLightbox = closeLightbox;
+window.zoomLightbox = zoomLightbox;
+window.resetLightboxZoom = resetLightboxZoom;
+window.openGuestAuthModal = openGuestAuthModal;
+window.switchModalAuthTab = switchModalAuthTab;
+window.fillDemoPhone = fillDemoPhone;
+window.fillDemoEmail = fillDemoEmail;
+window.executePendingGuestAction = executePendingGuestAction;
+window.openCheckoutModal = openCheckoutModal;
+window.renderCheckoutAddresses = renderCheckoutAddresses;
+window.toggleCheckoutAddressForm = toggleCheckoutAddressForm;
+window.saveNewCheckoutAddress = saveNewCheckoutAddress;
+window.toggleProductVisibility = toggleProductVisibility;
+window.openRoyalConciergeModal = openRoyalConciergeModal;
+window.openEditCouponModal = openEditCouponModal;
+window.initAdminAccess = initAdminAccess;
+window.fillAdminCredentials = fillAdminCredentials;
+window.handleProductImageUpload = handleProductImageUpload;
+
+// Keyboard Escape listener to close Lightbox
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeLightbox();
+  }
+});

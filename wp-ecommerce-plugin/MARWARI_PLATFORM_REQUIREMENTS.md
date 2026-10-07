@@ -37,7 +37,7 @@ To maintain a consistent brand experience, the web application (React/Next.js) m
 
 ### 2. Authentication & Guest Flow
 - **Persistent Navbar**: The header should contain links to Home, Collections, Cart, and Profile.
-- **Guest Interceptors**: 
+- **Guest Interceptors**:
   - If a guest clicks "Profile", "Orders", or "Checkout", trigger a **React Portal Modal** (the web equivalent of `GuestAuthModal`) prompting them to Login/Register.
   - Do NOT redirect them to a separate `/login` page if they click "Checkout"—keep them in context using the modal.
 - **Auth State**: Use JWT tokens stored in `HttpOnly` cookies or `localStorage`, managed via Redux/Context.

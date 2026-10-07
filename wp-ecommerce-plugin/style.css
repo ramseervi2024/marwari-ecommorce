@@ -1,56 +1,58 @@
 /* Import Premium Typography (Tailwind style) */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-/* CSS Variables for Premium Themes */
+/* CSS Variables for Premium Themes - Maroon, Slate & Gold */
 :root {
   --font-heading: 'Plus Jakarta Sans', sans-serif;
   --font-body: 'Inter', sans-serif;
 
-  /* Color Palette - Default Dark Mode (Tailwind Slate/Zinc) */
+  /* Color Palette - Default Dark Mode (Royal Maroon & Dark Slate) */
   --bg-app: #0f172a;
   --bg-card: #1e293b;
-  --bg-navbar: rgba(15, 23, 42, 0.85);
+  --bg-navbar: rgba(15, 23, 42, 0.92);
   --border-color: #334155;
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
 
-  --primary: #6366f1; /* Tailwind Indigo 500 */
-  --primary-hover: #4f46e5; /* Tailwind Indigo 600 */
-  --primary-glow: rgba(99, 102, 241, 0.15);
+  --primary: #831843; /* Deep Royal Maroon */
+  --primary-hover: #701a3d; /* Rich Maroon hover */
+  --primary-glow: rgba(131, 24, 67, 0.25);
 
-  --accent: #ec4899; /* Tailwind Pink 500 */
-  --accent-glow: rgba(236, 72, 153, 0.15);
+  --accent: #b45309; /* Rajasthan Amber Gold */
+  --accent-glow: rgba(180, 83, 9, 0.2);
+  --gold: #fbbf24;
 
   --success: #10b981;
   --danger: #ef4444;
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.08);
   --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --glass-bg: rgba(30, 41, 59, 0.7);
   --glass-border: rgba(255, 255, 255, 0.05);
 }
 
-/* Light Theme Variables (Premium Tailwind Slate) */
+/* Light Theme Variables (Royal Maroon on Warm Ivory & Slate) */
 body.light-mode {
-  --bg-app: #f8fafc;
+  --bg-app: #fafaf9;
   --bg-card: #ffffff;
-  --bg-navbar: rgba(255, 255, 255, 0.95);
+  --bg-navbar: rgba(255, 255, 255, 0.96);
   --border-color: #e2e8f0;
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #94a3b8;
 
-  --primary: #4f46e5; /* Tailwind Indigo 600 */
-  --primary-hover: #4338ca; /* Tailwind Indigo 700 */
-  --primary-glow: rgba(79, 70, 229, 0.1);
+  --primary: #831843; /* Deep Royal Maroon */
+  --primary-hover: #701a3d;
+  --primary-glow: rgba(131, 24, 67, 0.15);
 
-  --accent: #e11d48; /* Tailwind Rose 600 */
-  --accent-glow: rgba(225, 29, 72, 0.1);
+  --accent: #b45309; /* Rajasthan Amber Gold */
+  --accent-glow: rgba(180, 83, 9, 0.12);
+  --gold: #d97706;
 
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
-  --glass-bg: rgba(255, 255, 255, 0.85);
+  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+  --glass-bg: rgba(255, 255, 255, 0.9);
   --glass-border: rgba(0, 0, 0, 0.05);
 }
 
@@ -1934,5 +1936,423 @@ select.form-input {
 }
 .category-card.active > div:first-child, .category-card.active > img {
   border: 3px solid var(--primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 0 0 3px var(--primary-glow);
 }
+
+/* ==========================================================================
+   1. GUEST GATEKEEPING MODAL (ROYAL PATRON AUTH INTERCEPTOR)
+   ========================================================================== */
+.guest-auth-modal {
+  max-width: 480px;
+  width: 95%;
+  background: var(--bg-card);
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.guest-auth-header {
+  background: linear-gradient(135deg, #831843 0%, #500724 100%);
+  color: white;
+  padding: 1.75rem 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  border-bottom: 2px solid #b45309;
+}
+
+.guest-auth-header h3 {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin: 0.35rem 0 0.25rem;
+  color: #fef08a;
+  letter-spacing: 0.5px;
+}
+
+.guest-auth-header p {
+  font-size: 0.85rem;
+  color: #fce7f3;
+  margin: 0;
+  opacity: 0.95;
+}
+
+.guest-auth-tabs {
+  display: flex;
+  background: rgba(15, 23, 42, 0.05);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.25rem 0.5rem 0;
+}
+
+.guest-auth-tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 0.85rem 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.guest-auth-tab-btn.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  background: var(--bg-card);
+}
+
+.guest-auth-body {
+  padding: 1.75rem 2rem 2rem;
+}
+
+.demo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #b45309;
+  background: #fef3c7;
+  padding: 0.25rem 0.6rem;
+  border-radius: 99px;
+  cursor: pointer;
+  border: 1px solid #fde68a;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+.demo-chip:hover {
+  background: #fde68a;
+}
+
+/* ==========================================================================
+   2. MASTERPIECE IMAGE LIGHTBOX (HIGH-RESOLUTION INSPECTION)
+   ========================================================================== */
+.lightbox-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.96);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+}
+
+.lightbox-modal.active {
+  display: flex;
+}
+
+.lightbox-toolbar {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 1010;
+}
+
+.lightbox-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.lightbox-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+.lightbox-viewport {
+  width: 90vw;
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  cursor: grab;
+  user-select: none;
+}
+.lightbox-viewport.grabbing {
+  cursor: grabbing;
+}
+
+.lightbox-img {
+  max-width: 85%;
+  max-height: 85%;
+  object-fit: contain;
+  transition: transform 0.15s ease-out;
+  transform-origin: center center;
+  filter: drop-shadow(0 25px 25px rgba(0,0,0,0.5));
+}
+
+.lightbox-caption {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.6rem 1.5rem;
+  border-radius: 99px;
+  color: white;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 1010;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   3. OUT OF STOCK & INVENTORY BADGES
+   ========================================================================== */
+.out-of-stock-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: #ef4444 !important;
+  color: white !important;
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  z-index: 10;
+  box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);
+}
+
+.btn-disabled, button:disabled {
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+  filter: grayscale(0.5);
+  pointer-events: auto !important;
+}
+
+/* ==========================================================================
+   4. CHECKOUT DYNAMIC ADDRESS SELECTION CARDS
+   ========================================================================== */
+.checkout-addresses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.checkout-address-card {
+  border: 2px solid var(--border-color);
+  background: var(--bg-app);
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.checkout-address-card:hover {
+  border-color: #fbcfe8;
+}
+
+.checkout-address-card.selected {
+  border-color: var(--primary);
+  background: rgba(131, 24, 67, 0.04);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.checkout-address-card .address-radio {
+  accent-color: var(--primary);
+  width: 18px;
+  height: 18px;
+}
+
+/* ==========================================================================
+   5. ORDER STATUS TIMELINE (LIVE TRACKER IN CONSUMER ORDERS)
+   ========================================================================== */
+.order-tracking-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin: 1.5rem 0;
+  padding: 0 1rem;
+}
+
+.order-tracking-bar::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 2rem;
+  right: 2rem;
+  height: 3px;
+  background: var(--border-color);
+  z-index: 1;
+}
+
+.order-tracking-progress {
+  position: absolute;
+  top: 15px;
+  left: 2rem;
+  height: 3px;
+  background: var(--primary);
+  z-index: 2;
+  transition: width 0.4s ease;
+}
+
+.tracking-step {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.4rem;
+}
+
+.step-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: all 0.3s;
+}
+
+.tracking-step.completed .step-dot {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.tracking-step.active .step-dot {
+  background: var(--primary);
+  border-color: #fef08a;
+  color: white;
+  box-shadow: 0 0 0 4px var(--primary-glow);
+  animation: pulseStep 1.8s infinite;
+}
+
+@keyframes pulseStep {
+  0% { box-shadow: 0 0 0 0 rgba(131, 24, 67, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(131, 24, 67, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(131, 24, 67, 0); }
+}
+
+.step-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.tracking-step.completed .step-label,
+.tracking-step.active .step-label {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   6. SUPER ADMIN LOGIN GATE (STRICT ROLE-BASED ACCESS)
+   ========================================================================== */
+.admin-auth-gate {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 30%, #500724 0%, #0f172a 100%);
+  padding: 2rem;
+}
+
+.admin-auth-card {
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 440px;
+  padding: 2.75rem 2.25rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  position: relative;
+  color: #f8fafc;
+}
+
+.admin-auth-card h2 {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #fef08a;
+  text-align: center;
+  margin: 0.5rem 0 0.25rem;
+}
+
+.admin-auth-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 0.3rem 0.8rem;
+  border-radius: 99px;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  margin: 0 auto 1.5rem;
+}
+
+/* ==========================================================================
+   7. PRINTABLE ROYAL INVOICE (@MEDIA PRINT)
+   ========================================================================== */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #invoice-details-content, #invoice-details-content * {
+    visibility: visible;
+  }
+  #invoice-details-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 20mm !important;
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  .modal-close-btn, .print-btn-no-print {
+    display: none !important;
+  }
+}
+
