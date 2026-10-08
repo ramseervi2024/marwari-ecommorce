@@ -74,7 +74,7 @@ function wp_ecommerce_custom_routes($wp = null) {
     }
 
     $plugin_url = plugin_dir_url(__FILE__);
-    $cache_ver = time() . '101';
+    $cache_ver = time() . '115';
 
     // Route: Swagger API Documentation (Interactive Swagger UI)
     if (strpos($request_uri, '/ecommerce/api-docs') !== false || strpos($request_uri, '/ecommerce/swagger') !== false) {

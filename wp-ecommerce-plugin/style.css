@@ -1139,7 +1139,7 @@ body.light-mode .product-card:hover {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  z-index: 2000;
+  z-index: 999999;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
@@ -2892,3 +2892,22 @@ select.form-input {
   }
 }
 
+
+
+.auth-alert-box {
+  display: none;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  border: 1.5px solid transparent;
+  animation: authAlertSlide 0.25s ease-out;
+}
+
+@keyframes authAlertSlide {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

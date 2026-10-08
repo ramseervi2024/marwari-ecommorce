@@ -1211,7 +1211,7 @@ app.switchAuthTab = function(type, updateHistory = true) {
 
   if (isRegister) {
     if (title) title.innerText = "Create Account";
-    if (subtitle) subtitle.innerText = "Join the royal heritage club and unlock patron rewards";
+    if (subtitle) subtitle.innerText = "Create an account to track your orders and enjoy royal privileges";
     if (emailForm) emailForm.style.display = "none";
     if (signupForm) signupForm.style.display = "block";
     if (pillSignin) { pillSignin.style.background = "transparent"; pillSignin.style.color = "#831843"; }
@@ -1219,7 +1219,7 @@ app.switchAuthTab = function(type, updateHistory = true) {
     if (updateHistory) updateURLState('/ecommerce/register');
   } else {
     if (title) title.innerText = "Sign In";
-    if (subtitle) subtitle.innerText = "Access your exclusive patron profile and royal privileges";
+    if (subtitle) subtitle.innerText = "Sign in to access your saved bag, orders, and profile";
     if (signupForm) signupForm.style.display = "none";
     if (emailForm) emailForm.style.display = "block";
     if (pillSignin) { pillSignin.style.background = "#831843"; pillSignin.style.color = "#ffffff"; }
@@ -2223,9 +2223,9 @@ function renderAdminCustomersList(filterQuery = "") {
       <td>
         <div style="font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:0.4rem;">
           ${c.name}
-          ${c.verified !== false ? `<span class="badge-status completed" style="font-size:0.65rem; padding:0.1rem 0.4rem; background:#ecfdf5; color:#059669;" title="OTP Verified Patron">✓ Verified</span>` : ''}
+          ${c.verified !== false ? `<span class="badge-status completed" style="font-size:0.65rem; padding:0.1rem 0.4rem; background:#ecfdf5; color:#059669;" title="OTP Verified Customer">✓ Verified</span>` : ''}
         </div>
-        <div style="font-size:0.75rem; color:var(--text-muted);">Joined Patron Program</div>
+        <div style="font-size:0.75rem; color:var(--text-muted);">Joined Store</div>
       </td>
       <td>
         <div>${c.email}</div>
@@ -2598,7 +2598,7 @@ function fillPageLoginCreds() {
   const pass = document.getElementById("login-password");
   if (email) email.value = "user@gmail.com";
   if (pass) pass.value = "password123";
-  showToast("Demo Patron credentials filled (user@gmail.com / password123)");
+  showToast("Demo credentials filled (user@gmail.com / password123)");
 }
 window.fillPageLoginCreds = fillPageLoginCreds;
 
@@ -2832,7 +2832,7 @@ function toggleProductVisibility(productId) {
   renderStorefront();
 }
 
-// --- ROYAL CONCIERGE PATRON DOSSIER MODAL ---
+// --- ROYAL CONCIERGE CUSTOMER DOSSIER MODAL ---
 function openRoyalConciergeModal(userEmail) {
   const user = app.users.find(u => u.email === userEmail);
   if (!user) return;
@@ -2840,8 +2840,8 @@ function openRoyalConciergeModal(userEmail) {
   const contentContainer = document.getElementById("royal-concierge-modal-content");
   if (!contentContainer) return;
 
-  const patronOrders = app.orders.filter(o => o.userEmail === user.email);
-  const nonCancelledOrders = patronOrders.filter(o => o.status !== "Cancelled");
+  const customerOrders = app.orders.filter(o => o.userEmail === user.email);
+  const nonCancelledOrders = customerOrders.filter(o => o.status !== "Cancelled");
   const ltv = nonCancelledOrders.reduce((sum, o) => sum + o.total, 0);
   const aov = nonCancelledOrders.length > 0 ? Math.round(ltv / nonCancelledOrders.length) : 0;
 
@@ -2849,22 +2849,22 @@ function openRoyalConciergeModal(userEmail) {
     <div style="border-bottom:1px solid var(--border-color); padding-bottom:1.5rem; margin-bottom:1.5rem;">
       <div style="display:flex; justify-content:space-between; align-items:flex-start;">
         <div>
-          <span style="font-size:0.75rem; font-weight:700; color:#b45309; letter-spacing:1px; text-transform:uppercase;">ROYAL CONCIERGE DOSSIER</span>
+          <span style="font-size:0.75rem; font-weight:700; color:#b45309; letter-spacing:1px; text-transform:uppercase;">CUSTOMER DOSSIER</span>
           <h2 style="font-size:1.75rem; font-weight:800; color:var(--text-primary); margin:0.25rem 0;">${user.name}</h2>
           <div style="font-size:0.85rem; color:var(--text-secondary); display:flex; gap:1rem; align-items:center;">
             <span>📧 ${user.email}</span>
             <span>📱 +91 ${user.phone}</span>
-            ${user.verified !== false ? `<span class="badge-status completed" style="font-size:0.7rem;">✓ Verified Patron</span>` : ''}
+            ${user.verified !== false ? `<span class="badge-status completed" style="font-size:0.7rem;">✓ Verified Customer</span>` : ''}
           </div>
         </div>
         <div style="text-align:right;">
-          <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Patron Tier</div>
-          <div style="font-size:1.1rem; font-weight:800; color:#831843;">${ltv > 50000 ? '👑 Royal Maharaja Tier' : ltv > 10000 ? '⚜️ Noble Rajput Tier' : '✨ Patron Member'}</div>
+          <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Membership Tier</div>
+          <div style="font-size:1.1rem; font-weight:800; color:#831843;">${ltv > 50000 ? '👑 Royal Maharaja Tier' : ltv > 10000 ? '⚜️ Noble Rajput Tier' : '✨ Club Member'}</div>
         </div>
       </div>
     </div>
 
-    <!-- Patron Key Metrics -->
+    <!-- Customer Key Metrics -->
     <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem; margin-bottom:2rem;">
       <div style="background:var(--bg-app); border:1px solid var(--border-color); border-radius:12px; padding:1.25rem; text-align:center;">
         <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Lifetime Value</div>
@@ -2872,7 +2872,7 @@ function openRoyalConciergeModal(userEmail) {
       </div>
       <div style="background:var(--bg-app); border:1px solid var(--border-color); border-radius:12px; padding:1.25rem; text-align:center;">
         <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Acquisitions</div>
-        <div style="font-size:1.5rem; font-weight:800; color:var(--text-primary); margin-top:0.25rem;">${patronOrders.length} Orders</div>
+        <div style="font-size:1.5rem; font-weight:800; color:var(--text-primary); margin-top:0.25rem;">${customerOrders.length} Orders</div>
       </div>
       <div style="background:var(--bg-app); border:1px solid var(--border-color); border-radius:12px; padding:1.25rem; text-align:center;">
         <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Average Order</div>
@@ -2896,11 +2896,11 @@ function openRoyalConciergeModal(userEmail) {
     <!-- Full Chronological Purchase History -->
     <div>
       <h4 style="font-size:1rem; font-weight:700; margin-bottom:0.75rem; color:var(--text-primary);">Chronological Acquisition History</h4>
-      ${patronOrders.length === 0 ? `
+      ${customerOrders.length === 0 ? `
         <p style="color:var(--text-muted); font-size:0.85rem;">No acquisitions placed yet.</p>
       ` : `
         <div style="display:flex; flex-direction:column; gap:0.75rem;">
-          ${patronOrders.map(o => `
+          ${customerOrders.map(o => `
             <div style="background:var(--bg-app); border:1px solid var(--border-color); border-radius:12px; padding:1rem; display:flex; justify-content:space-between; align-items:center;">
               <div>
                 <div style="font-weight:700; font-size:0.95rem; color:var(--text-primary);">Order #${o.id.slice(-6).toUpperCase()}</div>
@@ -2983,6 +2983,133 @@ function openAddCouponModal() {
 // ==========================================
 // EVENT LISTENERS SETUP
 // ==========================================
+
+// ==========================================
+// ROBUST AUTHENTICATION HANDLERS & INLINE VALIDATION
+// ==========================================
+function showAuthAlert(message, type = 'error') {
+  const alertBox = document.getElementById("auth-alert-box");
+  if (!alertBox) return;
+  alertBox.style.display = "flex";
+  if (type === 'error') {
+    alertBox.style.background = "#fef2f2";
+    alertBox.style.borderColor = "#f87171";
+    alertBox.style.color = "#991b1b";
+    alertBox.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+      <span>${message}</span>
+    `;
+  } else {
+    alertBox.style.background = "#f0fdf4";
+    alertBox.style.borderColor = "#4ade80";
+    alertBox.style.color = "#166534";
+    alertBox.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <span>${message}</span>
+    `;
+  }
+  try {
+    alertBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } catch(e) {}
+}
+window.showAuthAlert = showAuthAlert;
+
+function handleEmailLoginSubmit(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const emailInput = document.getElementById("login-email");
+  const passwordInput = document.getElementById("login-password");
+  const email = emailInput ? emailInput.value.trim() : "";
+  const password = passwordInput ? passwordInput.value : "";
+
+  if (!email) {
+    showAuthAlert("Please enter your email address.", "error");
+    if (emailInput) emailInput.focus();
+    return false;
+  }
+  if (!password) {
+    showAuthAlert("Please enter your password.", "error");
+    if (passwordInput) passwordInput.focus();
+    return false;
+  }
+
+  const res = app.loginWithEmail(email, password);
+  if (res.success) {
+    showAuthAlert(`Welcome back, ${res.user.name}! Redirecting to store...`, "success");
+    if (window.showToast) window.showToast(`Welcome back, ${res.user.name}!`);
+    updateNavBarState();
+
+    setTimeout(() => {
+      if (res.user.role === 'admin') {
+        window.location.href = (window.location.protocol === 'file:') ? 'superpanel.html' : '/ecommerce/admin';
+      } else if (window.pendingGuestAction) {
+        executePendingGuestAction();
+      } else {
+        window.location.href = (window.location.protocol === 'file:') ? 'index.html' : '/ecommerce/website';
+      }
+    }, 600);
+    return false;
+  } else {
+    let msg = res.message || "Invalid credentials.";
+    if (msg.includes("User not found")) {
+      msg = "No account found with this email. Please click 'Create Account' above to register.";
+    }
+    showAuthAlert(msg, "error");
+    if (window.showToast) window.showToast(msg, "danger");
+    return false;
+  }
+}
+window.handleEmailLoginSubmit = handleEmailLoginSubmit;
+
+function handleSignupSubmit(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const nameInput = document.getElementById("signup-name");
+  const emailInput = document.getElementById("signup-email");
+  const phoneInput = document.getElementById("signup-phone");
+  const passwordInput = document.getElementById("signup-password");
+
+  const name = nameInput ? nameInput.value.trim() : "";
+  const email = emailInput ? emailInput.value.trim() : "";
+  const phone = phoneInput ? phoneInput.value.trim() : "9876543210";
+  const password = passwordInput ? passwordInput.value : "";
+
+  if (!name || name.length < 2) {
+    showAuthAlert("Please enter your full name.", "error");
+    if (nameInput) nameInput.focus();
+    return false;
+  }
+  if (!email || !email.includes("@")) {
+    showAuthAlert("Please enter a valid email address.", "error");
+    if (emailInput) emailInput.focus();
+    return false;
+  }
+  if (!password || password.length < 4) {
+    showAuthAlert("Please choose a password with at least 4 characters.", "error");
+    if (passwordInput) passwordInput.focus();
+    return false;
+  }
+
+  const res = app.signup(name, phone, email, password);
+  if (res.success) {
+    showAuthAlert(`Account created successfully! Welcome, ${res.user.name}. Redirecting to store...`, "success");
+    if (window.showToast) window.showToast(`Account created successfully! Welcome, ${res.user.name}`);
+    updateNavBarState();
+
+    setTimeout(() => {
+      if (window.pendingGuestAction) {
+        executePendingGuestAction();
+      } else {
+        window.location.href = (window.location.protocol === 'file:') ? 'index.html' : '/ecommerce/website';
+      }
+    }, 600);
+    return false;
+  } else {
+    showAuthAlert(res.message || "Registration failed.", "error");
+    if (window.showToast) window.showToast(res.message, "danger");
+    return false;
+  }
+}
+window.handleSignupSubmit = handleSignupSubmit;
+
 function setupEventListeners() {
   // Theme Toggle Click
   const themeToggle = document.getElementById("theme-toggle");
@@ -3059,28 +3186,7 @@ function setupEventListeners() {
 
   // Login via Email submission
   if (authEmailForm) {
-    authEmailForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const email = document.getElementById("login-email").value.trim();
-      const password = document.getElementById("login-password").value;
-
-      const res = app.loginWithEmail(email, password);
-      if (res.success) {
-        showToast(`Welcome back, ${res.user.name}!`);
-        updateNavBarState();
-        authEmailForm.reset();
-
-        if (res.user.role === 'admin') {
-          navigateTo('/ecommerce/admin');
-        } else if (window.pendingGuestAction) {
-          executePendingGuestAction();
-        } else {
-          navigateTo('/ecommerce/website');
-        }
-      } else {
-        showToast(res.message, "danger");
-      }
-    });
+    authEmailForm.addEventListener("submit", handleEmailLoginSubmit);
   }
 
   // Mobile login OTP display and verification
@@ -3141,28 +3247,7 @@ function setupEventListeners() {
 
   // Register via Signup Submission
   if (authSignupForm) {
-    authSignupForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const name = document.getElementById("signup-name").value.trim();
-      const email = document.getElementById("signup-email").value.trim();
-      const phoneInput = document.getElementById("signup-phone");
-      const phone = phoneInput ? phoneInput.value.trim() : "9876543210";
-      const password = document.getElementById("signup-password").value;
-
-      const res = app.signup(name, phone, email, password);
-      if (res.success) {
-        showToast(`Account created successfully! Welcome, ${res.user.name}`);
-        updateNavBarState();
-        authSignupForm.reset();
-        if (window.pendingGuestAction) {
-          executePendingGuestAction();
-        } else {
-          navigateTo('/ecommerce/website');
-        }
-      } else {
-        showToast(res.message, "danger");
-      }
-    });
+    authSignupForm.addEventListener("submit", handleSignupSubmit);
   }
 
   // Profile update form submission
@@ -3592,7 +3677,7 @@ function setupEventListeners() {
       if (res.success) {
         closeModal();
         updateNavBarState();
-        showToast(`Royal Patron Account created! Welcome, ${res.user.name}`);
+        showToast(`Account created successfully! Welcome, ${res.user.name}`);
         executePendingGuestAction();
       } else {
         showToast(res.message, "danger");
@@ -3631,9 +3716,9 @@ function setupEventListeners() {
       if (!user) {
         user = {
           id: "usr-" + Math.random().toString(36).substr(2, 9),
-          name: "Patron " + phone.slice(-4),
+          name: "Member " + phone.slice(-4),
           phone: phone,
-          email: `patron_${phone}@marwari.in`,
+          email: `member_${phone}@marwari.in`,
           role: "user",
           verified: true,
           addresses: [

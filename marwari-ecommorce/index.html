@@ -619,7 +619,7 @@
         <div>
           <div class="royal-showcase-badge">
             <span>👑</span>
-            <span>Patron Exclusive Portal</span>
+            <span>Royal Privilege Club</span>
           </div>
           
           <h2 class="royal-showcase-brand">MĀRWĀRI</h2>
@@ -629,15 +629,15 @@
             Step into the Splendor of Authentic Rajputana Couture & Handcrafts
           </div>
           <p class="royal-showcase-subtext">
-            Join our distinguished patron circle to discover rare handlooms, royal Jodhpuri finery, certified heirloom jewelry, and master-artisan splendors.
+            Join our royal member circle to discover rare handlooms, royal Jodhpuri finery, certified heirloom jewelry, and master-artisan splendors.
           </p>
 
-          <!-- 3 High-End Patron Benefit Cards -->
+          <!-- 3 High-End Member Benefit Cards -->
           <div class="royal-benefit-card">
             <div class="royal-benefit-icon">👑</div>
             <div>
               <div class="royal-benefit-title">Royal Privilege Rewards</div>
-              <div class="royal-benefit-desc">Earn 5% patron coin returns on acquisitions with private drops & previews.</div>
+              <div class="royal-benefit-desc">Earn 5% royal coin returns on acquisitions with private drops & previews.</div>
             </div>
           </div>
 
@@ -660,8 +660,8 @@
 
         <!-- Trust Footer Metric -->
         <div class="royal-showcase-footer">
-          <span>⭐ 4.9/5 Patron Rating</span>
-          <span>50,000+ Patrons Worldwide</span>
+          <span>⭐ 4.9/5 Customer Rating</span>
+          <span>50,000+ Happy Customers Worldwide</span>
           <span>🔒 256-Bit Vault</span>
         </div>
       </div>
@@ -683,7 +683,7 @@
           </div>
           <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 2px; color: #b45309; font-weight: 700; margin-bottom: 0.75rem;">Royal Heritage of Rajasthan</div>
           <h2 id="auth-view-title" style="color: #0f172a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 1.45rem; font-weight: 800; text-align: center; margin: 0 0 0.25rem;">Sign In</h2>
-          <p id="auth-view-subtitle" style="font-size: 0.85rem; color: #64748b; margin: 0; line-height: 1.4;">Access your exclusive patron profile and royal privileges</p>
+          <p id="auth-view-subtitle" style="font-size: 0.85rem; color: #64748b; margin: 0; line-height: 1.4;">Sign in to access your saved bag, orders, and profile</p>
         </div>
 
         <!-- Tab Switcher (Sign In vs Create Account) -->
@@ -692,21 +692,24 @@
           <button type="button" id="auth-tab-pill-signup" onclick="app.switchAuthTab('signup')" style="flex: 1; padding: 0.65rem 0.5rem; border: none; border-radius: 9px; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: all 0.2s; background: transparent; color: #831843;">Create Account</button>
         </div>
 
-        <!-- Demo Patron Quick Fill Chip -->
+        <!-- Demo Account Quick Fill Chip -->
         <div class="demo-chip" onclick="fillPageLoginCreds()" style="width: 100%; justify-content: center; margin-bottom: 1.25rem; font-size: 0.8rem; padding: 0.55rem 0.75rem; background: #fffbeb; border: 1px dashed #f59e0b; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; color: #92400e;">
-          <span>⚡ Demo Patron:</span> <strong>user@gmail.com / password123</strong> (Click to fill)
+          <span>⚡ Demo Account:</span> <strong>user@gmail.com / password123</strong> (Click to fill)
         </div>
         
         <div class="auth-form-container">
+          <!-- Inline Validation Alert Box -->
+          <div id="auth-alert-box" class="auth-alert-box" style="display:none;"></div>
+
           <!-- A. Royal Email Login Form -->
-          <form id="auth-email-form">
+          <form id="auth-email-form" onsubmit="return handleEmailLoginSubmit(event);" novalidate>
             <div style="margin-bottom: 1.15rem;">
               <label for="login-email" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Email Address</label>
               <div class="royal-input-wrapper">
                 <span class="royal-input-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                 </span>
-                <input type="email" id="login-email" class="royal-input" placeholder="patron@domain.com" required>
+                <input type="email" id="login-email" class="royal-input" placeholder="user@gmail.com" required>
               </div>
             </div>
             <div style="margin-bottom: 1rem;">
@@ -726,7 +729,7 @@
             </div>
 
             <button type="submit" class="royal-btn-primary" style="margin-top: 1.25rem;">
-              Sign In to Patron Portal &rarr;
+              Sign In &rarr;
             </button>
             
             <div style="text-align: center; margin-top: 1.5rem; font-size: 0.88rem; color: #64748b;">
@@ -735,7 +738,7 @@
           </form>
 
           <!-- B. Royal Register Form -->
-          <form id="auth-signup-form" style="display: none;">
+          <form id="auth-signup-form" style="display: none;" onsubmit="return handleSignupSubmit(event);" novalidate>
             <div style="margin-bottom: 1.15rem;">
               <label for="signup-name" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.45rem; color: #1e293b;">Full Name</label>
               <div class="royal-input-wrapper">
@@ -751,7 +754,7 @@
                 <span class="royal-input-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                 </span>
-                <input type="email" id="signup-email" class="royal-input" placeholder="patron@domain.com" required>
+                <input type="email" id="signup-email" class="royal-input" placeholder="user@gmail.com" required>
               </div>
             </div>
             <div style="margin-bottom: 1.15rem;">
@@ -777,18 +780,18 @@
             </div>
 
             <button type="submit" class="royal-btn-primary" style="margin-top: 1.25rem;">
-              Create Royal Account &rarr;
+              Create Account &rarr;
             </button>
             
             <div style="text-align: center; margin-top: 1.5rem; font-size: 0.88rem; color: #64748b;">
-              Already a patron? <a href="javascript:void(0)" onclick="app.switchAuthTab('signin')" style="color: #831843; font-weight: 700; text-decoration: none;">Sign In &rarr;</a>
+              Already have an account? <a href="javascript:void(0)" onclick="app.switchAuthTab('signin')" style="color: #831843; font-weight: 700; text-decoration: none;">Sign In &rarr;</a>
             </div>
           </form>
         </div>
 
         <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #f1f5f9; text-align: center; font-size: 0.75rem; color: #94a3b8; display: flex; align-items: center; justify-content: center; gap: 0.35rem;">
           <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <span>256-Bit Imperial Encryption • Official Patron Gateway</span>
+          <span>256-Bit Imperial Encryption • Official Secure Gateway</span>
         </div>
       </div>
 
@@ -928,7 +931,7 @@
               <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem;">
                 <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.8rem; color:var(--text-secondary); cursor:pointer;">
                   <input type="checkbox" id="new-addr-save-profile" checked style="accent-color:var(--primary);">
-                  Save to Patron Profile for next orders
+                  Save to My Profile for next orders
                 </label>
                 <button type="button" class="btn-primary" onclick="saveNewCheckoutAddress()" style="padding:0.4rem 1rem; font-size:0.85rem; background:#831843;">
                   Save & Use Address
