@@ -74,7 +74,7 @@ function wp_ecommerce_custom_routes($wp = null) {
     }
 
     $plugin_url = plugin_dir_url(__FILE__);
-    $cache_ver = time() . '115';
+    $cache_ver = time() . '117';
 
     // Route: Swagger API Documentation (Interactive Swagger UI)
     if (strpos($request_uri, '/ecommerce/api-docs') !== false || strpos($request_uri, '/ecommerce/swagger') !== false) {
@@ -86,8 +86,14 @@ function wp_ecommerce_custom_routes($wp = null) {
         exit;
     }
 
-    // Route: Admin Super Panel
-    if (strpos($request_uri, '/ecommerce/admin') !== false || strpos($request_uri, '/superpanel') !== false) {
+    // Route: Admin Super Panel (/ecommerce/admin, /ecommerce/admin/login, /ecommerce/admin/dashboard, /ecommerce/admin/*, /superpanel)
+    $is_admin_route = (
+        strpos($request_uri, '/ecommerce/admin') !== false || 
+        strpos($request_uri, '/superpanel') !== false ||
+        preg_match('#^/admin/(login|dashboard|products|orders|customers|categories|coupons|inventory|reports|settings)#i', $request_uri)
+    );
+
+    if ($is_admin_route) {
         $executed = true;
         if (!defined('DONOTCACHEPAGE')) define('DONOTCACHEPAGE', true);
         nocache_headers();

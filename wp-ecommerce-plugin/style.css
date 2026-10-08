@@ -1180,15 +1180,13 @@ body.light-mode .product-card:hover {
 
 /* Admin Dashboard View Container */
 .admin-view-wrapper {
-  padding: 3rem 0;
-  display: none;
-  /* Dynamic display toggled via JS */
+  padding: 0;
+  display: none !important;
   flex-direction: column;
-  gap: 2.5rem;
 }
 
 .admin-view-wrapper.active {
-  display: flex;
+  display: flex !important;
 }
 
 .admin-header {
@@ -2817,27 +2815,51 @@ select.form-input {
 }
 
 /* ==========================================================================
-   6. SUPER ADMIN LOGIN GATE (STRICT ROLE-BASED ACCESS)
+   6. SUPER ADMIN LOGIN GATE (EXECUTIVE ISOLATION & LUXURY SUITE)
    ========================================================================== */
 .admin-auth-gate {
+  display: none !important;
+}
+
+.admin-auth-gate.active {
+  display: flex !important;
   min-height: 100vh;
-  display: flex;
+  width: 100%;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 50% 30%, #500724 0%, #0f172a 100%);
-  padding: 2rem;
+  background: radial-gradient(ellipse at 50% 20%, #4a0d24 0%, #0f172a 75%, #080d19 100%);
+  padding: 2.5rem 1.5rem;
+  position: relative;
+  z-index: 9999;
+  box-sizing: border-box;
 }
 
 .admin-auth-card {
-  background: #1e293b;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(17, 24, 39, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(251, 191, 36, 0.25);
   border-radius: 24px;
   width: 100%;
-  max-width: 440px;
+  max-width: 460px;
   padding: 2.75rem 2.25rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8), 0 0 50px rgba(131, 24, 67, 0.25);
   position: relative;
   color: #f8fafc;
+  animation: modalPopIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.admin-auth-emblem {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 0.75rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(131, 24, 67, 0.4) 100%);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 25px rgba(251, 191, 36, 0.25);
 }
 
 .admin-auth-card h2 {
@@ -2862,7 +2884,111 @@ select.form-input {
   padding: 0.3rem 0.8rem;
   border-radius: 99px;
   border: 1px solid rgba(251, 191, 36, 0.3);
-  margin: 0 auto 1.5rem;
+  margin: 0 auto 1.25rem;
+}
+
+.admin-demo-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: rgba(251, 191, 36, 0.08);
+  border: 1px dashed rgba(251, 191, 36, 0.4);
+  border-radius: 12px;
+  padding: 0.65rem 1rem;
+  font-size: 0.82rem;
+  color: #fde047;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.admin-demo-pill:hover {
+  background: rgba(251, 191, 36, 0.16);
+  border-color: #fbbf24;
+  transform: translateY(-1px);
+}
+
+.admin-gate-alert {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  line-height: 1.35;
+}
+
+.admin-gate-alert.error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.admin-gate-alert.success {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #86efac;
+}
+
+.admin-password-toggle {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.admin-password-toggle:hover {
+  color: #fbbf24;
+}
+
+.admin-submit-btn {
+  width: 100%;
+  padding: 0.95rem 1.5rem;
+  background: linear-gradient(135deg, #831843 0%, #be185d 100%);
+  color: #ffffff;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 10px 25px -5px rgba(131, 24, 67, 0.5);
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+
+.admin-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px -5px rgba(131, 24, 67, 0.7);
+  background: linear-gradient(135deg, #9d174d 0%, #db2777 100%);
+}
+
+.admin-back-storefront {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+
+.admin-back-storefront:hover {
+  color: #fbbf24;
 }
 
 /* ==========================================================================

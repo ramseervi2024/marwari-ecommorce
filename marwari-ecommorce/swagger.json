@@ -1,0 +1,840 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Mārwāri E-Commerce & ERP API",
+    "version": "1.0.0",
+    "description": "Comprehensive RESTful API specification for React Native mobile app (iOS / Android) and Web client integration with the WordPress Mārwāri E-Commerce backend.",
+    "contact": {
+      "name": "Mārwāri E-Commerce Engineering Team",
+      "url": "https://rpsdigitalworld.store"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://rpsdigitalworld.store/wp-json/wp-ecommerce/v1",
+      "description": "Production Server"
+    },
+    {
+      "url": "http://localhost/wp-json/wp-ecommerce/v1",
+      "description": "Local Development Server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "User authentication, JWT tokens, mobile OTP, and session management"
+    },
+    {
+      "name": "Home & Feed",
+      "description": "High-performance unified payload for React Native initial screen"
+    },
+    {
+      "name": "Products",
+      "description": "Product listing, search, filtering, and detail endpoints"
+    },
+    {
+      "name": "Categories",
+      "description": "Heritage collections and category navigation"
+    },
+    {
+      "name": "Cart",
+      "description": "Customer shopping cart, item adjustments, and discount calculations"
+    },
+    {
+      "name": "Orders & Checkout",
+      "description": "Order placement, payment gateway integration, order tracking, and history"
+    },
+    {
+      "name": "Customer Profile",
+      "description": "Customer details, shipping addresses, and wishlist"
+    },
+    {
+      "name": "Coupons",
+      "description": "Discount codes and promotional coupons"
+    },
+    {
+      "name": "Media Upload",
+      "description": "Direct file and image uploads to WordPress Media Library"
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Email / Username Login",
+        "description": "Authenticates customer or administrator using email/username and password. Returns JWT bearer token and user profile.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials or account blocked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Customer Registration",
+        "description": "Registers a new customer account, sets up their profile, and returns an active JWT session token.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Account registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Email or phone already registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/send-otp": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Send Mobile OTP",
+        "description": "Dispatches a 6-digit one-time password to the customer's mobile number via SMS.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["phone"],
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "example": "9876543210"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "OTP sent to +91 9876543210" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/verify-otp": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Verify Mobile OTP & Login",
+        "description": "Verifies the received OTP. If customer is new, creates an account automatically and logs in.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["phone", "otp"],
+                "properties": {
+                  "phone": { "type": "string", "example": "9876543210" },
+                  "otp": { "type": "string", "example": "123456" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP verified, user authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Incorrect or expired OTP",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/home": {
+      "get": {
+        "tags": ["Home & Feed"],
+        "summary": "React Native Mobile Home Feed",
+        "description": "Returns hero banners, 7 heritage categories, featured treasures, bestsellers, artisan highlights, and promotional banners in a single payload.",
+        "responses": {
+          "200": {
+            "description": "Home screen feed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HomeFeedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "List Products",
+        "description": "Fetches products with support for category filtering, text search, pagination, and sorting.",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter by category name or slug (e.g. 'Royal Apparel', 'Silver Jewellery')",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Search keyword in product title, description, or tags",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (default 1)",
+            "required": false,
+            "schema": { "type": "integer", "default": 1 }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of items per page (default 20)",
+            "required": false,
+            "schema": { "type": "integer", "default": 20 }
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "description": "Sort order: 'price_asc', 'price_desc', 'newest', 'popular'",
+            "required": false,
+            "schema": { "type": "string", "enum": ["price_asc", "price_desc", "newest", "popular"] }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of products with pagination metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": { "type": "integer", "example": 20 },
+                    "page": { "type": "integer", "example": 1 },
+                    "limit": { "type": "integer", "example": 20 },
+                    "products": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Product" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Products"],
+        "summary": "Create / Update Product (Admin)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Product" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product updated successfully"
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "Get Product Detail",
+        "description": "Retrieves comprehensive product details by ID or numeric ID (e.g. '20' or 'prod-20'), including specifications, reviews, and related recommendations.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Product ID (e.g. '20' or 'prod-20')",
+            "schema": { "type": "string" },
+            "example": "20"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "product": { "$ref": "#/components/schemas/Product" },
+                    "recommended": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Product" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Product not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "tags": ["Categories"],
+        "summary": "List Heritage Categories",
+        "description": "Returns all 7 heritage categories with names, banner images, and counts.",
+        "responses": {
+          "200": {
+            "description": "List of categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Category" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cart": {
+      "get": {
+        "tags": ["Cart"],
+        "summary": "Get Current Cart",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Cart items and totals",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CartResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cart/items": {
+      "post": {
+        "tags": ["Cart"],
+        "summary": "Add Item to Cart",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["productId", "quantity"],
+                "properties": {
+                  "productId": { "type": "string", "example": "prod-20" },
+                  "quantity": { "type": "integer", "example": 1 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated cart",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CartResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cart/items/{id}": {
+      "put": {
+        "tags": ["Cart"],
+        "summary": "Update Cart Item Quantity",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["quantity"],
+                "properties": {
+                  "quantity": { "type": "integer", "example": 2 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Cart updated" }
+        }
+      },
+      "delete": {
+        "tags": ["Cart"],
+        "summary": "Remove Item from Cart",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Item removed from cart" }
+        }
+      }
+    },
+    "/orders": {
+      "get": {
+        "tags": ["Orders & Checkout"],
+        "summary": "List Customer Orders",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Order history list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Order" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Orders & Checkout"],
+        "summary": "Place Order / Checkout",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PlaceOrderRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Order created successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Order" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "tags": ["Orders & Checkout"],
+        "summary": "Get Order Detail & Tracking",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order and shipment tracking",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Order" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me": {
+      "get": {
+        "tags": ["Customer Profile"],
+        "summary": "Get Current Customer Profile",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Customer profile and preferences",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Customer Profile"],
+        "summary": "Update Profile",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Ramesh Seervi" },
+                  "phone": { "type": "string", "example": "9001122334" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Profile updated" }
+        }
+      }
+    },
+    "/coupons": {
+      "get": {
+        "tags": ["Coupons"],
+        "summary": "List Available Coupons",
+        "responses": {
+          "200": {
+            "description": "Active coupons",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Coupon" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upload": {
+      "post": {
+        "tags": ["Media Upload"],
+        "summary": "Upload Image / File",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "File uploaded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "url": { "type": "string", "example": "https://rpsdigitalworld.store/wp-content/uploads/2026/10/peacock.jpg" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": { "type": "string", "format": "email", "example": "user@gmail.com" },
+          "password": { "type": "string", "format": "password", "example": "password123" }
+        }
+      },
+      "RegisterRequest": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name": { "type": "string", "example": "Ramesh Seervi" },
+          "email": { "type": "string", "format": "email", "example": "ramesh@example.com" },
+          "phone": { "type": "string", "example": "9876543210" },
+          "password": { "type": "string", "format": "password", "example": "SecurePwd123" }
+        }
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "token": { "type": "string", "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." },
+          "user": { "$ref": "#/components/schemas/User" }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "usr-1" },
+          "username": { "type": "string", "example": "user" },
+          "email": { "type": "string", "example": "user@gmail.com" },
+          "name": { "type": "string", "example": "Ramesh Seervi" },
+          "phone": { "type": "string", "example": "9001122334" },
+          "role": { "type": "string", "enum": ["user", "admin"], "example": "user" },
+          "status": { "type": "string", "example": "active" },
+          "addresses": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Address" }
+          }
+        }
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "addr-1" },
+          "label": { "type": "string", "example": "Home Base" },
+          "street": { "type": "string", "example": "12 Heritage Lane" },
+          "city": { "type": "string", "example": "Jodhpur" },
+          "zip": { "type": "string", "example": "342001" },
+          "default": { "type": "boolean", "example": true }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "prod-20" },
+          "name": { "type": "string", "example": "Imperial Udaipur Heritage Silver Peacock Box" },
+          "category": { "type": "string", "example": "Handicrafts" },
+          "price": { "type": "number", "example": 7899 },
+          "original_price": { "type": "number", "example": 9083 },
+          "discount_percent": { "type": "integer", "example": 15 },
+          "description": { "type": "string", "example": "An extraordinary masterwork created by royal silversmiths of Udaipur. Crafted with hand-carved floral repoussé engraving..." },
+          "image": { "type": "string", "format": "uri", "example": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=600&q=80" },
+          "gallery": {
+            "type": "array",
+            "items": { "type": "string", "format": "uri" }
+          },
+          "badge": { "type": "string", "example": "Royal Masterpiece" },
+          "rating": { "type": "number", "example": 5.0 },
+          "reviews_count": { "type": "integer", "example": 134 },
+          "in_stock": { "type": "boolean", "example": true }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "cat-1" },
+          "name": { "type": "string", "example": "Royal Apparel" },
+          "slug": { "type": "string", "example": "Royal Apparel" },
+          "image": { "type": "string", "format": "uri", "example": "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=400&q=80" },
+          "count": { "type": "integer", "example": 5 }
+        }
+      },
+      "CartResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "product": { "$ref": "#/components/schemas/Product" },
+                "quantity": { "type": "integer", "example": 1 },
+                "subtotal": { "type": "number", "example": 7899 }
+              }
+            }
+          },
+          "subtotal": { "type": "number", "example": 7899 },
+          "discount": { "type": "number", "example": 0 },
+          "shipping": { "type": "number", "example": 0 },
+          "total": { "type": "number", "example": 7899 }
+        }
+      },
+      "PlaceOrderRequest": {
+        "type": "object",
+        "required": ["shippingAddress", "paymentMethod"],
+        "properties": {
+          "shippingAddress": { "$ref": "#/components/schemas/Address" },
+          "paymentMethod": { "type": "string", "enum": ["razorpay", "upi", "cod", "card"], "example": "razorpay" },
+          "couponCode": { "type": "string", "example": "MARWARI10" }
+        }
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "ORD-2026-8941" },
+          "customer_name": { "type": "string", "example": "Ramesh Seervi" },
+          "date": { "type": "string", "format": "date-time", "example": "2026-10-06T15:30:00Z" },
+          "status": { "type": "string", "enum": ["Processing", "Dispatched", "In Transit", "Delivered", "Cancelled"], "example": "Processing" },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "productId": { "type": "string", "example": "prod-20" },
+                "productName": { "type": "string", "example": "Imperial Udaipur Heritage Silver Peacock Box" },
+                "price": { "type": "number", "example": 7899 },
+                "quantity": { "type": "integer", "example": 1 }
+              }
+            }
+          },
+          "total": { "type": "number", "example": 7899 },
+          "payment_method": { "type": "string", "example": "razorpay" },
+          "payment_status": { "type": "string", "example": "paid" },
+          "tracking_number": { "type": "string", "example": "MRW-IND-9921448" }
+        }
+      },
+      "Coupon": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "cp-1" },
+          "code": { "type": "string", "example": "MARWARI10" },
+          "type": { "type": "string", "enum": ["percentage", "flat"], "example": "percentage" },
+          "amount": { "type": "number", "example": 10 },
+          "expiry": { "type": "string", "format": "date", "example": "2026-12-31" }
+        }
+      },
+      "HomeFeedResponse": {
+        "type": "object",
+        "properties": {
+          "banners": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "title": { "type": "string" },
+                "subtitle": { "type": "string" },
+                "image": { "type": "string" },
+                "action_url": { "type": "string" }
+              }
+            }
+          },
+          "categories": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Category" }
+          },
+          "featured_products": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Product" }
+          },
+          "heritage_cities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "specialty": { "type": "string" },
+                "image": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": false },
+          "message": { "type": "string", "example": "Invalid credentials or unauthorized" }
+        }
+      }
+    }
+  }
+}

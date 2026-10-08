@@ -498,6 +498,10 @@ class AppState {
     return { success: false, message: "Invalid password" };
   }
 
+  login(emailOrUsername, password) {
+    return this.loginWithEmail(emailOrUsername, password);
+  }
+
   loginWithEmail(emailOrUsername, password) {
     const validation = this.validateEmailLogin(emailOrUsername, password);
     if (!validation.success) return validation;
@@ -583,6 +587,20 @@ class AppState {
     this.activeCoupon = null;
     localStorage.removeItem('wp_ecommerce_jwt');
     this.saveState();
+
+    const isAdminRoute = window.location.pathname.includes('/ecommerce/admin') || 
+                         window.location.pathname.includes('superpanel') ||
+                         document.getElementById('admin-auth-gate');
+
+    if (isAdminRoute) {
+      if (typeof handleAdminRoute === 'function') {
+        handleAdminRoute('/ecommerce/admin/login', true);
+      } else {
+        window.location.href = '/ecommerce/admin/login';
+      }
+      return;
+    }
+
     if (typeof navigateTo !== 'undefined') {
       navigateTo('/ecommerce/website');
     } else {
@@ -629,7 +647,10 @@ let generatedOTPCode = null;
 
 // UI Initialization & Controller
 function initApp() {
-  const isSuperpanelPage = window.location.pathname.includes('superpanel') || window.location.pathname.includes('admin');
+  const isSuperpanelPage = window.location.pathname.includes('superpanel') || 
+                           window.location.pathname.includes('/ecommerce/admin') ||
+                           window.location.pathname.includes('/admin') ||
+                           document.getElementById("admin-auth-gate");
 
   // Theme initialization
   initTheme();
@@ -638,8 +659,7 @@ function initApp() {
   populateCategorySelects();
 
   if (isSuperpanelPage) {
-    initAdminAccess();
-    renderAdminDashboard();
+    handleAdminRoute(window.location.pathname, false);
     setupEventListeners();
   } else {
     // Initialize Storefront views
@@ -2935,21 +2955,163 @@ function openEditCouponModal(couponId) {
   openModal("edit-coupon-modal");
 }
 
-// --- ADMIN ACCESS GATE CONTROLLER ---
-function initAdminAccess() {
-  const isSuperpanel = window.location.pathname.includes('superpanel') || document.getElementById("admin-auth-gate");
-  if (!isSuperpanel) return;
-
+// --- DEDICATED SUPER-ADMIN ROUTER & ACCESS CONTROLLER ---
+function handleAdminRoute(path, shouldPushState = false) {
   const gate = document.getElementById("admin-auth-gate");
   const view = document.getElementById("admin-view");
+  if (!gate && !view) return;
 
-  if (app.currentUser && app.currentUser.role === 'admin') {
-    if (gate) gate.style.display = "none";
-    if (view) view.style.display = "flex";
-  } else {
-    if (gate) gate.style.display = "flex";
-    if (view) view.style.display = "none";
+  const pathname = path || window.location.pathname;
+
+  // Determine requested admin module from pathname:
+  // e.g. /ecommerce/admin/login, /ecommerce/admin/dashboard, /ecommerce/admin/products, etc.
+  let module = 'dashboard';
+  const adminMatch = pathname.match(/(?:\/ecommerce\/admin|\/superpanel|\/admin)\/?([a-zA-Z0-9_-]*)/i);
+  if (adminMatch && adminMatch[1]) {
+    module = adminMatch[1].toLowerCase();
+  } else if (pathname.endsWith('/admin') || pathname.endsWith('/admin/') || pathname.includes('/superpanel')) {
+    module = (app.currentUser && app.currentUser.role === 'admin') ? 'dashboard' : 'login';
   }
+
+  const isAdminLoggedIn = !!(app.currentUser && app.currentUser.role === 'admin');
+
+  // 1. Login Gate View (/ecommerce/admin/login)
+  if (module === 'login') {
+    if (isAdminLoggedIn) {
+      // Already authenticated admin -> redirect straight to dashboard
+      handleAdminRoute('/ecommerce/admin/dashboard', shouldPushState);
+      return;
+    }
+
+    // STRICT ISOLATION: Show Gate, strictly hide Dashboard View
+    if (gate) {
+      gate.classList.add('active');
+      gate.style.display = 'flex';
+    }
+    if (view) {
+      view.classList.remove('active');
+      view.style.display = 'none';
+    }
+
+    if (shouldPushState && window.location.pathname !== '/ecommerce/admin/login') {
+      window.history.pushState({ module: 'login' }, '', '/ecommerce/admin/login');
+    }
+    document.title = 'Mārwāri E-Commerce | Super Admin Login';
+    return;
+  }
+
+  // 2. All other Admin Modules require active Super-Admin session
+  if (!isAdminLoggedIn) {
+    // Unauthenticated visitor: Gate strictly to login
+    if (gate) {
+      gate.classList.add('active');
+      gate.style.display = 'flex';
+    }
+    if (view) {
+      view.classList.remove('active');
+      view.style.display = 'none';
+    }
+
+    if (window.location.pathname !== '/ecommerce/admin/login') {
+      window.history.replaceState({ module: 'login' }, '', '/ecommerce/admin/login');
+    }
+    document.title = 'Mārwāri E-Commerce | Super Admin Login';
+    return;
+  }
+
+  // 3. Authenticated Super-Admin: Show Dashboard, strictly hide Login Gate
+  if (gate) {
+    gate.classList.remove('active');
+    gate.style.display = 'none';
+  }
+  if (view) {
+    view.classList.add('active');
+    view.style.display = '';
+  }
+
+  // Map requested module to admin panel ID
+  let panelId = 'admin-overview';
+  let targetModule = 'dashboard';
+
+  switch (module) {
+    case 'products':
+      panelId = 'admin-products';
+      targetModule = 'products';
+      break;
+    case 'orders':
+      panelId = 'admin-orders';
+      targetModule = 'orders';
+      break;
+    case 'customers':
+      panelId = 'admin-customers';
+      targetModule = 'customers';
+      break;
+    case 'categories':
+      panelId = 'admin-categories';
+      targetModule = 'categories';
+      break;
+    case 'coupons':
+      panelId = 'admin-coupons';
+      targetModule = 'coupons';
+      break;
+    case 'inventory':
+      panelId = 'admin-products';
+      targetModule = 'inventory';
+      break;
+    case 'reports':
+    case 'marketing':
+    case 'analytics':
+      panelId = 'admin-reports';
+      targetModule = module;
+      break;
+    case 'settings':
+      panelId = 'admin-settings';
+      targetModule = 'settings';
+      break;
+    case 'dashboard':
+    case 'overview':
+    default:
+      panelId = 'admin-overview';
+      targetModule = 'dashboard';
+      break;
+  }
+
+  // Activate target panel and hide all others
+  document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+  const targetPanel = document.getElementById(panelId);
+  if (targetPanel) {
+    targetPanel.classList.add('active');
+  }
+
+  // Update sidebar navigation active state
+  document.querySelectorAll('.admin-nav-link').forEach(link => {
+    const linkPanel = link.dataset.panel;
+    const linkRoute = link.dataset.route;
+    if (linkPanel === panelId || linkRoute === targetModule) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+
+  // Push state for clean, shareable URL
+  const targetUrl = `/ecommerce/admin/${targetModule}`;
+  if (shouldPushState && window.location.pathname !== targetUrl) {
+    window.history.pushState({ module: targetModule }, '', targetUrl);
+  }
+
+  // Update page title
+  const moduleTitle = targetModule.charAt(0).toUpperCase() + targetModule.slice(1);
+  document.title = `Mārwāri E-Commerce | Super Admin - ${moduleTitle}`;
+
+  // Render dashboard calculations
+  if (typeof renderAdminDashboard === 'function') {
+    renderAdminDashboard();
+  }
+}
+
+function initAdminAccess() {
+  handleAdminRoute(window.location.pathname, false);
 }
 
 function fillAdminCredentials() {
@@ -2958,6 +3120,23 @@ function fillAdminCredentials() {
   if (u) u.value = "admin";
   if (p) p.value = "123456";
   showToast("Admin credentials auto-filled (admin / 123456)");
+}
+
+function toggleAdminGatePassword() {
+  const p = document.getElementById("admin-gate-password");
+  const eye = document.getElementById("admin-pw-eye");
+  if (!p) return;
+  if (p.type === "password") {
+    p.type = "text";
+    if (eye) {
+      eye.innerHTML = `<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/>`;
+    }
+  } else {
+    p.type = "password";
+    if (eye) {
+      eye.innerHTML = `<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>`;
+    }
+  }
 }
 
 function handleProductImageUpload(input, targetInputId) {
@@ -3608,13 +3787,24 @@ function setupEventListeners() {
       e.preventDefault();
       const u = document.getElementById("admin-gate-username").value.trim();
       const p = document.getElementById("admin-gate-password").value;
+      const alertBox = document.getElementById("admin-gate-alert");
 
       const res = app.login(u, p);
       if (res.success && res.user.role === 'admin') {
+        if (alertBox) alertBox.style.display = "none";
         showToast("👑 Access Granted. Welcome Super Administrator!");
-        initAdminAccess();
-        renderAdminDashboard();
+        handleAdminRoute('/ecommerce/admin/dashboard', true);
       } else {
+        if (alertBox) {
+          alertBox.className = "admin-gate-alert error";
+          alertBox.innerHTML = `
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span>Invalid administrator credentials or unauthorized role. Please verify username and password.</span>
+          `;
+          alertBox.style.display = "flex";
+        }
         showToast("Invalid admin credentials or role unauthorized", "danger");
       }
     });
@@ -3756,19 +3946,12 @@ function setupEventListeners() {
     });
   }
 
-  // Admin Sidebar switching logic
+  // Admin Sidebar switching logic with Clean Dedicated URL Routing
   const adminNavLinks = document.querySelectorAll(".admin-nav-link");
   adminNavLinks.forEach(link => {
     link.addEventListener("click", () => {
-      adminNavLinks.forEach(l => l.classList.remove("active"));
-      link.classList.add("active");
-
-      const panelId = link.dataset.panel;
-      document.querySelectorAll(".admin-panel").forEach(p => p.classList.remove("active"));
-      const activePanel = document.getElementById(panelId);
-      if (activePanel) {
-        activePanel.classList.add("active");
-      }
+      const route = link.dataset.route || (link.dataset.panel ? link.dataset.panel.replace('admin-', '') : 'dashboard');
+      handleAdminRoute('/ecommerce/admin/' + route, true);
     });
   });
 
@@ -3903,3 +4086,12 @@ window.fillModalOtpPhone = fillModalOtpPhone;
 window.togglePasswordVisibility = togglePasswordVisibility;
 window.handleRestrictedAccess = handleRestrictedAccess;
 window.updateMobileNavTab = updateMobileNavTab;
+window.handleAdminRoute = handleAdminRoute;
+window.toggleAdminGatePassword = toggleAdminGatePassword;
+
+// Popstate listener for seamless back/forward navigation in Admin Panel
+window.addEventListener('popstate', (e) => {
+  if (document.getElementById("admin-auth-gate") || window.location.pathname.includes('/ecommerce/admin')) {
+    handleAdminRoute(window.location.pathname, false);
+  }
+});
